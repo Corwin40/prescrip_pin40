@@ -1,0 +1,59 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Member index{% endblock %}
+
+{% block body %}
+    <h1>Member index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Email</th>
+                <th>Roles</th>
+                <th>Password</th>
+                <th>NameStructure</th>
+                <th>Address</th>
+                <th>Zipcode</th>
+                <th>City</th>
+                <th>ContactEmail</th>
+                <th>ContactPhone</th>
+                <th>ContactResponsableFirstname</th>
+                <th>ContactResponsableLastname</th>
+                <th>ContactResponsableCivility</th>
+                <th>IsVerified</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for member in members %}
+            <tr>
+                <td>{{ member.id }}</td>
+                <td>{{ member.email }}</td>
+                <td>{{ member.roles ? member.roles|json_encode : '' }}</td>
+                <td>{{ member.password }}</td>
+                <td>{{ member.nameStructure }}</td>
+                <td>{{ member.address }}</td>
+                <td>{{ member.zipcode }}</td>
+                <td>{{ member.city }}</td>
+                <td>{{ member.contactEmail }}</td>
+                <td>{{ member.contactPhone }}</td>
+                <td>{{ member.ContactResponsableFirstname }}</td>
+                <td>{{ member.contactResponsableLastname }}</td>
+                <td>{{ member.contactResponsableCivility }}</td>
+                <td>{{ member.isVerified ? 'Yes' : 'No' }}</td>
+                <td>
+                    <a href="{{ path('app_admin_member_show', {'id': member.id}) }}">show</a>
+                    <a href="{{ path('app_admin_member_edit', {'id': member.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="15">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_admin_member_new') }}">Create new</a>
+{% endblock %}
