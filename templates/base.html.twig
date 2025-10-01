@@ -33,14 +33,22 @@
                             Login
                         </a>
                         <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="#">Register</a></li>
-                            <li><a class="dropdown-item" href="#">Connexion</a></li>
+                            <li>
+                                <a class="dropdown-item" href="#">Register</a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" href="#">Connexion</a>
+                            </li>
                         </ul>
                     </li>
 
-                    <!-- Liens -->
-                    <li class="nav-item"><a class="nav-link" href="#">FABLAB</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">Parcours et Formation</a></li>
+                    <!-- Liens simples -->
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">FABLAB</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Parcours et Formation</a>
+                    </li>
 
                     <!-- Dropdown Services -->
                     <li class="nav-item dropdown">
@@ -49,20 +57,45 @@
                             Services
                         </a>
                         <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="#">Conseiller Numérique</a></li>
-                            <li><a class="dropdown-item" href="#">OpenPixl</a></li>
-                            <li><a class="dropdown-item" href="#">Numerik&Co</a></li>
+                            <li>
+                                <a class="dropdown-item"
+                                   href="https://www.conseiller-numerique.gouv.fr/"
+                                   target="_blank" rel="noopener noreferrer">
+                                    Conseiller Numérique
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item"
+                                   href="https://www.openpixl.fr/"
+                                   target="_blank" rel="noopener noreferrer">
+                                    OpenPixl
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item"
+                                   href="https://www.clubmicrosaintpierre.fr/"
+                                   target="_blank" rel="noopener noreferrer">
+                                    Numerik&Co
+                                </a>
+                            </li>
                         </ul>
                     </li>
 
-                    <li class="nav-item"><a class="nav-link" href="#">Wiki</a></li>
+                    <!-- Lien Wiki -->
+                    <li class="nav-item">
+                        <a class="nav-link"
+                           href="https://wiki.clubmicrosaintpierre.fr/"
+                           target="_blank" rel="noopener noreferrer">
+                            Wiki
+                        </a>
+                    </li>
                 </ul>
             </div>
         </div>
     </nav>
 
     <!-- CONTENU -->
-    <main class="container py-5 flex-grow-1">
+    <main class="container flex-grow-1 d-flex justify-content-center align-items-center">
         {% block body %}{% endblock %}
     </main>
 
@@ -75,7 +108,6 @@
         </div>
     </footer>
 
-    
     {% block javascripts %}
         {% block importmap %}{{ importmap('app') }}{% endblock %}
     {% endblock %}
