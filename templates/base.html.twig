@@ -16,7 +16,7 @@
     <!-- NAVBAR -->
     <nav class="navbar navbar-expand-lg bg-body-tertiary">
         <div class="container-fluid">
-            <a class="navbar-brand" href="#">MonSite</a>
+            <a class="navbar-brand" href="{{ path('app_webapp_public_accueil')}}">Prescription Ordi PIN40</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                     data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown"
                     aria-expanded="false" aria-label="Toggle navigation">
@@ -25,11 +25,16 @@
 
             <div class="collapse navbar-collapse" id="navbarNavDropdown">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-
+                    <!-- Liens simples -->
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Le dispositif</a>
+                    </li>
+                </ul>
+                <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                    {% if app.user %}
                     <!-- Dropdown Login -->
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" role="button"
-                           data-bs-toggle="dropdown" aria-expanded="false">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                             Login
                         </a>
                         <ul class="dropdown-menu">
@@ -41,54 +46,13 @@
                             </li>
                         </ul>
                     </li>
-
+                    {% else %}
                     <!-- Liens simples -->
                     <li class="nav-item">
-                        <a class="nav-link" href="#">FABLAB</a>
+                        <a class="nav-link" href="{{ path('app_login') }}">Espace de connexion</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Parcours et Formation</a>
-                    </li>
-
-                    <!-- Dropdown Services -->
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" role="button"
-                           data-bs-toggle="dropdown" aria-expanded="false">
-                            Services
-                        </a>
-                        <ul class="dropdown-menu">
-                            <li>
-                                <a class="dropdown-item"
-                                   href="https://www.conseiller-numerique.gouv.fr/"
-                                   target="_blank" rel="noopener noreferrer">
-                                    Conseiller Numérique
-                                </a>
-                            </li>
-                            <li>
-                                <a class="dropdown-item"
-                                   href="https://www.openpixl.fr/"
-                                   target="_blank" rel="noopener noreferrer">
-                                    OpenPixl
-                                </a>
-                            </li>
-                            <li>
-                                <a class="dropdown-item"
-                                   href="https://www.clubmicrosaintpierre.fr/"
-                                   target="_blank" rel="noopener noreferrer">
-                                    Numerik&Co
-                                </a>
-                            </li>
-                        </ul>
-                    </li>
-
-                    <!-- Lien Wiki -->
-                    <li class="nav-item">
-                        <a class="nav-link"
-                           href="https://wiki.clubmicrosaintpierre.fr/"
-                           target="_blank" rel="noopener noreferrer">
-                            Wiki
-                        </a>
-                    </li>
+                    {% endif %}
+                    
                 </ul>
             </div>
         </div>
