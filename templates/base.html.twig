@@ -39,10 +39,10 @@
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end">
                             <li>
-                                <a class="dropdown-item" href="{{ path('app_register') }}">Register</a>
+                                <a class="dropdown-item" href="{{ path('app_admin_member_edit', {'id': app.user.id}) }}">Mes informations</a>
                             </li>
                             <li>
-                                <a class="dropdown-item" href="{{ path('app_login') }}">Connexion</a>
+                                <a class="dropdown-item" href="{{ path('app_logout') }}">Se deconnecter</a>
                             </li>
                         </ul>
                     </li>
