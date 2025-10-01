@@ -37,12 +37,12 @@
                         <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                             Login
                         </a>
-                        <ul class="dropdown-menu">
+                        <ul class="dropdown-menu dropdown-menu-end">
                             <li>
-                                <a class="dropdown-item" href="#">Register</a>
+                                <a class="dropdown-item" href="{{ path('app_register') }}">Register</a>
                             </li>
                             <li>
-                                <a class="dropdown-item" href="#">Connexion</a>
+                                <a class="dropdown-item" href="{{ path('app_login') }}">Connexion</a>
                             </li>
                         </ul>
                     </li>
@@ -66,7 +66,7 @@
     <!-- FOOTER -->
     <footer class="container-fluid mt-auto bg-light">
         <div class="row text-center py-3">
-            <div class="col">© 2025 - MonSite</div>
+            <div class="col">© 2025 - Precrip Ordi Pin40</div>
             <div class="col">Mentions légales</div>
             <div class="col">Contact</div>
         </div>
