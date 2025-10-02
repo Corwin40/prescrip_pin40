@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Repository\Getapp;
+namespace App\Repository\Gestapp;
 
-use App\Entity\Getapp\prescription;
+use App\Entity\Gestapp\prescription;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 

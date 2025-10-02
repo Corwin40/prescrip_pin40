@@ -38,6 +38,13 @@ class Beneficiary
     #[ORM\Column(type: Types::DATE_MUTABLE)]
     private ?\DateTime $updatedAt = null;
 
+    #[ORM\OneToOne(inversedBy: 'beneficiary', cascade: ['persist', 'remove'])]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?prescription $prescription = null;
+
+    #[ORM\OneToOne(mappedBy: 'idBenefiaciary', cascade: ['persist', 'remove'])]
+    private ?prescription $beneficiary = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -137,5 +144,44 @@ class Beneficiary
         $this->updatedAt = $updatedAt;
 
         return $this;
+    }
+
+    public function getPrescription(): ?prescription
+    {
+        return $this->prescription;
+    }
+
+    public function setPrescription(prescription $prescription): static
+    {
+        $this->prescription = $prescription;
+
+        return $this;
+    }
+
+    public function getBeneficiary(): ?prescription
+    {
+        return $this->beneficiary;
+    }
+
+    public function setBeneficiary(?prescription $beneficiary): static
+    {
+        // unset the owning side of the relation if necessary
+        if ($beneficiary === null && $this->beneficiary !== null) {
+            $this->beneficiary->setIdBenefiaciary(null);
+        }
+
+        // set the owning side of the relation if necessary
+        if ($beneficiary !== null && $beneficiary->getIdBenefiaciary() !== $this) {
+            $beneficiary->setIdBenefiaciary($this);
+        }
+
+        $this->beneficiary = $beneficiary;
+
+        return $this;
+    }
+
+    public function __toString(): string
+    {
+        return $this->firstname.' '.$this->lastname;
     }
 }

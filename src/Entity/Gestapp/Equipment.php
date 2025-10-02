@@ -31,6 +31,13 @@ class Equipment
     #[ORM\Column]
     private ?bool $isDispo = null;
 
+    #[ORM\OneToOne(inversedBy: 'equipment', cascade: ['persist', 'remove'])]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?prescription $prescription = null;
+
+    #[ORM\OneToOne(mappedBy: 'idEquipment', cascade: ['persist', 'remove'])]
+    private ?prescription $prescriptions = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -106,5 +113,39 @@ class Equipment
         $this->isDispo = $isDispo;
 
         return $this;
+    }
+
+    public function getPrescription(): ?prescription
+    {
+        return $this->prescription;
+    }
+
+    public function setPrescription(prescription $prescription): static
+    {
+        $this->prescription = $prescription;
+
+        return $this;
+    }
+
+    public function getPrescriptions(): ?prescription
+    {
+        return $this->prescriptions;
+    }
+
+    public function setPrescriptions(prescription $prescriptions): static
+    {
+        // set the owning side of the relation if necessary
+        if ($prescriptions->getIdEquipment() !== $this) {
+            $prescriptions->setIdEquipment($this);
+        }
+
+        $this->prescriptions = $prescriptions;
+
+        return $this;
+    }
+
+    public function __toString(): string
+    {
+        return $this->matriculEquipment;
     }
 }
