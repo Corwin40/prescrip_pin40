@@ -1,0 +1,55 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Beneficiary index{% endblock %}
+
+{% block body %}
+    <div class="container mt-5">
+        <h1 class="text-center mb-4">Beneficiary Index</h1>
+
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped table-hover align-middle">
+                <thead class="table-dark text-center">
+                    <tr>
+                        <th>Id</th>
+                        <th>Firstname</th>
+                        <th>Lastname</th>
+                        <th>Civility</th>
+                        <th>Gender</th>
+                        <th>Age Group</th>
+                        <th>Professional Status</th>
+                        <th>Created At</th>
+                        <th>Updated At</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for beneficiary in beneficiaries %}
+                        <tr>
+                            <td>{{ beneficiary.id }}</td>
+                            <td>{{ beneficiary.firstname }}</td>
+                            <td>{{ beneficiary.lastname }}</td>
+                            <td>{{ beneficiary.civility }}</td>
+                            <td>{{ beneficiary.gender }}</td>
+                            <td>{{ beneficiary.ageGroup }}</td>
+                            <td>{{ beneficiary.professionnalStatus }}</td>
+                            <td>{{ beneficiary.createdAt ? beneficiary.createdAt|date('Y-m-d') : '' }}</td>
+                            <td>{{ beneficiary.updatedAt ? beneficiary.updatedAt|date('Y-m-d') : '' }}</td>
+                            <td class="text-center">
+                                <a href="{{ path('app_gestapp_beneficiary_show', {'id': beneficiary.id}) }}" class="btn btn-sm btn-primary mb-1">Show</a>
+                                <a href="{{ path('app_gestapp_beneficiary_edit', {'id': beneficiary.id}) }}" class="btn btn-sm btn-warning">Edit</a>
+                            </td>
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <td colspan="10" class="text-center text-muted">No records found</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <div class="text-center mt-4">
+            <a href="{{ path('app_gestapp_beneficiary_new') }}" class="btn btn-success">Create New</a>
+        </div>
+    </div>
+{% endblock %}

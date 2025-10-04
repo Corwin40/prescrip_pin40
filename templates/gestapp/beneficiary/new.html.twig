@@ -1,0 +1,61 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New Beneficiary{% endblock %}
+
+{% block body %}
+    <div class="container mt-5">
+        <h1 class="text-center mb-4">Create New Beneficiary</h1>
+
+        <div class="card shadow-lg">
+            <div class="card-body">
+                {{ form_start(form) }}
+                    <table class="table table-bordered table-striped align-middle">
+                        <tbody>
+                            <tr>
+                                <th scope="row" class="table-dark w-25">Firstname</th>
+                                <td>{{ form_widget(form.firstname, {'attr': {'class': 'form-control'}}) }}</td>
+                            </tr>
+                            <tr>
+                                <th scope="row" class="table-dark w-25">Lastname</th>
+                                <td>{{ form_widget(form.lastname, {'attr': {'class': 'form-control'}}) }}</td>
+                            </tr>
+                            <tr>
+                                <th scope="row" class="table-dark w-25">Civility</th>
+                                <td>{{ form_widget(form.civility, {'attr': {'class': 'form-select'}}) }}</td>
+                            </tr>
+                            <tr>
+                                <th scope="row" class="table-dark w-25">Gender</th>
+                                <td>{{ form_widget(form.gender, {'attr': {'class': 'form-select'}}) }}</td>
+                            </tr>
+                            <tr>
+                                <th scope="row" class="table-dark w-25">Age Group</th>
+                                <td>{{ form_widget(form.ageGroup, {'attr': {'class': 'form-select'}}) }}</td>
+                            </tr>
+                            <tr>
+                                <th scope="row" class="table-dark w-25">Professional Status</th>
+                                <td>{{ form_widget(form.professionnalStatus, {'attr': {'class': 'form-control'}}) }}</td>
+                            </tr>
+                            <tr>
+                                <th scope="row" class="table-dark w-25">Created At</th>
+                                <td>{{ form_widget(form.createdAt, {'attr': {'class': 'form-control'}}) }}</td>
+                            </tr>
+                            <tr>
+                                <th scope="row" class="table-dark w-25">Updated At</th>
+                                <td>{{ form_widget(form.updatedAt, {'attr': {'class': 'form-control'}}) }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div class="text-center mt-4">
+                        <button class="btn btn-success btn-lg mx-2">
+                            <i class="bi bi-check-circle"></i> Save
+                        </button>
+                        <a href="{{ path('app_gestapp_beneficiary_index') }}" class="btn btn-secondary btn-lg mx-2">
+                            <i class="bi bi-arrow-left"></i> Back to list
+                        </a>
+                    </div>
+                {{ form_end(form) }}
+            </div>
+        </div>
+    </div>
+{% endblock %}
