@@ -1,46 +1,76 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Equipment{% endblock %}
+{% block title %}Détails de l'Équipement{% endblock %}
 
 {% block body %}
-    <h1>Equipment</h1>
-
-    <table class="table">
-        <tbody>
-            <tr>
-                <th>Id</th>
-                <td>{{ equipment.id }}</td>
-            </tr>
-            <tr>
-                <th>TypeEquipment</th>
-                <td>{{ equipment.typeEquipment }}</td>
-            </tr>
-            <tr>
-                <th>BrandEquipment</th>
-                <td>{{ equipment.brandEquipment }}</td>
-            </tr>
-            <tr>
-                <th>MatriculEquipment</th>
-                <td>{{ equipment.matriculEquipment }}</td>
-            </tr>
-            <tr>
-                <th>OsInstalled</th>
-                <td>{{ equipment.osInstalled }}</td>
-            </tr>
-            <tr>
-                <th>StatusEquipment</th>
-                <td>{{ equipment.statusEquipment }}</td>
-            </tr>
-            <tr>
-                <th>IsDispo</th>
-                <td>{{ equipment.isDispo ? 'Yes' : 'No' }}</td>
-            </tr>
-        </tbody>
-    </table>
-
-    <a href="{{ path('app_gestapp_equipment_index') }}">back to list</a>
-
-    <a href="{{ path('app_gestapp_equipment_edit', {'id': equipment.id}) }}">edit</a>
-
-    {{ include('gestapp/equipment/_delete_form.html.twig') }}
+<div class="container mt-5">
+    <div class="card shadow-sm">
+        <div class="card-header bg-primary text-white">
+            <h3 class="mb-0">🔎 Détails de l'Équipement</h3>
+        </div>
+        <div class="card-body">
+            <table class="table table-bordered">
+                <tbody>
+                    <tr>
+                        <th scope="row">ID</th>
+                        <td>{{ equipment.id }}</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Type</th>
+                        <td>{{ equipment.typeEquipment }}</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Marque</th>
+                        <td>{{ equipment.brandEquipment }}</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Matricule</th>
+                        <td>{{ equipment.matriculEquipment }}</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">OS Installé</th>
+                        <td>{{ equipment.osInstalled }}</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Statut</th>
+                        <td>
+                            <span class="badge 
+                                {% if equipment.statusEquipment == 'Actif' %}bg-success
+                                {% elseif equipment.statusEquipment == 'En panne' %}bg-danger
+                                {% else %}bg-secondary{% endif %}">
+                                {{ equipment.statusEquipment }}
+                            </span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Disponible</th>
+                        <td>
+                            {% if equipment.isDispo %}
+                                <span class="badge bg-success">Oui</span>
+                            {% else %}
+                                <span class="badge bg-danger">Non</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="card-footer d-flex justify-content-between">
+            <a href="{{ path('app_gestapp_equipment_index') }}" class="btn btn-primary">
+                <i class="bi bi-arrow-left"></i> Retour à la liste
+            </a>
+            <div class="d-flex gap-2">
+                <a href="{{ path('app_gestapp_equipment_edit', {'id': equipment.id}) }}" class="btn btn-warning">
+                    <i class="bi bi-pencil-square"></i> Modifier
+                </a>
+                <form method="post" action="{{ path('app_gestapp_equipment_delete', {'id': equipment.id}) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cet équipement ?');" class="d-inline">
+                    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ equipment.id) }}">
+                    <button class="btn btn-danger">
+                        <i class="bi bi-trash"></i> Supprimer
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}

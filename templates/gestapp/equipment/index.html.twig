@@ -1,45 +1,73 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Equipment index{% endblock %}
+{% block title %}Liste des Équipements{% endblock %}
 
 {% block body %}
-    <h1>Equipment index</h1>
+<div class="container mt-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="text-primary">📋 Liste des Équipements</h1>
+        <a href="{{ path('app_gestapp_equipment_new') }}" class="btn btn-success">
+            <i class="bi bi-plus-circle"></i> Ajouter un équipement
+        </a>
+    </div>
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>TypeEquipment</th>
-                <th>BrandEquipment</th>
-                <th>MatriculEquipment</th>
-                <th>OsInstalled</th>
-                <th>StatusEquipment</th>
-                <th>IsDispo</th>
-                <th>actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for equipment in equipment %}
-            <tr>
-                <td>{{ equipment.id }}</td>
-                <td>{{ equipment.typeEquipment }}</td>
-                <td>{{ equipment.brandEquipment }}</td>
-                <td>{{ equipment.matriculEquipment }}</td>
-                <td>{{ equipment.osInstalled }}</td>
-                <td>{{ equipment.statusEquipment }}</td>
-                <td>{{ equipment.isDispo ? 'Yes' : 'No' }}</td>
-                <td>
-                    <a href="{{ path('app_gestapp_equipment_show', {'id': equipment.id}) }}">show</a>
-                    <a href="{{ path('app_gestapp_equipment_edit', {'id': equipment.id}) }}">edit</a>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="8">no records found</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
-
-    <a href="{{ path('app_gestapp_equipment_new') }}">Create new</a>
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead class="table-dark">
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Type</th>
+                            <th scope="col">Marque</th>
+                            <th scope="col">Matricule</th>
+                            <th scope="col">OS Installé</th>
+                            <th scope="col">Statut</th>
+                            <th scope="col">Disponible</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for equipment in equipment %}
+                        <tr>
+                            <td>{{ equipment.id }}</td>
+                            <td>{{ equipment.typeEquipment }}</td>
+                            <td>{{ equipment.brandEquipment }}</td>
+                            <td>{{ equipment.matriculEquipment }}</td>
+                            <td>{{ equipment.osInstalled }}</td>
+                            <td>
+                                <span class="badge {% if equipment.statusEquipment == 'Actif' %}bg-success{% elseif equipment.statusEquipment == 'En panne' %}bg-danger{% else %}bg-secondary{% endif %}">
+                                    {{ equipment.statusEquipment }}
+                                </span>
+                            </td>
+                            <td>
+                                {% if equipment.isDispo %}
+                                    <span class="badge bg-success">Oui</span>
+                                {% else %}
+                                    <span class="badge bg-danger">Non</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="7" class="text-center">
+                                <div class="d-flex justify-content-center gap-2">
+                                    <a href="{{ path('app_gestapp_equipment_show', {'id': equipment.id}) }}" class="btn btn-sm btn-primary">
+                                        <i class="bi bi-eye"></i> Voir
+                                    </a>
+                                    <a href="{{ path('app_gestapp_equipment_edit', {'id': equipment.id}) }}" class="btn btn-sm btn-warning">
+                                        <i class="bi bi-pencil-square"></i> Modifier
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <td colspan="7" class="text-center text-muted">Aucun équipement trouvé</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}
