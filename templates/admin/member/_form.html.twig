@@ -1,4 +1,5 @@
-{{ form_start(form) }}
-    {{ form_widget(form) }}
-    <button class="btn">{{ button_label|default('Save') }}</button>
+{{ form_start(form, {'attr': {'id': 'member_form'}}) }}
+    <div class="row g-3">
+        {{ form_widget(form) }}
+    </div>
 {{ form_end(form) }}
