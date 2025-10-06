@@ -38,6 +38,11 @@ class Beneficiary
     #[ORM\Column(type: Types::DATE_MUTABLE)]
     private ?\DateTime $updatedAt = null;
 
+    #[ORM\OneToOne(inversedBy: 'beneficiary', cascade: ['persist', 'remove'])]
+    private ?Competence $beneficiaryCompetences = null;
+
+    
+
     public function getId(): ?int
     {
         return $this->id;
@@ -138,4 +143,18 @@ class Beneficiary
 
         return $this;
     }
+
+    public function getBeneficiaryCompetences(): ?Competence
+    {
+        return $this->beneficiaryCompetences;
+    }
+
+    public function setBeneficiaryCompetences(?Competence $beneficiaryCompetences): static
+    {
+        $this->beneficiaryCompetences = $beneficiaryCompetences;
+
+        return $this;
+    }
+
+   
 }

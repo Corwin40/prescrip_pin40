@@ -33,6 +33,18 @@ class Prescription
     #[ORM\OneToOne(cascade: ['persist', 'remove'])]
     private ?Equipment $equipement = null;
 
+    #[ORM\Column(type: Types::TEXT)]
+    private ?string $détails = null;
+
+    #[ORM\Column(length: 100)]
+    private ?string $baseCompetence = null;
+
+    #[ORM\Column(length: 100)]
+    private ?string $lieuMediation = null;
+
+    #[ORM\OneToOne(mappedBy: 'beneficiaryCompetences', cascade: ['persist', 'remove'])]
+    private ?Beneficiary $beneficiary = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -109,4 +121,47 @@ class Prescription
 
         return $this;
     }
+
+    public function getDétails(): ?string
+    {
+        return $this->détails;
+    }
+
+    public function setDétails(string $détails): static
+    {
+        $this->détails = $détails;
+
+        return $this;
+    }
+
+    public function getBaseCompetence(): ?string
+    {
+        return $this->baseCompetence;
+    }
+
+    public function setBaseCompetence(string $baseCompetence): static
+    {
+        $this->baseCompetence = $baseCompetence;
+
+        return $this;
+    }
+
+    public function getLieuMediation(): ?string
+    {
+        return $this->lieuMediation;
+    }
+
+    public function setLieuMediation(string $lieuMediation): static
+    {
+        $this->lieuMediation = $lieuMediation;
+
+        return $this;
+    }
+
+    public function getBeneficiary(): ?Beneficiary
+    {
+        return $this->beneficiary;
+    }
+
+   
 }

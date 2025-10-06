@@ -27,7 +27,7 @@
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <!-- Liens simples -->
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Le dispositif</a>
+                        <a class="nav-link" href="{{ path('app_webapp_public_prezDon') }}">Le dispositif</a>
                     </li>
                 </ul>
                 <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
@@ -66,7 +66,7 @@
     <footer class="container-fluid mt-auto  text-dark py-4">
         <div class="row text-center">
             <div class="col">© 2025 - Precrip Ordi Pin40</div>
-            <div class="col">Mentions légales</div>
+            <div class="col"> <a class="nav-link" href="{{ path('app_webapp_public_mentions') }}">Mentions Légales</a></div>
             <div class="col">Contact</div>
         </div>
     </footer>
