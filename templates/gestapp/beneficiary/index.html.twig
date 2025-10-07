@@ -3,81 +3,47 @@
 {% block title %}Beneficiary index{% endblock %}
 
 {% block body %}
-<div class="container mt-5">
-    <h1 class="text-center mb-4">Beneficiary Index</h1>
+    <h1>Beneficiary index</h1>
 
-    <!-- Barre d’actions -->
-    <div class="d-flex justify-content-between mb-3 flex-wrap">
-        <a href="{{ path('app_gestapp_beneficiary_new') }}" class="btn btn-success mb-2">
-            <i class="bi bi-plus-circle"></i> Create New
-        </a>
-        <div>
-            <a href="{{ path('app_gestapp_beneficiary_show', {'id': beneficiaries|last.id ?? 0}) }}" class="btn btn-primary mx-1 mb-2">
-                <i class="bi bi-eye"></i> Show
-            </a>
-            <a href="{{ path('app_gestapp_beneficiary_edit', {'id': beneficiaries|last.id ?? 0}) }}" class="btn btn-warning mx-1 mb-2">
-                <i class="bi bi-pencil-square"></i> Edit
-            </a>
-        </div>
-    </div>
-
-    <!-- Tableau en mode bureau -->
-    <div class="d-none d-md-block table-responsive">
-        <table class="table table-bordered table-striped table-hover align-middle">
-            <thead class="table-dark text-center">
-                <tr>
-                    <th>Id</th>
-                    <th>Firstname</th>
-                    <th>Lastname</th>
-                    <th>Civility</th>
-                    <th>Gender</th>
-                    <th>Age Group</th>
-                    <th>Professional Status</th>
-                    <th>Created At</th>
-                    <th>Updated At</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for beneficiary in beneficiaries %}
-                    <tr>
-                        <td>{{ beneficiary.id }}</td>
-                        <td>{{ beneficiary.firstname }}</td>
-                        <td>{{ beneficiary.lastname }}</td>
-                        <td>{{ beneficiary.civility }}</td>
-                        <td>{{ beneficiary.gender }}</td>
-                        <td>{{ beneficiary.ageGroup }}</td>
-                        <td>{{ beneficiary.professionnalStatus }}</td>
-                        <td>{{ beneficiary.createdAt ? beneficiary.createdAt|date('Y-m-d') : '' }}</td>
-                        <td>{{ beneficiary.updatedAt ? beneficiary.updatedAt|date('Y-m-d') : '' }}</td>
-                    </tr>
-                {% else %}
-                    <tr>
-                        <td colspan="9" class="text-center text-muted">No records found</td>
-                    </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </div>
-
-    <!-- Vue mobile -->
-    <div class="d-md-none">
+    <table>
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Firstname</th>
+                <th>Lastname</th>
+                <th>Civility</th>
+                <th>Gender</th>
+                <th>Age Group</th>
+                <th>Professional Status</th>
+                <th>Created At</th>
+                <th>Updated At</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
         {% for beneficiary in beneficiaries %}
-            <div class="card mb-3 shadow-sm">
-                <div class="card-body">
-                    <p><strong>Id:</strong> {{ beneficiary.id }}</p>
-                    <p><strong>Firstname:</strong> {{ beneficiary.firstname }}</p>
-                    <p><strong>Lastname:</strong> {{ beneficiary.lastname }}</p>
-                    <p><strong>Civility:</strong> {{ beneficiary.civility }}</p>
-                    <p><strong>Gender:</strong> {{ beneficiary.gender }}</p>
-                    <p><strong>Age Group:</strong> {{ beneficiary.ageGroup }}</p>
-                    <p><strong>Professional Status:</strong> {{ beneficiary.professionnalStatus }}</p>
-                    <p><strong>Created At:</strong> {{ beneficiary.createdAt ? beneficiary.createdAt|date('Y-m-d') : '' }}</p>
-                    <p><strong>Updated At:</strong> {{ beneficiary.updatedAt ? beneficiary.updatedAt|date('Y-m-d') : '' }}</p>
-                </div>
-            </div>
+            <tr>
+                <td>{{ beneficiary.id }}</td>
+                <td>{{ beneficiary.firstname }}</td>
+                <td>{{ beneficiary.lastname }}</td>
+                <td>{{ beneficiary.civility }}</td>
+                <td>{{ beneficiary.gender }}</td>
+                <td>{{ beneficiary.ageGroup }}</td>
+                <td>{{ beneficiary.professionnalStatus }}</td>
+                <td>{{ beneficiary.createdAt ? beneficiary.createdAt|date('Y-m-d') : '' }}</td>
+                <td>{{ beneficiary.updatedAt ? beneficiary.updatedAt|date('Y-m-d') : '' }}</td>
+                <td>
+                    <a href="{{ path('app_gestapp_beneficiary_show', {'id': beneficiary.id}) }}">show</a>
+                    <a href="{{ path('app_gestapp_beneficiary_edit', {'id': beneficiary.id}) }}">edit</a>
+                </td>
+            </tr>
         {% else %}
-            <p class="text-center text-muted">No records found</p>
+            <tr>
+                <td colspan="10">No records found</td>
+            </tr>
         {% endfor %}
-    </div>
-</div>
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_gestapp_beneficiary_new') }}">Create new</a>
 {% endblock %}

@@ -3,67 +3,11 @@
 {% block title %}Edit Beneficiary{% endblock %}
 
 {% block body %}
-    <div class="container mt-5">
-        <h1 class="text-center mb-4">Edit Beneficiary</h1>
+    <h1>Edit Beneficiary</h1>
 
-        <div class="card shadow-lg">
-            <div class="card-body">
-                {{ form_start(form) }}
-                    <table class="table table-bordered table-striped align-middle">
-                        <tbody>
-                            <tr>
-                                <th scope="row" class="table-dark w-25">Firstname</th>
-                                <td>{{ form_widget(form.firstname, {'attr': {'class': 'form-control'}}) }}</td>
-                            </tr>
-                            <tr>
-                                <th scope="row" class="table-dark w-25">Lastname</th>
-                                <td>{{ form_widget(form.lastname, {'attr': {'class': 'form-control'}}) }}</td>
-                            </tr>
-                            <tr>
-                                <th scope="row" class="table-dark w-25">Civility</th>
-                                <td>{{ form_widget(form.civility, {'attr': {'class': 'form-select'}}) }}</td>
-                            </tr>
-                            <tr>
-                                <th scope="row" class="table-dark w-25">Gender</th>
-                                <td>{{ form_widget(form.gender, {'attr': {'class': 'form-select'}}) }}</td>
-                            </tr>
-                            <tr>
-                                <th scope="row" class="table-dark w-25">Age Group</th>
-                                <td>{{ form_widget(form.ageGroup, {'attr': {'class': 'form-select'}}) }}</td>
-                            </tr>
-                            <tr>
-                                <th scope="row" class="table-dark w-25">Professional Status</th>
-                                <td>{{ form_widget(form.professionnalStatus, {'attr': {'class': 'form-control'}}) }}</td>
-                            </tr>
-                            <tr>
-                                <th scope="row" class="table-dark w-25">Created At</th>
-                                <td>{{ form_widget(form.createdAt, {'attr': {'class': 'form-control'}}) }}</td>
-                            </tr>
-                            <tr>
-                                <th scope="row" class="table-dark w-25">Updated At</th>
-                                <td>{{ form_widget(form.updatedAt, {'attr': {'class': 'form-control'}}) }}</td>
-                            </tr>
-                        </tbody>
-                    </table>
+    {{ include('gestapp/beneficiary/_form.html.twig', {'button_label': 'Update'}) }}
 
-                    <div class="text-center mt-4">
-                        <button class="btn btn-success btn-lg mx-2">
-                            <i class="bi bi-check-circle"></i> Update
-                        </button>
-                        <a href="{{ path('app_gestapp_beneficiary_index') }}" class="btn btn-primary btn-lg mx-2">
-                            <i class="bi bi-arrow-left"></i> Back to list
-                        </a>
-                        <form method="post" action="{{ path('app_gestapp_beneficiary_delete', {'id': beneficiary.id}) }}"
-                              onsubmit="return confirm('Are you sure you want to delete this item?');"
-                              class="d-inline">
-                            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ beneficiary.id) }}">
-                            <button type="submit" class="btn btn-danger btn-lg mx-2">
-                                <i class="bi bi-trash"></i> Delete
-                            </button>
-                        </form>
-                    </div>
-                {{ form_end(form) }}
-            </div>
-        </div>
-    </div>
+    <a href="{{ path('app_gestapp_beneficiary_index') }}">back to list</a>
+
+    {{ include('gestapp/beneficiary/_delete_form.html.twig') }}
 {% endblock %}

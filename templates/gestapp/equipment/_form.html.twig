@@ -1,32 +1,12 @@
 {{ form_start(form, {'attr': {'id': 'equipment_form'}}) }}
 
-<div class="row g-3">
-    <div class="col-md-6">
-        {{ form_label(form.typeEquipment, null, {'label_attr': {'class': 'form-label d-block mb-1'}}) }}
-        {{ form_widget(form.typeEquipment, {'attr': {'class': 'form-control'}}) }}
-    </div>
-    <div class="col-md-6">
-        {{ form_label(form.brandEquipment, null, {'label_attr': {'class': 'form-label d-block mb-1'}}) }}
-        {{ form_widget(form.brandEquipment, {'attr': {'class': 'form-control'}}) }}
-    </div>
-    <div class="col-md-6">
-        {{ form_label(form.matriculEquipment, null, {'label_attr': {'class': 'form-label d-block mb-1'}}) }}
-        {{ form_widget(form.matriculEquipment, {'attr': {'class': 'form-control'}}) }}
-    </div>
-    <div class="col-md-6">
-        {{ form_label(form.osInstalled, null, {'label_attr': {'class': 'form-label d-block mb-1'}}) }}
-        {{ form_widget(form.osInstalled, {'attr': {'class': 'form-control'}}) }}
-    </div>
-    <div class="col-md-6">
-        {{ form_label(form.statusEquipment, null, {'label_attr': {'class': 'form-label d-block mb-1'}}) }}
-        {{ form_widget(form.statusEquipment, {'attr': {'class': 'form-control'}}) }}
-    </div>
-    <div class="col-md-6 d-flex align-items-center">
-        <div class="form-check">
-            {{ form_widget(form.isDispo, {'attr': {'class': 'form-check-input'}}) }}
-            {{ form_label(form.isDispo, 'Disponible', {'label_attr': {'class': 'form-check-label ms-2'}}) }}
-        </div>
-    </div>
-</div>
+{{ form_row(form.typeEquipment) }}
+{{ form_row(form.brandEquipment) }}
+{{ form_row(form.matriculEquipment) }}
+{{ form_row(form.osInstalled) }}
+{{ form_row(form.statusEquipment) }}
+{{ form_row(form.isDispo) }}
 
-{{ form_end(form, {'render_rest': false}) }}
+<button class="btn">Save</button>
+
+{{ form_end(form) }}

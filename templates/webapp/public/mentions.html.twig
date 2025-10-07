@@ -1,18 +1,105 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-<div class="container mt-4">
-  <h1>Mentions légales</h1>
-  <p>contact :</p>
-  <p>prescription_pin40@club.com</p>
-  <p>01 02 03 04 05</p>
-  <p>JeanFrancois</p>
-  <p>Adresse : 40 rue des ordis 40280 St Pierre du Mont</p>
-  <p>Service de relation prescription - beneficiare</p>
-  <p class="mt-3">
-    <a href="{{ path('app_webapp_public_accueil') }}" >
-       Retour à l'accueil
-    </a>
-  </p>
-</div>
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mentions légales - ALPI</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container py-5">
+        <h1 class="mb-4">Mentions légales</h1>
+        <p>Merci de lire attentivement les présentes mentions légales avant toute utilisation du site de <strong>l'Agence Landaise Pour l'Informatique (ALPI)</strong>. En accédant à ce site, vous acceptez sans réserve les conditions décrites ci-dessous.</p>
+
+        <h2 class="mt-5">Sommaire</h2>
+        <ol>
+            <li>Identification de l’éditeur du site</li>
+            <li>Hébergement, conception graphique et développement</li>
+            <li>Données personnelles et confidentialité</li>
+            <li>Propriété intellectuelle et crédits</li>
+            <li>Reproduction des contenus</li>
+            <li>Liens hypertextes</li>
+            <li>Signalement d’erreurs (Erratum)</li>
+        </ol>
+
+        <h2 class="mt-5">1. Identification de l’éditeur du site</h2>
+        <p><strong>OpenPixl</strong><br>
+            Maison des associations<br>
+           Saint Pierre du Mont<br>
+           40280<br>
+            <strong>Téléphone :</strong> 01 02 03 04 05
+        </p>
+        <p><strong>Directeur :</strong> Mr Xavier Burke</p>
+        <p><strong>Apprentis Developpeur  :</strong> Mr Ledeunf Jean François</p>
+
+        <h2 class="mt-5">2. Hébergement, conception graphique et développement</h2>
+        <p><strong>OpenPixl</strong><br>
+            Maison des associations<br>
+            40280 Saint Pierre du Mont</p>
+
+        <h2 class="mt-5">3. Données personnelles et confidentialité</h2>
+        <p>Numerik And Co collecte, traite et conserve certaines données personnelles dans le cadre de ses missions. Ces traitements respectent la réglementation en vigueur (notamment le RGPD).</p>
+
+        <h5>Vos droits</h5>
+        <p>Conformément au RGPD, vous disposez des droits suivants :</p>
+        <ul>
+            <li>Droit d’accès</li>
+            <li>Droit de rectification</li>
+            <li>Droit à l’effacement</li>
+            <li>Droit d’opposition</li>
+            <li>Droit à la limitation du traitement</li>
+            <li>Droit à la portabilité</li>
+        </ul>
+        <p>Pour exercer vos droits, adressez votre demande à :</p>
+        <p>
+            entreprise OpenPixl<br>
+            Maison des Associations<br>
+            Ancienne Mairie<br>
+            40280 St Pierre du Mont<br>
+            Joignez une copie de votre pièce d’identité.
+        </p>
+
+        <h5>Délégué à la protection des données (DPO)</h5>
+        <p>
+            📧 OpenPixl.fr<br>
+            📞 01 02 03 04 05
+        </p>
+        <p>En cas de désaccord, vous avez également le droit de déposer une réclamation auprès de la CNIL.</p>
+
+        <h2 class="mt-5">4. Cookies</h2>
+        
+        <p>Ces cookies ne sont activés qu’après votre consentement. Vous pouvez les accepter, les refuser ou les paramétrer via le gestionnaire de cookies.</p>
+
+        <h2 class="mt-5">5. Propriété intellectuelle et crédits</h2>
+        <p>Le contenu du site (textes, images, logos, vidéos, etc.) est la propriété exclusive de l’ALPI ou de ses partenaires. Toute reproduction, distribution, modification ou utilisation sans autorisation préalable est interdite.</p>
+        <p>Pour toute demande : <strong>OpenPixl.fr</strong></p>
+        <p>Les contenus ne peuvent être utilisés qu’à des fins personnelles ou associatives. Toute exploitation commerciale est interdite.</p>
+
+        <h3 class="mt-4">Reproduction sur support papier</h3>
+        <p>Autorisation possible sous réserve :</p>
+        <ul>
+            <li>Diffusion gratuite</li>
+            <li>Intégrité des documents</li>
+            <li>Source clairement indiquée</li>
+        </ul>
+
+        <h3 class="mt-4">Reproduction sur support électronique</h3>
+        <p>La mention "Source : OpenPixl – Droits réservés" doit apparaître clairement.</p>
+
+        <h2 class="mt-5">6. Liens hypertextes</h2>
+        <p>Vous pouvez créer un lien vers ce site, à condition de respecter les règles suivantes :</p>
+        <ul>
+            <li>Pas de lien profond (deep linking)</li>
+            <li>Pas d’intégration dans un autre site (pas de frame ou iframe)</li>
+            <li>Source clairement mentionnée</li>
+        </ul>
+        <p>Les sites à caractère polémique, pornographique, xénophobe ou choquant sont exclus de cette autorisation.</p>
+        <p>OpenPixl se réserve le droit de demander la suppression d’un lien non conforme.</p>
+
+        <h2 class="mt-5">7. Signalement d’erreurs (Erratum)</h2>
+        <p>Malgré le soin apporté à la rédaction, certaines erreurs peuvent subsister. Merci de les signaler à : <strong>OpenPixl.fr</strong></p>
+    </div>
 {% endblock %}
