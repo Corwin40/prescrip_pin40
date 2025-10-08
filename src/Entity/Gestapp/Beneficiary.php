@@ -41,8 +41,6 @@ class Beneficiary
     #[ORM\OneToOne(inversedBy: 'beneficiary', cascade: ['persist', 'remove'])]
     private ?Competence $beneficiaryCompetences = null;
 
-    
-
     public function getId(): ?int
     {
         return $this->id;
@@ -156,5 +154,5 @@ class Beneficiary
         return $this;
     }
 
-   
+
 }

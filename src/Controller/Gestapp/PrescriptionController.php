@@ -17,8 +17,11 @@ final class PrescriptionController extends AbstractController
     #[Route(name: 'app_gestapp_prescription_index', methods: ['GET'])]
     public function index(PrescriptionRepository $prescriptionRepository): Response
     {
+        $member = $this->getUser();
+        $prescriptions = $prescriptionRepository->findBy(['membre' => $member]);
+
         return $this->render('gestapp/prescription/index.html.twig', [
-            'prescriptions' => $prescriptionRepository->findAll(),
+            'prescriptions' => $prescriptions,
         ]);
     }
 
