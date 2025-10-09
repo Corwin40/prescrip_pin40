@@ -1,30 +1,33 @@
-<div class="mb-3">
-  <label for="email" class="form-label">Adresse email</label>
-  <input type="email" class="form-control" id="email" placeholder="Entrer votre email">
+<!-- Groupe Nom & Prénom -->
+<div class="input-group mb-3">
+  <span class="input-group-text">Nom et Prénom</span>
+  <input type="text" class="form-control" placeholder="Nom" aria-label="Nom">
+  <input type="text" class="form-control" placeholder="Prénom" aria-label="Prénom">
 </div>
 
+<!-- Groupe Adresse, Code Postal & Ville -->
 <div class="mb-3">
-  <label for="structureName" class="form-label">Nom de la structure</label>
-  <input type="text" class="form-control" id="structureName" placeholder="Nom de la structure">
-</div>
-<div class="mb-3">
-  <label for="address" class="form-label">Adresse</label>
-  <input type="text" class="form-control" id="address" placeholder="Adresse">
-</div>
-<div class="mb-3">
-  <label for="zipcode" class="form-label">Code postal</label>
-  <input type="text" class="form-control" id="zipcode" placeholder="Code postal">   
-</div>
-<div class="mb-3">  
-  <label for="city" class="form-label">Ville</label>
-  <input type="text" class="form-control" id="city" placeholder="Ville">
-</div>         
-<div class="form-check">
-  <input class="isverified" type="checkbox" value="" id="isverified">
-  <label class="isverified" for="checkDefault">
-    Default checkbox
-  </label>
-</div>
-<button type="button" class="btn btn-danger">DELETE</button>
+  <label for="adresse" class="form-label">Adresse</label>
+  <input type="text" class="form-control mb-2" id="adresse" aria-label="Adresse">
 
-<button type="button" class="btn btn-primary"><a href="/admin/member/">back to list</a></button>
+  <div class="d-flex gap-2">
+    <div class="flex-grow-1">
+      <label for="ville" class="form-label">Ville</label>
+      <input type="text" class="form-control" id="ville" aria-label="Ville">
+    </div>
+
+    <div style="width: 120px;">
+      <label for="codepostal" class="form-label">Code postal</label>
+      <input type="text" class="form-control" id="codepostal" aria-label="Code postal" maxlength="5">
+    </div>
+  </div>
+</div>
+
+
+<!-- Groupe Email & Téléphone -->
+<div class="input-group mb-3">
+  <span class="input-group-text">@</span>
+  <input type="email" class="form-control" placeholder="Email" aria-label="Email">
+  <span class="input-group-text">tel</span>
+  <input type="tel" class="form-control" placeholder="Téléphone" aria-label="Téléphone">
+</div>
