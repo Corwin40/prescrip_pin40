@@ -1,0 +1,78 @@
+<div class="container py-5">
+    <h1 class="text-center text-primary mb-4">Ajouter un équipement</h1>
+
+    <form class="card shadow-sm p-4 rounded-3 bg-white">
+      <div class="row g-3">
+
+        <!-- Type d'équipement -->
+        <div class="col-md-6">
+          <label for="typeEquipment" class="form-label fw-semibold">Type d’équipement</label>
+          <select id="typeEquipment" name="typeEquipment" class="form-select" required>
+            <option value="">-- Sélectionnez un type --</option>
+            <option>Ordinateur portable</option>
+            <option>Ordinateur fixe</option>
+            <option>Tablette</option>
+            <option>Smartphone</option>
+            <option>Imprimante</option>
+          </select>
+        </div>
+
+        <!-- Marque -->
+        <div class="col-md-6">
+          <label for="brandEquipment" class="form-label fw-semibold">Marque</label>
+          <input type="text" id="brandEquipment" name="brandEquipment" class="form-control" placeholder="Ex : Dell, HP, Lenovo..." required>
+        </div>
+
+        <!-- Matricule -->
+        <div class="col-md-6">
+          <label for="matriculEquipment" class="form-label fw-semibold">Matricule</label>
+          <input type="text" id="matriculEquipment" name="matriculEquipment" class="form-control" placeholder="Ex : EQ-2025-001" required>
+        </div>
+
+        <!-- Système d'exploitation -->
+        <div class="col-md-6">
+          <label for="osInstalled" class="form-label fw-semibold">Système d’exploitation installé</label>
+          <select id="osInstalled" name="osInstalled" class="form-select" required>
+            <option value="">-- Sélectionnez un OS --</option>
+            <option>Windows 10</option>
+            <option>Windows 11</option>
+            <option>macOS</option>
+            <option>Linux</option>
+            <option>Android</option>
+            <option>iOS</option>
+          </select>
+        </div>
+
+        <!-- Statut -->
+        <div class="col-md-6">
+          <label for="statusEquipment" class="form-label fw-semibold">Statut de l’équipement</label>
+          <select id="statusEquipment" name="statusEquipment" class="form-select" required>
+            <option value="">-- Sélectionnez un statut --</option>
+            <option>En service</option>
+            <option>En maintenance</option>
+            <option>Hors service</option>
+          </select>
+        </div>
+
+        <!-- Disponibilité -->
+        <div class="col-md-6">
+          <label class="form-label fw-semibold d-block">Disponible</label>
+          <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="isDispo" id="dispoYes" value="yes" checked>
+            <label class="form-check-label" for="dispoYes">Oui</label>
+          </div>
+          <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="isDispo" id="dispoNo" value="no">
+            <label class="form-check-label" for="dispoNo">Non</label>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Boutons -->
+      <div class="mt-4 d-flex justify-content-between">
+        <a href="#" class="btn btn-secondary">Retour</a>
+        <button type="submit" class="btn btn-success px-4">Enregistrer</button>
+      </div>
+    </form>
+  </div>
