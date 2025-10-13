@@ -8,6 +8,7 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: PrescriptionRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 class Prescription
 {
     #[ORM\Id]
@@ -64,6 +65,7 @@ class Prescription
         return $this->createdAt;
     }
 
+    #[ORM\PrePersist]
     public function setCreatedAt(\DateTime $createdAt): static
     {
         $this->createdAt = $createdAt;
@@ -76,6 +78,8 @@ class Prescription
         return $this->updatedAt;
     }
 
+    #[ORM\PrePersist]
+    #[ORM\PreUpdate]
     public function setUpdatedAt(\DateTime $updatedAt): static
     {
         $this->updatedAt = $updatedAt;

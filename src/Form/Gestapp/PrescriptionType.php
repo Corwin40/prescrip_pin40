@@ -19,12 +19,6 @@ class PrescriptionType extends AbstractType
     {
         $builder
             ->add('ref')
-            ->add('createdAt')
-            ->add('updatedAt')
-            ->add('membre', EntityType::class, [
-                'class' => Member::class,
-                'choice_label' => 'id',
-            ])
             ->add('beneficiaire', EntityType::class, [
                 'class' => Beneficiary::class,
                 'choice_label' => 'id',

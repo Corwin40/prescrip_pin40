@@ -29,10 +29,15 @@ final class PrescriptionController extends AbstractController
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
         $prescription = new Prescription();
+
         $form = $this->createForm(PrescriptionType::class, $prescription);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+
+            // Ajout du membre dans la prescription
+            $prescription->setMembre($this->getUser());
+
             $entityManager->persist($prescription);
             $entityManager->flush();
 
