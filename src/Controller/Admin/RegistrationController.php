@@ -2,7 +2,7 @@
 
 namespace App\Controller\Admin;
 
-use App\Entity\Member;
+use App\Entity\Admin\Member;
 use App\Form\Admin\RegistrationFormType;
 use App\Security\EmailVerifier;
 use Doctrine\ORM\EntityManagerInterface;
@@ -50,7 +50,7 @@ class RegistrationController extends AbstractController
 
             // do anything else you need here, like send an email
 
-            return $this->redirectToRoute('op_public_dashboard_index');
+            return $this->redirectToRoute('app_webapp_public_accueil');
         }
 
         return $this->render('registration/register.html.twig', [

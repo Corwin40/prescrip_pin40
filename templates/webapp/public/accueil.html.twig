@@ -1,0 +1,12 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+<div class="container mt-4">
+  <h1>Accueil</h1>
+  <p>Bienvenue sur la plateforme.</p>
+  <p>
+    <a href="{{ path('app_webapp_public_mentions') }}">Mentions légales</a> ·
+    <a href="{{ path('app_webapp_public_prezDon') }}">Présentation du dispositif</a>
+  </p>
+</div>
+{% endblock %}

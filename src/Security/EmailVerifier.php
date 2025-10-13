@@ -2,7 +2,7 @@
 
 namespace App\Security;
 
-use App\Entity\Member;
+use App\Entity\Admin\Member;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\HttpFoundation\Request;

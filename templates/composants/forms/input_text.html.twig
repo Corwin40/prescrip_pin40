@@ -1,0 +1,33 @@
+<!-- Groupe Nom & Prénom -->
+<div class="input-group mb-3">
+  <span class="input-group-text">Nom et Prénom</span>
+  <input type="text" class="form-control" placeholder="Nom" aria-label="Nom">
+  <input type="text" class="form-control" placeholder="Prénom" aria-label="Prénom">
+</div>
+
+<!-- Groupe Adresse, Code Postal & Ville -->
+<div class="mb-3">
+  <label for="adresse" class="form-label">Adresse</label>
+  <input type="text" class="form-control mb-2" id="adresse" aria-label="Adresse">
+
+  <div class="d-flex gap-2">
+    <div class="flex-grow-1">
+      <label for="ville" class="form-label">Ville</label>
+      <input type="text" class="form-control" id="ville" aria-label="Ville">
+    </div>
+
+    <div style="width: 120px;">
+      <label for="codepostal" class="form-label">Code postal</label>
+      <input type="text" class="form-control" id="codepostal" aria-label="Code postal" maxlength="5">
+    </div>
+  </div>
+</div>
+
+
+<!-- Groupe Email & Téléphone -->
+<div class="input-group mb-3">
+  <span class="input-group-text">@</span>
+  <input type="email" class="form-control" placeholder="Email" aria-label="Email">
+  <span class="input-group-text">tel</span>
+  <input type="tel" class="form-control" placeholder="Téléphone" aria-label="Téléphone">
+</div>

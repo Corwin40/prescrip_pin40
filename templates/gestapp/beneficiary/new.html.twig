@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New Beneficiary{% endblock %}
+
+{% block body %}
+    <h1>Create new Beneficiary</h1>
+
+    {{ include('gestapp/beneficiary/_form.html.twig') }}
+
+    <a href="{{ path('app_gestapp_beneficiary_index') }}">back to list</a>
+{% endblock %}

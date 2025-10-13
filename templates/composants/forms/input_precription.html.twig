@@ -1,0 +1,41 @@
+ <div class="container py-5">
+    <h1 class="text-center text-primary mb-4">Créer une nouvelle prescription</h1>
+
+    <form class="card shadow-sm p-4 rounded-3 bg-white">
+
+      <div class="row g-3">
+
+        <!-- Référence de la prescription -->
+        <div class="col-md-6">
+          <label for="ref" class="form-label fw-semibold">Référence</label>
+          <input type="text" id="ref" name="ref" class="form-control" placeholder="Ex : PRESC-2025-001" required>
+        </div>
+
+        <!-- Date de création -->
+        <div class="col-md-6">
+          <label for="createdAt" class="form-label fw-semibold">Date de création</label>
+          <input type="date" id="createdAt" name="createdAt" class="form-control" required>
+        </div>
+
+        <!-- Date de mise à jour -->
+        <div class="col-md-6">
+          <label for="updatedAt" class="form-label fw-semibold">Date de mise à jour</label>
+          <input type="date" id="updatedAt" name="updatedAt" class="form-control">
+        </div>
+
+        <!-- Commentaires ou détails -->
+        <div class="col-12">
+          <label for="details" class="form-label fw-semibold">Détails / Remarques</label>
+          <textarea id="details" name="details" class="form-control" rows="4" placeholder="Ajoutez ici les informations complémentaires sur la prescription..."></textarea>
+        </div>
+
+      </div>
+
+      <!-- Boutons -->
+      <div class="mt-4 d-flex justify-content-between">
+        <a href="#" class="btn btn-secondary">Retour</a>
+        <button type="submit" class="btn btn-success px-4">Enregistrer</button>
+      </div>
+
+    </form>
+  </div>

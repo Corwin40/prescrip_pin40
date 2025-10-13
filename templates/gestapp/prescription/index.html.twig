@@ -1,0 +1,39 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Prescription index{% endblock %}
+
+{% block body %}
+    <h1>Prescription index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Ref</th>
+                <th>CreatedAt</th>
+                <th>UpdatedAt</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for prescription in prescriptions %}
+            <tr>
+                <td>{{ prescription.id }}</td>
+                <td>{{ prescription.ref }}</td>
+                <td>{{ prescription.createdAt ? prescription.createdAt|date('Y-m-d') : '' }}</td>
+                <td>{{ prescription.updatedAt ? prescription.updatedAt|date('Y-m-d') : '' }}</td>
+                <td>
+                    <a href="{{ path('app_gestapp_prescription_show', {'id': prescription.id}) }}">show</a>
+                    <a href="{{ path('app_gestapp_prescription_edit', {'id': prescription.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="5">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_gestapp_prescription_new') }}">Create new</a>
+{% endblock %}

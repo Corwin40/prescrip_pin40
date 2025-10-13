@@ -1,0 +1,86 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Member{% endblock %}
+
+{% block body %}
+    <h1>Member</h1>
+
+     <table class="table table-bordered table-hover align-middle shadow-sm rounded-3">
+  <thead class="table-primary">
+    <tr>
+      <th colspan="2" class="text-center fs-5">Détails du membre</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th scope="row" class="w-25 text-primary">ID</th>
+      <td>{{ member.id }}</td>
+    </tr>
+    <tr>
+      <th scope="row" class="text-primary">Email</th>
+      <td>{{ member.email }}</td>
+    </tr>
+    <tr>
+      <th scope="row" class="text-primary">Rôles</th>
+      <td><code>{{ member.roles ? member.roles|json_encode : '' }}</code></td>
+    </tr>
+    <tr>
+      <th scope="row" class="text-primary">Mot de passe</th>
+      <td><span class="text-muted">••••••••••••</span></td>
+    </tr>
+    <tr class="table-light">
+      <th scope="row" class="text-primary">Nom de la structure</th>
+      <td>{{ member.nameStructure }}</td>
+    </tr>
+    <tr>
+      <th scope="row" class="text-primary">Adresse</th>
+      <td>{{ member.address }}</td>
+    </tr>
+    <tr>
+      <th scope="row" class="text-primary">Code postal</th>
+      <td>{{ member.zipcode }}</td>
+    </tr>
+    <tr>
+      <th scope="row" class="text-primary">Ville</th>
+      <td>{{ member.city }}</td>
+    </tr>
+    <tr class="table-light">
+      <th scope="row" class="text-primary">Email de contact</th>
+      <td>{{ member.contactEmail }}</td>
+    </tr>
+    <tr>
+      <th scope="row" class="text-primary">Téléphone de contact</th>
+      <td>{{ member.contactPhone }}</td>
+    </tr>
+    <tr>
+      <th scope="row" class="text-primary">Prénom du responsable</th>
+      <td>{{ member.contactResponsableFirstname }}</td>
+    </tr>
+    <tr>
+      <th scope="row" class="text-primary">Nom du responsable</th>
+      <td>{{ member.contactResponsableLastname }}</td>
+    </tr>
+    <tr>
+      <th scope="row" class="text-primary">Civilité du responsable</th>
+      <td>{{ member.contactResponsableCivility }}</td>
+    </tr>
+    <tr>
+      <th scope="row" class="text-primary">Vérifié</th>
+      <td>
+        {% if member.isVerified %}
+          <span class="badge bg-success px-3 py-2 rounded-pill">Oui</span>
+        {% else %}
+          <span class="badge bg-danger px-3 py-2 rounded-pill">Non</span>
+        {% endif %}
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+
+    <a href="{{ path('app_admin_member_index') }}">back to list</a>
+
+    <a href="{{ path('app_admin_member_edit', {'id': member.id}) }}">edit</a>
+
+    {{ include('admin/member/_delete_form.html.twig') }}
+{% endblock %}

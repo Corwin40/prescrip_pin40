@@ -1,0 +1,49 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Beneficiary index{% endblock %}
+
+{% block body %}
+    <h1>Beneficiary index</h1>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Firstname</th>
+                <th>Lastname</th>
+                <th>Civility</th>
+                <th>Gender</th>
+                <th>Age Group</th>
+                <th>Professional Status</th>
+                <th>Created At</th>
+                <th>Updated At</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for beneficiary in beneficiaries %}
+            <tr>
+                <td>{{ beneficiary.id }}</td>
+                <td>{{ beneficiary.firstname }}</td>
+                <td>{{ beneficiary.lastname }}</td>
+                <td>{{ beneficiary.civility }}</td>
+                <td>{{ beneficiary.gender }}</td>
+                <td>{{ beneficiary.ageGroup }}</td>
+                <td>{{ beneficiary.professionnalStatus }}</td>
+                <td>{{ beneficiary.createdAt ? beneficiary.createdAt|date('Y-m-d') : '' }}</td>
+                <td>{{ beneficiary.updatedAt ? beneficiary.updatedAt|date('Y-m-d') : '' }}</td>
+                <td>
+                    <a href="{{ path('app_gestapp_beneficiary_show', {'id': beneficiary.id}) }}">show</a>
+                    <a href="{{ path('app_gestapp_beneficiary_edit', {'id': beneficiary.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="10">No records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_gestapp_beneficiary_new') }}">Create new</a>
+{% endblock %}

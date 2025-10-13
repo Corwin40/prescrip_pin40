@@ -1,0 +1,54 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Beneficiary{% endblock %}
+
+{% block body %}
+    <h1>Beneficiary</h1>
+
+    <table>
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ beneficiary.id }}</td>
+            </tr>
+            <tr>
+                <th>Firstname</th>
+                <td>{{ beneficiary.firstname }}</td>
+            </tr>
+            <tr>
+                <th>Lastname</th>
+                <td>{{ beneficiary.lastname }}</td>
+            </tr>
+            <tr>
+                <th>Civility</th>
+                <td>{{ beneficiary.civility }}</td>
+            </tr>
+            <tr>
+                <th>Gender</th>
+                <td>{{ beneficiary.gender }}</td>
+            </tr>
+            <tr>
+                <th>Age Group</th>
+                <td>{{ beneficiary.ageGroup }}</td>
+            </tr>
+            <tr>
+                <th>Professional Status</th>
+                <td>{{ beneficiary.professionnalStatus }}</td>
+            </tr>
+            <tr>
+                <th>Created At</th>
+                <td>{{ beneficiary.createdAt ? beneficiary.createdAt|date('Y-m-d') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Updated At</th>
+                <td>{{ beneficiary.updatedAt ? beneficiary.updatedAt|date('Y-m-d') : '' }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_gestapp_beneficiary_index') }}">back to list</a>
+
+    <a href="{{ path('app_gestapp_beneficiary_edit', {'id': beneficiary.id}) }}">edit</a>
+
+    {{ include('gestapp/beneficiary/_delete_form.html.twig') }}
+{% endblock %}
