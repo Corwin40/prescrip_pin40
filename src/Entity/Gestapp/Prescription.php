@@ -60,29 +60,29 @@ class Prescription
         return $this;
     }
 
-    public function getCreatedAt(): ?\DateTime
+    public function getCreateAt(): ?\DateTimeInterface
     {
-        return $this->createdAt;
+        return $this->createAt;
     }
 
     #[ORM\PrePersist]
-    public function setCreatedAt(\DateTime $createdAt): static
+    public function setCreateAt(): self
     {
-        $this->createdAt = $createdAt;
+        $this->createAt = new \DateTime('now');
 
         return $this;
     }
 
-    public function getUpdatedAt(): ?\DateTime
+    public function getUpdateAt(): ?\DateTimeInterface
     {
-        return $this->updatedAt;
+        return $this->updateAt;
     }
 
     #[ORM\PrePersist]
     #[ORM\PreUpdate]
-    public function setUpdatedAt(\DateTime $updatedAt): static
+    public function setUpdateAt(): self
     {
-        $this->updatedAt = $updatedAt;
+        $this->updateAt = new \DateTime('now');
 
         return $this;
     }
