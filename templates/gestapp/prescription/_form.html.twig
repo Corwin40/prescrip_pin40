@@ -1,4 +1,79 @@
 {{ form_start(form) }}
-    {{ form_widget(form) }}
-    <button class="btn">{{ button_label|default('Save') }}</button>
+
+<div class="row g-3">
+
+    <div class="col-md-6">
+        {% include 'composants/inputs/input_text.html.twig' with {
+            label: 'Référence',
+            field: form.ref
+        } %}
+    </div>
+
+    <div class="col-md-6"></div>
+
+    <div class="col-md-6">
+        {% include 'composants/inputs/input_select.html.twig' with {
+            label: 'Bénéficiaire',
+            field: form.beneficiaire
+        } %}
+    </div>
+
+    <div class="col-md-6">
+        {% include 'composants/inputs/input_select.html.twig' with {
+            label: 'Equipement',
+            field: form.equipement
+        } %}
+    </div>
+
+    <div class="col-md-12">
+        {% include 'composants/inputs/input_aera.html.twig' with {
+            label: 'Détail',
+            field: form.details
+        } %}
+    </div>
+
+    <div class="col-md-6">
+        {% include 'composants/inputs/input_select.html.twig' with {
+            label: 'Base Compétences',
+            field: form.baseCompetence
+        } %}
+    </div>
+
+    <div class="col-md-6">
+        {% include 'composants/inputs/input_text.html.twig' with {
+            label: 'Lieu de Médiation',
+            field: form.lieuMediation
+        } %}
+    </div>
+
+
+
+
+
+    <div class="col-md-6">
+        {% include 'composants/inputs/input_date.html.twig' with {
+            label: 'Créé le',
+            field: form.createdAt
+        } %}
+    </div>
+
+    <div class="col-md-6">
+        {% include 'composants/inputs/input_date.html.twig' with {
+            label: 'Mis à jour le',
+            field: form.updatedAt
+        } %}
+    </div>
+</div>
+<div class="col"></div>
+
+
+
+
+
+<div class="mt-4">
+    <button class="btn btn-primary">{{ button_label|default('Enregistrer') }}</button>
+</div>
+
+{{ form_rest(form) }}
+
 {{ form_end(form) }}

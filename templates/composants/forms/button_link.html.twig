@@ -1,1 +1,10 @@
-<button type="button" class="btn btn-primary"><a href="">text du lien</a></button>
+{% set btn_class = {
+    'info': 'btn btn-info btn-sm',
+    'warning': 'btn btn-warning btn-sm',
+    'danger': 'btn btn-danger btn-sm',
+    'default': 'btn btn-secondary btn-sm'
+}[type|default('default')] %}
+
+<a href="{{ href|default('#') }}" class="{{ btn_class }}">
+    {{ label }}
+</a>

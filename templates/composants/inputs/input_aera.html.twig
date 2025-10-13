@@ -1,5 +1,5 @@
-<!-- input area Commentaires ou détails -->
-<div class="col-12">
-    <label for="details" class="form-label fw-semibold">Détails / Remarques</label>
-    <textarea id="details" name="details" class="form-control" rows="4" placeholder="Ajoutez ici les informations complémentaires sur la prescription..."></textarea>
+<div class="mb-3">
+    <label class="form-label">{{ label }}</label>
+    {{ form_widget(field, {'attr': {'class': 'form-control', 'rows': 4}}) }}
+    {{ form_errors(field) }}
 </div>

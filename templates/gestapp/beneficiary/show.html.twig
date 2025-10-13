@@ -1,54 +1,73 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Beneficiary{% endblock %}
+{% block title %}Détails du bénéficiaire{% endblock %}
 
 {% block body %}
-    <h1>Beneficiary</h1>
+    <div class="container mt-5">
 
-    <table>
-        <tbody>
-            <tr>
-                <th>Id</th>
-                <td>{{ beneficiary.id }}</td>
-            </tr>
-            <tr>
-                <th>Firstname</th>
-                <td>{{ beneficiary.firstname }}</td>
-            </tr>
-            <tr>
-                <th>Lastname</th>
-                <td>{{ beneficiary.lastname }}</td>
-            </tr>
-            <tr>
-                <th>Civility</th>
-                <td>{{ beneficiary.civility }}</td>
-            </tr>
-            <tr>
-                <th>Gender</th>
-                <td>{{ beneficiary.gender }}</td>
-            </tr>
-            <tr>
-                <th>Age Group</th>
-                <td>{{ beneficiary.ageGroup }}</td>
-            </tr>
-            <tr>
-                <th>Professional Status</th>
-                <td>{{ beneficiary.professionnalStatus }}</td>
-            </tr>
-            <tr>
-                <th>Created At</th>
-                <td>{{ beneficiary.createdAt ? beneficiary.createdAt|date('Y-m-d') : '' }}</td>
-            </tr>
-            <tr>
-                <th>Updated At</th>
-                <td>{{ beneficiary.updatedAt ? beneficiary.updatedAt|date('Y-m-d') : '' }}</td>
-            </tr>
-        </tbody>
-    </table>
+        <h1 class="mb-4">Détails du bénéficiaire</h1>
 
-    <a href="{{ path('app_gestapp_beneficiary_index') }}">back to list</a>
+        <div class="card p-4 shadow-sm">
+            <table class="table table-bordered align-middle">
+                <tbody>
+                <tr>
+                    <th scope="row">ID</th>
+                    <td>{{ beneficiary.id }}</td>
+                </tr>
+                <tr>
+                    <th scope="row">Prénom</th>
+                    <td>{{ beneficiary.firstname }}</td>
+                </tr>
+                <tr>
+                    <th scope="row">Nom</th>
+                    <td>{{ beneficiary.lastname }}</td>
+                </tr>
+                <tr>
+                    <th scope="row">Civilité</th>
+                    <td>{{ beneficiary.civility }}</td>
+                </tr>
+                <tr>
+                    <th scope="row">Genre</th>
+                    <td>{{ beneficiary.gender }}</td>
+                </tr>
+                <tr>
+                    <th scope="row">Tranche d’âge</th>
+                    <td>{{ beneficiary.ageGroup }}</td>
+                </tr>
+                <tr>
+                    <th scope="row">Statut professionnel</th>
+                    <td>{{ beneficiary.professionnalStatus }}</td>
+                </tr>
+                <tr>
+                    <th scope="row">Créé le</th>
+                    <td>{{ beneficiary.createdAt ? beneficiary.createdAt|date('d/m/Y') : '' }}</td>
+                </tr>
+                <tr>
+                    <th scope="row">Modifié le</th>
+                    <td>{{ beneficiary.updatedAt ? beneficiary.updatedAt|date('d/m/Y') : '' }}</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
 
-    <a href="{{ path('app_gestapp_beneficiary_edit', {'id': beneficiary.id}) }}">edit</a>
+        <div class="mt-4 d-flex gap-2">
+            {# Bouton retour (depuis showsTable) #}
+            {% include 'composants/showsTable/button_return_list.html.twig' with {
+                href: path('app_gestapp_beneficiary_index'),
+                label: 'Retour à la liste'
+            } %}
 
-    {{ include('gestapp/beneficiary/_delete_form.html.twig') }}
+            {# Bouton modifier (depuis showsTable) #}
+            {% include 'composants/showsTable/button_update.html.twig' with {
+                href: path('app_gestapp_beneficiary_edit', {'id': beneficiary.id}),
+                label: 'Modifier'
+            } %}
+
+            {# Bouton supprimer (depuis showsTable) #}
+            {% include 'composants/showsTable/buttons_delete.html.twig' with {
+                id: beneficiary.id,
+                route: 'app_gestapp_beneficiary_delete'
+            } %}
+        </div>
+    </div>
 {% endblock %}

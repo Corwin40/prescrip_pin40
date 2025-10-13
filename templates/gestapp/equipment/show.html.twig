@@ -1,46 +1,68 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Equipment{% endblock %}
+{% block title %}Détails de l’équipement{% endblock %}
 
 {% block body %}
-    <h1>Equipment</h1>
+    <div class="container mt-5">
 
-    <table>
-        <tbody>
-            <tr>
-                <th>Id</th>
-                <td>{{ equipment.id }}</td>
-            </tr>
-            <tr>
-                <th>Type Equipment</th>
-                <td>{{ equipment.typeEquipment }}</td>
-            </tr>
-            <tr>
-                <th>Brand Equipment</th>
-                <td>{{ equipment.brandEquipment }}</td>
-            </tr>
-            <tr>
-                <th>Matricul Equipment</th>
-                <td>{{ equipment.matriculEquipment }}</td>
-            </tr>
-            <tr>
-                <th>OS Installed</th>
-                <td>{{ equipment.osInstalled }}</td>
-            </tr>
-            <tr>
-                <th>Status Equipment</th>
-                <td>{{ equipment.statusEquipment }}</td>
-            </tr>
-            <tr>
-                <th>Is Dispo</th>
-                <td>{{ equipment.isDispo ? 'Yes' : 'No' }}</td>
-            </tr>
-        </tbody>
-    </table>
+        <h1 class="mb-4">Détails de l’équipement</h1>
 
-    <a href="{{ path('app_gestapp_equipment_index') }}">back to list</a>
+        <div class="card p-4 shadow-sm">
+            <table class="table table-bordered align-middle">
+                <tbody>
+                <tr>
+                    <th scope="row">ID</th>
+                    <td>{{ equipment.id }}</td>
+                </tr>
+                <tr>
+                    <th scope="row">Type</th>
+                    <td>{{ equipment.typeEquipment }}</td>
+                </tr>
+                <tr>
+                    <th scope="row">Marque</th>
+                    <td>{{ equipment.brandEquipment }}</td>
+                </tr>
+                <tr>
+                    <th scope="row">Matricule</th>
+                    <td>{{ equipment.matriculEquipment }}</td>
+                </tr>
+                <tr>
+                    <th scope="row">OS installé</th>
+                    <td>{{ equipment.osInstalled }}</td>
+                </tr>
+                <tr>
+                    <th scope="row">Statut</th>
+                    <td>{{ equipment.statusEquipment }}</td>
+                </tr>
+                <tr>
+                    <th scope="row">Disponible</th>
+                    <td>
+                        {% if equipment.isDispo %}
+                            <span class="badge bg-success">Oui</span>
+                        {% else %}
+                            <span class="badge bg-danger">Non</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
 
-    <a href="{{ path('app_gestapp_equipment_edit', {'id': equipment.id}) }}">edit</a>
+        <div class="mt-4 d-flex gap-2">
+            {% include 'composants/showsTable/button_return_list.html.twig' with {
+                href: path('app_gestapp_equipment_index'),
+                label: 'Retour à la liste'
+            } %}
 
-    {{ include('gestapp/equipment/_delete_form.html.twig') }}
+            {% include 'composants/showsTable/button_update.html.twig' with {
+                href: path('app_gestapp_equipment_edit', {'id': equipment.id}),
+                label: 'Modifier'
+            } %}
+
+            {% include 'composants/showsTable/buttons_delete.html.twig' with {
+                id: equipment.id,
+                route: 'app_gestapp_equipment_delete'
+            } %}
+        </div>
+    </div>
 {% endblock %}

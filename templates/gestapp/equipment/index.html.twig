@@ -1,45 +1,76 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Equipment index{% endblock %}
+{% block title %}Liste des équipements{% endblock %}
 
 {% block body %}
-    <h1>Equipment index</h1>
+    <div class="container mt-5">
 
-    <table>
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Type</th>
-                <th>Brand</th>
-                <th>Matricule</th>
-                <th>OS Installed</th>
-                <th>Status</th>
-                <th>Disponible</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for equipment in equipment %}
-            <tr>
-                <td>{{ equipment.id }}</td>
-                <td>{{ equipment.typeEquipment }}</td>
-                <td>{{ equipment.brandEquipment }}</td>
-                <td>{{ equipment.matriculEquipment }}</td>
-                <td>{{ equipment.osInstalled }}</td>
-                <td>{{ equipment.statusEquipment }}</td>
-                <td>{{ equipment.isDispo ? 'Yes' : 'No' }}</td>
-                <td>
-                    <a href="{{ path('app_gestapp_equipment_show', {'id': equipment.id}) }}">show</a>
-                    <a href="{{ path('app_gestapp_equipment_edit', {'id': equipment.id}) }}">edit</a>
-                </td>
-            </tr>
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1 class="h3">Liste des équipements</h1>
+
+            {# Bouton pour créer un équipement via ton composant #}
+            {% include 'composants/forms/button_creatnew.html.twig' with {
+                label: 'Ajouter un équipement',
+                href: path('app_gestapp_equipment_new')
+            } %}
+        </div>
+
+        {% if equipment is not empty %}
+            <div class="table-responsive">
+                <table class="table table-striped table-bordered align-middle">
+                    <thead class="table-dark">
+                    <tr>
+                        <th>ID</th>
+                        <th>Type</th>
+                        <th>Marque</th>
+                        <th>Matricule</th>
+                        <th>OS installé</th>
+                        <th>Statut</th>
+                        <th>Disponible</th>
+                        <th>Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for item in equipment %}
+                        <tr>
+                            <td>{{ item.id }}</td>
+                            <td>{{ item.typeEquipment }}</td>
+                            <td>{{ item.brandEquipment }}</td>
+                            <td>{{ item.matriculEquipment }}</td>
+                            <td>{{ item.osInstalled }}</td>
+                            <td>{{ item.statusEquipment }}</td>
+                            <td>
+                                {% if item.isDispo %}
+                                    <span class="badge bg-success">Oui</span>
+                                {% else %}
+                                    <span class="badge bg-danger">Non</span>
+                                {% endif %}
+                            </td>
+                            <td class="text-center">
+                                {% include 'composants/forms/button_link.html.twig' with {
+                                    label: 'Voir',
+                                    href: path('app_gestapp_equipment_show', {'id': item.id}),
+                                    type: 'info'
+                                } %}
+
+                                {% include 'composants/forms/button_link.html.twig' with {
+                                    label: 'Modifier',
+                                    href: path('app_gestapp_equipment_edit', {'id': item.id}),
+                                    type: 'warning'
+                                } %}
+
+                                {% include 'composants/forms/buttons_delete.html.twig' with {
+                                    id: item.id,
+                                    route: 'app_gestapp_equipment_delete'
+                                } %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
         {% else %}
-            <tr>
-                <td colspan="8">No records found</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
-
-    <a href="{{ path('app_gestapp_equipment_new') }}">Create new</a>
+            <p class="text-center">Aucun équipement trouvé.</p>
+        {% endif %}
+    </div>
 {% endblock %}

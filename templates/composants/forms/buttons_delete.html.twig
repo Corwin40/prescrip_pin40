@@ -1,1 +1,4 @@
-<button type="button" class="btn btn-danger">DELETE</button>
+<form method="post" action="{{ path(route, {'id': id}) }}" style="display:inline" onsubmit="return confirm('Supprimer cet élément ?');">
+    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ id) }}">
+    <button class="btn btn-danger btn-sm">Supprimer</button>
+</form>

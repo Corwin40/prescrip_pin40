@@ -1,49 +1,80 @@
+{# templates/gestapp/beneficiary/index.html.twig #}
 {% extends 'base.html.twig' %}
 
-{% block title %}Beneficiary index{% endblock %}
+{% block title %}Liste des bénéficiaires{% endblock %}
 
 {% block body %}
-    <h1>Beneficiary index</h1>
+    <div class="container mt-5">
 
-    <table>
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Firstname</th>
-                <th>Lastname</th>
-                <th>Civility</th>
-                <th>Gender</th>
-                <th>Age Group</th>
-                <th>Professional Status</th>
-                <th>Created At</th>
-                <th>Updated At</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for beneficiary in beneficiaries %}
-            <tr>
-                <td>{{ beneficiary.id }}</td>
-                <td>{{ beneficiary.firstname }}</td>
-                <td>{{ beneficiary.lastname }}</td>
-                <td>{{ beneficiary.civility }}</td>
-                <td>{{ beneficiary.gender }}</td>
-                <td>{{ beneficiary.ageGroup }}</td>
-                <td>{{ beneficiary.professionnalStatus }}</td>
-                <td>{{ beneficiary.createdAt ? beneficiary.createdAt|date('Y-m-d') : '' }}</td>
-                <td>{{ beneficiary.updatedAt ? beneficiary.updatedAt|date('Y-m-d') : '' }}</td>
-                <td>
-                    <a href="{{ path('app_gestapp_beneficiary_show', {'id': beneficiary.id}) }}">show</a>
-                    <a href="{{ path('app_gestapp_beneficiary_edit', {'id': beneficiary.id}) }}">edit</a>
-                </td>
-            </tr>
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1 class="h3">Liste des bénéficiaires</h1>
+
+            {# Bouton pour créer un bénéficiaire via ton composant #}
+            {% include 'composants/forms/button_creatnew.html.twig' with {
+                label: 'Créer un nouveau bénéficiaire',
+                href: path('app_gestapp_beneficiary_new')
+            } %}
+        </div>
+
+        {% if beneficiaries is not empty %}
+            <div class="table-responsive">
+                <table class="table table-striped table-bordered align-middle">
+                    <thead class="table-dark">
+                    <tr>
+                        <th>Id</th>
+                        <th>Prénom</th>
+                        <th>Nom</th>
+                        <th>Civilité</th>
+                        <th>Genre</th>
+                        <th>Tranche d’âge</th>
+                        <th>Statut professionnel</th>
+                        <th>Créé le</th>
+                        <th>Modifié le</th>
+                        <th>Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for beneficiary in beneficiaries %}
+                        <tr>
+                            <td>{{ beneficiary.id }}</td>
+                            <td>{{ beneficiary.firstname }}</td>
+                            <td>{{ beneficiary.lastname }}</td>
+                            <td>{{ beneficiary.civility }}</td>
+                            <td>{{ beneficiary.gender }}</td>
+                            <td>{{ beneficiary.ageGroup }}</td>
+                            <td>{{ beneficiary.professionnalStatus }}</td>
+                            <td>{{ beneficiary.createdAt ? beneficiary.createdAt|date('d/m/Y') : '' }}</td>
+                            <td>{{ beneficiary.updatedAt ? beneficiary.updatedAt|date('d/m/Y') : '' }}</td>
+                            <td class="text-center">
+
+                                {# Bouton "Voir" #}
+                                {% include 'composants/forms/button_link.html.twig' with {
+                                    label: 'Voir',
+                                    href: path('app_gestapp_beneficiary_show', {'id': beneficiary.id}),
+                                    type: 'info'
+                                } %}
+
+                                {# Bouton "Modifier" #}
+                                {% include 'composants/forms/button_link.html.twig' with {
+                                    label: 'Modifier',
+                                    href: path('app_gestapp_beneficiary_edit', {'id': beneficiary.id}),
+                                    type: 'warning'
+                                } %}
+
+                                {# Bouton "Supprimer" (optionnel) #}
+                                {% include 'composants/forms/buttons_delete.html.twig' with {
+                                    id: beneficiary.id,
+                                    route: 'app_gestapp_beneficiary_delete'
+                                } %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
         {% else %}
-            <tr>
-                <td colspan="10">No records found</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+            <p class="text-center">Aucun bénéficiaire trouvé.</p>
+        {% endif %}
 
-    <a href="{{ path('app_gestapp_beneficiary_new') }}">Create new</a>
+    </div>
 {% endblock %}

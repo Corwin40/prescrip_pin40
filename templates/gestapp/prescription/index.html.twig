@@ -1,39 +1,63 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Prescription index{% endblock %}
+{% block title %}Liste des prescriptions{% endblock %}
 
 {% block body %}
-    <h1>Prescription index</h1>
+    <div class="container mt-5">
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Ref</th>
-                <th>CreatedAt</th>
-                <th>UpdatedAt</th>
-                <th>actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for prescription in prescriptions %}
-            <tr>
-                <td>{{ prescription.id }}</td>
-                <td>{{ prescription.ref }}</td>
-                <td>{{ prescription.createdAt ? prescription.createdAt|date('Y-m-d') : '' }}</td>
-                <td>{{ prescription.updatedAt ? prescription.updatedAt|date('Y-m-d') : '' }}</td>
-                <td>
-                    <a href="{{ path('app_gestapp_prescription_show', {'id': prescription.id}) }}">show</a>
-                    <a href="{{ path('app_gestapp_prescription_edit', {'id': prescription.id}) }}">edit</a>
-                </td>
-            </tr>
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1 class="h3">Liste des prescriptions</h1>
+
+            {% include 'composants/forms/button_creatnew.html.twig' with {
+                label: 'Créer une prescription',
+                href: path('app_gestapp_prescription_new')
+            } %}
+        </div>
+
+        {% if prescriptions is not empty %}
+            <div class="table-responsive">
+                <table class="table table-striped table-bordered align-middle">
+                    <thead class="table-dark">
+                    <tr>
+                        <th>ID</th>
+                        <th>Référence</th>
+                        <th>Créé le</th>
+                        <th>Modifié le</th>
+                        <th>Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for prescription in prescriptions %}
+                        <tr>
+                            <td>{{ prescription.id }}</td>
+                            <td>{{ prescription.ref }}</td>
+                            <td>{{ prescription.createdAt ? prescription.createdAt|date('d/m/Y') : '' }}</td>
+                            <td>{{ prescription.updatedAt ? prescription.updatedAt|date('d/m/Y') : '' }}</td>
+                            <td class="text-center">
+                                {% include 'composants/forms/button_link.html.twig' with {
+                                    label: 'Voir',
+                                    href: path('app_gestapp_prescription_show', {'id': prescription.id}),
+                                    type: 'info'
+                                } %}
+
+                                {% include 'composants/forms/button_link.html.twig' with {
+                                    label: 'Modifier',
+                                    href: path('app_gestapp_prescription_edit', {'id': prescription.id}),
+                                    type: 'warning'
+                                } %}
+
+                                {% include 'composants/forms/buttons_delete.html.twig' with {
+                                    id: prescription.id,
+                                    route: 'app_gestapp_prescription_delete'
+                                } %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
         {% else %}
-            <tr>
-                <td colspan="5">no records found</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
-
-    <a href="{{ path('app_gestapp_prescription_new') }}">Create new</a>
+            <p class="text-center">Aucune prescription trouvée.</p>
+        {% endif %}
+    </div>
 {% endblock %}

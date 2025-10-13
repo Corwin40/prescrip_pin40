@@ -1,12 +1,53 @@
-{{ form_start(form, {'attr': {'id': 'equipment_form'}}) }}
+{{ form_start(form) }}
 
-{{ form_row(form.typeEquipment) }}
-{{ form_row(form.brandEquipment) }}
-{{ form_row(form.matriculEquipment) }}
-{{ form_row(form.osInstalled) }}
-{{ form_row(form.statusEquipment) }}
-{{ form_row(form.isDispo) }}
+<div class="row g-3">
 
-<button class="btn">Save</button>
+    <div class="col-md-6">
+        {% include 'composants/inputs/input_select.html.twig' with {
+            label: 'Type d’équipement',
+            field: form.typeEquipment
+        } %}
+    </div>
+
+    <div class="col-md-6">
+        {% include 'composants/inputs/input_text.html.twig' with {
+            label: 'Marque',
+            field: form.brandEquipment
+        } %}
+    </div>
+
+    <div class="col-md-6">
+        {% include 'composants/inputs/input_text.html.twig' with {
+            label: 'Matricule',
+            field: form.matriculEquipment
+        } %}
+    </div>
+
+    <div class="col-md-6">
+        {% include 'composants/inputs/input_select.html.twig' with {
+            label: 'OS installé',
+            field: form.osInstalled
+        } %}
+    </div>
+
+    <div class="col-md-6">
+        {% include 'composants/inputs/input_select.html.twig' with {
+            label: 'Statut',
+            field: form.statusEquipment
+        } %}
+    </div>
+
+    <div class="col-md-6">
+        {% include 'composants/inputs/input_radio.html.twig' with {
+            label: 'Disponible',
+            field: form.isDispo
+        } %}
+    </div>
+
+</div>
+
+<div class="mt-4">
+    <button class="btn btn-primary">{{ button_label|default('Enregistrer') }}</button>
+</div>
 
 {{ form_end(form) }}

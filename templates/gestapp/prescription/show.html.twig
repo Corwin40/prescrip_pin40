@@ -1,34 +1,50 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Prescription{% endblock %}
+{% block title %}Détails de la prescription{% endblock %}
 
 {% block body %}
-    <h1>Prescription</h1>
+    <div class="container mt-5">
 
-    <table class="table">
-        <tbody>
-            <tr>
-                <th>Id</th>
-                <td>{{ prescription.id }}</td>
-            </tr>
-            <tr>
-                <th>Ref</th>
-                <td>{{ prescription.ref }}</td>
-            </tr>
-            <tr>
-                <th>CreatedAt</th>
-                <td>{{ prescription.createdAt ? prescription.createdAt|date('Y-m-d') : '' }}</td>
-            </tr>
-            <tr>
-                <th>UpdatedAt</th>
-                <td>{{ prescription.updatedAt ? prescription.updatedAt|date('Y-m-d') : '' }}</td>
-            </tr>
-        </tbody>
-    </table>
+        <h1 class="mb-4">Détails de la prescription</h1>
 
-    <a href="{{ path('app_gestapp_prescription_index') }}">back to list</a>
+        <div class="card p-4 shadow-sm">
+            <table class="table table-bordered align-middle">
+                <tbody>
+                <tr>
+                    <th>ID</th>
+                    <td>{{ prescription.id }}</td>
+                </tr>
+                <tr>
+                    <th>Référence</th>
+                    <td>{{ prescription.ref }}</td>
+                </tr>
+                <tr>
+                    <th>Créée le</th>
+                    <td>{{ prescription.createdAt ? prescription.createdAt|date('d/m/Y') : '' }}</td>
+                </tr>
+                <tr>
+                    <th>Modifiée le</th>
+                    <td>{{ prescription.updatedAt ? prescription.updatedAt|date('d/m/Y') : '' }}</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
 
-    <a href="{{ path('app_gestapp_prescription_edit', {'id': prescription.id}) }}">edit</a>
+        <div class="mt-4 d-flex gap-2">
+            {% include 'composants/showsTable/button_return_list.html.twig' with {
+                href: path('app_gestapp_prescription_index'),
+                label: 'Retour à la liste'
+            } %}
 
-    {{ include('gestapp/prescription/_delete_form.html.twig') }}
+            {% include 'composants/showsTable/button_update.html.twig' with {
+                href: path('app_gestapp_prescription_edit', {'id': prescription.id}),
+                label: 'Modifier'
+            } %}
+
+            {% include 'composants/showsTable/buttons_delete.html.twig' with {
+                id: prescription.id,
+                route: 'app_gestapp_prescription_delete'
+            } %}
+        </div>
+    </div>
 {% endblock %}

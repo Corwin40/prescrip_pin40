@@ -1,12 +1,5 @@
-<!--input date creation et mise a jour -->
-
-<div class="col-md-6">
-    <label for="createdAt" class="form-label fw-semibold">Date de création</label>
-    <input type="date" id="createdAt" name="createdAt" class="form-control" required>
-</div>
-
-<!-- input Date mise à jour -->
-<div class="col-md-6">
-    <label for="updatedAt" class="form-label fw-semibold">Date de mise à jour</label>
-    <input type="date" id="updatedAt" name="updatedAt" class="form-control">
+<div class="mb-3">
+    <label class="form-label">{{ label }}</label>
+    {{ form_widget(field, {'attr': {'class': 'form-control'}}) }}
+    {{ form_errors(field) }}
 </div>
