@@ -28,8 +28,6 @@
                     <tr>
                         <th>Id</th>
                         <th>Prénom</th>
-                        <th>Nom</th>
-                        <th>Civilité</th>
                         <th>Genre</th>
                         <th>Tranche d’âge</th>
                         <th>Statut professionnel</th>
@@ -42,9 +40,7 @@
                     {% for beneficiary in beneficiaries %}
                         <tr>
                             <td>{{ beneficiary.id }}</td>
-                            <td>{{ beneficiary.firstname }}</td>
-                            <td>{{ beneficiary.lastname }}</td>
-                            <td>{{ beneficiary.civility }}</td>
+                            <td>{{ beneficiary.civility }} {{ beneficiary.firstname }} {{ beneficiary.lastname }}</td>
                             <td>{{ beneficiary.gender }}</td>
                             <td>{{ beneficiary.ageGroup }}</td>
                             <td>{{ beneficiary.professionnalStatus }}</td>

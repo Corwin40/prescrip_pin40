@@ -39,9 +39,8 @@
 
     <div class="col-md-10"></div>
 
-    <div class="col-md-3">
-        {% include 'composants/inputs/input_select.html.twig' with {
-            label: 'Situation',
+    <div class="col-md-12">
+        {% include 'composants/inputs/input_radios.html.twig' with {
             field: form.professionnalStatus
         } %}
     </div>
