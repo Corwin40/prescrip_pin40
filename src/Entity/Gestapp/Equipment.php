@@ -3,9 +3,11 @@
 namespace App\Entity\Gestapp;
 
 use App\Repository\Gestapp\EquipmentRepository;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: EquipmentRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 class Equipment
 {
     #[ORM\Id]
@@ -31,6 +33,12 @@ class Equipment
     #[ORM\Column]
     private ?bool $isDispo = null;
 
+    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
+    private ?\DateTimeInterface $createdAt = null;
+
+    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
+    private ?\DateTimeInterface $updatedAt = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -44,7 +52,6 @@ class Equipment
     public function setTypeEquipment(string $typeEquipment): static
     {
         $this->typeEquipment = $typeEquipment;
-
         return $this;
     }
 
@@ -56,7 +63,6 @@ class Equipment
     public function setBrandEquipment(string $brandEquipment): static
     {
         $this->brandEquipment = $brandEquipment;
-
         return $this;
     }
 
@@ -68,7 +74,6 @@ class Equipment
     public function setMatriculEquipment(string $matriculEquipment): static
     {
         $this->matriculEquipment = $matriculEquipment;
-
         return $this;
     }
 
@@ -80,7 +85,6 @@ class Equipment
     public function setOsInstalled(string $osInstalled): static
     {
         $this->osInstalled = $osInstalled;
-
         return $this;
     }
 
@@ -92,7 +96,6 @@ class Equipment
     public function setStatusEquipment(string $statusEquipment): static
     {
         $this->statusEquipment = $statusEquipment;
-
         return $this;
     }
 
@@ -104,7 +107,31 @@ class Equipment
     public function setIsDispo(bool $isDispo): static
     {
         $this->isDispo = $isDispo;
+        return $this;
+    }
 
+    public function getCreatedAt(): ?\DateTimeInterface
+    {
+        return $this->createdAt;
+    }
+
+    #[ORM\PrePersist]
+    public function setCreatedAt(): self
+    {
+        $this->createdAt = new \DateTime('now');
+        return $this;
+    }
+
+    public function getUpdatedAt(): ?\DateTimeInterface
+    {
+        return $this->updatedAt;
+    }
+
+    #[ORM\PrePersist]
+    #[ORM\PreUpdate]
+    public function setUpdatedAt(): self
+    {
+        $this->updatedAt = new \DateTime('now');
         return $this;
     }
 }

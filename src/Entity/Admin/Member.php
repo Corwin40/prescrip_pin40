@@ -6,6 +6,7 @@ use App\Entity\Gestapp\Prescription;
 use App\Repository\MemberRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
@@ -15,6 +16,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 #[ORM\Table(name: '`member`')]
 #[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_EMAIL', fields: ['email'])]
 #[UniqueEntity(fields: ['email'], message: 'There is already an account with this email')]
+#[ORM\HasLifecycleCallbacks]
 class Member implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
@@ -67,6 +69,12 @@ class Member implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private bool $isVerified = false;
 
+    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
+    private ?\DateTimeInterface $createdAt = null;
+
+    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
+    private ?\DateTimeInterface $updatedAt = null;
+
     /**
      * @var Collection<int, Prescription>
      */
@@ -95,41 +103,25 @@ class Member implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    /**
-     * A visual identifier that represents this user.
-     *
-     * @see UserInterface
-     */
     public function getUserIdentifier(): string
     {
         return (string) $this->email;
     }
 
-    /**
-     * @see UserInterface
-     */
     public function getRoles(): array
     {
         $roles = $this->roles;
-        // guarantee every user at least has ROLE_USER
         $roles[] = 'ROLE_USER';
 
         return array_unique($roles);
     }
 
-    /**
-     * @param list<string> $roles
-     */
     public function setRoles(array $roles): static
     {
         $this->roles = $roles;
-
         return $this;
     }
 
-    /**
-     * @see PasswordAuthenticatedUserInterface
-     */
     public function getPassword(): ?string
     {
         return $this->password;
@@ -138,13 +130,9 @@ class Member implements UserInterface, PasswordAuthenticatedUserInterface
     public function setPassword(string $password): static
     {
         $this->password = $password;
-
         return $this;
     }
 
-    /**
-     * Ensure the session doesn't contain actual password hashes by CRC32C-hashing them, as supported since Symfony 7.3.
-     */
     public function __serialize(): array
     {
         $data = (array) $this;
@@ -167,7 +155,6 @@ class Member implements UserInterface, PasswordAuthenticatedUserInterface
     public function setNameStructure(string $nameStructure): static
     {
         $this->nameStructure = $nameStructure;
-
         return $this;
     }
 
@@ -179,7 +166,6 @@ class Member implements UserInterface, PasswordAuthenticatedUserInterface
     public function setAddress(?string $address): static
     {
         $this->address = $address;
-
         return $this;
     }
 
@@ -191,7 +177,6 @@ class Member implements UserInterface, PasswordAuthenticatedUserInterface
     public function setZipcode(?string $zipcode): static
     {
         $this->zipcode = $zipcode;
-
         return $this;
     }
 
@@ -203,7 +188,6 @@ class Member implements UserInterface, PasswordAuthenticatedUserInterface
     public function setCity(?string $city): static
     {
         $this->city = $city;
-
         return $this;
     }
 
@@ -215,7 +199,6 @@ class Member implements UserInterface, PasswordAuthenticatedUserInterface
     public function setContactEmail(?string $contactEmail): static
     {
         $this->contactEmail = $contactEmail;
-
         return $this;
     }
 
@@ -227,7 +210,6 @@ class Member implements UserInterface, PasswordAuthenticatedUserInterface
     public function setContactPhone(?string $contactPhone): static
     {
         $this->contactPhone = $contactPhone;
-
         return $this;
     }
 
@@ -239,7 +221,6 @@ class Member implements UserInterface, PasswordAuthenticatedUserInterface
     public function setContactResponsableFirstname(?string $ContactResponsableFirstname): static
     {
         $this->ContactResponsableFirstname = $ContactResponsableFirstname;
-
         return $this;
     }
 
@@ -251,7 +232,6 @@ class Member implements UserInterface, PasswordAuthenticatedUserInterface
     public function setContactResponsableLastname(?string $contactResponsableLastname): static
     {
         $this->contactResponsableLastname = $contactResponsableLastname;
-
         return $this;
     }
 
@@ -263,7 +243,6 @@ class Member implements UserInterface, PasswordAuthenticatedUserInterface
     public function setContactResponsableCivility(?string $contactResponsableCivility): static
     {
         $this->contactResponsableCivility = $contactResponsableCivility;
-
         return $this;
     }
 
@@ -275,7 +254,31 @@ class Member implements UserInterface, PasswordAuthenticatedUserInterface
     public function setIsVerified(bool $isVerified): static
     {
         $this->isVerified = $isVerified;
+        return $this;
+    }
 
+    public function getCreatedAt(): ?\DateTimeInterface
+    {
+        return $this->createdAt;
+    }
+
+    #[ORM\PrePersist]
+    public function setCreatedAt(): self
+    {
+        $this->createdAt = new \DateTime('now');
+        return $this;
+    }
+
+    public function getUpdatedAt(): ?\DateTimeInterface
+    {
+        return $this->updatedAt;
+    }
+
+    #[ORM\PrePersist]
+    #[ORM\PreUpdate]
+    public function setUpdatedAt(): self
+    {
+        $this->updatedAt = new \DateTime('now');
         return $this;
     }
 
@@ -300,7 +303,6 @@ class Member implements UserInterface, PasswordAuthenticatedUserInterface
     public function removePrescription(Prescription $prescription): static
     {
         if ($this->prescriptions->removeElement($prescription)) {
-            // set the owning side to null (unless already changed)
             if ($prescription->getMembre() === $this) {
                 $prescription->setMembre(null);
             }

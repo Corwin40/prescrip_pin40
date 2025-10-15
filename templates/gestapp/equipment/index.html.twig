@@ -5,8 +5,15 @@
 {% block body %}
     <div class="container mt-5">
 
+        {# Bouton de retour au tableau de bord #}
+        <div class="mb-4">
+            {% include 'composants/forms/button_return_dashboard.html.twig' %}
+        </div>
+
         <div class="d-flex justify-content-between align-items-center mb-4">
             <h1 class="h3">Liste des équipements</h1>
+
+
 
             {# Bouton pour créer un équipement via ton composant #}
             {% include 'composants/forms/button_creatnew.html.twig' with {

@@ -1,7 +1,59 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello LoginDashboardController!{% endblock %}
+{% block title %}Dashboard{% endblock %}
 
 {% block body %}
-    <h1>Login Dashboard</h1>
+    <div class="container my-5">
+        <div class="row justify-content-center text-center g-4">
+
+            <!-- Carte Bénéficiaire -->
+            <div class="col-md-4">
+                <div class="card h-100 shadow-sm">
+                    <img
+                        src="{{ asset('assets/images/dashboard_beneficiary.jpg') }}"
+                        class="card-img-top mx-auto d-block mt-3"
+                        alt="Bénéficiaire"
+                        style="width: 100px; height: 100px; object-fit: contain;"
+                    >
+                    <div class="card-body">
+                        <h6 class="card-title">Bénéficiaire</h6>
+                        <a href="{{ path('app_gestapp_beneficiary_index') }}" class="btn btn-primary mt-2">Voir plus</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Carte Équipement -->
+            <div class="col-md-4">
+                <div class="card h-100 shadow-sm">
+                    <img
+                        src="{{ asset('assets/images/dashboard_equipment2.jpg') }}"
+                        class="card-img-top mx-auto d-block mt-3"
+                        alt="Équipement"
+                        style="width: 100px; height: 100px; object-fit: contain;"
+                    >
+                    <div class="card-body">
+                        <h6 class="card-title">Équipement</h6>
+                        <a href="{{ path('app_gestapp_equipment_index') }}" class="btn btn-primary mt-2">Voir plus</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Carte Prescription -->
+            <div class="col-md-4">
+                <div class="card h-100 shadow-sm">
+                    <img
+                        src="{{ asset('assets/images/dashboard_prescription.jpg') }}"
+                        class="card-img-top mx-auto d-block mt-3"
+                        alt="Prescription"
+                        style="width: 100px; height: 100px; object-fit: contain;"
+                    >
+                    <div class="card-body">
+                        <h6 class="card-title">Prescription</h6>
+                        <a href="{{ path('app_gestapp_prescription_index') }}" class="btn btn-primary mt-2">Voir plus</a>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
 {% endblock %}

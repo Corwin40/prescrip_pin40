@@ -18,8 +18,7 @@ class BeneficiaryType extends AbstractType
             ->add('gender')
             ->add('ageGroup')
             ->add('professionnalStatus')
-            ->add('createdAt')
-            ->add('updatedAt')
+
         ;
     }
 

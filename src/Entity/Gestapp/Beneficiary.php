@@ -7,6 +7,7 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: BeneficiaryRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 class Beneficiary
 {
     #[ORM\Id]
@@ -33,13 +34,15 @@ class Beneficiary
     private ?string $professionnalStatus = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
-    private ?\DateTime $createdAt = null;
+    private ?\DateTimeInterface $createdAt = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
-    private ?\DateTime $updatedAt = null;
+    private ?\DateTimeInterface $updatedAt = null;
 
     #[ORM\OneToOne(inversedBy: 'beneficiary', cascade: ['persist', 'remove'])]
     private ?Competence $beneficiaryCompetences = null;
+
+
 
     public function getId(): ?int
     {
@@ -54,7 +57,6 @@ class Beneficiary
     public function setFirstname(string $firstname): static
     {
         $this->firstname = $firstname;
-
         return $this;
     }
 
@@ -66,7 +68,6 @@ class Beneficiary
     public function setLastname(string $lastname): static
     {
         $this->lastname = $lastname;
-
         return $this;
     }
 
@@ -78,7 +79,6 @@ class Beneficiary
     public function setCivility(string $civility): static
     {
         $this->civility = $civility;
-
         return $this;
     }
 
@@ -90,7 +90,6 @@ class Beneficiary
     public function setGender(string $gender): static
     {
         $this->gender = $gender;
-
         return $this;
     }
 
@@ -102,7 +101,6 @@ class Beneficiary
     public function setAgeGroup(?string $ageGroup): static
     {
         $this->ageGroup = $ageGroup;
-
         return $this;
     }
 
@@ -114,31 +112,31 @@ class Beneficiary
     public function setProfessionnalStatus(string $professionnalStatus): static
     {
         $this->professionnalStatus = $professionnalStatus;
-
         return $this;
     }
 
-    public function getCreatedAt(): ?\DateTime
+    public function getCreatedAt(): ?\DateTimeInterface
     {
         return $this->createdAt;
     }
 
-    public function setCreatedAt(\DateTime $createdAt): static
+    #[ORM\PrePersist]
+    public function setCreatedAt(): self
     {
-        $this->createdAt = $createdAt;
-
+        $this->createdAt = new \DateTime('now');
         return $this;
     }
 
-    public function getUpdatedAt(): ?\DateTime
+    public function getUpdatedAt(): ?\DateTimeInterface
     {
         return $this->updatedAt;
     }
 
-    public function setUpdatedAt(\DateTime $updatedAt): static
+    #[ORM\PrePersist]
+    #[ORM\PreUpdate]
+    public function setUpdatedAt(): self
     {
-        $this->updatedAt = $updatedAt;
-
+        $this->updatedAt = new \DateTime('now');
         return $this;
     }
 
@@ -150,9 +148,6 @@ class Beneficiary
     public function setBeneficiaryCompetences(?Competence $beneficiaryCompetences): static
     {
         $this->beneficiaryCompetences = $beneficiaryCompetences;
-
         return $this;
     }
-
-
 }

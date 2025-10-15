@@ -1,59 +1,102 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Member index{% endblock %}
+{% block title %}Liste des membres{% endblock %}
 
 {% block body %}
-    <h1>Member index</h1>
+    <div class="container mt-5">
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Email</th>
-                <th>Roles</th>
-                <th>Password</th>
-                <th>NameStructure</th>
-                <th>Address</th>
-                <th>Zipcode</th>
-                <th>City</th>
-                <th>ContactEmail</th>
-                <th>ContactPhone</th>
-                <th>ContactResponsableFirstname</th>
-                <th>ContactResponsableLastname</th>
-                <th>ContactResponsableCivility</th>
-                <th>IsVerified</th>
-                <th>actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for member in members %}
-            <tr>
-                <td>{{ member.id }}</td>
-                <td>{{ member.email }}</td>
-                <td>{{ member.roles ? member.roles|json_encode : '' }}</td>
-                <td>{{ member.password }}</td>
-                <td>{{ member.nameStructure }}</td>
-                <td>{{ member.address }}</td>
-                <td>{{ member.zipcode }}</td>
-                <td>{{ member.city }}</td>
-                <td>{{ member.contactEmail }}</td>
-                <td>{{ member.contactPhone }}</td>
-                <td>{{ member.ContactResponsableFirstname }}</td>
-                <td>{{ member.contactResponsableLastname }}</td>
-                <td>{{ member.contactResponsableCivility }}</td>
-                <td>{{ member.isVerified ? 'Yes' : 'No' }}</td>
-                <td>
-                    <a href="{{ path('app_admin_member_show', {'id': member.id}) }}">show</a>
-                    <a href="{{ path('app_admin_member_edit', {'id': member.id}) }}">edit</a>
-                </td>
-            </tr>
+        {# Bouton de retour au tableau de bord #}
+        <div class="mb-4">
+            {% include 'composants/forms/button_return_dashboard.html.twig' %}
+        </div>
+
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1 class="h3">Liste des membres</h1>
+
+            {# Bouton pour créer un membre #}
+            {% include 'composants/forms/button_creatnew.html.twig' with {
+                label: 'Créer un nouveau membre',
+                href: path('app_admin_member_new')
+            } %}
+        </div>
+
+        {% if members is not empty %}
+            <div class="table-responsive">
+                <table class="table table-striped table-bordered align-middle">
+                    <thead class="table-dark">
+                    <tr>
+                        <th>ID</th>
+                        <th>Email</th>
+                        <th>Rôles</th>
+                        <th>Nom de la structure</th>
+                        <th>Adresse</th>
+                        <th>Code postal</th>
+                        <th>Ville</th>
+                        <th>Email de contact</th>
+                        <th>Téléphone</th>
+                        <th>Responsable (Prénom / Nom)</th>
+                        <th>Civilité</th>
+                        <th>Vérifié</th>
+                        <th>Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for member in members %}
+                        <tr>
+                            <td>{{ member.id }}</td>
+                            <td>{{ member.email }}</td>
+                            <td>
+                                {% if member.roles is defined and member.roles is iterable %}
+                                    {{ member.roles|join(', ') }}
+                                {% else %}
+                                    -
+                                {% endif %}
+                            </td>
+                            <td>{{ member.nameStructure }}</td>
+                            <td>{{ member.address }}</td>
+                            <td>{{ member.zipcode }}</td>
+                            <td>{{ member.city }}</td>
+                            <td>{{ member.contactEmail }}</td>
+                            <td>{{ member.contactPhone }}</td>
+                            <td>{{ member.contactResponsableFirstname }} {{ member.contactResponsableLastname }}</td>
+                            <td>{{ member.contactResponsableCivility }}</td>
+                            <td>
+                                {% if member.isVerified %}
+                                    <span class="badge bg-success">Oui</span>
+                                {% else %}
+                                    <span class="badge bg-danger">Non</span>
+                                {% endif %}
+                            </td>
+                            <td class="text-center">
+
+                                {# Bouton "Voir" #}
+                                {% include 'composants/forms/button_link.html.twig' with {
+                                    label: 'Voir',
+                                    href: path('app_admin_member_show', {'id': member.id}),
+                                    type: 'info'
+                                } %}
+
+                                {# Bouton "Modifier" #}
+                                {% include 'composants/forms/button_link.html.twig' with {
+                                    label: 'Modifier',
+                                    href: path('app_admin_member_edit', {'id': member.id}),
+                                    type: 'warning'
+                                } %}
+
+                                {# Bouton "Supprimer" (optionnel, si ton composant existe) #}
+                                {% include 'composants/forms/buttons_delete.html.twig' with {
+                                    id: member.id,
+                                    route: 'app_admin_member_delete'
+                                } %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
         {% else %}
-            <tr>
-                <td colspan="15">no records found</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+            <p class="text-center">Aucun membre trouvé.</p>
+        {% endif %}
 
-    <a href="{{ path('app_admin_member_new') }}">Create new</a>
+    </div>
 {% endblock %}
