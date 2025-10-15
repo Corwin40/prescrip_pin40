@@ -30,10 +30,9 @@
         } %}
     </div>
 
-    <div class="col-md-2">
-        {% include 'composants/inputs/input_select.html.twig' with {
-            label: 'Tranche d’âge',
-            field: form.ageGroup
+    <div class="col-md-12">
+        {% include 'composants/inputs/input_radios.html.twig' with {
+          field: form.ageGroup
         } %}
     </div>
 

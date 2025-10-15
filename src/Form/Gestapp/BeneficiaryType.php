@@ -49,7 +49,7 @@ class BeneficiaryType extends AbstractType
             ])
 
             ->add('professionnalStatus', ChoiceType::class, [
-                'label' => 'Situation',
+                'label' => 'Statut professionnel',
                 'choices' => [
                     'scolaire/Étudiant' => 'scolaire/etudiant',
                     'En emploi ou en formation' => 'employe/formation',
