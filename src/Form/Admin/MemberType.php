@@ -6,6 +6,7 @@ use App\Entity\Admin\Member;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 
 class MemberType extends AbstractType
 {
@@ -13,7 +14,7 @@ class MemberType extends AbstractType
     {
         $builder
             ->add('email')
-            ->add('password')
+            #->add('password')
             ->add('nameStructure')
             ->add('address')
             ->add('zipcode')
@@ -22,9 +23,17 @@ class MemberType extends AbstractType
             ->add('contactPhone')
             ->add('ContactResponsableFirstname')
             ->add('contactResponsableLastname')
-            ->add('contactResponsableCivility')
-            ->add('isVerified')
-        ;
+            ->add('contactResponsableCivility', ChoiceType::class, [
+                'choices' => [
+                    'Mme' => 'Mme',
+                    'Mlle' => 'Mlle',
+                    'Monsieur' => 'Monsieur',
+                ],
+                'label' => 'Civilité',
+                'placeholder' => 'Sélectionnez une civilité',
+                'required' => true,
+            ])
+            ->add('isVerified');
     }
 
     public function configureOptions(OptionsResolver $resolver): void

@@ -8,6 +8,7 @@ use App\Entity\Gestapp\Equipment;
 use App\Entity\Gestapp\Prescription;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -28,7 +29,18 @@ class PrescriptionType extends AbstractType
                 'choice_label' => 'id',
             ])
             ->add('details')
-            ->add('baseCompetence')
+            ->add('baseCompetence', ChoiceType::class, [
+                'label' => 'Compétences de base',
+                'choices' => [
+                    'Acquises' => 'Acquises',
+                    'À vérifier' => 'A verifier',
+                    'Non acquises' => 'Non acquises',
+                ],
+                'placeholder' => 'Veuillez choisir',
+                'required' => true,
+            ])
+
+
             ->add('lieuMediation')
         ;
     }
