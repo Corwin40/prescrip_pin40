@@ -5,32 +5,37 @@
 {% block body %}
     <div class="container mt-5">
 
-        <h1 class="mb-4">Détails de la prescription</h1>
-
-        <div class="card p-4 shadow-sm">
-            <table class="table table-bordered align-middle">
-                <tbody>
-                <tr>
-                    <th>ID</th>
-                    <td>{{ prescription.id }}</td>
-                </tr>
-                <tr>
-                    <th>Référence</th>
-                    <td>{{ prescription.ref }}</td>
-                </tr>
-                <tr>
-                    <th>Créée le</th>
-                    <td>{{ prescription.createdAt ? prescription.createdAt|date('d/m/Y') : '' }}</td>
-                </tr>
-                <tr>
-                    <th>Modifiée le</th>
-                    <td>{{ prescription.updatedAt ? prescription.updatedAt|date('d/m/Y') : '' }}</td>
-                </tr>
-                </tbody>
-            </table>
+        {# Bouton de retour au tableau de bord #}
+        <div class="mb-4">
+            {% include 'composants/forms/button_return_dashboard.html.twig' %}
         </div>
 
-        <div class="mt-4 d-flex gap-2">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1 class="h3">Détails de la prescription</h1>
+        </div>
+
+        <div class="card p-4 shadow-sm">
+            <div class="table-responsive">
+                <table class="table table-bordered align-middle">
+                    <tbody>
+                    <tr>
+                        <th scope="row" style="width: 30%;">Référence</th>
+                        <td>{{ prescription.ref }}</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Date de création</th>
+                        <td>{{ prescription.createdAt ? prescription.createdAt|date('d/m/Y') : '' }}</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Dernière modification</th>
+                        <td>{{ prescription.updatedAt ? prescription.updatedAt|date('d/m/Y') : '' }}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="mt-4 d-flex flex-wrap gap-2">
             {% include 'composants/showsTable/button_return_list.html.twig' with {
                 href: path('app_gestapp_prescription_index'),
                 label: 'Retour à la liste'

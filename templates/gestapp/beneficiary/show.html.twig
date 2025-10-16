@@ -8,62 +8,66 @@
         <h1 class="mb-4">Détails du bénéficiaire</h1>
 
         <div class="card p-4 shadow-sm">
-            <table class="table table-bordered align-middle">
-                <tbody>
-                <tr>
-                    <th scope="row">ID</th>
-                    <td>{{ beneficiary.id }}</td>
-                </tr>
-                <tr>
-                    <th scope="row">Prénom</th>
-                    <td>{{ beneficiary.firstname }}</td>
-                </tr>
-                <tr>
-                    <th scope="row">Nom</th>
-                    <td>{{ beneficiary.lastname }}</td>
-                </tr>
-                <tr>
-                    <th scope="row">Civilité</th>
-                    <td>{{ beneficiary.civility }}</td>
-                </tr>
-                <tr>
-                    <th scope="row">Genre</th>
-                    <td>{{ beneficiary.gender }}</td>
-                </tr>
-                <tr>
-                    <th scope="row">Tranche d’âge</th>
-                    <td>{{ beneficiary.ageGroup }}</td>
-                </tr>
-                <tr>
-                    <th scope="row">Statut professionnel</th>
-                    <td>{{ beneficiary.professionnalStatus }}</td>
-                </tr>
-                <tr>
-                    <th scope="row">Créé le</th>
-                    <td>{{ beneficiary.createdAt ? beneficiary.createdAt|date('d/m/Y') : '' }}</td>
-                </tr>
-                <tr>
-                    <th scope="row">Modifié le</th>
-                    <td>{{ beneficiary.updatedAt ? beneficiary.updatedAt|date('d/m/Y') : '' }}</td>
-                </tr>
-                </tbody>
-            </table>
+            <div class="table-responsive">
+                <table class="table table-bordered align-middle">
+                    <tbody>
+                    {# Ligne : Prénom + Nom #}
+                    <tr>
+                        <th scope="row" style="width: 30%;">Prénom et Nom</th>
+                        <td>{{ beneficiary.firstname }} {{ beneficiary.lastname }}</td>
+                    </tr>
+
+                    {# Ligne : Civilité + Genre + Tranche d’âge (3 colonnes md-4) #}
+                    <tr>
+                        <td colspan="2">
+                            <div class="row ps-2">
+                                <div class="col-md-4 col-12 mb-2">
+                                    <label class="fw-bold me-1">Civilité :</label>
+                                    <span>{{ beneficiary.civility }}</span>
+                                </div>
+                                <div class="col-md-4 col-12 mb-2">
+                                    <label class="fw-bold me-1">Genre :</label>
+                                    <span>{{ beneficiary.gender }}</span>
+                                </div>
+                                <div class="col-md-4 col-12 mb-2">
+                                    <label class="fw-bold me-1">Tranche d’âge :</label>
+                                    <span>{{ beneficiary.ageGroup }}</span>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+
+                    {# Ligne : Statut professionnel #}
+                    <tr>
+                        <th scope="row">Statut professionnel</th>
+                        <td>{{ beneficiary.professionnalStatus }}</td>
+                    </tr>
+
+                    {# Ligne : Dates de création / modification #}
+                    <tr>
+                        <th scope="row">Créé le</th>
+                        <td>{{ beneficiary.createdAt ? beneficiary.createdAt|date('d/m/Y') : '' }}</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Modifié le</th>
+                        <td>{{ beneficiary.updatedAt ? beneficiary.updatedAt|date('d/m/Y') : '' }}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
 
-        <div class="mt-4 d-flex gap-2">
-            {# Bouton retour (depuis showsTable) #}
+        <div class="mt-4 d-flex flex-wrap gap-2">
             {% include 'composants/showsTable/button_return_list.html.twig' with {
                 href: path('app_gestapp_beneficiary_index'),
                 label: 'Retour à la liste'
             } %}
 
-            {# Bouton modifier (depuis showsTable) #}
             {% include 'composants/showsTable/button_update.html.twig' with {
                 href: path('app_gestapp_beneficiary_edit', {'id': beneficiary.id}),
                 label: 'Modifier'
             } %}
 
-            {# Bouton supprimer (depuis showsTable) #}
             {% include 'composants/showsTable/buttons_delete.html.twig' with {
                 id: beneficiary.id,
                 route: 'app_gestapp_beneficiary_delete'

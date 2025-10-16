@@ -1,6 +1,7 @@
-<div class="form-check">
-  <input class="isverified" type="checkbox" value="" id="isverified">
-  <label class="isverified" for="checkDefault">
-    Default checkbox
-  </label>
+<div class="form-check mb-3">
+    {{ form_widget(field, {'attr': {'class': 'form-check-input'}}) }}
+    <label class="form-check-label" for="{{ field.vars.id }}">
+        {{ label|default(form_label(field)) }}
+    </label>
+    {{ form_errors(field) }}
 </div>

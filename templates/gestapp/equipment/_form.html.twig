@@ -37,12 +37,11 @@
         } %}
     </div>
 
-    <div class="col-md-6">
-        {% include 'composants/inputs/input_radio.html.twig' with {
-            label: 'Disponible',
-            field: form.isDispo
-        } %}
-    </div>
+    {% include 'composants/forms/check_verif.html.twig' with {
+        label: 'Disponible',
+        field: form.isDispo
+    } %}
+
 
 </div>
 
