@@ -1,0 +1,70 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Competence{% endblock %}
+
+{% block body %}
+    <h1>Competence</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ competence.id }}</td>
+            </tr>
+            <tr>
+                <th>CompBase</th>
+                <td>{{ competence.compBase }}</td>
+            </tr>
+            <tr>
+                <th>CompDesk</th>
+                <td>{{ competence.compDesk }}</td>
+            </tr>
+            <tr>
+                <th>CompInternet</th>
+                <td>{{ competence.compInternet }}</td>
+            </tr>
+            <tr>
+                <th>CompEmail</th>
+                <td>{{ competence.compEmail }}</td>
+            </tr>
+            <tr>
+                <th>IsAutoEva</th>
+                <td>{{ competence.isAutoEva ? 'Yes' : 'No' }}</td>
+            </tr>
+            <tr>
+                <th>IsDigComp1</th>
+                <td>{{ competence.isDigComp1 ? 'Yes' : 'No' }}</td>
+            </tr>
+            <tr>
+                <th>IsDigComp2</th>
+                <td>{{ competence.isDigComp2 ? 'Yes' : 'No' }}</td>
+            </tr>
+            <tr>
+                <th>IsDigComp3</th>
+                <td>{{ competence.isDigComp3 ? 'Yes' : 'No' }}</td>
+            </tr>
+            <tr>
+                <th>IsDigComp4</th>
+                <td>{{ competence.isDigComp4 ? 'Yes' : 'No' }}</td>
+            </tr>
+            <tr>
+                <th>IsDigComp5</th>
+                <td>{{ competence.isDigComp5 ? 'Yes' : 'No' }}</td>
+            </tr>
+            <tr>
+                <th>DetailParcour</th>
+                <td>{{ competence.detailParcour }}</td>
+            </tr>
+            <tr>
+                <th>IsAutoEvalEnd</th>
+                <td>{{ competence.isAutoEvalEnd ? 'Yes' : 'No' }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_gestapp_competence_index') }}">back to list</a>
+
+    <a href="{{ path('app_gestapp_competence_edit', {'id': competence.id}) }}">edit</a>
+
+    {{ include('gestapp/competence/_delete_form.html.twig') }}
+{% endblock %}
