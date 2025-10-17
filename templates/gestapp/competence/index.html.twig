@@ -1,57 +1,64 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Competence index{% endblock %}
+{% block title %}Auto-évaluation des compétences{% endblock %}
 
 {% block body %}
-    <h1>Competence index</h1>
+    <div class="container mt-4">
+        <h1 class="text-center mb-4">Auto-évaluation des compétences</h1>
 
-    <table class="table">
-        <thead>
+        <table class="table table-bordered text-center align-middle">
+            <thead class="table-light">
             <tr>
-                <th>Id</th>
-                <th>CompBase</th>
-                <th>CompDesk</th>
-                <th>CompInternet</th>
-                <th>CompEmail</th>
-                <th>IsAutoEva</th>
-                <th>IsDigComp1</th>
-                <th>IsDigComp2</th>
-                <th>IsDigComp3</th>
-                <th>IsDigComp4</th>
-                <th>IsDigComp5</th>
-                <th>DetailParcour</th>
-                <th>IsAutoEvalEnd</th>
-                <th>actions</th>
+                <th scope="col">Compétences</th>
+                <th scope="col">Acquis</th>
+                <th scope="col">En cours</th>
+                <th scope="col">Non acquis</th>
             </tr>
-        </thead>
-        <tbody>
-        {% for competence in competences %}
-            <tr>
-                <td>{{ competence.id }}</td>
-                <td>{{ competence.compBase }}</td>
-                <td>{{ competence.compDesk }}</td>
-                <td>{{ competence.compInternet }}</td>
-                <td>{{ competence.compEmail }}</td>
-                <td>{{ competence.isAutoEva ? 'Yes' : 'No' }}</td>
-                <td>{{ competence.isDigComp1 ? 'Yes' : 'No' }}</td>
-                <td>{{ competence.isDigComp2 ? 'Yes' : 'No' }}</td>
-                <td>{{ competence.isDigComp3 ? 'Yes' : 'No' }}</td>
-                <td>{{ competence.isDigComp4 ? 'Yes' : 'No' }}</td>
-                <td>{{ competence.isDigComp5 ? 'Yes' : 'No' }}</td>
-                <td>{{ competence.detailParcour }}</td>
-                <td>{{ competence.isAutoEvalEnd ? 'Yes' : 'No' }}</td>
-                <td>
-                    <a href="{{ path('app_gestapp_competence_show', {'id': competence.id}) }}">show</a>
-                    <a href="{{ path('app_gestapp_competence_edit', {'id': competence.id}) }}">edit</a>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="14">no records found</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+            {% for competence in competences %}
+                <tr>
+                    <td>Comp-bases</td>
+                    <td>{% if competence.compBase == 'acquis' %}✔{% endif %}</td>
+                    <td>{% if competence.compBase == 'en_cours' %}✔{% endif %}</td>
+                    <td>{% if competence.compBase == 'non_acquis' %}✔{% endif %}</td>
+                </tr>
+                <tr>
+                    <td>Comp-desk</td>
+                    <td>{% if competence.compDesk == 'acquis' %}✔{% endif %}</td>
+                    <td>{% if competence.compDesk == 'en_cours' %}✔{% endif %}</td>
+                    <td>{% if competence.compDesk == 'non_acquis' %}✔{% endif %}</td>
+                </tr>
+                <tr>
+                    <td>Comp-internet</td>
+                    <td>{% if competence.compInternet == 'acquis' %}✔{% endif %}</td>
+                    <td>{% if competence.compInternet == 'en_cours' %}✔{% endif %}</td>
+                    <td>{% if competence.compInternet == 'non_acquis' %}✔{% endif %}</td>
+                </tr>
+                <tr>
+                    <td>Comp-email</td>
+                    <td>{% if competence.compEmail == 'acquis' %}✔{% endif %}</td>
+                    <td>{% if competence.compEmail == 'en_cours' %}✔{% endif %}</td>
+                    <td>{% if competence.compEmail == 'non_acquis' %}✔{% endif %}</td>
+                </tr>
+                <tr class="table-secondary">
+                    <td colspan="4">
+                        <strong>Détails :</strong> {{ competence.detailParcour }}<br>
+                        <strong>Évaluation finale :</strong> {{ competence.isAutoEvalEnd ? 'Oui' : 'Non' }}<br>
+                        <a href="{{ path('app_gestapp_competence_show', {'id': competence.id}) }}" class="btn btn-sm btn-outline-primary mt-2">Voir</a>
+                        <a href="{{ path('app_gestapp_competence_edit', {'id': competence.id}) }}" class="btn btn-sm btn-outline-secondary mt-2">Modifier</a>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="4" class="text-center text-muted">Aucune compétence enregistrée</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
 
-    <a href="{{ path('app_gestapp_competence_new') }}">Create new</a>
+        <div class="text-center mt-3">
+            <a href="{{ path('app_gestapp_competence_new') }}" class="btn btn-primary">Ajouer competence</a>
+        </div>
+    </div>
 {% endblock %}

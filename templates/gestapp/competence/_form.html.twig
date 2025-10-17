@@ -1,4 +1,62 @@
 {{ form_start(form) }}
-    {{ form_widget(form) }}
-    <button class="btn">{{ button_label|default('Save') }}</button>
+
+<div class="container mt-4">
+    <h2 class="text-center mb-4">Auto-évaluation des compétences</h2>
+
+    <table class="table table-bordered text-center align-middle">
+        <thead class="table-light">
+        <tr>
+            <th scope="col">Compétences</th>
+            <th scope="col">Acquis</th>
+            <th scope="col">En cours</th>
+            <th scope="col">Non acquis</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td>Comp-bases</td>
+            <td><input type="radio" name="competence[compBase]" value="acquis" {{ form.vars.data.compBase == 'acquis' ? 'checked' : '' }}></td>
+            <td><input type="radio" name="competence[compBase]" value="en_cours" {{ form.vars.data.compBase == 'en_cours' ? 'checked' : '' }}></td>
+            <td><input type="radio" name="competence[compBase]" value="non_acquis" {{ form.vars.data.compBase == 'non_acquis' ? 'checked' : '' }}></td>
+        </tr>
+        <tr>
+            <td>Comp-desk</td>
+            <td><input type="radio" name="competence[compDesk]" value="acquis" {{ form.vars.data.compDesk == 'acquis' ? 'checked' : '' }}></td>
+            <td><input type="radio" name="competence[compDesk]" value="en_cours" {{ form.vars.data.compDesk == 'en_cours' ? 'checked' : '' }}></td>
+            <td><input type="radio" name="competence[compDesk]" value="non_acquis" {{ form.vars.data.compDesk == 'non_acquis' ? 'checked' : '' }}></td>
+        </tr>
+        <tr>
+            <td>Comp-internet</td>
+            <td><input type="radio" name="competence[compInternet]" value="acquis" {{ form.vars.data.compInternet == 'acquis' ? 'checked' : '' }}></td>
+            <td><input type="radio" name="competence[compInternet]" value="en_cours" {{ form.vars.data.compInternet == 'en_cours' ? 'checked' : '' }}></td>
+            <td><input type="radio" name="competence[compInternet]" value="non_acquis" {{ form.vars.data.compInternet == 'non_acquis' ? 'checked' : '' }}></td>
+        </tr>
+        <tr>
+            <td>Comp-email</td>
+            <td><input type="radio" name="competence[compEmail]" value="acquis" {{ form.vars.data.compEmail == 'acquis' ? 'checked' : '' }}></td>
+            <td><input type="radio" name="competence[compEmail]" value="en_cours" {{ form.vars.data.compEmail == 'en_cours' ? 'checked' : '' }}></td>
+            <td><input type="radio" name="competence[compEmail]" value="non_acquis" {{ form.vars.data.compEmail == 'non_acquis' ? 'checked' : '' }}></td>
+        </tr>
+        </tbody>
+    </table>
+
+    <div class="mt-3">
+
+        {{ form_row(form.isAutoEva) }}
+        {{ form_row(form.isAutoEvalEnd) }}
+        {{ form_row(form.isDigComp1) }}
+        {{ form_row(form.isDigComp2) }}
+        {{ form_row(form.isDigComp3) }}
+        {{ form_row(form.isDigComp4) }}
+        {{ form_row(form.isDigComp5) }}
+        {{ form_row(form.detailParcour) }}
+        {{ form_row(form.beneficiary) }}
+    </div>
+
+    <div class="text-center mt-3">
+        <button class="btn btn-success">{{ button_label|default('Enregistrer') }}</button>
+        <a href="{{ path('app_gestapp_competence_index') }}" class="btn btn-secondary ms-2">Annuler</a>
+    </div>
+</div>
+
 {{ form_end(form) }}
