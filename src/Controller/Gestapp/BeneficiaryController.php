@@ -42,6 +42,26 @@ final class BeneficiaryController extends AbstractController
         ]);
     }
 
+    #[Route('/new2', name: 'app_gestapp_beneficiary_new2', methods: ['GET', 'POST'])]
+    public function new2(Request $request, EntityManagerInterface $entityManager): Response
+    {
+        $beneficiary = new Beneficiary();
+        $form = $this->createForm(BeneficiaryType::class, $beneficiary);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager->persist($beneficiary);
+            $entityManager->flush();
+
+            return $this->redirectToRoute('app_gestapp_beneficiary_index', [], Response::HTTP_SEE_OTHER);
+        }
+
+        return $this->render('gestapp/beneficiary/_form.html.twig', [
+            'beneficiary' => $beneficiary,
+            'form' => $form,
+        ]);
+    }
+
     #[Route('/{id}', name: 'app_gestapp_beneficiary_show', methods: ['GET'])]
     public function show(Beneficiary $beneficiary): Response
     {

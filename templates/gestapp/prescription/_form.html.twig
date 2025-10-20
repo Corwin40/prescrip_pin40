@@ -18,6 +18,9 @@
         } %}
     </div>
 
+    <div>Accueillir le form bénificiaire</div>
+    {{ render(controller('App\\Controller\\Gestapp\\BeneficiaryController::new2')) }}
+
     <div class="col-md-6">
         {% include 'composants/inputs/input_select.html.twig' with {
             label: 'Equipement',
@@ -45,6 +48,8 @@
             field: form.lieuMediation
         } %}
     </div>
+
+    <div>Accueillir le form compétence</div>
 </div>
 
 <div class="mt-4">
