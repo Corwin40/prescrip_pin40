@@ -64,6 +64,7 @@ class CompetenceType extends AbstractType
 
 
             ->add('isAutoEva')
+            ->add('isDigComp0')
             ->add('isDigComp1')
             ->add('isDigComp2')
             ->add('isDigComp3')

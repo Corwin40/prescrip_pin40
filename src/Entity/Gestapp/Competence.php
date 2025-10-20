@@ -30,6 +30,9 @@ class Competence
     private ?bool $isAutoEva = null;
 
     #[ORM\Column]
+    private ?bool $isDigComp0 = null;
+
+    #[ORM\Column]
     private ?bool $isDigComp1 = null;
 
     #[ORM\Column]
@@ -114,6 +117,18 @@ class Competence
     public function setIsAutoEva(bool $isAutoEva): static
     {
         $this->isAutoEva = $isAutoEva;
+
+        return $this;
+    }
+
+    public function isDigComp0(): ?bool
+    {
+        return $this->isDigComp0;
+    }
+
+    public function setIsDigComp0(bool $isDigComp0): static
+    {
+        $this->isDigComp0 = $isDigComp0;
 
         return $this;
     }
