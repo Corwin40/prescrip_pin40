@@ -1,10 +1,13 @@
 <div class="container mt-5">
     {# Bouton de retour au tableau de bord #}
-    <div class="mb-4">
-        {% include 'composants/forms/button_return_dashboard.html.twig' %}
-    </div>
+    <div class="container mt-5">
+        {# Bouton de redirection vers la création de prescription #}
+        <a href="{{ path('app_gestapp_prescription_new') }}" class="btn btn-outline-primary">
+            <i class="bi bi-arrow-right-circle me-2"></i> Go to prescription
+        </a>
 
-    <h2 class="text-center mb-4">Auto-évaluation des compétences</h2>
+
+        <h2 class="text-center mb-4">Auto-évaluation des compétences</h2>
 
     <div class="card shadow-sm p-4">
         {{ form_start(form) }}
