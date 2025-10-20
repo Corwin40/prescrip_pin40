@@ -1,66 +1,77 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Auto-évaluation des compétences{% endblock %}
+{% block title %}Liste des compétences{% endblock %}
 
 {% block body %}
-    <div class="container mt-4">
-        <h1 class="text-center mb-4">Auto-évaluation des compétences</h1>
+    <div class="container mt-5">
 
-        
-
-        <table class="table table-bordered text-center align-middle">
-            <thead class="table-light">
-            <tr>
-                <th scope="col">Compétences</th>
-                <th scope="col">Acquis</th>
-                <th scope="col">En cours</th>
-                <th scope="col">Non acquis</th>
-            </tr>
-            </thead>
-            <tbody>
-            {% for competence in competences %}
-                <tr>
-                    <td>Comp-bases</td>
-                    <td>{% if competence.compBase == 'acquis' %}✔{% endif %}</td>
-                    <td>{% if competence.compBase == 'en_cours' %}✔{% endif %}</td>
-                    <td>{% if competence.compBase == 'non_acquis' %}✔{% endif %}</td>
-                </tr>
-                <tr>
-                    <td>Comp-desk</td>
-                    <td>{% if competence.compDesk == 'acquis' %}✔{% endif %}</td>
-                    <td>{% if competence.compDesk == 'en_cours' %}✔{% endif %}</td>
-                    <td>{% if competence.compDesk == 'non_acquis' %}✔{% endif %}</td>
-                </tr>
-                <tr>
-                    <td>Comp-internet</td>
-                    <td>{% if competence.compInternet == 'acquis' %}✔{% endif %}</td>
-                    <td>{% if competence.compInternet == 'en_cours' %}✔{% endif %}</td>
-                    <td>{% if competence.compInternet == 'non_acquis' %}✔{% endif %}</td>
-                </tr>
-                <tr>
-                    <td>Comp-email</td>
-                    <td>{% if competence.compEmail == 'acquis' %}✔{% endif %}</td>
-                    <td>{% if competence.compEmail == 'en_cours' %}✔{% endif %}</td>
-                    <td>{% if competence.compEmail == 'non_acquis' %}✔{% endif %}</td>
-                </tr>
-                <tr class="table-secondary">
-                    <td colspan="4">
-                        <strong>Détails :</strong> {{ competence.detailParcour }}<br>
-                        <strong>Évaluation finale :</strong> {{ competence.isAutoEvalEnd ? 'Oui' : 'Non' }}<br>
-                        <a href="{{ path('app_gestapp_competence_show', {'id': competence.id}) }}" class="btn btn-sm btn-outline-primary mt-2">Voir</a>
-                        <a href="{{ path('app_gestapp_competence_edit', {'id': competence.id}) }}" class="btn btn-sm btn-outline-secondary mt-2">Modifier</a>
-                    </td>
-                </tr>
-            {% else %}
-                <tr>
-                    <td colspan="4" class="text-center text-muted">Aucune compétence enregistrée</td>
-                </tr>
-            {% endfor %}
-            </tbody>
-        </table>
-
-        <div class="text-center mt-3">
-            <a href="{{ path('app_gestapp_competence_new') }}" class="btn btn-primary">Ajouer competence</a>
+        <!-- 🔙 Bouton de retour au tableau de bord -->
+        <div class="mb-4">
+            {% include 'composants/forms/button_return_dashboard.html.twig' %}
         </div>
+
+        <h1 class="text-center mb-4">Liste des compétences</h1>
+
+        {% if competences is not empty %}
+            <div class="row g-4">
+                {% for competence in competences %}
+                    <div class="col-12 col-md-6 col-lg-4">
+                        <div class="card shadow-sm border-0 h-100">
+                            <div class="card-body">
+                                <h5 class="card-title fw-bold text-primary mb-3">
+                                    {{ competence.beneficiary }}
+                                </h5>
+
+                                <div class="mb-2">
+                                    <strong>Comp. base :</strong> {{ competence.compBase|capitalize }}
+                                </div>
+                                <div class="mb-2">
+                                    <strong>Comp. desk :</strong> {{ competence.compDesk|capitalize }}
+                                </div>
+                                <div class="mb-2">
+                                    <strong>Comp. internet :</strong> {{ competence.compInternet|capitalize }}
+                                </div>
+                                <div class="mb-2">
+                                    <strong>Comp. email :</strong> {{ competence.compEmail|capitalize }}
+                                </div>
+                                <div class="mb-2">
+                                    <strong>Auto-éval. :</strong> {{ competence.isAutoEva ? 'Oui' : 'Non' }}
+                                </div>
+                                <div class="mb-3">
+                                    <strong>Finale :</strong> {{ competence.isAutoEvalEnd ? 'Oui' : 'Non' }}
+                                </div>
+
+                                <div class="d-flex justify-content-between flex-wrap gap-2 mt-3">
+                                    <!-- Bouton Voir -->
+                                    <a href="{{ path('app_gestapp_competence_show', {'id': competence.id}) }}"
+                                       class="btn btn-info btn-sm flex-fill text-white text-center">
+                                        Voir
+                                    </a>
+
+                                    <!-- Bouton Modifier -->
+                                    <a href="{{ path('app_gestapp_competence_edit', {'id': competence.id}) }}"
+                                       class="btn btn-warning btn-sm flex-fill text-center">
+                                        Modifier
+                                    </a>
+
+                                    <!-- Bouton Supprimer -->
+                                    <form method="post"
+                                          action="{{ path('app_gestapp_competence_delete', {'id': competence.id}) }}"
+                                          class="flex-fill text-center"
+                                          onsubmit="return confirm('Supprimer cette compétence ?');">
+                                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ competence.id) }}">
+                                        <button class="btn btn-danger btn-sm w-100">Supprimer</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="alert alert-secondary text-center">
+                Aucune compétence enregistrée.
+            </div>
+        {% endif %}
     </div>
 {% endblock %}

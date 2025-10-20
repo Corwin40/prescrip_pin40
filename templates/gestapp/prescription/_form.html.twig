@@ -47,9 +47,16 @@
     </div>
 </div>
 
-<div class="mt-4">
-    <button class="btn btn-primary">{{ button_label|default('Enregistrer') }}</button>
+<div class="mt-4 d-flex justify-content-center gap-3">
+    <button class="btn btn-primary px-4">
+        {{ button_label|default('Créer') }}
+    </button>
+
+    <a href="{{ path('app_gestapp_competence_new') }}" class="btn btn-success px-4">
+        Créer compétence
+    </a>
 </div>
+
 
 {{ form_rest(form) }}
 

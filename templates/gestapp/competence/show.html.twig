@@ -1,70 +1,717 @@
-{% extends 'base.html.twig' %}
+Ignorer et passer au contenu
+Historique de chat
 
-{% block title %}Competence{% endblock %}
+Vous avez dit :
+extends 'base.html.twig' %}
+
+{% block title %}Auto-évaluation des compétences{% endblock %}
 
 {% block body %}
-    <h1>Competence</h1>
+    <div class="container mt-4">
+        <h1 class="text-center mb-4">Auto-évaluation des compétences</h1>
 
-    <table class="table">
-        <tbody>
-            <tr>
-                <th>Id</th>
-                <td>{{ competence.id }}</td>
-            </tr>
-            <tr>
-                <th>CompBase</th>
-                <td>{{ competence.compBase }}</td>
-            </tr>
-            <tr>
-                <th>CompDesk</th>
-                <td>{{ competence.compDesk }}</td>
-            </tr>
-            <tr>
-                <th>CompInternet</th>
-                <td>{{ competence.compInternet }}</td>
-            </tr>
-            <tr>
-                <th>CompEmail</th>
-                <td>{{ competence.compEmail }}</td>
-            </tr>
-            <tr>
-                <th>IsAutoEva</th>
-                <td>{{ competence.isAutoEva ? 'Yes' : 'No' }}</td>
-            </tr>
-            <tr>
-                <th>IsDigComp1</th>
-                <td>{{ competence.isDigComp1 ? 'Yes' : 'No' }}</td>
-            </tr>
-            <tr>
-                <th>IsDigComp2</th>
-                <td>{{ competence.isDigComp2 ? 'Yes' : 'No' }}</td>
-            </tr>
-            <tr>
-                <th>IsDigComp3</th>
-                <td>{{ competence.isDigComp3 ? 'Yes' : 'No' }}</td>
-            </tr>
-            <tr>
-                <th>IsDigComp4</th>
-                <td>{{ competence.isDigComp4 ? 'Yes' : 'No' }}</td>
-            </tr>
-            <tr>
-                <th>IsDigComp5</th>
-                <td>{{ competence.isDigComp5 ? 'Yes' : 'No' }}</td>
-            </tr>
-            <tr>
-                <th>DetailParcour</th>
-                <td>{{ competence.detailParcour }}</td>
-            </tr>
-            <tr>
-                <th>IsAutoEvalEnd</th>
-                <td>{{ competence.isAutoEvalEnd ? 'Yes' : 'No' }}</td>
-            </tr>
-        </tbody>
-    </table>
 
-    <a href="{{ path('app_gestapp_competence_index') }}">back to list</a>
 
-    <a href="{{ path('app_gestapp_competence_edit', {'id': competence.id}) }}">edit</a>
+        <table class="table table-bordered text-center align-middle">
+            <thead class="table-light">
+            <tr>
+                <th scope="col">Compétences</th>
+                <th scope="col">Acquis</th>
+                <th scope="col">En cours</th>
+                <th scope="col">Non acquis</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for competence in competences %}
+                <tr>
+                    <td>Comp-bases</td>
+                    <td>{% if competence.compBase == 'acquis' %}✔{% endif %}</td>
+                    <td>{% if competence.compBase == 'en_cours' %}✔{% endif %}</td>
+                    <td>{% if competence.compBase == 'non_acquis' %}✔{% endif %}</td>
+                </tr>
+                <tr>
+                    <td>Comp-desk</td>
+                    <td>{% if competence.compDesk == 'acquis' %}✔{% endif %}</td>
+                    <td>{% if competence.compDesk == 'en_cours' %}✔{% endif %}</td>
+                    <td>{% if competence.compDesk == 'non_acquis' %}✔{% endif %}</td>
+                </tr>
+                <tr>
+                    <td>Comp-internet</td>
+                    <td>{% if competence.compInternet == 'acquis' %}✔{% endif %}</td>
+                    <td>{% if competence.compInternet == 'en_cours' %}✔{% endif %}</td>
+                    <td>{% if competence.compInternet == 'non_acquis' %}✔{% endif %}</td>
+                </tr>
+                <tr>
+                    <td>Comp-email</td>
+                    <td>{% if competence.compEmail == 'acquis' %}✔{% endif %}</td>
+                    <td>{% if competence.compEmail == 'en_cours' %}✔{% endif %}</td>
+                    <td>{% if competence.compEmail == 'non_acquis' %}✔{% endif %}</td>
+                </tr>
+                <tr class="table-secondary">
+                    <td colspan="4">
+                        <strong>Détails :</strong> {{ competence.detailParcour }}<br>
+                        <strong>Évaluation finale :</strong> {{ competence.isAutoEvalEnd ? 'Oui' : 'Non' }}<br>
+                        <a href="{{ path('app_gestapp_competence_show', {'id': competence.id}) }}" class="btn btn-sm btn-outline-primary mt-2">Voir</a>
+                        <a href="{{ path('app_gestapp_competence_edit', {'id': competence.id}) }}" class="btn btn-sm btn-outline-secondary mt-2">Modifier</a>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="4" class="text-center text-muted">Aucune compétence enregistrée</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
 
-    {{ include('gestapp/competence/_delete_form.html.twig') }}
-{% endblock %}
+        <div class="text-center mt-3">
+            <a href="{{ path('app_gestapp_competence_new') }}" class="btn btn-primary">Ajouter competence</a>
+        </div>
+    </div>
+{% endblock %} refait le mais sans <table>, que du div en bootstrape
+    ChatGPT a dit :
+    Voici ta version sans <table>, entièrement refaite avec des <div> et la grille Bootstrap pour une mise en page moderne, claire et responsive 👇
+
+            {% extends 'base.html.twig' %}
+
+            {% block title %}Auto-évaluation des compétences{% endblock %}
+
+            {% block body %}
+                <div class="container mt-4">
+                    <h1 class="text-center mb-4">Auto-évaluation des compétences</h1>
+
+                    {% if competences is not empty %}
+                        {% for competence in competences %}
+                            <div class="card shadow-sm mb-4">
+                                <div class="card-body">
+                                    <h5 class="card-title mb-3">Compétences</h5>
+
+                                    <!-- Ligne des entêtes -->
+                                    <div class="row fw-bold border-bottom pb-2 mb-2 text-center">
+                                        <div class="col-6 text-start">Nom de la compétence</div>
+                                        <div class="col-2">Acquis</div>
+                                        <div class="col-2">En cours</div>
+                                        <div class="col-2">Non acquis</div>
+                                    </div>
+
+                                    <!-- Comp-bases -->
+                                    <div class="row align-items-center text-center py-2 border-bottom">
+                                        <div class="col-6 text-start">Comp-bases</div>
+                                        <div class="col-2">{% if competence.compBase == 'acquis' %}✔{% endif %}</div>
+                                        <div class="col-2">{% if competence.compBase == 'en_cours' %}✔{% endif %}</div>
+                                        <div class="col-2">{% if competence.compBase == 'non_acquis' %}✔{% endif %}</div>
+                                    </div>
+
+                                    <!-- Comp-desk -->
+                                    <div class="row align-items-center text-center py-2 border-bottom">
+                                        <div class="col-6 text-start">Comp-desk</div>
+                                        <div class="col-2">{% if competence.compDesk == 'acquis' %}✔{% endif %}</div>
+                                        <div class="col-2">{% if competence.compDesk == 'en_cours' %}✔{% endif %}</div>
+                                        <div class="col-2">{% if competence.compDesk == 'non_acquis' %}✔{% endif %}</div>
+                                    </div>
+
+                                    <!-- Comp-internet -->
+                                    <div class="row align-items-center text-center py-2 border-bottom">
+                                        <div class="col-6 text-start">Comp-internet</div>
+                                        <div class="col-2">{% if competence.compInternet == 'acquis' %}✔{% endif %}</div>
+                                        <div class="col-2">{% if competence.compInternet == 'en_cours' %}✔{% endif %}</div>
+                                        <div class="col-2">{% if competence.compInternet == 'non_acquis' %}✔{% endif %}</div>
+                                    </div>
+
+                                    <!-- Comp-email -->
+                                    <div class="row align-items-center text-center py-2 border-bottom">
+                                        <div class="col-6 text-start">Comp-email</div>
+                                        <div class="col-2">{% if competence.compEmail == 'acquis' %}✔{% endif %}</div>
+                                        <div class="col-2">{% if competence.compEmail == 'en_cours' %}✔{% endif %}</div>
+                                        <div class="col-2">{% if competence.compEmail == 'non_acquis' %}✔{% endif %}</div>
+                                    </div>
+
+                                    <!-- Détails -->
+                                    <div class="mt-3 p-3 bg-light rounded">
+                                        <p><strong>Détails :</strong> {{ competence.detailParcour }}</p>
+                                        <p><strong>Évaluation finale :</strong> {{ competence.isAutoEvalEnd ? 'Oui' : 'Non' }}</p>
+                                        <div class="d-flex gap-2 mt-2">
+                                            <a href="{{ path('app_gestapp_competence_show', {'id': competence.id}) }}" class="btn btn-sm btn-outline-primary">Voir</a>
+                                            <a href="{{ path('app_gestapp_competence_edit', {'id': competence.id}) }}" class="btn btn-sm btn-outline-secondary">Modifier</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    {% else %}
+                        <div class="alert alert-secondary text-center">
+                            Aucune compétence enregistrée
+                        </div>
+                    {% endif %}
+
+                    <div class="text-center mt-3">
+                        <a href="{{ path('app_gestapp_competence_new') }}" class="btn btn-primary">
+                            Ajouter une compétence
+                        </a>
+                    </div>
+                </div>
+            {% endblock %}
+            💡 Améliorations incluses :
+            Remplacement complet du <table> par une grille Bootstrap (.row / .col).
+
+                Design plus moderne et responsive (chaque compétence dans une carte).
+
+                Utilisation d’un système de bordures et d’espacements (border-bottom, py-2, mb-3).
+
+                Boutons organisés dans une ligne fluide et centrée.
+
+                Souhaites-tu que je te fasse une version colorée (par exemple vert/orange/rouge pour les statuts acquis/en cours/non acquis) ?
+
+                Vous avez dit :
+                {% extends 'base.html.twig' %}
+
+                {% block title %}Auto-évaluation des compétences{% endblock %}
+
+                {% block body %}
+                    <div class="container mt-4">
+                        <h1 class="text-center mb-4">Auto-évaluation des compétences</h1>
+
+
+
+                        <table class="table table-bordered text-center align-middle">
+                            <thead class="table-light">
+                            <tr>
+                                <th scope="col">Compétences</th>
+                                <th scope="col">Acquis</th>
+                                <th scope="col">En cours</th>
+                                <th scope="col">Non acquis</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for competence in competences %}
+                                <tr>
+                                    <td>Comp-bases</td>
+                                    <td>{% if competence.compBase == 'acquis' %}✔{% endif %}</td>
+                                    <td>{% if competence.compBase == 'en_cours' %}✔{% endif %}</td>
+                                    <td>{% if competence.compBase == 'non_acquis' %}✔{% endif %}</td>
+                                </tr>
+                                <tr>
+                                    <td>Comp-desk</td>
+                                    <td>{% if competence.compDesk == 'acquis' %}✔{% endif %}</td>
+                                    <td>{% if competence.compDesk == 'en_cours' %}✔{% endif %}</td>
+                                    <td>{% if competence.compDesk == 'non_acquis' %}✔{% endif %}</td>
+                                </tr>
+                                <tr>
+                                    <td>Comp-internet</td>
+                                    <td>{% if competence.compInternet == 'acquis' %}✔{% endif %}</td>
+                                    <td>{% if competence.compInternet == 'en_cours' %}✔{% endif %}</td>
+                                    <td>{% if competence.compInternet == 'non_acquis' %}✔{% endif %}</td>
+                                </tr>
+                                <tr>
+                                    <td>Comp-email</td>
+                                    <td>{% if competence.compEmail == 'acquis' %}✔{% endif %}</td>
+                                    <td>{% if competence.compEmail == 'en_cours' %}✔{% endif %}</td>
+                                    <td>{% if competence.compEmail == 'non_acquis' %}✔{% endif %}</td>
+                                </tr>
+                                <tr class="table-secondary">
+                                    <td colspan="4">
+                                        <strong>Détails :</strong> {{ competence.detailParcour }}<br>
+                                        <strong>Évaluation finale :</strong> {{ competence.isAutoEvalEnd ? 'Oui' : 'Non' }}<br>
+                                        <a href="{{ path('app_gestapp_competence_show', {'id': competence.id}) }}" class="btn btn-sm btn-outline-primary mt-2">Voir</a>
+                                        <a href="{{ path('app_gestapp_competence_edit', {'id': competence.id}) }}" class="btn btn-sm btn-outline-secondary mt-2">Modifier</a>
+                                    </td>
+                                </tr>
+                            {% else %}
+                                <tr>
+                                    <td colspan="4" class="text-center text-muted">Aucune compétence enregistrée</td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+
+                        <div class="text-center mt-3">
+                            <a href="{{ path('app_gestapp_competence_new') }}" class="btn btn-primary">Ajouter competence</a>
+                        </div>
+                    </div>
+                {% endblock %} efait l'index sant table juste avec des div et en bootstrape uniquement
+                ChatGPT a dit :
+                Voici la même page refaite sans <table>, uniquement avec des <div> Bootstrap pour une mise en page claire, responsive et moderne 👇
+
+                        {% extends 'base.html.twig' %}
+
+                        {% block title %}Auto-évaluation des compétences{% endblock %}
+
+                        {% block body %}
+                            <div class="container mt-4">
+                                <h1 class="text-center mb-4">Auto-évaluation des compétences</h1>
+
+                                {% if competences is not empty %}
+                                    {% for competence in competences %}
+                                        <div class="card shadow-sm mb-4">
+                                            <div class="card-body">
+
+                                                <!-- En-têtes -->
+                                                <div class="row fw-bold text-center border-bottom pb-2 mb-3">
+                                                    <div class="col-6 text-start">Compétences</div>
+                                                    <div class="col-2">Acquis</div>
+                                                    <div class="col-2">En cours</div>
+                                                    <div class="col-2">Non acquis</div>
+                                                </div>
+
+                                                <!-- Compétence : Bases -->
+                                                <div class="row text-center align-items-center py-2 border-bottom">
+                                                    <div class="col-6 text-start">Comp-bases</div>
+                                                    <div class="col-2">{% if competence.compBase == 'acquis' %}✔{% endif %}</div>
+                                                    <div class="col-2">{% if competence.compBase == 'en_cours' %}✔{% endif %}</div>
+                                                    <div class="col-2">{% if competence.compBase == 'non_acquis' %}✔{% endif %}</div>
+                                                </div>
+
+                                                <!-- Compétence : Desk -->
+                                                <div class="row text-center align-items-center py-2 border-bottom">
+                                                    <div class="col-6 text-start">Comp-desk</div>
+                                                    <div class="col-2">{% if competence.compDesk == 'acquis' %}✔{% endif %}</div>
+                                                    <div class="col-2">{% if competence.compDesk == 'en_cours' %}✔{% endif %}</div>
+                                                    <div class="col-2">{% if competence.compDesk == 'non_acquis' %}✔{% endif %}</div>
+                                                </div>
+
+                                                <!-- Compétence : Internet -->
+                                                <div class="row text-center align-items-center py-2 border-bottom">
+                                                    <div class="col-6 text-start">Comp-internet</div>
+                                                    <div class="col-2">{% if competence.compInternet == 'acquis' %}✔{% endif %}</div>
+                                                    <div class="col-2">{% if competence.compInternet == 'en_cours' %}✔{% endif %}</div>
+                                                    <div class="col-2">{% if competence.compInternet == 'non_acquis' %}✔{% endif %}</div>
+                                                </div>
+
+                                                <!-- Compétence : Email -->
+                                                <div class="row text-center align-items-center py-2 border-bottom">
+                                                    <div class="col-6 text-start">Comp-email</div>
+                                                    <div class="col-2">{% if competence.compEmail == 'acquis' %}✔{% endif %}</div>
+                                                    <div class="col-2">{% if competence.compEmail == 'en_cours' %}✔{% endif %}</div>
+                                                    <div class="col-2">{% if competence.compEmail == 'non_acquis' %}✔{% endif %}</div>
+                                                </div>
+
+                                                <!-- Détails -->
+                                                <div class="mt-3 p-3 bg-light rounded">
+                                                    <p class="mb-1"><strong>Détails :</strong> {{ competence.detailParcour }}</p>
+                                                    <p class="mb-1"><strong>Évaluation finale :</strong> {{ competence.isAutoEvalEnd ? 'Oui' : 'Non' }}</p>
+                                                    <div class="d-flex flex-wrap gap-2 mt-2">
+                                                        <a href="{{ path('app_gestapp_competence_show', {'id': competence.id}) }}" class="btn btn-sm btn-outline-primary">Voir</a>
+                                                        <a href="{{ path('app_gestapp_competence_edit', {'id': competence.id}) }}" class="btn btn-sm btn-outline-secondary">Modifier</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    {% endfor %}
+                                {% else %}
+                                    <div class="alert alert-secondary text-center">
+                                        Aucune compétence enregistrée.
+                                    </div>
+                                {% endif %}
+
+                                <div class="text-center mt-3">
+                                    <a href="{{ path('app_gestapp_competence_new') }}" class="btn btn-primary">Ajouter une compétence</a>
+                                </div>
+                            </div>
+                        {% endblock %}
+                        ✅ Points forts de cette version :
+                        100 % Bootstrap (sans <table>)
+
+                            Chaque ensemble de compétences est contenu dans une carte (.card) propre et lisible.
+
+                            Responsive automatique grâce au système .row / .col.
+
+                            Les ✔️ sont bien alignés et centrés.
+
+                            Les boutons "Voir" et "Modifier" sont regroupés avec un petit espace fluide (gap-2).
+
+                            Souhaites-tu que j’ajoute un code couleur (vert/orange/rouge) pour les statuts acquis / en cours / non acquis ?
+
+                            Vous avez dit :
+                            pour le _form.html.twig :
+                            <div class="container mt-4">
+                                <h2 class="text-center mb-4">Auto-évaluation des compétences</h2>
+
+                                <div class="card shadow-sm p-4">
+                                    <div class="row g-3">
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label class="fw-bold mb-2">Compétence de base</label>
+                                                {% include 'composants/inputs/input_radios.html.twig' with {
+                                                    field: form.compBase
+                                                } %}
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label class="fw-bold mb-2">Compétence Texte et documents</label>
+                                                {% include 'composants/inputs/input_radios.html.twig' with {
+                                                    field: form.compDesk
+                                                } %}
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label class="fw-bold mb-2">Compétence Internet</label>
+                                                {% include 'composants/inputs/input_radios.html.twig' with {
+                                                    field: form.compInternet
+                                                } %}
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label class="fw-bold mb-2">Compétence Messagerie email</label>
+                                                {% include 'composants/inputs/input_radios.html.twig' with {
+                                                    field: form.compEmail
+                                                } %}
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <hr class="my-4">
+
+                                    <div class="row g-3">
+                                        <div class="col-md-6">{{ form_row(form.isAutoEva) }}</div>
+                                        <div class="col-md-6">{{ form_row(form.isAutoEvalEnd) }}</div>
+                                    </div>
+
+                                    <!-- Ligne avec les 5 isDigComp -->
+                                    <div class="row g-3 align-items-center mt-3">
+                                        <div class="col d-flex flex-wrap justify-content-between">
+                                            <div class="flex-fill text-center mx-1">{{ form_row(form.isDigComp1) }}</div>
+                                            <div class="flex-fill text-center mx-1">{{ form_row(form.isDigComp2) }}</div>
+                                            <div class="flex-fill text-center mx-1">{{ form_row(form.isDigComp3) }}</div>
+                                            <div class="flex-fill text-center mx-1">{{ form_row(form.isDigComp4) }}</div>
+                                            <div class="flex-fill text-center mx-1">{{ form_row(form.isDigComp5) }}</div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Section Détail du parcours -->
+                                    <div class="row g-3 mt-4">
+                                        <div class="col-md-12">
+                                            <div class="form-group">
+                                                <label class="fw-bold mb-2 d-block">Détail du parcours</label>
+                                                {{ form_widget(form.detailParcour, {'attr': {'class': 'form-control', 'rows': 4}}) }}
+                                            </div>
+                                        </div>
+
+                                        <!-- Section Bénéficiaire aligné sur une ligne -->
+                                        <div class="col-md-4">
+                                            <div class="form-group d-flex align-items-center">
+                                                <label class="fw-bold me-3 mb-0" style="white-space: nowrap;">Bénéficiaire :</label>
+                                                <div class="flex-grow-1">
+                                                    {{ form_widget(form.beneficiary, {'attr': {'class': 'form-control'}}) }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="text-center mt-4">
+                                        <button class="btn btn-success px-4">{{ button_label|default('Enregistrer') }}</button>
+                                        <a href="{{ path('app_gestapp_competence_index') }}" class="btn btn-secondary ms-2 px-4">Annuler</a>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {{ form_end(form) }} refaire au propre et ramener le champs et le label beneficiaire en haut
+                            ChatGPT a dit :
+                            Voici ton fichier _form.html.twig entièrement remis au propre, avec une structure claire, responsive, lisible et le champ “Bénéficiaire” déplacé en haut du formulaire.
+                            J’ai aussi harmonisé les espacements et regroupé les sections avec des titres discrets 👇
+
+                            <div class="container mt-4">
+                                <h2 class="text-center mb-4">Auto-évaluation des compétences</h2>
+
+                                <div class="card shadow-sm p-4">
+                                    {{ form_start(form) }}
+
+                                    <!-- ==================== SECTION : BÉNÉFICIAIRE ==================== -->
+                                    <div class="row mb-4">
+                                        <div class="col-md-6">
+                                            <div class="form-group d-flex align-items-center">
+                                                <label for="{{ form.beneficiary.vars.id }}" class="fw-bold me-3 mb-0" style="white-space: nowrap;">
+                                                    Bénéficiaire :
+                                                </label>
+                                                <div class="flex-grow-1">
+                                                    {{ form_widget(form.beneficiary, {'attr': {'class': 'form-control'}}) }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- ==================== SECTION : COMPÉTENCES ==================== -->
+                                    <h5 class="fw-semibold mb-3 text-primary border-bottom pb-2">Évaluation des compétences</h5>
+                                    <div class="row g-3">
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label class="fw-bold mb-2">Compétence de base</label>
+                                                {% include 'composants/inputs/input_radios.html.twig' with { field: form.compBase } %}
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label class="fw-bold mb-2">Compétence Texte et documents</label>
+                                                {% include 'composants/inputs/input_radios.html.twig' with { field: form.compDesk } %}
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label class="fw-bold mb-2">Compétence Internet</label>
+                                                {% include 'composants/inputs/input_radios.html.twig' with { field: form.compInternet } %}
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label class="fw-bold mb-2">Compétence Messagerie email</label>
+                                                {% include 'composants/inputs/input_radios.html.twig' with { field: form.compEmail } %}
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <hr class="my-4">
+
+                                    <!-- ==================== SECTION : VALIDATION AUTO-EVAL ==================== -->
+                                    <h5 class="fw-semibold mb-3 text-primary border-bottom pb-2">Validation de l’auto-évaluation</h5>
+                                    <div class="row g-3">
+                                        <div class="col-md-6">{{ form_row(form.isAutoEva) }}</div>
+                                        <div class="col-md-6">{{ form_row(form.isAutoEvalEnd) }}</div>
+                                    </div>
+
+                                    <!-- ==================== SECTION : COMPÉTENCES NUMÉRIQUES ==================== -->
+                                    <h5 class="fw-semibold mt-4 mb-3 text-primary border-bottom pb-2">Compétences numériques</h5>
+                                    <div class="row g-3 align-items-center">
+                                        <div class="col d-flex flex-wrap justify-content-between">
+                                            <div class="flex-fill text-center mx-1">{{ form_row(form.isDigComp1) }}</div>
+                                            <div class="flex-fill text-center mx-1">{{ form_row(form.isDigComp2) }}</div>
+                                            <div class="flex-fill text-center mx-1">{{ form_row(form.isDigComp3) }}</div>
+                                            <div class="flex-fill text-center mx-1">{{ form_row(form.isDigComp4) }}</div>
+                                            <div class="flex-fill text-center mx-1">{{ form_row(form.isDigComp5) }}</div>
+                                        </div>
+                                    </div>
+
+                                    <!-- ==================== SECTION : DÉTAIL DU PARCOURS ==================== -->
+                                    <h5 class="fw-semibold mt-4 mb-3 text-primary border-bottom pb-2">Détail du parcours</h5>
+                                    <div class="row g-3">
+                                        <div class="col-md-12">
+                                            <div class="form-group">
+                                                {{ form_widget(form.detailParcour, {'attr': {'class': 'form-control', 'rows': 4}}) }}
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- ==================== BOUTONS ==================== -->
+                                    <div class="text-center mt-4">
+                                        <button class="btn btn-success px-4">{{ button_label|default('Enregistrer') }}</button>
+                                        <a href="{{ path('app_gestapp_competence_index') }}" class="btn btn-secondary ms-2 px-4">Annuler</a>
+                                    </div>
+
+                                    {{ form_end(form) }}
+                                </div>
+                            </div>
+                            ✅ Ce qui a été amélioré :
+                            Le champ Bénéficiaire est en haut, bien aligné horizontalement.
+
+                            Sections clairement séparées avec titres et traits (<hr> et border-bottom).
+
+                            Classes Bootstrap cohérentes (.row, .col-md-6, .form-group, .fw-bold).
+
+                            Code indenté proprement et facile à maintenir.
+
+                            Aucun style inline superflu sauf le white-space: nowrap; pour garder “Bénéficiaire :” lisible.
+
+                            Souhaites-tu que je t’ajoute un léger style (par ex. fond bleu pâle et bord arrondi) pour les titres de section afin de les rendre plus visuellement distincts ?
+
+                            Vous avez dit :
+                            pour le show.html.twig :
+                            {% extends 'base.html.twig' %}
+
+                            {% block title %}Competence{% endblock %}
+
+                            {% block body %}
+                                <h1>Competence</h1>
+
+                                <table class="table">
+                                    <tbody>
+                                    <tr>
+                                        <th>Id</th>
+                                        <td>{{ competence.id }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>CompBase</th>
+                                        <td>{{ competence.compBase }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>CompDesk</th>
+                                        <td>{{ competence.compDesk }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>CompInternet</th>
+                                        <td>{{ competence.compInternet }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>CompEmail</th>
+                                        <td>{{ competence.compEmail }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>IsAutoEva</th>
+                                        <td>{{ competence.isAutoEva ? 'Yes' : 'No' }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>IsDigComp1</th>
+                                        <td>{{ competence.isDigComp1 ? 'Yes' : 'No' }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>IsDigComp2</th>
+                                        <td>{{ competence.isDigComp2 ? 'Yes' : 'No' }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>IsDigComp3</th>
+                                        <td>{{ competence.isDigComp3 ? 'Yes' : 'No' }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>IsDigComp4</th>
+                                        <td>{{ competence.isDigComp4 ? 'Yes' : 'No' }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>IsDigComp5</th>
+                                        <td>{{ competence.isDigComp5 ? 'Yes' : 'No' }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>DetailParcour</th>
+                                        <td>{{ competence.detailParcour }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>IsAutoEvalEnd</th>
+                                        <td>{{ competence.isAutoEvalEnd ? 'Yes' : 'No' }}</td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+
+                                <a href="{{ path('app_gestapp_competence_index') }}">back to list</a>
+
+                                <a href="{{ path('app_gestapp_competence_edit', {'id': competence.id}) }}">edit</a>
+
+                                {{ include('gestapp/competence/_delete_form.html.twig') }}
+                            {% endblock %}   refaire le show sans table ,juste en bootstrape
+                            ChatGPT a dit :
+                            Voici une version propre, moderne et 100 % Bootstrap de ton fichier
+                            show.html.twig, sans <table>, avec une mise en page claire, lisible et responsive 👇
+
+                                {% extends 'base.html.twig' %}
+
+                                {% block title %}Détail de la compétence{% endblock %}
+
+                                {% block body %}
+                                    <div class="container mt-4">
+                                        <h1 class="text-center mb-4">Détail de la compétence</h1>
+
+                                        <div class="card shadow-sm p-4">
+                                            <!-- ID -->
+                                            <div class="row mb-3">
+                                                <div class="col-md-4 fw-bold text-secondary">ID :</div>
+                                                <div class="col-md-8">{{ competence.id }}</div>
+                                            </div>
+
+                                            <hr>
+
+                                            <!-- SECTION : Compétences -->
+                                            <h5 class="fw-semibold text-primary mb-3">État des compétences</h5>
+
+                                            <div class="row mb-2">
+                                                <div class="col-md-4 fw-bold">Compétence de base :</div>
+                                                <div class="col-md-8">{{ competence.compBase|capitalize }}</div>
+                                            </div>
+
+                                            <div class="row mb-2">
+                                                <div class="col-md-4 fw-bold">Texte et documents :</div>
+                                                <div class="col-md-8">{{ competence.compDesk|capitalize }}</div>
+                                            </div>
+
+                                            <div class="row mb-2">
+                                                <div class="col-md-4 fw-bold">Internet :</div>
+                                                <div class="col-md-8">{{ competence.compInternet|capitalize }}</div>
+                                            </div>
+
+                                            <div class="row mb-3">
+                                                <div class="col-md-4 fw-bold">Messagerie email :</div>
+                                                <div class="col-md-8">{{ competence.compEmail|capitalize }}</div>
+                                            </div>
+
+                                            <hr>
+
+                                            <!-- SECTION : Auto-évaluation -->
+                                            <h5 class="fw-semibold text-primary mb-3">Auto-évaluation</h5>
+
+                                            <div class="row mb-2">
+                                                <div class="col-md-4 fw-bold">Auto-évalué :</div>
+                                                <div class="col-md-8">{{ competence.isAutoEva ? 'Oui' : 'Non' }}</div>
+                                            </div>
+
+                                            <div class="row mb-2">
+                                                <div class="col-md-4 fw-bold">Évaluation finale :</div>
+                                                <div class="col-md-8">{{ competence.isAutoEvalEnd ? 'Oui' : 'Non' }}</div>
+                                            </div>
+
+                                            <hr>
+
+                                            <!-- SECTION : Compétences numériques -->
+                                            <h5 class="fw-semibold text-primary mb-3">Compétences numériques</h5>
+
+                                            <div class="row mb-2">
+                                                <div class="col-md-4 fw-bold">Compétence numérique 1 :</div>
+                                                <div class="col-md-8">{{ competence.isDigComp1 ? 'Oui' : 'Non' }}</div>
+                                            </div>
+                                            <div class="row mb-2">
+                                                <div class="col-md-4 fw-bold">Compétence numérique 2 :</div>
+                                                <div class="col-md-8">{{ competence.isDigComp2 ? 'Oui' : 'Non' }}</div>
+                                            </div>
+                                            <div class="row mb-2">
+                                                <div class="col-md-4 fw-bold">Compétence numérique 3 :</div>
+                                                <div class="col-md-8">{{ competence.isDigComp3 ? 'Oui' : 'Non' }}</div>
+                                            </div>
+                                            <div class="row mb-2">
+                                                <div class="col-md-4 fw-bold">Compétence numérique 4 :</div>
+                                                <div class="col-md-8">{{ competence.isDigComp4 ? 'Oui' : 'Non' }}</div>
+                                            </div>
+                                            <div class="row mb-3">
+                                                <div class="col-md-4 fw-bold">Compétence numérique 5 :</div>
+                                                <div class="col-md-8">{{ competence.isDigComp5 ? 'Oui' : 'Non' }}</div>
+                                            </div>
+
+                                            <hr>
+
+                                            <!-- SECTION : Détail du parcours -->
+                                            <h5 class="fw-semibold text-primary mb-3">Détail du parcours</h5>
+                                            <div class="row mb-3">
+                                                <div class="col">
+                                                    <p class="mb-0">{{ competence.detailParcour }}</p>
+                                                </div>
+                                            </div>
+
+                                            <!-- ACTIONS -->
+                                            <div class="d-flex justify-content-center gap-3 mt-4">
+                                                <a href="{{ path('app_gestapp_competence_index') }}" class="btn btn-secondary px-4">
+                                                    Retour à la liste
+                                                </a>
+                                                <a href="{{ path('app_gestapp_competence_edit', {'id': competence.id}) }}" class="btn btn-primary px-4">
+                                                    Modifier
+                                                </a>
+                                                {{ include('gestapp/competence/_delete_form.html.twig', { 'attr': {'class': 'd-inline'} }) }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endblock %}
+                                ✅ Points forts :
+                                Plus de <table>, tout est en <div> avec la grille Bootstrap (.row, .col).
+
+                                        Mise en forme propre et aérée, facile à lire même sur mobile.
+
+                                        Les sections sont visuellement séparées par des <hr> et des titres bleus.
+
+                                        Les boutons d’action sont centrés, harmonisés et espacés.
+
+                                        Souhaites-tu que j’ajoute des badges colorés (vert/orange/rouge) pour les statuts “Oui / Non” afin de rendre la lecture plus visuelle ?
+
+
+
+
+                                        Aucun fichier choisiAucun fichier choisi
+                                        ChatGPT peut commettre des erreurs. Il est recommandé de vérifier les informations importantes. Voir les préférences en matière de cookies.
