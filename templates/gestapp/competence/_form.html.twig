@@ -2,85 +2,85 @@
     <h2 class="text-center mb-4">Auto-évaluation des compétences</h2>
 
     <div class="card shadow-sm p-4">
-        <div class="row g-3">
-            <div class="col-md-6">
-                <div class="form-group">
-                    <label class="fw-bold mb-2">Compétence de base</label>
-                    {% include 'composants/inputs/input_radios.html.twig' with {
-                        field: form.compBase
-                    } %}
-                </div>
-            </div>
 
-            <div class="col-md-6">
-                <div class="form-group">
-                    <label class="fw-bold mb-2">Compétence Texte et documents</label>
-                    {% include 'composants/inputs/input_radios.html.twig' with {
-                        field: form.compDesk
-                    } %}
-                </div>
-            </div>
 
-            <div class="col-md-6">
-                <div class="form-group">
-                    <label class="fw-bold mb-2">Compétence Internet</label>
-                    {% include 'composants/inputs/input_radios.html.twig' with {
-                        field: form.compInternet
-                    } %}
-                </div>
-            </div>
+        <div class="row text-center fw-bold border-bottom pb-2 mb-3 bg-secondary">
+            <div class="col-4 text-start">Compétences</div>
+            <div class="col">Acquis</div>
+            <div class="col">En cours</div>
+            <div class="col">Non acquis</div>
+        </div>
 
-            <div class="col-md-6">
-                <div class="form-group">
-                    <label class="fw-bold mb-2">Compétence Messagerie email</label>
-                    {% include 'composants/inputs/input_radios.html.twig' with {
-                        field: form.compEmail
-                    } %}
-                </div>
+        <!-- Compétence de base -->
+        <div class="row align-items-center text-center border-bottom py-2 bg-light">
+            <div class="col-4 text-start fw-semibold">Compétence de base</div>
+            <div class="col d-flex justify-content-around">
+                {% include 'composants/inputs/input_radios.html.twig' with { field: form.compBase, attr: {'label': false} } %}
             </div>
         </div>
 
-        <hr class="my-4">
-
-        <div class="row g-3">
-            <div class="col-md-6">{{ form_row(form.isAutoEva) }}</div>
-            <div class="col-md-6">{{ form_row(form.isAutoEvalEnd) }}</div>
-        </div>
-
-        <!-- Ligne avec les 5 isDigComp -->
-        <div class="row g-3 align-items-center mt-3">
-            <div class="col d-flex flex-wrap justify-content-between">
-                <div class="flex-fill text-center mx-1">{{ form_row(form.isDigComp1) }}</div>
-                <div class="flex-fill text-center mx-1">{{ form_row(form.isDigComp2) }}</div>
-                <div class="flex-fill text-center mx-1">{{ form_row(form.isDigComp3) }}</div>
-                <div class="flex-fill text-center mx-1">{{ form_row(form.isDigComp4) }}</div>
-                <div class="flex-fill text-center mx-1">{{ form_row(form.isDigComp5) }}</div>
+        <!-- Compétence Texte et documents -->
+        <div class="row align-items-center text-center border-bottom py-2 ">
+            <div class="col-4 text-start fw-semibold">Compétence Texte et documents</div>
+            <div class="col d-flex justify-content-around">
+                {% include 'composants/inputs/input_radios.html.twig' with { field: form.compDesk, attr: {'label': false} } %}
             </div>
         </div>
 
-        <!-- Section Détail du parcours -->
-        <div class="row g-3 mt-4">
-            <div class="col-md-12">
-                <div class="form-group">
-                    <label class="fw-bold mb-2 d-block">Détail du parcours</label>
-                    {{ form_widget(form.detailParcour, {'attr': {'class': 'form-control', 'rows': 4}}) }}
+        <!-- Compétence Internet -->
+        <div class="row align-items-center text-center border-bottom py-2 bg-light">
+            <div class="col-4 text-start fw-semibold">Compétence Internet</div>
+            <div class="col d-flex justify-content-around">
+                {% include 'composants/inputs/input_radios.html.twig' with { field: form.compInternet, attr: {'label': false} } %}
+            </div>
+        </div>
+
+        <!-- Compétence Messagerie email -->
+        <div class="row align-items-center text-center py-2">
+            <div class="col-4 text-start fw-semibold">Compétence Messagerie email</div>
+            <div class="col d-flex justify-content-around">
+                {% include 'composants/inputs/input_radios.html.twig' with { field: form.compEmail, attr: {'label': false} } %}
+            </div>
+        </div>
+
+    </div>
+
+    <hr class="my-4">
+
+
+    <div class="row g-3">
+        <div class="col-md-6">{{ form_row(form.isAutoEva) }}</div>
+        <div class="col-md-6">{{ form_row(form.isAutoEvalEnd) }}</div>
+    </div>
+
+    <!-- Compétences numériques -->
+    <div class="row g-3 align-items-center mt-3">
+        <div class="col d-flex flex-wrap justify-content-between">
+            {% for i in 1..5 %}
+                <div class="flex-fill text-center mx-1">
+                    {{ form_row(attribute(form, 'isDigComp' ~ i)) }}
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- Détail du parcours -->
+    <div class="row g-3 mt-4">
+        <div class="col-md-12">
+            <div class="form-group">
+                <label class="fw-bold mb-2 d-block">Détail du parcours</label>
+                {{ form_widget(form.detailParcour, {'attr': {'class': 'form-control', 'rows': 4}}) }}
+            </div>
+        </div>
+
+        <!-- Bénéficiaire -->
+        <div class="col-md-4">
+            <div class="form-group d-flex align-items-center">
+                <label class="fw-bold me-3 mb-0" style="white-space: nowrap;">Bénéficiaire :</label>
+                <div class="flex-grow-1">
+                    {{ form_widget(form.beneficiary, {'attr': {'class': 'form-control'}}) }}
                 </div>
             </div>
-
-            <!-- Section Bénéficiaire aligné sur une ligne -->
-            <div class="col-md-4">
-                <div class="form-group d-flex align-items-center">
-                    <label class="fw-bold me-3 mb-0" style="white-space: nowrap;">Bénéficiaire :</label>
-                    <div class="flex-grow-1">
-                        {{ form_widget(form.beneficiary, {'attr': {'class': 'form-control'}}) }}
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="text-center mt-4">
-            <button class="btn btn-success px-4">{{ button_label|default('Enregistrer') }}</button>
-            <a href="{{ path('app_gestapp_competence_index') }}" class="btn btn-secondary ms-2 px-4">Annuler</a>
         </div>
     </div>
 </div>

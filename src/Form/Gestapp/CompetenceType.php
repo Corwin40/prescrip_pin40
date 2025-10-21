@@ -60,9 +60,6 @@ class CompetenceType extends AbstractType
              'required' => true,
     ])
 
-
-
-
             ->add('isAutoEva')
             ->add('isDigComp0')
             ->add('isDigComp1')
