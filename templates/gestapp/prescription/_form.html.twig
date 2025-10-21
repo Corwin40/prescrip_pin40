@@ -2,6 +2,8 @@
 
 <div class="row g-3">
 
+
+
     <div class="col-md-6">
         {% include 'composants/inputs/input_text.html.twig' with {
             label: 'Référence',
@@ -10,6 +12,10 @@
     </div>
 
     <div class="col-md-6"></div>
+
+    <div class="col-12 bg-light border-bottom border-dark">
+        <h3>Le bénéficiaire</h3>
+    </div>
 
     <div class="col-md-6">
         {% include 'composants/inputs/input_select.html.twig' with {
@@ -25,6 +31,8 @@
         {{ render(controller('App\\Controller\\Gestapp\\BeneficiaryController::edit2')) }}
     {% endif %}
 
+
+
     <div class="col-md-6">
         {% include 'composants/inputs/input_select.html.twig' with {
             label: 'Equipement',
@@ -32,20 +40,43 @@
         } %}
     </div>
 
+
+
+    <div class="col-12 bg-light border-bottom border-dark">
+        <h3>Le prescripteur</h3>
+    </div>
+
+    <div class="col-12">
+        <p>Structure : {{ app.user.nameStructure }}</p>
+        <p>Nom et prenom du prescripteur : {% if app.user.contactResponsableFirstname is empty and app.user.contactResponsableLastname is empty %} - {% else %}{{ app.user.contactResponsableFirstname }} {{ app.user.contactResponsableLastname }}{% endif %}</p>
+        <p>Telephone : {% if app.user.contactPhone is empty %} - {% else %}{{ app.user.contactPhone }}{% endif %}</p>
+        <p><i class="fa-duotone fa-solid fa-inbox"></i> Email : {% if app.user.contactEmail is empty %} - {% else %}{{ app.user.contactEmail }}{% endif %}</p>
+    </div>
+
+    <div class="col-12 bg-light border-bottom border-dark">
+        <h3>Motivation de la prescription</h3>
+    </div>
+
     <div class="col-md-12">
         {% include 'composants/inputs/input_aera.html.twig' with {
-            label: 'Détail',
+            label: 'A completer par le prescripteur',
             field: form.details
         } %}
     </div>
 
-
+    <div class="col-12 bg-light border-bottom border-dark">
+        <h3>Le mediateur numérique</h3>
+    </div>
 
     <div class="col-md-6">
         {% include 'composants/inputs/input_text.html.twig' with {
             label: 'Lieu de Médiation',
             field: form.lieuMediation
         } %}
+    </div>
+
+    <div class="col-12 bg-light border-bottom border-dark">
+        <h3>Motivation de la prescription</h3>
     </div>
 
 

@@ -5,10 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <title>{% block title %}Welcome!{% endblock %}</title>
-        
+
     {% block importmap %}{{ importmap('app') }}{% endblock %}
 
-    {% block stylesheets %}{% endblock %}
+    {% block stylesheets %}
+        <script src="https://kit.fontawesome.com/1fb9149f4c.js" crossorigin="anonymous"></script>
+    {% endblock %}
 </head>
 <body class="min-vh-100">
 
@@ -71,7 +73,7 @@
     </footer>
 
     {% block javascripts %}
-   
+
     {% endblock %}
 </body>
 </html>

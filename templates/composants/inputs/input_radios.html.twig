@@ -1,6 +1,6 @@
 {% for label, value, choice in field_choices(field) %}
     <div class="form-check form-check-inline ">
         <input class="form-check-input-dark" type="radio" name="{{ field_name(field) }}" id="inlineRadio{{ loop.index }}" value="{{ value }}" {% if value is same as field %}checked="checked"{% endif %}>
-        {# <label class="form-check-label" for="inlineRadio{{ loop.index }}">{{ label }}</label> #}
+        <label class="form-check-label" for="inlineRadio{{ loop.index }}">{{ label }}</label>
     </div>
 {% endfor %}
