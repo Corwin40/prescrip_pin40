@@ -36,7 +36,7 @@ final class CompetenceController extends AbstractController
             return $this->redirectToRoute('app_gestapp_competence_index', [], Response::HTTP_SEE_OTHER);
         }
 
-        return $this->render('gestapp/competence/new.html.twig', [
+        return $this->render('gestapp/competence/_form.html.twig', [
             'competence' => $competence,
             'form' => $form,
         ]);
@@ -62,7 +62,7 @@ final class CompetenceController extends AbstractController
             return $this->redirectToRoute('app_gestapp_competence_index', [], Response::HTTP_SEE_OTHER);
         }
 
-        return $this->render('gestapp/competence/edit.html.twig', [
+        return $this->render('gestapp/competence/_form.html.twig', [
             'competence' => $competence,
             'form' => $form,
         ]);

@@ -19,7 +19,11 @@
     </div>
 
     <div>Accueillir le form bénificiaire</div>
-    {{ render(controller('App\\Controller\\Gestapp\\BeneficiaryController::new2')) }}
+    {% if app.request.attributes.get('_route') == 'app_gestapp_prescription_new'  %}
+        {{ render(controller('App\\Controller\\Gestapp\\BeneficiaryController::new2')) }}
+    {% elseif  app.request.attributes.get('_route') == 'app_gestapp_prescription_edit' %}
+        {{ render(controller('App\\Controller\\Gestapp\\BeneficiaryController::edit2')) }}
+    {% endif %}
 
     <div class="col-md-6">
         {% include 'composants/inputs/input_select.html.twig' with {
@@ -50,6 +54,11 @@
     </div>
 
     <div>Accueillir le form compétence</div>
+    {% if app.request.attributes.get('_route') == 'app_gestapp_prescription_new'  %}
+        {{ render(controller('App\\Controller\\Gestapp\\CompetenceController::new')) }}
+    {% elseif  app.request.attributes.get('_route') == 'app_gestapp_prescription_edit' %}
+        {{ render(controller('App\\Controller\\Gestapp\\CompetenceController::edit')) }}
+    {% endif %}
 </div>
 
 <div class="mt-4">
