@@ -32,7 +32,8 @@
 
     <div class="col-md-12">
         {% include 'composants/inputs/input_radios.html.twig' with {
-          field: form.ageGroup
+            input_label: 'Age',
+            field: form.ageGroup
         } %}
     </div>
 
@@ -40,6 +41,7 @@
 
     <div class="col-md-12">
         {% include 'composants/inputs/input_radios.html.twig' with {
+            input_label: 'Situation',
             field: form.professionnalStatus
         } %}
     </div>

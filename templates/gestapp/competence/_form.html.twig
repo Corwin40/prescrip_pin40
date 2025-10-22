@@ -3,11 +3,11 @@
     </div>
 
     <div class="col-12">
-        <div class="row text-center fw-bold border-bottom bg-secondary">
-            <div class="col-4 text-start">Compétences</div>
-            <div class="col">Acquis</div>
-            <div class="col">En cours</div>
-            <div class="col">Non acquis</div>
+        <div class="row py-2 text-center fw-bold border-bottom bg-secondary">
+            <div class="col-4 text-start text-white">Compétences</div>
+            <div class="col text-white">Acquis</div>
+            <div class="col text-white">En cours</div>
+            <div class="col text-white">Non acquis</div>
         </div>
         <!-- Compétence de base -->
         <div class="row align-items-center text-center border-bottom py-2 bg-light">
@@ -73,16 +73,6 @@
             <div class="form-group">
                 <label class="fw-bold mb-2 d-block">Détail du parcours</label>
                 {{ form_widget(form.detailParcour, {'attr': {'class': 'form-control', 'rows': 4}}) }}
-            </div>
-        </div>
-
-        <!-- Bénéficiaire -->
-        <div class="col-md-4">
-            <div class="form-group d-flex align-items-center">
-                <label class="fw-bold me-3 mb-0" style="white-space: nowrap;">Bénéficiaire :</label>
-                <div class="flex-grow-1">
-                    {{ form_widget(form.beneficiary, {'attr': {'class': 'form-control'}}) }}
-                </div>
             </div>
         </div>
     </div>
