@@ -6,10 +6,13 @@
 
     <title>{% block title %}Welcome!{% endblock %}</title>
 
-    {% block importmap %}{{ importmap('app') }}{% endblock %}
+    {% block javascripts %}
+        {{ encore_entry_script_tags('app') }}
+        <script src="https://kit.fontawesome.com/1fb9149f4c.js" crossorigin="anonymous"></script>
+    {% endblock %}
 
     {% block stylesheets %}
-        <script src="https://kit.fontawesome.com/1fb9149f4c.js" crossorigin="anonymous"></script>
+        {{ encore_entry_link_tags('app') }}
     {% endblock %}
 </head>
 <body class="min-vh-100">
@@ -71,9 +74,5 @@
             <div class="col">Contact</div>
         </div>
     </footer>
-
-    {% block javascripts %}
-
-    {% endblock %}
 </body>
 </html>

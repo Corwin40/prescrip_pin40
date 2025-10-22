@@ -43,6 +43,9 @@ class Prescription
     #[ORM\Column(length: 100)]
     private ?string $lieuMediation = null;
 
+    #[ORM\Column(type: Types::SMALLINT)]
+    private ?int $compteur = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -155,6 +158,18 @@ class Prescription
     public function setLieuMediation(string $lieuMediation): static
     {
         $this->lieuMediation = $lieuMediation;
+
+        return $this;
+    }
+
+    public function getCompteur(): ?int
+    {
+        return $this->compteur;
+    }
+
+    public function setCompteur(int $compteur): static
+    {
+        $this->compteur = $compteur;
 
         return $this;
     }

@@ -1,20 +1,13 @@
-import './bootstrap.js';
-import './styles/app.css';
+/*
+ * Welcome to your app's main JavaScript file!
+ *
+ * We recommend including the built version of this JavaScript file
+ * (and its CSS file) in your base layout (base.html.twig).
+ */
+
+// any CSS you import will output into a single css file (app.scss in this case)
+// this "modifies" the jquery module: adding behavior to it
+// the bootstrap module doesn't export/return anything
 import 'bootstrap';
-import 'bootstrap/dist/css/bootstrap.min.css';
-
-import { initNewEdit_Prescription } from './js/pages/gestapp/prescription/newedit_prescription.js';
-
-document.addEventListener('DOMContentLoaded', () => {
-    initDropdowns();
-    const page = document.body.dataset.page;
-    switch (page) {
-        case 'mac_admin_association_new':
-        case 'mac_admin_association_edit':
-            initNewEdit_Prescription();
-            break;
-        default:
-            console.log('Page non reconnue ou pas de JS spécifique');
-    }
-
-});
+import { Tooltip, Toast, Popover } from 'bootstrap';
+import './styles/app.scss';

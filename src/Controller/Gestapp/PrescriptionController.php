@@ -26,16 +26,23 @@ final class PrescriptionController extends AbstractController
     }
 
     #[Route('/new', name: 'app_gestapp_prescription_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager): Response
+    public function new(Request $request, EntityManagerInterface $entityManager, PrescriptionRepository $prescriptionRepository): Response
     {
-        $prescription = new Prescription();
-
+        // Construction de la variable Ref
         $date = new \DateTime('now');
         $structure = $this->getUser()->getNameStructure();
 
+        $lastPrescription = $prescriptionRepository->findOneBy(['membre' => $this->getUser(), 'id' => 'DESC']);
+        $compteur = 0;
+        if(!$lastPrescription){
+            $compteur = 1;
+        }else{
+            $compteur = $lastPrescription->getCompteur() + 1;
+        }
+        $ref = $date->format('mY')."-".$structure."-".$compteur;// mois-année-structure-compteur
 
-        $ref = $date->format('mY')."-".$structure."-";// mois-année-structure-compteur
-
+        $prescription = new Prescription();
+        $prescription->setRef($ref);
         $form = $this->createForm(PrescriptionType::class, $prescription);
         $form->handleRequest($request);
 
