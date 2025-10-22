@@ -1,68 +1,84 @@
 {{ form_start(form) }}
 
-<div class="row g-3">
+<div class="row">
 
+    <div class="col-md-3">
+        <p>Reférence : {{ prescription.ref }}</p>
+    </div>
+    <div class="w-100"></div>
 
-
-    <div class="col-md-6">
-        {% include 'composants/inputs/input_text.html.twig' with {
-            label: 'Référence',
-            field: form.ref
-        } %}
+    {#  Bloc Bénéficiaire #}
+    <div class="col-12 mb-2">
+        <div class="row">
+            <div class="col-12 bg-light border-bottom border-dark mb-2">
+                <h3>Le bénéficiaire</h3>
+            </div>
+            <div class="col-md-6">
+                {% include 'composants/inputs/input_select.html.twig' with {
+                    label: 'Bénéficiaire',
+                    field: form.beneficiaire
+                } %}
+            </div>
+            <div class="col-md-6 d-flex align-items-end">
+                <a class="btn btn-primary mb-3">Ajouter un bénéficiaire</a>
+            </div>
+            <div class="col-12">
+                {% if app.request.attributes.get('_route') == 'app_gestapp_prescription_new'  %}
+                    {{ render(controller('App\\Controller\\Gestapp\\BeneficiaryController::new2')) }}
+                {% elseif  app.request.attributes.get('_route') == 'app_gestapp_prescription_edit' %}
+                    {{ render(controller('App\\Controller\\Gestapp\\BeneficiaryController::edit2')) }}
+                {% endif %}
+            </div>
+        </div>
     </div>
 
-    <div class="col-md-6"></div>
+    {#  Bloc Prescripteur #}
+    <div class="col-12 mb-2">
+        <div class="row">
+            <div class="col-12 bg-light border-bottom border-dark mb-2">
+                <h3>Le prescripteur</h3>
+            </div>
 
-    <div class="col-12 bg-light border-bottom border-dark">
-        <h3>Le bénéficiaire</h3>
+            <div class="col-12">
+                <p>Structure : {{ app.user.nameStructure }}</p>
+                <p>Nom et prenom du prescripteur : {% if app.user.contactResponsableFirstname is empty and app.user.contactResponsableLastname is empty %} - {% else %}{{ app.user.contactResponsableFirstname }} {{ app.user.contactResponsableLastname }}{% endif %}</p>
+                <p>Telephone : {% if app.user.contactPhone is empty %} - {% else %}{{ app.user.contactPhone }}{% endif %}</p>
+                <p><i class="fa-duotone fa-solid fa-inbox"></i> Email : {% if app.user.contactEmail is empty %} - {% else %}{{ app.user.contactEmail }}{% endif %}</p>
+            </div>
+        </div>
     </div>
 
-    <div class="col-md-6">
-        {% include 'composants/inputs/input_select.html.twig' with {
-            label: 'Bénéficiaire',
-            field: form.beneficiaire
-        } %}
+    {#  Bloc Prescripteur #}
+    <div class="col-12 mb-2">
+        <div class="row">
+            <div class="col-12 bg-light border-bottom border-dark mb-2">
+                <h3>Motivation de la prescription</h3>
+            </div>
+
+            <div class="col-md-12">
+                {% include 'composants/inputs/input_aera.html.twig' with {
+                    label: 'A completer par le prescripteur',
+                    field: form.details
+                } %}
+            </div>
+            <div class="col-md-12">
+                {% include 'composants/inputs/input_radios.html.twig' with {
+                    input_label: 'Compétences de base',
+                    field: form.baseCompetence
+                } %}
+            </div>
+        </div>
     </div>
 
-    <div>Accueillir le form bénificiaire</div>
-    {% if app.request.attributes.get('_route') == 'app_gestapp_prescription_new'  %}
-        {{ render(controller('App\\Controller\\Gestapp\\BeneficiaryController::new2')) }}
-    {% elseif  app.request.attributes.get('_route') == 'app_gestapp_prescription_edit' %}
-        {{ render(controller('App\\Controller\\Gestapp\\BeneficiaryController::edit2')) }}
-    {% endif %}
 
 
 
-    <div class="col-md-6">
-        {% include 'composants/inputs/input_select.html.twig' with {
-            label: 'Equipement',
-            field: form.equipement
-        } %}
-    </div>
 
 
 
-    <div class="col-12 bg-light border-bottom border-dark">
-        <h3>Le prescripteur</h3>
-    </div>
 
-    <div class="col-12">
-        <p>Structure : {{ app.user.nameStructure }}</p>
-        <p>Nom et prenom du prescripteur : {% if app.user.contactResponsableFirstname is empty and app.user.contactResponsableLastname is empty %} - {% else %}{{ app.user.contactResponsableFirstname }} {{ app.user.contactResponsableLastname }}{% endif %}</p>
-        <p>Telephone : {% if app.user.contactPhone is empty %} - {% else %}{{ app.user.contactPhone }}{% endif %}</p>
-        <p><i class="fa-duotone fa-solid fa-inbox"></i> Email : {% if app.user.contactEmail is empty %} - {% else %}{{ app.user.contactEmail }}{% endif %}</p>
-    </div>
 
-    <div class="col-12 bg-light border-bottom border-dark">
-        <h3>Motivation de la prescription</h3>
-    </div>
 
-    <div class="col-md-12">
-        {% include 'composants/inputs/input_aera.html.twig' with {
-            label: 'A completer par le prescripteur',
-            field: form.details
-        } %}
-    </div>
 
     <div class="col-12 bg-light border-bottom border-dark">
         <h3>Le mediateur numérique</h3>
@@ -75,11 +91,6 @@
         } %}
     </div>
 
-    <div class="col-12 bg-light border-bottom border-dark">
-        <h3>Motivation de la prescription</h3>
-    </div>
-
-
     {% if app.request.attributes.get('_route') == 'app_gestapp_prescription_new'  %}
         {{ render(controller('App\\Controller\\Gestapp\\CompetenceController::new')) }}
     {% elseif  app.request.attributes.get('_route') == 'app_gestapp_prescription_edit' %}
@@ -89,6 +100,13 @@
 
 <div class="mt-4">
     <button class="btn btn-primary">{{ button_label|default('Enregistrer') }}</button>
+</div>
+
+<div class="col-md-6">
+    {% include 'composants/inputs/input_select.html.twig' with {
+        label: 'Equipement',
+        field: form.equipement
+    } %}
 </div>
 
 {{ form_rest(form) }}

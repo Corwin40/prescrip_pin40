@@ -37,29 +37,25 @@ class CompetenceType extends AbstractType
                 'required' => true,
             ])
             ->add('compInternet', ChoiceType::class, [
-        'label' => 'competence',
-        'choices' => [
-            'Acquis' => 'acquis',
-            'En cours' => 'encours',
-            'Non acquis' => 'Nonacquis',
-        ],
-             'placeholder' => 'Veuillez choisir',
-             'required' => true,
-    ])
-
-
-
+                'label' => 'competence',
+                'choices' => [
+                    'Acquis' => 'acquis',
+                    'En cours' => 'encours',
+                    'Non acquis' => 'Nonacquis',
+                ],
+                     'placeholder' => 'Veuillez choisir',
+                     'required' => true,
+            ])
             ->add('compEmail', ChoiceType::class, [
-        'label' => 'competence',
-        'choices' => [
-            'Acquis' => 'acquis',
-            'En cours' => 'encours',
-            'Non acquis' => 'Nonacquis',
-        ],
-             'placeholder' => 'Veuillez choisir',
-             'required' => true,
-    ])
-
+                'label' => 'competence',
+                'choices' => [
+                    'Acquis' => 'acquis',
+                    'En cours' => 'encours',
+                    'Non acquis' => 'Nonacquis',
+                ],
+                     'placeholder' => 'Veuillez choisir',
+                     'required' => true,
+            ])
             ->add('isAutoEva')
             ->add('isDigComp0')
             ->add('isDigComp1')
@@ -69,10 +65,6 @@ class CompetenceType extends AbstractType
             ->add('isDigComp5')
             ->add('detailParcour')
             ->add('isAutoEvalEnd')
-            ->add('beneficiary', EntityType::class, [
-                'class' => Beneficiary::class,
-                'choice_label' => 'id',
-            ])
         ;
     }
 
