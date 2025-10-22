@@ -94,8 +94,6 @@
         } %}
     </div>
 
-
-
     {% if app.request.attributes.get('_route') == 'app_gestapp_prescription_new'  %}
         {{ render(controller('App\\Controller\\Gestapp\\CompetenceController::new')) }}
     {% elseif  app.request.attributes.get('_route') == 'app_gestapp_prescription_edit' %}

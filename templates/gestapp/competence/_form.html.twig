@@ -61,8 +61,8 @@
         <div class="col d-flex flex-wrap justify-content-between">
             {% for i in 1..5 %}
                 <div class="flex-fill text-center mx-1">
-                    {{ form_row(attribute(form, 'isDigComp' ~ i)) }}
-                </div>
+
+                </div>{{ form_row(attribute(form, 'isDigComp' ~ i)) }}
             {% endfor %}
         </div>
     </div>

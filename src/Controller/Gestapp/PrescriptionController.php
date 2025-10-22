@@ -30,7 +30,11 @@ final class PrescriptionController extends AbstractController
     {
         $prescription = new Prescription();
 
-        $ref = // mois-année-strucutre-compteur
+        $date = new \DateTime('now');
+        $structure = $this->getUser()->getNameStructure();
+
+
+        $ref = $date->format('mY')."-".$structure."-";// mois-année-structure-compteur
 
         $form = $this->createForm(PrescriptionType::class, $prescription);
         $form->handleRequest($request);
