@@ -26,16 +26,6 @@ class BeneficiaryType extends AbstractType
                 'placeholder' => 'veuillez choisir',
                 'required' => true,
             ])
-            ->add('gender', ChoiceType::class, [
-                'label' => 'Genre',
-                'choices' => [
-                    'Féminin' => 'f',
-                    'Masculin' => 'm',
-                    'Autre' => 'autre',
-                ],
-                'placeholder' => 'veuillez choisir',
-                'required' => true,
-            ])
             ->add('ageGroup', ChoiceType::class, [
                 'label' => 'Tranche d’âge',
                 'choices' => [
@@ -44,6 +34,8 @@ class BeneficiaryType extends AbstractType
                     '26 à 59 ans' => '26-59',
                     '60 ans et plus' => '60+',
                 ],
+                'expanded' => true,
+                'multiple' => false,
                 'placeholder' => 'Veuillez choisir',
                 'required' => true,
             ])
@@ -57,6 +49,8 @@ class BeneficiaryType extends AbstractType
                     'Retraité' => 'retraite',
                     'Autre situation' => 'autre',
                 ],
+                'expanded' => true,
+                'multiple' => false,
                 'placeholder' => 'veuillez choisir',
                 'required' => true,
             ]);
