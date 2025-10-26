@@ -29,7 +29,9 @@ security:
             # switch_user: true  # décommente si tu veux l’impersonation
 
     role_hierarchy:
-        ROLE_ADMIN: ROLE_USER
+        ROLE_PRESCRIPTEUR: ROLE_USER
+        ROLE_MEDIATEUR: ROLE_PRESCRIPTEUR
+        ROLE_ADMIN: ROLE_MEDIATEUR
         ROLE_SUPER_ADMIN: [ROLE_ADMIN, ROLE_ALLOWED_TO_SWITCH]
 
     access_control:

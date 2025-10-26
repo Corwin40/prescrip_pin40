@@ -20,14 +20,7 @@
                 } %}
             </div>
             <div class="col-md-6 d-flex align-items-end">
-                <a class="btn btn-primary mb-3">Ajouter un bénéficiaire</a>
-            </div>
-            <div class="col-12">
-                {% if app.request.attributes.get('_route') == 'app_gestapp_prescription_new'  %}
-                    {{ render(controller('App\\Controller\\Gestapp\\BeneficiaryController::new2')) }}
-                {% elseif  app.request.attributes.get('_route') == 'app_gestapp_prescription_edit' %}
-                    {{ render(controller('App\\Controller\\Gestapp\\BeneficiaryController::edit2')) }}
-                {% endif %}
+                <a href="{{ path('app_gestapp_beneficiary_new2') }}" id="btnAddBeneficiary" class="btn btn-primary mb-3">Ajouter un bénéficiaire</a>
             </div>
         </div>
     </div>
@@ -69,16 +62,6 @@
             </div>
         </div>
     </div>
-
-
-
-
-
-
-
-
-
-
 
     <div class="col-12 bg-light border-bottom border-dark">
         <h3>Le mediateur numérique</h3>

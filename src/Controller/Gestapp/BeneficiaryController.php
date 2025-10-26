@@ -30,6 +30,11 @@ final class BeneficiaryController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+
+            $civility = $form->get('civility')->getData();
+
+            $beneficiary->setGender($civility);
+
             $entityManager->persist($beneficiary);
             $entityManager->flush();
 
@@ -50,16 +55,23 @@ final class BeneficiaryController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+
+            $civility = $form->get('civility')->getData();
+
+            $beneficiary->setGender($civility);
             $entityManager->persist($beneficiary);
             $entityManager->flush();
 
             return $this->redirectToRoute('app_gestapp_beneficiary_index', [], Response::HTTP_SEE_OTHER);
         }
 
-        return $this->render('gestapp/beneficiary/_form.html.twig', [
-            'beneficiary' => $beneficiary,
-            'form' => $form,
-        ]);
+        return $this->json([
+            'message' => 'le formulaire est livré.',
+            'formView' => $this->renderView('gestapp/beneficiary/_form.html.twig', [
+                'beneficiary' => $beneficiary,
+                'form' => $form,
+            ])
+        ],200);
     }
 
     #[Route('/{id}', name: 'app_gestapp_beneficiary_show', methods: ['GET'])]

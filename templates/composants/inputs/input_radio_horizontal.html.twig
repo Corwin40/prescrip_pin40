@@ -1,0 +1,13 @@
+<div id="{{ form_field.vars.id }}" class="d-inline-flex w-100">
+    {% if form_label is defined %}
+        <p class="mx-2"><b>{{ form_label }}</b></p>
+    {% endif %}
+    <div class="radio-group w-75">
+        {% for choice in form_field %}
+            <label class="form-check-label mx-2">
+                {{ form_widget(choice, {'attr': {'class': 'form-check-input'}}) }}
+                {{ form_label(choice) }}
+            </label>
+        {% endfor %}
+    </div>
+</div>

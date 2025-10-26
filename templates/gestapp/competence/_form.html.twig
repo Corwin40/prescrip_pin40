@@ -3,19 +3,20 @@
     </div>
 
     <div class="col-12">
-        <div class="row py-2 text-center fw-bold border-bottom bg-secondary">
-            <div class="col-4 text-start text-white">Compétences</div>
-            <div class="col text-white">Acquis</div>
-            <div class="col text-white">En cours</div>
-            <div class="col text-white">Non acquis</div>
-        </div>
-        <!-- Compétence de base -->
-        <div class="row align-items-center text-center border-bottom py-2 bg-light">
-            <div class="col-4 text-start fw-semibold">Compétence de base</div>
-            <div class="col d-flex justify-content-around">
-                {% include 'composants/inputs/input_radios.html.twig' with { field: form.compBase, attr: {'label': false} } %}
-            </div>
-        </div>
+        <table class="table table-bordered table-striped">
+            <tr>
+                <th>Compétences</th>
+                <th>Acquis</th>
+                <th>En cours</th>
+                <th>Non acquis</th>
+            </tr>
+            {% include 'composants/inputs/input_radio_tablerow.html.twig' with {
+                form_label: 'Compétence de base',
+                form_field: form.compBase
+            } %}
+        </table>
+
+
         <!-- Compétence Texte et documents -->
         <div class="row align-items-center text-center border-bottom py-2 ">
             <div class="col-4 text-start fw-semibold">Compétence Texte et documents</div>
