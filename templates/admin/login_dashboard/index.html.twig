@@ -1,3 +1,4 @@
+{% extends 'base.html.twig' %}
 {% block body %}
     <div class="container my-5">
         <h2 class="text-center mb-4">Bienvenue sur votre tableau de bord</h2>
@@ -36,7 +37,7 @@
                     </div>
                 </div>
 
-                {# 👉 Sinon si le user est MEDIATEUR : afficher uniquement la carte Médiation #}
+                {#  afficher uniquement la carte Médiation #}
             {% elseif is_granted('ROLE_MEDIATEUR') %}
                 <div class="col-md-4">
                     <div class="card h-100 shadow-sm">
@@ -53,7 +54,7 @@
                     </div>
                 </div>
 
-                {# 👉 Sinon si le user est PRESCRIPTEUR : afficher uniquement la carte Prescription #}
+                {#  afficher uniquement la carte Prescription #}
             {% elseif is_granted('ROLE_PRESCRIPTEUR') %}
                 <div class="col-md-4">
                     <div class="card h-100 shadow-sm">
