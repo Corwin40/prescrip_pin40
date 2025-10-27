@@ -7,6 +7,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 
 class MemberType extends AbstractType
 {
@@ -14,7 +15,16 @@ class MemberType extends AbstractType
     {
         $builder
             ->add('email')
-            #->add('password')
+            ->add('plainPassword', PasswordType::class, [
+                'mapped' => false, // ⚠️ ne lie pas directement à l'entité
+                'required' => true, // ✅ obligatoire à la création
+                'label' => 'Mot de passe',
+                'attr' => [
+                    'autocomplete' => 'new-password',
+                    'placeholder' => 'Saisir un mot de passe',
+                    'class' => 'form-control',
+                ],
+            ])
             ->add('nameStructure')
             ->add('address')
             ->add('zipcode')
@@ -27,13 +37,24 @@ class MemberType extends AbstractType
                 'choices' => [
                     'Mme' => 'Mme',
                     'Mlle' => 'Mlle',
-                    'Monsieur' => 'Monsieur',
+                    'Monsieur' => 'Mr',
                 ],
                 'label' => 'Civilité',
                 'placeholder' => 'Sélectionnez une civilité',
                 'required' => true,
             ])
-            ->add('isVerified');
+            ->add('isVerified')
+            ->add('role', ChoiceType::class, [
+                'label' => 'Rôle proposé',
+                'choices' => [
+                    'Prescripteur' => 'ROLE_PRESCRIPTEUR',
+                    'Médiateur' => 'ROLE_MEDIATEUR',
+                ],
+                'expanded' => true,   // ✅ boutons radio
+                'multiple' => false,  // un seul rôle
+                'mapped' => false,    // ⚠️ géré dans le contrôleur
+                'required' => true,
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void

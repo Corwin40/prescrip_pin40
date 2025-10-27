@@ -7,30 +7,34 @@
     </div>
     <div class="w-100"></div>
 
-    {#  Bloc Bénéficiaire #}
+    {# Bloc Bénéficiaire #}
     <div class="col-12 mb-2">
         <div class="row">
             <div class="col-12 bg-light border-bottom border-dark mb-2">
                 <h3>Le bénéficiaire</h3>
             </div>
+
             <div class="col-md-6">
                 {% include 'composants/inputs/input_select.html.twig' with {
                     label: 'Bénéficiaire',
                     field: form.beneficiaire
                 } %}
             </div>
+
             <div class="col-md-6 d-flex align-items-end">
-                <a class="btn btn-primary mb-3">Ajouter un bénéficiaire</a>
+                <a id="show-beneficiaire-form" class="btn btn-primary mb-3">Ajouter un bénéficiaire</a>
             </div>
-            <div class="col-12">
-                {% if app.request.attributes.get('_route') == 'app_gestapp_prescription_new'  %}
+
+            <div class="col-12" id="beneficiaire-form" style="display: none;">
+                {% if app.request.attributes.get('_route') == 'app_gestapp_prescription_new' %}
                     {{ render(controller('App\\Controller\\Gestapp\\BeneficiaryController::new2')) }}
-                {% elseif  app.request.attributes.get('_route') == 'app_gestapp_prescription_edit' %}
+                {% elseif app.request.attributes.get('_route') == 'app_gestapp_prescription_edit' %}
                     {{ render(controller('App\\Controller\\Gestapp\\BeneficiaryController::edit2')) }}
                 {% endif %}
             </div>
         </div>
     </div>
+
 
     {#  Bloc Prescripteur #}
     <div class="col-12 mb-2">
