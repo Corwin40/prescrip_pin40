@@ -21,11 +21,13 @@ class PrescriptionType extends AbstractType
         $builder
             ->add('beneficiaire', EntityType::class, [
                 'class' => Beneficiary::class,
-                'choice_label' => 'firstname',
+                'choice_label' => function ($beneficiary) {
+                    return $beneficiary->getFirstname() . ' ' . $beneficiary->getLastname();
+                },
                 'query_builder' => function (EntityRepository $er) {
                     return $er->createQueryBuilder('b')
-                        ->join('b.prescription', 'p')
-                        ->where('p.id is empty')
+                        ->leftjoin('b.prescription', 'p')
+                        ->where('p.id IS NULL')
                         ->orderBy('b.id', 'ASC');
                 },
             ])
@@ -43,6 +45,8 @@ class PrescriptionType extends AbstractType
                 ],
                 'placeholder' => 'Veuillez choisir',
                 'required' => true,
+                'expanded' => true,
+                'multiple' => false,
             ])
 
             ->add('lieuMediation',EntityType::class, [

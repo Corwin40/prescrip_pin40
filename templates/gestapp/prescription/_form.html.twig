@@ -66,9 +66,9 @@
                 } %}
             </div>
             <div class="col-md-12">
-                {% include 'composants/inputs/input_radios.html.twig' with {
-                    input_label: 'Compétences de base',
-                    field: form.baseCompetence
+                {% include 'composants/inputs/input_radio_horizontal.html.twig' with {
+                    form_label: 'Compétences de base',
+                    form_field: form.baseCompetence
                 } %}
             </div>
         </div>
@@ -85,23 +85,20 @@
         } %}
     </div>
 
-    {% if app.request.attributes.get('_route') == 'app_gestapp_prescription_new'  %}
-        {{ render(controller('App\\Controller\\Gestapp\\CompetenceController::new')) }}
-    {% elseif  app.request.attributes.get('_route') == 'app_gestapp_prescription_edit' %}
-        {{ render(controller('App\\Controller\\Gestapp\\CompetenceController::edit')) }}
-    {% endif %}
+    <div class="col-md-6">
+        {% include 'composants/inputs/input_select.html.twig' with {
+            label: 'Equipement',
+            field: form.equipement
+        } %}
+    </div>
+
 </div>
 
 <div class="mt-4">
-    <button class="btn btn-primary">{{ button_label|default('Enregistrer') }}</button>
+    <button class="btn btn-primary">{{ button_label|default('Préenregistrer ') }}</button>
 </div>
 
-<div class="col-md-6">
-    {% include 'composants/inputs/input_select.html.twig' with {
-        label: 'Equipement',
-        field: form.equipement
-    } %}
-</div>
+
 
 {{ form_rest(form) }}
 
