@@ -14,11 +14,16 @@
 
         <div class="row">
             <div class="col-9">
-                Quelques chiffres...
-                Machine dispo0nibles : {{ equipments|length }}
+                <div class="card">
+                    <div class="card-body">
+                        <p class="lead">Machine disponibles</p>
+                        <p class="h3">{{ equipments|length }}</p>
+                    </div>
+                </div>
             </div>
             <div class="col-3">
-                bouton d'actions
+                <a href="{{ path('app_admin_member_new',{'role':'prescripteur'}) }}" class="btn btn-outline-info">Ajouter un prescripteur</a>
+                <a href="{{ path('app_admin_member_new',{'role':'mediateur'}) }}" class="btn btn-outline-info">Ajouter un médiateur</a>
             </div>
         </div>
 

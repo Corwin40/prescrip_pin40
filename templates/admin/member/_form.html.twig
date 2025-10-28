@@ -62,22 +62,6 @@
         {{ form_widget(form.contactResponsableCivility, {'attr': {'class': 'form-select'}}) }}
     </div>
 
-    <!-- Compte vérifié + Rôle -->
-    <div class="col-md-12 mt-2">
-        <div class="row align-items-center">
-            <div class="col-md-6">
-                <div class="form-check">
-                    {{ form_widget(form.isVerified, {'attr': {'class': 'form-check-input'}}) }}
-                    {{ form_label(form.isVerified, 'Compte vérifié', {'label_attr': {'class': 'form-check-label ms-2 fw-semibold'}}) }}
-                </div>
-            </div>
-            <div class="col-md-6">
-                <label class="form-label fw-semibold d-block mb-2">Rôle proposé</label>
-                {{ form_widget(form.role) }}
-            </div>
-        </div>
-    </div>
-
     <!-- Bouton -->
     <div class="col-12 text-end mt-4">
         <button type="submit" class="btn btn-primary px-4">

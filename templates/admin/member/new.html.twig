@@ -5,7 +5,7 @@
 {% block body %}
     <div class="container mt-5">
 
-        <h1 class="mb-4 fw-bold">Créer un nouveau membre</h1>
+        <h1 class="mb-4 fw-bold">Créer un nouveau {{ role }}</h1>
 
         <div class="card p-4 shadow-sm">
             {{ include('admin/member/_form.html.twig', {'button_label': 'Créer'}) }}
