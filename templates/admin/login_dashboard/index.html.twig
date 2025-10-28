@@ -28,6 +28,12 @@
 
         <div class="col-12">
             <h3 class="mb-4 border-bottom border-dark bg-light text-uppercase">Liste des prescriptions</h3>
+             {% include 'composants/forms/button_creatnew.html.twig' with {
+                    label: 'nouvelle prescription',
+                    href: path('app_gestapp_prescription_new')
+                } %}
+            </div>
+
             <table class="table table-hover">
                 <thead class="table-light">
                 <tr>
@@ -41,7 +47,13 @@
                 {% for prescription in prescriptions %}
                     <tr>
                         <td>{{ prescription.ref }}</td>
-                        <td>{{ prescription.beneficiaire.firstname }} {{ prescription.beneficiaire.lastname }}</td>
+
+                        <td>{% if prescription.beneficiaire is not empty %}
+                                {{ prescription.beneficiaire.firstname }} {{ prescription.beneficiaire.lastname }}
+                            {% else %}
+                                non disponible
+                            {% endif %}
+                        </td>
                         <td>{{ prescription.membre.nameStructure }}</td>
                         <td>{{ prescription.lieuMediation }}</td>
                     </tr>
@@ -53,6 +65,28 @@
                 </tbody>
             </table>
         </div>
+    <div class="col-12 justify-content-evenly">
+
+        {% include 'composants/forms/button_creatnew.html.twig' with {
+            label: 'Créer un nouveau bénéficiaire',
+            href: path('app_gestapp_beneficiary_new')
+        } %}
+        {% include 'composants/forms/button_creatnew.html.twig' with {
+            label: 'Créer un nouveau prescripteur',
+            href: path('app_admin_member_new', {'role':'prescripteur'})
+        } %}
+        {% include 'composants/forms/button_creatnew.html.twig' with {
+            label: 'Créer un nouveau mediateur',
+            href: path('app_admin_member_new',{'role':'mediateur'})
+        } %}
+        {% include 'composants/forms/button_creatnew.html.twig' with {
+            label: 'nouveau equipement',
+            href: path('app_gestapp_equipment_new')
+        } %}
+
+
+    </div>
+    <div class="col-12"></div>
 
         {# --- menu media ou prescription --- #}
         <div class="row justify-content-center g-4">
