@@ -7,7 +7,7 @@
 
         {# --- Section chiffre ordi dispo et nombre prescriptions --- #}
         <div class="row mb-4">
-            <div class="col-md-6 mb-3">
+            <div class="col-md-3 mb-3">
                 <div class="card text-center">
                     <div class="card-body">
                         <h5 class="card-title">Machines disponibles</h5>
@@ -16,7 +16,7 @@
                 </div>
             </div>
 
-            <div class="col-md-6 mb-3">
+            <div class="col-md-3 mb-3">
                 <div class="card text-center">
                     <div class="card-body">
                         <h5 class="card-title">Prescriptions enregistrées</h5>
@@ -26,37 +26,32 @@
             </div>
         </div>
 
-        {# --- tableau liste  des prescriptions --- #}
-        <div class="card mb-4">
-            <div class="card-header bg-primary text-white">
-                Liste des prescriptions
-            </div>
-            <div class="card-body p-0">
-                <table class="table table-striped table-hover mb-0">
-                    <thead class="table-light">
+        <div class="col-12">
+            <h3 class="mb-4 border-bottom border-dark bg-light text-uppercase">Liste des prescriptions</h3>
+            <table class="table table-hover">
+                <thead class="table-light">
+                <tr>
+                    <th>Ref</th>
+                    <th>Nom et Prénom</th>
+                    <th>Structure</th>
+                    <th>Espace</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for prescription in prescriptions %}
                     <tr>
-                        <th>Ref</th>
-                        <th>Nom et Prénom</th>
-                        <th>Structure</th>
-                        <th>Espace</th>
+                        <td>{{ prescription.ref }}</td>
+                        <td>{{ prescription.beneficiaire.firstname }} {{ prescription.beneficiaire.lastname }}</td>
+                        <td>{{ prescription.membre.nameStructure }}</td>
+                        <td>{{ prescription.lieuMediation }}</td>
                     </tr>
-                    </thead>
-                    <tbody>
-                    {% for prescription in prescriptions %}
-                        <tr>
-                            <td>{{ prescription.ref }}</td>
-                            <td>{{ prescription.beneficiaire.firstname }} {{ prescription.beneficiaire.lastname }}</td>
-                            <td>{{ prescription.membre.nameStructure }}</td>
-                            <td>{{ prescription.lieuMediation }}</td>
-                        </tr>
-                    {% else %}
-                        <tr>
-                            <td colspan="4" class="text-center text-muted">Aucune prescription disponible</td>
-                        </tr>
-                    {% endfor %}
-                    </tbody>
-                </table>
-            </div>
+                {% else %}
+                    <tr>
+                        <td colspan="4" class="text-start text-muted">Aucune prescription disponible</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
         </div>
 
         {# --- menu media ou prescription --- #}

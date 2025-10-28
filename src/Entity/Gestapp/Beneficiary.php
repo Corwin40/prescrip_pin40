@@ -42,7 +42,8 @@ class Beneficiary
     #[ORM\OneToOne(inversedBy: 'beneficiary', cascade: ['persist', 'remove'])]
     private ?Competence $beneficiaryCompetences = null;
 
-
+    #[ORM\OneToOne(mappedBy: 'beneficiaire', cascade: ['persist', 'remove'])]
+    private ?Prescription $prescription = null;
 
     public function getId(): ?int
     {
@@ -148,6 +149,28 @@ class Beneficiary
     public function setBeneficiaryCompetences(?Competence $beneficiaryCompetences): static
     {
         $this->beneficiaryCompetences = $beneficiaryCompetences;
+        return $this;
+    }
+
+    public function getPrescription(): ?Prescription
+    {
+        return $this->prescription;
+    }
+
+    public function setPrescription(?Prescription $prescription): static
+    {
+        // unset the owning side of the relation if necessary
+        if ($prescription === null && $this->prescription !== null) {
+            $this->prescription->setBeneficiaire(null);
+        }
+
+        // set the owning side of the relation if necessary
+        if ($prescription !== null && $prescription->getBeneficiaire() !== $this) {
+            $prescription->setBeneficiaire($this);
+        }
+
+        $this->prescription = $prescription;
+
         return $this;
     }
 }

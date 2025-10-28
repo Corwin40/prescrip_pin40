@@ -22,7 +22,7 @@
             </div>
 
             <div class="col-md-6 d-flex align-items-end">
-                <a id="show-beneficiaire-form" class="btn btn-primary mb-3">Ajouter un bénéficiaire</a>
+                <a id="btnAddBeneficiary" href="{{ path('app_gestapp_beneficiary_new2') }}" class="btn btn-primary mb-3">Ajouter un bénéficiaire</a>
             </div>
 
             <div class="col-12" id="beneficiaire-form" style="display: none;">
@@ -79,7 +79,7 @@
     </div>
 
     <div class="col-md-6">
-        {% include 'composants/inputs/input_text.html.twig' with {
+        {% include 'composants/inputs/input_select.html.twig' with {
             label: 'Lieu de Médiation',
             field: form.lieuMediation
         } %}

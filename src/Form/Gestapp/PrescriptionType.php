@@ -6,13 +6,13 @@ use App\Entity\Admin\Member;
 use App\Entity\Gestapp\Beneficiary;
 use App\Entity\Gestapp\Equipment;
 use App\Entity\Gestapp\Prescription;
+use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use function Sodium\add;
 
 class PrescriptionType extends AbstractType
 {
@@ -21,7 +21,13 @@ class PrescriptionType extends AbstractType
         $builder
             ->add('beneficiaire', EntityType::class, [
                 'class' => Beneficiary::class,
-                'choice_label' => 'id',
+                'choice_label' => 'firstname',
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('b')
+                        ->join('b.prescription', 'p')
+                        ->where('p.id is empty')
+                        ->orderBy('b.id', 'ASC');
+                },
             ])
             ->add('equipement', EntityType::class, [
                 'class' => Equipment::class,
@@ -39,8 +45,16 @@ class PrescriptionType extends AbstractType
                 'required' => true,
             ])
 
-
-            ->add('lieuMediation')
+            ->add('lieuMediation',EntityType::class, [
+                'class' => Member::class,
+                'choice_label' => 'nameStructure',
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('d')
+                        ->where('d.roles LIKE :roles')
+                        ->setParameter('roles', '%ROLE_MEDIATEUR%')
+                        ->orderBy('d.id', 'ASC');
+                },
+            ])
         ;
     }
 
