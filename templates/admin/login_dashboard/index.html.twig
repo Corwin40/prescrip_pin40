@@ -1,0 +1,137 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="container py-4">
+
+        <h2 class="text-center mb-4">Bienvenue sur votre tableau de bord</h2>
+
+        {# --- Section chiffre ordi dispo et nombre prescriptions --- #}
+        <div class="row mb-4">
+            <div class="col-md-6 mb-3">
+                <div class="card text-center">
+                    <div class="card-body">
+                        <h5 class="card-title">Machines disponibles</h5>
+                        <p class="display-6">{{ equipments|length }}</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6 mb-3">
+                <div class="card text-center">
+                    <div class="card-body">
+                        <h5 class="card-title">Prescriptions enregistrées</h5>
+                        <p class="display-6">{{ prescriptions|length }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {# --- tableau liste  des prescriptions --- #}
+        <div class="card mb-4">
+            <div class="card-header bg-primary text-white">
+                Liste des prescriptions
+            </div>
+            <div class="card-body p-0">
+                <table class="table table-striped table-hover mb-0">
+                    <thead class="table-light">
+                    <tr>
+                        <th>Ref</th>
+                        <th>Nom et Prénom</th>
+                        <th>Structure</th>
+                        <th>Espace</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for prescription in prescriptions %}
+                        <tr>
+                            <td>{{ prescription.ref }}</td>
+                            <td>{{ prescription.beneficiaire.firstname }} {{ prescription.beneficiaire.lastname }}</td>
+                            <td>{{ prescription.membre.nameStructure }}</td>
+                            <td>{{ prescription.lieuMediation }}</td>
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <td colspan="4" class="text-center text-muted">Aucune prescription disponible</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        {# --- menu media ou prescription --- #}
+        <div class="row justify-content-center g-4">
+
+            {% if is_granted('ROLE_ADMIN') %}
+                {# Carte Médiation #}
+                <div class="col-md-4">
+                    <div class="card text-center h-100 shadow-sm">
+                        <img
+                            src="{{ asset('assets/images/dashboard_beneficiary.jpg') }}"
+                            class="card-img-top mx-auto d-block mt-3"
+                            alt="Médiation"
+                            style="width: 100px; height: 100px; object-fit: contain;"
+                        >
+                        <div class="card-body">
+                            <h5 class="card-title">Médiation</h5>
+                            <p class="card-text">Gérer les équipements et activités de médiation.</p>
+                            <a href="{{ path('app_gestapp_equipment_index') }}" class="btn btn-primary">Voir plus</a>
+                        </div>
+                    </div>
+                </div>
+
+                {# Carte Prescription #}
+                <div class="col-md-4">
+                    <div class="card text-center h-100 shadow-sm">
+                        <img
+                            src="{{ asset('assets/images/dashboard_prescription.jpg') }}"
+                            class="card-img-top mx-auto d-block mt-3"
+                            alt="Prescription"
+                            style="width: 100px; height: 100px; object-fit: contain;"
+                        >
+                        <div class="card-body">
+                            <h5 class="card-title">Prescription</h5>
+                            <p class="card-text">Gérer les prescriptions et bénéficiaires.</p>
+                            <a href="{{ path('app_gestapp_prescription_index') }}" class="btn btn-primary">Voir plus</a>
+                        </div>
+                    </div>
+                </div>
+
+            {% elseif is_granted('ROLE_MEDIATEUR') %}
+                <div class="col-md-4">
+                    <div class="card text-center h-100 shadow-sm">
+                        <img
+                            src="{{ asset('assets/images/dashboard_beneficiary.jpg') }}"
+                            class="card-img-top mx-auto d-block mt-3"
+                            alt="Médiation"
+                            style="width: 100px; height: 100px; object-fit: contain;"
+                        >
+                        <div class="card-body">
+                            <h5 class="card-title">Médiation</h5>
+                            <p class="card-text">Accéder à la gestion des équipements.</p>
+                            <a href="{{ path('app_gestapp_equipment_index') }}" class="btn btn-primary">Voir plus</a>
+                        </div>
+                    </div>
+                </div>
+
+            {% elseif is_granted('ROLE_PRESCRIPTEUR') %}
+                <div class="col-md-4">
+                    <div class="card text-center h-100 shadow-sm">
+                        <img
+                            src="{{ asset('assets/images/dashboard_prescription.jpg') }}"
+                            class="card-img-top mx-auto d-block mt-3"
+                            alt="Prescription"
+                            style="width: 100px; height: 100px; object-fit: contain;"
+                        >
+                        <div class="card-body">
+                            <h5 class="card-title">Prescription</h5>
+                            <p class="card-text">Accéder à la gestion des prescriptions.</p>
+                            <a href="{{ path('app_gestapp_prescription_index') }}" class="btn btn-primary">Voir plus</a>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+
+    </div>
+{% endblock %}
