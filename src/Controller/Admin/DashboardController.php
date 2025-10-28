@@ -10,7 +10,7 @@ use Symfony\Component\Routing\Attribute\Route;
 
 final class DashboardController extends AbstractController
 {
-    #[Route('/admin/dashboard', name: 'app_admin_dashboard_index')]
+    #[Route('/admin/dashboard', name: 'app_admin_dashboard_index', methods: ['GET'])]
     public function index(EquipmentRepository $equipmentRepository, PrescriptionRepository $prescriptionRepository): Response
     {
         $equipments = $equipmentRepository->findAll();
