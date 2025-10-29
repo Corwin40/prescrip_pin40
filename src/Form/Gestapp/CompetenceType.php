@@ -23,8 +23,9 @@ class CompetenceType extends AbstractType
                     'Non acquis' => 'Nonacquis',
 
                 ],
-                'placeholder' => 'Veuillez choisir',
                 'required' => true,
+                'expanded' => true,
+                'multiple' => false,
             ])
             ->add('compDesk', ChoiceType::class, [
                 'label' => 'competence',
@@ -33,8 +34,9 @@ class CompetenceType extends AbstractType
                     'En cours' => 'encours',
                     'Non acquis' => 'Nonacquis',
                 ],
-                 'placeholder' => 'Veuillez choisir',
                 'required' => true,
+                'expanded' => true,
+                'multiple' => false,
             ])
             ->add('compInternet', ChoiceType::class, [
                 'label' => 'competence',
@@ -43,8 +45,9 @@ class CompetenceType extends AbstractType
                     'En cours' => 'encours',
                     'Non acquis' => 'Nonacquis',
                 ],
-                     'placeholder' => 'Veuillez choisir',
-                     'required' => true,
+                'required' => true,
+                'expanded' => true,
+                'multiple' => false,
             ])
             ->add('compEmail', ChoiceType::class, [
                 'label' => 'competence',
@@ -53,8 +56,9 @@ class CompetenceType extends AbstractType
                     'En cours' => 'encours',
                     'Non acquis' => 'Nonacquis',
                 ],
-                     'placeholder' => 'Veuillez choisir',
-                     'required' => true,
+                'required' => true,
+                'expanded' => true,
+                'multiple' => false,
             ])
             ->add('isAutoEva')
             ->add('isDigComp0')

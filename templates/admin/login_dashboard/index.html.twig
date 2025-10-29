@@ -27,11 +27,20 @@
         </div>
 
         <div class="col-12">
-            <h3 class="mb-4 border-bottom border-dark bg-light text-uppercase">Liste des prescriptions</h3>
-             {% include 'composants/forms/button_creatnew.html.twig' with {
-                    label: 'nouvelle prescription',
-                    href: path('app_gestapp_prescription_new')
-                } %}
+            <div class="d-flex d-flex-inline mb-3 border-bottom border-dark bg-light justify-content-between py-2 px-1">
+                <div class="col-6">
+                    <h3 class="text-uppercase mb-0">Liste des prescriptions</h3>
+                </div>
+                <div class="col-6">
+                    <p class="mb-0 text-end">
+                        {% include 'composants/forms/button_creatnew.html.twig' with {
+                            label: 'nouvelle prescription',
+                            style: 'btn btn-outline-dark btn-sm',
+                            href: path('app_gestapp_prescription_new')
+                        } %}
+                    </p>
+
+                </div>
             </div>
 
             <table class="table table-hover">
@@ -68,18 +77,22 @@
 
         {% include 'composants/forms/button_creatnew.html.twig' with {
             label: 'Créer un nouveau bénéficiaire',
+            style : null,
             href: path('app_gestapp_beneficiary_new')
         } %}
         {% include 'composants/forms/button_creatnew.html.twig' with {
             label: 'Créer un nouveau prescripteur',
+            style : null,
             href: path('app_admin_member_new', {'role':'prescripteur'})
         } %}
         {% include 'composants/forms/button_creatnew.html.twig' with {
             label: 'Créer un nouveau mediateur',
+            style : null,
             href: path('app_admin_member_new',{'role':'mediateur'})
         } %}
         {% include 'composants/forms/button_creatnew.html.twig' with {
             label: 'nouveau equipement',
+            style : null,
             href: path('app_gestapp_equipment_new')
         } %}
 

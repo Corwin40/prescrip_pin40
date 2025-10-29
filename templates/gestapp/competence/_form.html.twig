@@ -11,33 +11,25 @@
                 <th>Non acquis</th>
             </tr>
             {% include 'composants/inputs/input_radio_tablerow.html.twig' with {
-                form_label: 'Compétence de base',
+                form_label: 'Les bases',
                 form_field: form.compBase
+            } %}
+            {% include 'composants/inputs/input_radio_tablerow.html.twig' with {
+                form_label: 'Texte et documents',
+                form_field: form.compDesk
+            } %}
+            {% include 'composants/inputs/input_radio_tablerow.html.twig' with {
+                form_label: 'Internet',
+                form_field: form.compInternet
+            } %}
+            {% include 'composants/inputs/input_radio_tablerow.html.twig' with {
+                form_label: 'Messagerie electronique',
+                form_field: form.compEmail
             } %}
         </table>
 
 
-        <!-- Compétence Texte et documents -->
-        <div class="row align-items-center text-center border-bottom py-2 ">
-            <div class="col-4 text-start fw-semibold">Compétence Texte et documents</div>
-            <div class="col d-flex justify-content-around">
-                {% include 'composants/inputs/input_radios.html.twig' with { field: form.compDesk, attr: {'label': false} } %}
-            </div>
-        </div>
-        <!-- Compétence Internet -->
-        <div class="row align-items-center text-center border-bottom py-2 bg-light">
-            <div class="col-4 text-start fw-semibold">Compétence Internet</div>
-            <div class="col d-flex justify-content-around">
-                {% include 'composants/inputs/input_radios.html.twig' with { field: form.compInternet, attr: {'label': false} } %}
-            </div>
-        </div>
-        <!-- Compétence Messagerie email -->
-        <div class="row align-items-center text-center py-2">
-            <div class="col-4 text-start fw-semibold">Compétence Messagerie email</div>
-            <div class="col d-flex justify-content-around">
-                {% include 'composants/inputs/input_radios.html.twig' with { field: form.compEmail, attr: {'label': false} } %}
-            </div>
-        </div>
+
     </div>
 
 

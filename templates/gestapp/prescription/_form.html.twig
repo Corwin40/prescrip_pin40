@@ -29,7 +29,7 @@
                 {% if app.request.attributes.get('_route') == 'app_gestapp_prescription_new' %}
                     {{ render(controller('App\\Controller\\Gestapp\\BeneficiaryController::new2')) }}
                 {% elseif app.request.attributes.get('_route') == 'app_gestapp_prescription_edit' %}
-                    {{ render(controller('App\\Controller\\Gestapp\\BeneficiaryController::edit2')) }}
+                    {{ render(controller('App\\Controller\\Gestapp\\BeneficiaryController::edit2', {'id': prescription.beneficiaire.id})) }}
                 {% endif %}
             </div>
         </div>
@@ -91,6 +91,16 @@
             field: form.equipement
         } %}
     </div>
+
+    {# Bloc Diagnostique des compétences numériques #}
+    <div class="col-12 mb-2">
+        {% if app.request.attributes.get('_route') == 'app_gestapp_prescription_new' %}
+            {{ render(controller('App\\Controller\\Gestapp\\CompetenceController::new')) }}
+        {% elseif app.request.attributes.get('_route') == 'app_gestapp_prescription_edit' %}
+            {{ render(controller('App\\Controller\\Gestapp\\CompetenceController::edit')) }}
+        {% endif %}
+    </div>
+
 
 </div>
 
