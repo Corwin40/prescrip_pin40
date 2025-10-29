@@ -43,6 +43,7 @@ final class PrescriptionController extends AbstractController
 
         $prescription = new Prescription();
         $prescription->setRef($ref);
+        $prescription->setCompteur($compteur);
         $form = $this->createForm(PrescriptionType::class, $prescription);
         $form->handleRequest($request);
 
