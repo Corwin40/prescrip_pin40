@@ -61,7 +61,16 @@ class CompetenceType extends AbstractType
                 'expanded' => true,
                 'multiple' => false,
             ])
-            ->add('isAutoEva')
+            ->add('isAutoEva',CheckboxType::class, [
+                'label' => 'IsAutoEva',
+                'required' => true,
+            ])
+
+            ->add('isAutoEvalEnd' ,CheckboxType::class, [
+                'label' => 'IsAutoEvaEnd ',
+                'required' => true,
+            ])
+
             ->add('isDigComp0')
             ->add('isDigComp1')
             ->add('isDigComp2')
@@ -69,8 +78,7 @@ class CompetenceType extends AbstractType
             ->add('isDigComp4')
             ->add('isDigComp5')
             ->add('detailParcour')
-            ->add('isAutoEvalEnd')
-        ;
+    ;
     }
 
     public function configureOptions(OptionsResolver $resolver): void
