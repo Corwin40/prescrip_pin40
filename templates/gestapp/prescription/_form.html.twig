@@ -97,7 +97,15 @@
         {% if app.request.attributes.get('_route') == 'app_gestapp_prescription_new' %}
             {{ render(controller('App\\Controller\\Gestapp\\CompetenceController::new')) }}
         {% elseif app.request.attributes.get('_route') == 'app_gestapp_prescription_edit' %}
-            {{ render(controller('App\\Controller\\Gestapp\\CompetenceController::edit')) }}
+            {% if prescription.beneficiaire is not null %}
+                {% if prescription.beneficiaire.beneficiaryCompetences is not null %}
+                    {{ render(controller('App\\Controller\\Gestapp\\CompetenceController::edit', {'id' : prescription.beneficiaire.beneficiaryCompetences.id})) }}
+                {% else %}
+                    {{ render(controller('App\\Controller\\Gestapp\\CompetenceController::new')) }}
+                {% endif %}
+            {% else %}
+                {{ render(controller('App\\Controller\\Gestapp\\CompetenceController::new')) }}
+            {% endif %}
         {% endif %}
     </div>
 

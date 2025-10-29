@@ -27,10 +27,10 @@ class Competence
     private ?string $compEmail = null;
 
     #[ORM\Column]
-    private ?bool $isAutoEva = null;
+    private ?bool $isAutoEva = false;
 
     #[ORM\Column]
-    private ?bool $isDigComp0 = null;
+    private ?bool $isDigComp0 = false;
 
     #[ORM\Column]
     private ?bool $isDigComp1 = null;

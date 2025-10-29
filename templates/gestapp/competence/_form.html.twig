@@ -1,7 +1,7 @@
-    <div class="col-12 bg-light border-bottom border-dark">
-        <h3>Diagnostique des compétences numériques</h3>
+<div class="row">
+    <div class="col-12 bg-light border-bottom border-dark mb-2">
+        <h3>Diagnostic des compétences numériques</h3>
     </div>
-
     <div class="col-12">
         <table class="table table-bordered table-striped">
             <tr>
@@ -31,43 +31,29 @@
 
 
     </div>
-
-
-
-
-
-
-
-
-
-
-
-    <hr class="my-4">
-
     <div class="row g-3">
-        <div class="col-md-6">{{ form_row(form.isAutoEva) }}</div>
+        <div class="col-md-6">
+            {% include 'composants/inputs/input_checkbox_switch.html.twig' with {
+                form_field: form.isAutoEva
+            } %}
+        </div>
         <div class="col-md-6">{{ form_row(form.isAutoEvalEnd) }}</div>
     </div>
-
-    <!-- Compétences numériques -->
-    <div class="row g-3 align-items-center mt-3">
-        <div class="col d-flex flex-wrap justify-content-between">
-            {% for i in 1..5 %}
-                <div class="flex-fill text-center mx-1">
-
-                </div>{{ form_row(attribute(form, 'isDigComp' ~ i)) }}
-            {% endfor %}
-        </div>
+</div>
+<div class="row">
+    <div class="col-12 bg-light border-bottom border-dark mb-2">
+        <h3>Les objectifs de la mediation</h3>
+    </div>
+    <div class="col-12 mb-2">
+        <p class="mb-0">Compétences à travailer (référentiel DIGCOMP) : https//eduscol.education.fr/document/20392/download</p>
     </div>
 
-    <!-- Détail du parcours -->
-    <div class="row g-3 mt-4">
-        <div class="col-md-12">
-            <div class="form-group">
-                <label class="fw-bold mb-2 d-block">Détail du parcours</label>
-                {{ form_widget(form.detailParcour, {'attr': {'class': 'form-control', 'rows': 4}}) }}
-            </div>
-        </div>
+    <div class="col-md-12">
+        {% include 'composants/inputs/input_aera.html.twig' with {
+            label: 'A completer par le médiateur',
+            field: form.detailParcour
+        } %}
     </div>
+</div>
 
 {{ form_end(form) }}
