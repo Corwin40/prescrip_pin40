@@ -46,6 +46,9 @@ class Prescription
     #[ORM\OneToOne(inversedBy: 'prescription', cascade: ['persist', 'remove'])]
     private ?Beneficiary $beneficiaire = null;
 
+    #[ORM\OneToOne(cascade: ['persist', 'remove'])]
+    private ?Competence $competence = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -170,6 +173,18 @@ class Prescription
     public function setBeneficiaire(?Beneficiary $beneficiaire): static
     {
         $this->beneficiaire = $beneficiaire;
+
+        return $this;
+    }
+
+    public function getCompetence(): ?Competence
+    {
+        return $this->competence;
+    }
+
+    public function setCompetence(?Competence $competence): static
+    {
+        $this->competence = $competence;
 
         return $this;
     }
