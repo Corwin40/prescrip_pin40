@@ -31,14 +31,17 @@
 
 
     </div>
-
-    <div class="d-flex justify-content-between align-items-center">
-        {% include 'composants/inputs/input_checkbox_switch.html.twig' with {
-            form_field: form.isAutoEva
-        } %}
-        {% include 'composants/inputs/input_checkbox_switch.html.twig' with {
-            form_field: form.isAutoEvaEnd
-        } %}
+    <div class="row g-3">
+        <div class="col-md-6">
+            {% include 'composants/inputs/input_checkbox_switch.html.twig' with {
+                form_field: form.isAutoEva
+            } %}
+        </div>
+        <div class="col-md-6">
+            {% include 'composants/inputs/input_checkbox_switch.html.twig' with {
+                form_field: form.isAutoEvalEnd
+            } %}
+        </div>
     </div>
 </div>
 <div class="row">
