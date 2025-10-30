@@ -73,106 +73,37 @@
                 </tbody>
             </table>
         </div>
-    <div class="col-12 justify-content-evenly">
+        <div class="col-12 justify-content-evenly">
+            {# --- Admin ? Médiateur ? Prescripteur ? --- #}
+            {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_MEDIATEUR') or is_granted('ROLE_PRESCRIPTEUR') %}
+                {% include 'composants/forms/button_creatnew.html.twig' with {
+                    label: 'Créer un nouveau bénéficiaire',
+                    style: null,
+                    href: path('app_gestapp_beneficiary_new')
+                } %}
 
-        {% include 'composants/forms/button_creatnew.html.twig' with {
-            label: 'Créer un nouveau bénéficiaire',
-            style : null,
-            href: path('app_gestapp_beneficiary_new')
-        } %}
-        {% include 'composants/forms/button_creatnew.html.twig' with {
-            label: 'Créer un nouveau prescripteur',
-            style : null,
-            href: path('app_admin_member_new', {'role':'prescripteur'})
-        } %}
-        {% include 'composants/forms/button_creatnew.html.twig' with {
-            label: 'Créer un nouveau mediateur',
-            style : null,
-            href: path('app_admin_member_new',{'role':'mediateur'})
-        } %}
-        {% include 'composants/forms/button_creatnew.html.twig' with {
-            label: 'nouveau equipement',
-            style : null,
-            href: path('app_gestapp_equipment_new')
-        } %}
+                {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_MEDIATEUR') %}
+                    {% include 'composants/forms/button_creatnew.html.twig' with {
+                        label: 'Créer un nouveau prescripteur',
+                        style: null,
+                        href: path('app_admin_member_new', {'role': 'prescripteur'})
+                    } %}
+                {% endif %}
 
+                {% if is_granted('ROLE_ADMIN') %}
+                    {% include 'composants/forms/button_creatnew.html.twig' with {
+                        label: 'Créer un nouveau médiateur',
+                        style: null,
+                        href: path('app_admin_member_new', {'role': 'mediateur'})
+                    } %}
+                {% endif %}
 
-    </div>
-    <div class="col-12"></div>
-
-        {# --- menu media ou prescription --- #}
-        <div class="row justify-content-center g-4">
-
-            {% if is_granted('ROLE_ADMIN') %}
-                {# Carte Médiation #}
-                <div class="col-md-4">
-                    <div class="card text-center h-100 shadow-sm">
-                        <img
-                            src="{{ asset('assets/images/dashboard_beneficiary.jpg') }}"
-                            class="card-img-top mx-auto d-block mt-3"
-                            alt="Médiation"
-                            style="width: 100px; height: 100px; object-fit: contain;"
-                        >
-                        <div class="card-body">
-                            <h5 class="card-title">Médiation</h5>
-                            <p class="card-text">Gérer les équipements et activités de médiation.</p>
-                            <a href="{{ path('app_gestapp_equipment_index') }}" class="btn btn-primary">Voir plus</a>
-                        </div>
-                    </div>
-                </div>
-
-                {# Carte Prescription #}
-                <div class="col-md-4">
-                    <div class="card text-center h-100 shadow-sm">
-                        <img
-                            src="{{ asset('assets/images/dashboard_prescription.jpg') }}"
-                            class="card-img-top mx-auto d-block mt-3"
-                            alt="Prescription"
-                            style="width: 100px; height: 100px; object-fit: contain;"
-                        >
-                        <div class="card-body">
-                            <h5 class="card-title">Prescription</h5>
-                            <p class="card-text">Gérer les prescriptions et bénéficiaires.</p>
-                            <a href="{{ path('app_gestapp_prescription_index') }}" class="btn btn-primary">Voir plus</a>
-                        </div>
-                    </div>
-                </div>
-
-            {% elseif is_granted('ROLE_MEDIATEUR') %}
-                <div class="col-md-4">
-                    <div class="card text-center h-100 shadow-sm">
-                        <img
-                            src="{{ asset('assets/images/dashboard_beneficiary.jpg') }}"
-                            class="card-img-top mx-auto d-block mt-3"
-                            alt="Médiation"
-                            style="width: 100px; height: 100px; object-fit: contain;"
-                        >
-                        <div class="card-body">
-                            <h5 class="card-title">Médiation</h5>
-                            <p class="card-text">Accéder à la gestion des équipements.</p>
-                            <a href="{{ path('app_gestapp_equipment_index') }}" class="btn btn-primary">Voir plus</a>
-                        </div>
-                    </div>
-                </div>
-
-            {% elseif is_granted('ROLE_PRESCRIPTEUR') %}
-                <div class="col-md-4">
-                    <div class="card text-center h-100 shadow-sm">
-                        <img
-                            src="{{ asset('assets/images/dashboard_prescription.jpg') }}"
-                            class="card-img-top mx-auto d-block mt-3"
-                            alt="Prescription"
-                            style="width: 100px; height: 100px; object-fit: contain;"
-                        >
-                        <div class="card-body">
-                            <h5 class="card-title">Prescription</h5>
-                            <p class="card-text">Accéder à la gestion des prescriptions.</p>
-                            <a href="{{ path('app_gestapp_prescription_index') }}" class="btn btn-primary">Voir plus</a>
-                        </div>
-                    </div>
-                </div>
+                {% include 'composants/forms/button_creatnew.html.twig' with {
+                    label: 'Nouveau équipement',
+                    style: null,
+                    href: path('app_gestapp_equipment_new')
+                } %}
             {% endif %}
         </div>
-
     </div>
 {% endblock %}
