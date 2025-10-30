@@ -49,6 +49,15 @@ class Prescription
     #[ORM\OneToOne(cascade: ['persist', 'remove'])]
     private ?Competence $competence = null;
 
+    #[ORM\Column(length: 100)]
+    private ?string $commune = null;
+
+    #[ORM\Column(length: 5)]
+    private ?string $cp = null;
+
+    #[ORM\Column]
+    private ?bool $validcase = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -185,6 +194,42 @@ class Prescription
     public function setCompetence(?Competence $competence): static
     {
         $this->competence = $competence;
+
+        return $this;
+    }
+
+    public function getCommune(): ?string
+    {
+        return $this->commune;
+    }
+
+    public function setCommune(string $commune): static
+    {
+        $this->commune = $commune;
+
+        return $this;
+    }
+
+    public function getCp(): ?string
+    {
+        return $this->cp;
+    }
+
+    public function setCp(string $cp): static
+    {
+        $this->cp = $cp;
+
+        return $this;
+    }
+
+    public function isValidcase(): ?bool
+    {
+        return $this->validcase;
+    }
+
+    public function setValidcase(bool $validcase): static
+    {
+        $this->validcase = $validcase;
 
         return $this;
     }

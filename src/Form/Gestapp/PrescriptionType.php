@@ -10,7 +10,6 @@ use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -26,7 +25,7 @@ class PrescriptionType extends AbstractType
                 },
                 'query_builder' => function (EntityRepository $er) {
                     return $er->createQueryBuilder('b')
-                        ->leftjoin('b.prescription', 'p')
+                        ->leftJoin('b.prescription', 'p')
                         ->where('p.id IS NULL')
                         ->orderBy('b.id', 'ASC');
                 },
@@ -48,8 +47,7 @@ class PrescriptionType extends AbstractType
                 'expanded' => true,
                 'multiple' => false,
             ])
-
-            ->add('lieuMediation',EntityType::class, [
+            ->add('lieuMediation', EntityType::class, [
                 'class' => Member::class,
                 'choice_label' => 'nameStructure',
                 'query_builder' => function (EntityRepository $er) {
@@ -59,7 +57,9 @@ class PrescriptionType extends AbstractType
                         ->orderBy('d.id', 'ASC');
                 },
             ])
-        ;
+            ->add('cp')
+            ->add('commune')
+            ;
     }
 
     public function configureOptions(OptionsResolver $resolver): void
