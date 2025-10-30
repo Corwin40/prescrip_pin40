@@ -31,13 +31,19 @@
 
 
     </div>
-    <div class="row g-3">
+
+    <div class="row g-3 align-items-start">
         <div class="col-md-6">
             {% include 'composants/inputs/input_checkbox_switch.html.twig' with {
                 form_field: form.isAutoEva
             } %}
         </div>
-        <div class="col-md-6">{{ form_row(form.isAutoEvalEnd) }}</div>
+        <div class="col-md-6">
+            {% include 'composants/inputs/input_checkbox_switch.html.twig' with {
+                form_field: form.isAutoEvaEnd
+            } %}
+        </div>
+        </div>
     </div>
 </div>
 <div class="row">

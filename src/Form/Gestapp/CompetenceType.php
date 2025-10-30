@@ -66,7 +66,7 @@ class CompetenceType extends AbstractType
                 'required' => true,
             ])
 
-            ->add('isAutoEvalEnd' ,CheckboxType::class, [
+            ->add('isAutoEvaEnd' ,CheckboxType::class, [
                 'label' => 'IsAutoEvaEnd ',
                 'required' => true,
             ])

@@ -51,7 +51,7 @@ class Competence
     private ?string $detailParcour = null;
 
     #[ORM\Column]
-    private ?bool $isAutoEvalEnd = null;
+    private ?bool $isAutoEvaEnd = null;
 
     #[ORM\OneToOne(mappedBy: 'beneficiaryCompetences', cascade: ['persist', 'remove'])]
     private ?Beneficiary $beneficiary = null;
@@ -205,14 +205,14 @@ class Competence
         return $this;
     }
 
-    public function isAutoEvalEnd(): ?bool
+    public function isAutoEvaEnd(): ?bool
     {
-        return $this->isAutoEvalEnd;
+        return $this->isAutoEvaEnd;
     }
 
-    public function setIsAutoEvalEnd(bool $isAutoEvalEnd): static
+    public function setisAutoEvaEnd(bool $isAutoEvaEnd): static
     {
-        $this->isAutoEvalEnd = $isAutoEvalEnd;
+        $this->isAutoEvaEnd = $isAutoEvaEnd;
 
         return $this;
     }
