@@ -35,6 +35,7 @@ class PrescriptionType extends AbstractType
                 'choice_label' => 'id',
             ])
             ->add('details')
+
             ->add('baseCompetence', ChoiceType::class, [
                 'label' => 'Compétences de base',
                 'choices' => [
@@ -59,6 +60,7 @@ class PrescriptionType extends AbstractType
             ])
             ->add('cp')
             ->add('commune')
+            ->add('validcase')
             ;
     }
 
