@@ -97,20 +97,48 @@
         {% endif %}
     {% endif %}
 
-    {# Bloc Final de la fiche #}
+    {# remise de l'ordinateur #}
     <div class="col-12 mb-2">
         <div class="row">
             <div class="col-12 bg-light border-bottom border-dark mb-2">
-                <h3>Date de la remise de l'oridinateur</h3>
+                <h3>Date de la remise de l'ordinateur</h3>
             </div>
         </div>
-        <div class="col-md-6">
+        </div>
+
+    <div class="row">
+
+        <div class="col-md-2">
+            {% include 'composants/inputs/input_text.html.twig' with {
+                label: 'Code postal',
+                field: form.cp
+            } %}
+        </div>
+
+        <div class="col-md-4">
+            {% include 'composants/inputs/input_text.html.twig' with {
+                label: 'Commune',
+                field: form.commune
+            } %}
+        </div>
+
+        <div class="col-md-3">
             {% include 'composants/inputs/input_select.html.twig' with {
-                label: 'Equipement',
+                label: 'Équipement',
                 field: form.equipement
             } %}
         </div>
+
+        <div class="col-md-3">
+            <label class="form-label">Le</label>
+            <input type="text" class="form-control"
+                   value="{{ prescription.updatedAt ? prescription.updatedAt|date('d/m/Y') : '' }}"
+                   readonly>
+        </div>
+
     </div>
+
+
 </div>
 <div class="mt-4">
     <button class="btn btn-primary">{{ button_label|default('Préenregistrer ') }}</button>

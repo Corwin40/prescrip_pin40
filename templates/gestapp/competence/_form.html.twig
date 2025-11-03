@@ -1,66 +1,40 @@
-<div class="col-12 mb-2">
-    <div class="row">
-        <div class="col-12 bg-light border-bottom border-dark">
-            <h3>Diagnostique des compétences numériques</h3>
-        </div>
-
-        <div class="col-12">
-            <table class="table table-bordered table-striped">
-                <tr>
-                    <th>Compétences</th>
-                    <th>Acquis</th>
-                    <th>En cours</th>
-                    <th>Non acquis</th>
-                </tr>
-                {% include 'composants/inputs/input_radio_tablerow.html.twig' with {
-                    form_label: 'Les bases',
-                    form_field: form.compBase
-                } %}
-                {% include 'composants/inputs/input_radio_tablerow.html.twig' with {
-                    form_label: 'Texte et documents',
-                    form_field: form.compDesk
-                } %}
-                {% include 'composants/inputs/input_radio_tablerow.html.twig' with {
-                    form_label: 'Internet',
-                    form_field: form.compInternet
-                } %}
-                {% include 'composants/inputs/input_radio_tablerow.html.twig' with {
-                    form_label: 'Messagerie electronique',
-                    form_field: form.compEmail
-                } %}
-            </table>
-            <div class="row g-3">
-                <div class="col-md-6">
-                    {% include 'composants/inputs/input_checkbox_switch.html.twig' with {
-                        form_field: form.isAutoEva
-                    } %}
-                </div>
-            </div>
-        </div>
+<div class="row">
+    <div class="col-12 bg-light border-bottom border-dark mb-2">
+        <h3>Diagnostic des compétences numériques</h3>
     </div>
-</div>
-<div class="col-12 mb-2">
-    <div class="row">
-        <div class="col-12 bg-light border-bottom border-dark mb-2">
-            <h3>Les objectifs de la mediation</h3>
-        </div>
-        <div class="col-12 mb-2">
-            <p class="mb-0">Compétences à travailler (référentiel DIGCOMP) : https//eduscol.education.fr/document/20392/download</p>
-        </div>
+    <div class="col-12">
+        <table class="table table-bordered table-striped">
+            <tr>
+                <th>Compétences</th>
+                <th>Acquis</th>
+                <th>En cours</th>
+                <th>Non acquis</th>
+            </tr>
+            {% include 'composants/inputs/input_radio_tablerow.html.twig' with {
+                form_label: 'Les bases',
+                form_field: form.compBase
+            } %}
+            {% include 'composants/inputs/input_radio_tablerow.html.twig' with {
+                form_label: 'Texte et documents',
+                form_field: form.compDesk
+            } %}
+            {% include 'composants/inputs/input_radio_tablerow.html.twig' with {
+                form_label: 'Internet',
+                form_field: form.compInternet
+            } %}
+            {% include 'composants/inputs/input_radio_tablerow.html.twig' with {
+                form_label: 'Messagerie electronique',
+                form_field: form.compEmail
+            } %}
+        </table>
 
-        <div class="col-12">
-            {{ form_row(form.isDigComp0) }}
-            {{ form_row(form.isDigComp1) }}
-            {{ form_row(form.isDigComp2) }}
-            {{ form_row(form.isDigComp3) }}
-            {{ form_row(form.isDigComp4) }}
-            {{ form_row(form.isDigComp5) }}
-        </div>
 
-        <div class="col-md-12">
-            {% include 'composants/inputs/input_aera.html.twig' with {
-                label: 'A completer par le médiateur',
-                field: form.detailParcour
+
+    </div>
+    <div class="row g-3">
+        <div class="col-md-6">
+            {% include 'composants/inputs/input_checkbox_switch.html.twig' with {
+                form_field: form.isAutoEva
             } %}
         </div>
         <div class="col-md-6">
@@ -70,4 +44,20 @@
         </div>
     </div>
 </div>
+<div class="row">
+    <div class="col-12 bg-light border-bottom border-dark mb-2">
+        <h3>Les objectifs de la mediation</h3>
+    </div>
+    <div class="col-12 mb-2">
+        <p class="mb-0">Compétences à travailler (référentiel DIGCOMP) : https//eduscol.education.fr/document/20392/download</p>
+    </div>
+
+    <div class="col-md-12">
+        {% include 'composants/inputs/input_aera.html.twig' with {
+            label: 'A completer par le médiateur',
+            field: form.detailParcour
+        } %}
+    </div>
+</div>
+
 {{ form_end(form) }}
