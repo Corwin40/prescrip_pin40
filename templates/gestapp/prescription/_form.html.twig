@@ -10,25 +10,21 @@
             <div class="col-12 bg-light border-bottom border-dark mb-2">
                 <h3>Le bénéficiaire</h3>
             </div>
-
-            <div class="col-md-6">
-                {% include 'composants/inputs/input_select.html.twig' with {
-                    label: 'Bénéficiaire',
-                    field: form.beneficiaire
-                } %}
-            </div>
-
-            <div class="col-md-6 d-flex align-items-end">
-                <a id="btnAddBeneficiary" href="{{ path('app_gestapp_beneficiary_new2') }}" class="btn btn-primary mb-3">Ajouter un bénéficiaire</a>
-            </div>
-
-            <div class="col-12" id="beneficiaire-form" style="display: none;">
-                {% if app.request.attributes.get('_route') == 'app_gestapp_prescription_new' %}
-                    {{ render(controller('App\\Controller\\Gestapp\\BeneficiaryController::new2')) }}
-                {% elseif app.request.attributes.get('_route') == 'app_gestapp_prescription_edit' %}
+            {% if app.request.attributes.get('_route') == 'app_gestapp_prescription_new' %}
+                <div class="col-md-6">
+                    {% include 'composants/inputs/input_select.html.twig' with {
+                        label: 'Bénéficiaire',
+                        field: form.beneficiaire
+                    } %}
+                </div>
+                <div class="col-md-6 d-flex align-items-end">
+                    <a id="btnAddBeneficiary" href="{{ path('app_gestapp_beneficiary_new2') }}" class="btn btn-primary mb-3">Ajouter un bénéficiaire</a>
+                </div>
+            {% elseif app.request.attributes.get('_route') == 'app_gestapp_prescription_edit' %}
+                <div class="col-12" id="beneficiaire-form">
                     {{ render(controller('App\\Controller\\Gestapp\\BeneficiaryController::edit2', {'id': prescription.beneficiaire.id})) }}
-                {% endif %}
-            </div>
+                </div>
+            {% endif %}
         </div>
     </div>
 
