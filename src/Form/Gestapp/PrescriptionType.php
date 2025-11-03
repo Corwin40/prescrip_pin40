@@ -12,24 +12,23 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 class PrescriptionType extends AbstractType
 {
+
+    private $requestStack;
+
+    public function __construct(RequestStack $requestStack)
+    {
+        $this->requestStack = $requestStack;
+    }
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
+        $request = $this->requestStack->getCurrentRequest();
+        $route = $request?->attributes->get('_route');
+
         $builder
-            ->add('beneficiaire', EntityType::class, [
-                'class' => Beneficiary::class,
-                'choice_label' => function ($beneficiary) {
-                    return $beneficiary->getFirstname() . ' ' . $beneficiary->getLastname();
-                },
-                'query_builder' => function (EntityRepository $er) {
-                    return $er->createQueryBuilder('b')
-                        ->leftJoin('b.prescription', 'p')
-                        ->where('p.id IS NULL')
-                        ->orderBy('b.id', 'ASC');
-                },
-            ])
             ->add('equipement', EntityType::class, [
                 'class' => Equipment::class,
                 'choice_label' => 'id',
@@ -62,6 +61,23 @@ class PrescriptionType extends AbstractType
             ->add('commune')
             ->add('validcase')
             ;
+
+        if ($route == 'gestapp_prescription_create') {
+            $builder
+                ->add('beneficiaire', EntityType::class, [
+                    'class' => Beneficiary::class,
+                    'choice_label' => function ($beneficiary) {
+                        return $beneficiary->getFirstname() . ' ' . $beneficiary->getLastname();
+                    },
+                    'query_builder' => function (EntityRepository $er) {
+                        return $er->createQueryBuilder('b')
+                            ->leftJoin('b.prescription', 'p')
+                            ->where('p.id IS NULL')
+                            ->orderBy('b.id', 'ASC');
+                    },
+                ])
+            ;
+        }
     }
 
     public function configureOptions(OptionsResolver $resolver): void
