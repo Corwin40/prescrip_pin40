@@ -62,7 +62,7 @@ class PrescriptionType extends AbstractType
             ->add('validcase')
             ;
 
-        if ($route == 'gestapp_prescription_create') {
+        if ($route == 'app_gestapp_prescription_new') {
             $builder
                 ->add('beneficiaire', EntityType::class, [
                     'class' => Beneficiary::class,
