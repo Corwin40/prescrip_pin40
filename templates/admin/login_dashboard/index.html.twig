@@ -63,7 +63,14 @@
                             {% endif %}
                         </td>
                         <td>{{ prescription.membre.nameStructure }}</td>
-                        <td>{{ prescription.lieuMediation }}</td>
+                        <td>{{ prescription.lieuMediation }}
+
+                        {% include 'composants/forms/button_link.html.twig' with {
+                            label:'edit',
+                            href: path('app_gestapp_prescription_edit', {'ref': prescription.ref})
+
+                        }%}
+                        </td>
                     </tr>
                 {% else %}
                     <tr>
