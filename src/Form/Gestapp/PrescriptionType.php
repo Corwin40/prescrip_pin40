@@ -59,7 +59,7 @@ class PrescriptionType extends AbstractType
             ])
             ->add('cp')
             ->add('commune')
-            ;
+        ;
 
         if ($route == 'app_gestapp_prescription_new') {
             $builder

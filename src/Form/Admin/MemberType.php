@@ -16,8 +16,8 @@ class MemberType extends AbstractType
         $builder
             ->add('email')
             ->add('password', PasswordType::class, [
-                'mapped' => false, // ⚠️ ne lie pas directement à l'entité
-                'required' => true, // ✅ obligatoire à la création
+                'mapped' => false, //  ne lie pas directement à l'entité
+                'required' => true, // obligatoire à la création
                 'label' => 'Mot de passe',
                 'attr' => [
                     'autocomplete' => 'new-password',
