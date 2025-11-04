@@ -10,6 +10,7 @@ use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -34,7 +35,6 @@ class PrescriptionType extends AbstractType
                 'choice_label' => 'id',
             ])
             ->add('details')
-
             ->add('baseCompetence', ChoiceType::class, [
                 'label' => 'Compétences de base',
                 'choices' => [
@@ -59,7 +59,6 @@ class PrescriptionType extends AbstractType
             ])
             ->add('cp')
             ->add('commune')
-            ->add('validcase')
             ;
 
         if ($route == 'app_gestapp_prescription_new') {

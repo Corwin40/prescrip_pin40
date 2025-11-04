@@ -127,16 +127,9 @@
 
         <div class="col-md-3">
             <label class="form-label">Le</label>
-            <input type="text" class="form-control"
-                   value="{{ prescription.updatedAt ? prescription.updatedAt|date('d/m/Y') : '' }}"
-                   readonly>
+            <input type="text" class="form-control" value="{{ prescription.updatedAt|date('d/m/Y')}}" readonly>
         </div>
-
     </div>
-
-
 </div>
-<div class="mt-4">
-    <button class="btn btn-primary">{{ button_label|default('Préenregistrer ') }}</button>
-</div>
+
 {{ form_end(form) }}

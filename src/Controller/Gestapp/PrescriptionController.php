@@ -2,6 +2,7 @@
 
 namespace App\Controller\Gestapp;
 
+use App\Entity\Gestapp\Competence;
 use App\Entity\Gestapp\Prescription;
 use App\Form\Gestapp\PrescriptionType;
 use App\Repository\Gestapp\PrescriptionRepository;
@@ -44,6 +45,8 @@ final class PrescriptionController extends AbstractController
         $prescription = new Prescription();
         $prescription->setRef($ref);
         $prescription->setCompteur($compteur);
+        $prescription->setCompetence(new Competence());
+
         $form = $this->createForm(PrescriptionType::class, $prescription);
         $form->handleRequest($request);
 

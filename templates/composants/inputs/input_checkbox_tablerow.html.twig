@@ -1,0 +1,10 @@
+<tr>
+    {% if form_label is defined %}
+        <td>{{ form_label }}</td>
+    {% endif %}
+    <td>
+        <label class="form-check-label mx-2">
+            {{ form_widget(form_field, {'attr': {'class': 'form-check-input border-dark'}}) }}
+        </label>
+    </td>
+</tr>

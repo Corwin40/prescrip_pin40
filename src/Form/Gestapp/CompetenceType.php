@@ -62,12 +62,12 @@ class CompetenceType extends AbstractType
                 'multiple' => false,
             ])
             ->add('isAutoEva',CheckboxType::class, [
-                'label' => 'IsAutoEva',
+                'label' => 'L\'auto évaluation du bénéficiaire a été réalisée avant l\'action.',
                 'required' => true,
             ])
 
             ->add('isAutoEvaEnd' ,CheckboxType::class, [
-                'label' => 'IsAutoEvaEnd ',
+                'label' => 'L\'auto évaluation du bénéficiaire a été réalisée après l\'action.',
                 'required' => true,
             ])
 
