@@ -3,9 +3,9 @@
 {% block title %}New Equipment{% endblock %}
 
 {% block body %}
-    <h1>Create new Equipment</h1>
+    <h1>Enregistrer nouveau equipement</h1>
 
     {{ include('gestapp/equipment/_form.html.twig') }}
 
-    <a href="{{ path('app_gestapp_equipment_index') }}">back to list</a>
+    <a href="{{ path('app_admin_dashboard_index') }}">retour</a>
 {% endblock %}
