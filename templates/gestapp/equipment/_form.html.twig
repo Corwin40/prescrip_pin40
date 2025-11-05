@@ -46,7 +46,8 @@
 </div>
 
 <div class="mt-4">
-    <button class="btn btn-primary">{{ button_label|default('Enregistrer') }}</button>
+    <button class="btn btn-primary">{{ button_label|default('Enregistrer') }}
+        <a href="/{{ path('app_admin_dashboard_index') }}"></a></button>
 </div>
 
 {{ form_end(form) }}
