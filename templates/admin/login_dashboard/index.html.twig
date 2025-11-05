@@ -8,7 +8,7 @@
         {# --- Section chiffre ordi dispo et nombre prescriptions --- #}
         <div class="row mb-4">
             <div class="col-md-3 mb-3">
-                <div class="card text-center">
+                <div class="card text-center h-100">
                     <div class="card-body">
                         <h5 class="card-title">Machines disponibles</h5>
                         <p class="display-6">{{ equipments|length }}</p>
@@ -17,7 +17,7 @@
             </div>
 
             <div class="col-md-3 mb-3">
-                <div class="card text-center">
+                <div class="card text-center h-100">
                     <div class="card-body">
                         <h5 class="card-title">Prescriptions enregistrées</h5>
                         <p class="display-6">{{ prescriptions|length }}</p>
@@ -56,20 +56,24 @@
                     <tr>
                         <td>{{ prescription.ref }}</td>
 
-                        <td>{% if prescription.beneficiaire is not empty %}
+                        <td>
+                            {% if prescription.beneficiaire is not empty %}
                                 {{ prescription.beneficiaire.firstname }} {{ prescription.beneficiaire.lastname }}
                             {% else %}
                                 non disponible
                             {% endif %}
                         </td>
+
                         <td>{{ prescription.membre.nameStructure }}</td>
-                        <td>{{ prescription.lieuMediation }}
 
-                        {% include 'composants/forms/button_link.html.twig' with {
-                            label:'edit',
-                            href: path('app_gestapp_prescription_edit', {'ref': prescription.ref})
+                        <td>{{ prescription.lieuMediation }}</td>
 
-                        }%}
+                        <td>
+                            {% include 'composants/forms/button_link.html.twig' with {
+                                label:'edit',
+                                href: path('app_gestapp_prescription_edit', {'id': prescription.id})
+
+                            }%}
                         </td>
                     </tr>
                 {% else %}
