@@ -77,7 +77,7 @@ class PrescriptionType extends AbstractType
         }
         if($route == 'app_gestapp_prescription_edit') {
             $builder
-                ->add('beneficiare', BeneficiaryType::class, [
+                ->add('beneficiaire', BeneficiaryType::class, [
                     'empty_data' => new Beneficiary(),
                 ]);
         }

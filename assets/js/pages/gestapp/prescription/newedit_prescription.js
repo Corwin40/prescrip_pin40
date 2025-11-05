@@ -10,8 +10,8 @@ export function initNewEdit_Prescription() {
     const modal = new bootstrap.Modal(modalBS)
 
     btnAddBeneficiary.addEventListener('click', openModal)
-    let btnsSubmit = document.querySelectorAll('.btnSubmit')
 
+    let btnsSubmit = document.querySelectorAll('.btnSubmit')
     btnsSubmit.forEach(function(link){
         link.addEventListener('click', submitModal);
     });

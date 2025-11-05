@@ -49,6 +49,7 @@
                     <th>Nom et Prénom</th>
                     <th>Structure</th>
                     <th>Espace</th>
+                    <th></th>
                 </tr>
                 </thead>
                 <tbody>
@@ -69,16 +70,12 @@
                         <td>{{ prescription.lieuMediation }}</td>
 
                         <td>
-                            {% include 'composants/forms/button_link.html.twig' with {
-                                label:'edit',
-                                href: path('app_gestapp_prescription_edit', {'id': prescription.id})
-
-                            }%}
+                            <a href="{{ path('app_gestapp_prescription_edit', {'id': prescription.id}) }}"><i class="fa-light fa-pen-to-square"></i></a>
                         </td>
                     </tr>
                 {% else %}
                     <tr>
-                        <td colspan="4" class="text-start text-muted">Aucune prescription disponible</td>
+                        <td colspan="5" class="text-start text-muted">Aucune prescription disponible</td>
                     </tr>
                 {% endfor %}
                 </tbody>
