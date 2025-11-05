@@ -9,16 +9,5 @@
 
         {{ include('gestapp/prescription/_form.html.twig') }}
 
-        <div class="mt-4">
-            <button class="btn btn-primary">Préenregistrer la demande</button>
-        </div>
-
-        <div class="mt-3">
-            {% include 'composants/showsTable/button_return_list.html.twig' with {
-                href: path('app_gestapp_prescription_index'),
-                label: 'Retour à la liste'
-            } %}
-        </div>
-
     </div>
 {% endblock %}

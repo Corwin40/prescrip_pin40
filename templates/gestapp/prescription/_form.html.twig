@@ -1,9 +1,12 @@
-{{ form_start(form) }}
+
 <div class="row">
     <div class="col-md-3">
         <p>Reférence : {{ prescription.ref }}</p>
     </div>
     <div class="w-100"></div>
+
+    {{ form_start(form) }}
+
     {# Bloc Bénéficiaire #}
     <div class="col-12 mb-2">
         <div class="row">
@@ -21,8 +24,46 @@
                     <a id="btnAddBeneficiary" href="{{ path('app_gestapp_beneficiary_new2') }}" class="btn btn-primary mb-3">Ajouter un bénéficiaire</a>
                 </div>
             {% elseif app.request.attributes.get('_route') == 'app_gestapp_prescription_edit' %}
-                <div class="col-12" id="beneficiaire-form">
-                    {{ render(controller('App\\Controller\\Gestapp\\BeneficiaryController::edit2', {'id': prescription.beneficiaire.id})) }}
+                <div class="row">
+
+                    <div class="col-md-2">
+                        {% include 'composants/inputs/input_select.html.twig' with {
+                            label: 'Civilité',
+                            field: form.beneficiaire.civility
+                        } %}
+                    </div>
+
+                    <div class="col-md-4">
+                        {% include 'composants/inputs/input_text.html.twig' with {
+                            label: 'Prénom',
+                            field: form.beneficiaire.firstname
+                        } %}
+                    </div>
+
+                    <div class="col-md-4">
+                        {% include 'composants/inputs/input_text.html.twig' with {
+                            label: 'Nom',
+                            field: form.beneficiaire.lastname
+                        } %}
+                    </div>
+
+
+                    <div class="col-md-12">
+                        {% include 'composants/inputs/input_radio_horizontal.html.twig' with {
+                            form_label: 'Age',
+                            form_field: form.beneficiaire.ageGroup
+                        } %}
+                    </div>
+
+                    <div class="col-md-10"></div>
+
+                    <div class="col-md-12">
+                        {% include 'composants/inputs/input_radio_horizontal.html.twig' with {
+                            form_label: 'Situation',
+                            form_field: form.beneficiaire.professionnalStatus
+                        } %}
+                    </div>
+
                 </div>
             {% endif %}
         </div>
@@ -82,54 +123,134 @@
         </div>
     </div>
 
-    {# Bloc Diagnostique des compétences numériques #}
-    {% if app.request.attributes.get('_route') == 'app_gestapp_prescription_new' %}
-        {{ render(controller('App\\Controller\\Gestapp\\CompetenceController::new')) }}
-    {% elseif app.request.attributes.get('_route') == 'app_gestapp_prescription_edit' %}
-        {% if prescription.competence is not null %}
-            {{ render(controller('App\\Controller\\Gestapp\\CompetenceController::edit', {'id' : prescription.competence.id})) }}
-        {% else %}
-            {{ render(controller('App\\Controller\\Gestapp\\CompetenceController::new')) }}
-        {% endif %}
-    {% endif %}
-
-    {# remise de l'ordinateur #}
-    <div class="col-12 mb-2">
-        <div class="row">
-            <div class="col-12 bg-light border-bottom border-dark mb-2">
-                <h3>Date de la remise de l'ordinateur</h3>
-            </div>
+    <div class="row">
+        <div class="col-12 bg-light border-bottom border-dark mb-2">
+            <h3>Diagnostic des compétences numériques</h3>
         </div>
+        <div class="col-12">
+            <table class="table table-bordered table-striped">
+                <tr>
+                    <th>Compétences</th>
+                    <th>Acquis</th>
+                    <th>En cours</th>
+                    <th>Non acquis</th>
+                </tr>
+                {% include 'composants/inputs/input_radio_tablerow.html.twig' with {
+                    form_label: 'Les bases',
+                    form_field: form.competence.compBase
+                } %}
+                {% include 'composants/inputs/input_radio_tablerow.html.twig' with {
+                    form_label: 'Texte et documents',
+                    form_field: form.competence.compDesk
+                } %}
+                {% include 'composants/inputs/input_radio_tablerow.html.twig' with {
+                    form_label: 'Internet',
+                    form_field: form.competence.compInternet
+                } %}
+                {% include 'composants/inputs/input_radio_tablerow.html.twig' with {
+                    form_label: 'Messagerie electronique',
+                    form_field: form.competence.compEmail
+                } %}
+            </table>
+
+
+
+        </div>
+        <div class="row g-3">
+            <div class="col-md-6">
+                {% include 'composants/inputs/input_checkbox_switch.html.twig' with {
+                    form_field: form.competence.isAutoEva
+                } %}
+            </div>
+
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12 bg-light border-bottom border-dark mb-2">
+            <h3>Les objectifs de la mediation</h3>
+        </div>
+        <div class="col-12 mb-2">
+            <p class="mb-0">Compétences à travailler (référentiel DIGCOMP) : https//eduscol.education.fr/document/20392/download</p>
+        </div>
+
+        <div class="col-12 mb-2">
+            <table class="table table-bordered table-hover">
+                <tbody>
+
+                <tr>
+                    <th>Compétences</th>
+                    <th>Objectifs</th>
+                </tr>
+
+                <tr>
+                    {% include 'composants/inputs/input_checkbox_tablerow.html.twig' with {
+                        form_label: '0 - Compétences matérielles',
+                        form_field: form.competence.isDigComp0
+                    } %}
+                </tr>
+
+                <tr>
+                    {% include 'composants/inputs/input_checkbox_tablerow.html.twig' with {
+                        form_label: '1 - Information et données',
+                        form_field: form.competence.isDigComp1
+                    } %}
+                </tr>
+
+                <tr>
+                    {% include 'composants/inputs/input_checkbox_tablerow.html.twig' with {
+                        form_label: '2 - Communication et collaboration',
+                        form_field: form.competence.isDigComp2
+                    } %}
+                </tr>
+
+                <tr>
+                    {% include 'composants/inputs/input_checkbox_tablerow.html.twig' with {
+                        form_label: '3 - Création de contenu',
+                        form_field: form.competence.isDigComp3
+                    } %}
+                </tr>
+
+                <tr>
+                    {% include 'composants/inputs/input_checkbox_tablerow.html.twig' with {
+                        form_label: '4 - Protection et securité',
+                        form_field: form.competence.isDigComp4
+                    } %}
+                </tr>
+
+                <tr>
+                    {% include 'composants/inputs/input_checkbox_tablerow.html.twig' with {
+                        form_label: '5 - Environnement numérique',
+                        form_field: form.competence.isDigComp5
+                    } %}
+                </tr>
+
+                </tbody>
+            </table>
+
+            {% include 'composants/inputs/input_checkbox_switch.html.twig' with {
+                form_field: form.competence.isAutoEvaEnd
+            } %}
+
+        </div>
+
+        <div class="col-md-12 mb-2">
+            {% include 'composants/inputs/input_aera.html.twig' with {
+                label: 'A completer par le médiateur',
+                field: form.competence.detailParcour
+            } %}
+        </div>
+
     </div>
 
     <div class="row">
-
-        <div class="col-md-2">
-            {% include 'composants/inputs/input_text.html.twig' with {
-                label: 'Code postal',
-                field: form.cp
-            } %}
+        <div class="col-6">
+            <a href="{{ path('app_gestapp_prescription_index') }}" class="btn btn-outline-dark btn-sm" ><i class="fa-light fa-chevrons-left"></i> Retour au dashboard</a>
+            <button id="btnAddPrescription" class="btn btn-outline-primary btn-sm">Préenregistrer la demande</button>
         </div>
-
-        <div class="col-md-4">
-            {% include 'composants/inputs/input_text.html.twig' with {
-                label: 'Commune',
-                field: form.commune
-            } %}
-        </div>
-
-        <div class="col-md-3">
-            {% include 'composants/inputs/input_select.html.twig' with {
-                label: 'Équipement',
-                field: form.equipement
-            } %}
-        </div>
-
-        <div class="col-md-3">
-            <label class="form-label">Le</label>
-            <input type="text" class="form-control" value="{{ prescription.updatedAt|date('d/m/Y')}}" readonly>
+        <div class="col-6 text-end">
         </div>
     </div>
-</div>
 
-{{ form_end(form) }}
+    {{ form_end(form) }}
+
+</div>

@@ -26,7 +26,13 @@ final class CompetenceController extends AbstractController
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
         $competence = new Competence();
-        $form = $this->createForm(CompetenceType::class, $competence);
+        $form = $this->createForm(CompetenceType::class, $competence, [
+            'action' => $this->generateUrl('app_gestapp_competence_new'),
+            'method' => 'POST',
+            'attr' => [
+                'id' => 'formCompetence',
+            ]
+        ]);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -53,7 +59,13 @@ final class CompetenceController extends AbstractController
     #[Route('/{id}/edit', name: 'app_gestapp_competence_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Competence $competence, EntityManagerInterface $entityManager): Response
     {
-        $form = $this->createForm(CompetenceType::class, $competence);
+        $form = $this->createForm(CompetenceType::class, $competence, [
+            'action' => $this->generateUrl('app_gestapp_competence_edit', ['id' => $competence->getId()]),
+            'method' => 'POST',
+            'attr' => [
+                'id' => 'formCompetence',
+            ]
+        ]);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {

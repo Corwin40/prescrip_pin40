@@ -39,7 +39,7 @@ class Beneficiary
     #[ORM\Column(type: Types::DATE_MUTABLE)]
     private ?\DateTimeInterface $updatedAt = null;
 
-    #[ORM\OneToOne(mappedBy: 'beneficiaire', cascade: ['persist', 'remove'])]
+    #[ORM\OneToOne(mappedBy: 'beneficiaire', cascade: ['persist'])]
     private ?Prescription $prescription = null;
 
     public function getId(): ?int

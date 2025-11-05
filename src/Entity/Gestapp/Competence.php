@@ -33,28 +33,25 @@ class Competence
     private ?bool $isDigComp0 = false;
 
     #[ORM\Column]
-    private ?bool $isDigComp1 = null;
+    private ?bool $isDigComp1 = false;
 
     #[ORM\Column]
-    private ?bool $isDigComp2 = null;
+    private ?bool $isDigComp2 = false;
 
     #[ORM\Column]
-    private ?bool $isDigComp3 = null;
+    private ?bool $isDigComp3 = false;
 
     #[ORM\Column]
-    private ?bool $isDigComp4 = null;
+    private ?bool $isDigComp4 = false;
 
     #[ORM\Column]
-    private ?bool $isDigComp5 = null;
+    private ?bool $isDigComp5 = false;
 
     #[ORM\Column(type: Types::TEXT)]
     private ?string $detailParcour = null;
 
     #[ORM\Column]
-    private ?bool $isAutoEvaEnd = null;
-
-    #[ORM\OneToOne(mappedBy: 'beneficiaryCompetences', cascade: ['persist', 'remove'])]
-    private ?Beneficiary $beneficiary = null;
+    private ?bool $isAutoEvaEnd = false;
 
     public function getId(): ?int
     {

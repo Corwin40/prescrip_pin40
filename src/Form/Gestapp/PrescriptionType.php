@@ -4,6 +4,7 @@ namespace App\Form\Gestapp;
 
 use App\Entity\Admin\Member;
 use App\Entity\Gestapp\Beneficiary;
+use App\Entity\Gestapp\Competence;
 use App\Entity\Gestapp\Equipment;
 use App\Entity\Gestapp\Prescription;
 use Doctrine\ORM\EntityRepository;
@@ -17,7 +18,6 @@ use Symfony\Component\HttpFoundation\RequestStack;
 
 class PrescriptionType extends AbstractType
 {
-
     private $requestStack;
 
     public function __construct(RequestStack $requestStack)
@@ -30,10 +30,6 @@ class PrescriptionType extends AbstractType
         $route = $request?->attributes->get('_route');
 
         $builder
-            ->add('equipement', EntityType::class, [
-                'class' => Equipment::class,
-                'choice_label' => 'id',
-            ])
             ->add('details')
             ->add('baseCompetence', ChoiceType::class, [
                 'label' => 'Compétences de base',
@@ -57,8 +53,10 @@ class PrescriptionType extends AbstractType
                         ->orderBy('d.id', 'ASC');
                 },
             ])
-            ->add('cp')
-            ->add('commune')
+            ->add('competence', CompetenceType::class, [
+                'label' => 'COMPETENCE',
+                'empty_data' => new Competence(),
+            ])
         ;
 
         if ($route == 'app_gestapp_prescription_new') {
@@ -77,6 +75,13 @@ class PrescriptionType extends AbstractType
                 ])
             ;
         }
+        if($route == 'app_gestapp_prescription_edit') {
+            $builder
+                ->add('beneficiare', BeneficiaryType::class, [
+                    'empty_data' => new Beneficiary(),
+                ]);
+        }
+
     }
 
     public function configureOptions(OptionsResolver $resolver): void

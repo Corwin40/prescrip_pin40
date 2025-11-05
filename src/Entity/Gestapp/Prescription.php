@@ -43,20 +43,20 @@ class Prescription
     #[ORM\ManyToOne(inversedBy: 'lieuxmediation')]
     private ?Member $lieuMediation = null;
 
-    #[ORM\OneToOne(inversedBy: 'prescription', cascade: ['persist', 'remove'])]
+    #[ORM\OneToOne(inversedBy: 'prescription', cascade: ['persist'])]
     private ?Beneficiary $beneficiaire = null;
 
     #[ORM\OneToOne(cascade: ['persist', 'remove'])]
     private ?Competence $competence = null;
 
-    #[ORM\Column(length: 100)]
+    #[ORM\Column(length: 100, nullable: true)]
     private ?string $commune = null;
 
-    #[ORM\Column(length: 5)]
+    #[ORM\Column(length: 5, nullable: true)]
     private ?string $cp = null;
 
     #[ORM\Column]
-    private ?bool $validcase = null;
+    private ?bool $validcase = false;
 
     public function getId(): ?int
     {
