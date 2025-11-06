@@ -92,6 +92,7 @@
         </div>
         <div class="col-12 justify-content-evenly">
             {# --- Admin ? Médiateur ? Prescripteur ? --- #}
+
             {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_MEDIATEUR') or is_granted('ROLE_PRESCRIPTEUR') %}
                 {% include 'composants/forms/button_creatnew.html.twig' with {
                     label: 'Créer un nouveau bénéficiaire',

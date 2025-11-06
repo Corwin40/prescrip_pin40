@@ -1,3 +1,7 @@
+
+{{ dump(app.user.roles) }}
+{{ dump(app.request.attributes.get('_route')) }}
+
 <div class="row">
     <div class="col-md-3">
         <p>Reférence : {{ prescription.ref }}</p>
@@ -151,8 +155,10 @@
         </div>
     {% endif %}
 
-    {% if is_granted('ROLE_PRESCRIPTEUR') %}
+
         {#  Bloc diagnostic competences numeriques #}
+
+        {% if is_granted('ROLE_PRESCRIPTEUR') %}
         <div class="row">
             <div class="col-12 bg-light border-bottom border-dark mb-2">
                 <h3>Diagnostic des compétences numériques</h3>
