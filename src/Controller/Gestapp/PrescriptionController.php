@@ -52,7 +52,8 @@ final class PrescriptionController extends AbstractController
             'method' => 'POST',
             'attr' => [
                 'id' => 'formPrescription',
-            ]
+            ],
+            'user' => $this->getUser(),
         ]);
         $form->handleRequest($request);
 

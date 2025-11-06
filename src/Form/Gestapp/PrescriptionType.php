@@ -29,6 +29,8 @@ class PrescriptionType extends AbstractType
         $request = $this->requestStack->getCurrentRequest();
         $route = $request?->attributes->get('_route');
 
+        $user = $options['user'];
+
         $builder
             ->add('details')
             ->add('baseCompetence', ChoiceType::class, [
@@ -59,6 +61,21 @@ class PrescriptionType extends AbstractType
             ])
         ;
 
+        if($user && in_array('ROLE_MEDIATEUR', $user->getRoles())){
+            $builder
+                ->add('membre', EntityType::class, [
+                    'class' => Member::class,
+                    'choice_label' => 'nameStructure',
+                    'query_builder' => function (EntityRepository $er) {
+                        return $er->createQueryBuilder('d')
+                            ->where('d.roles LIKE :roles')
+                            ->setParameter('roles', '%ROLE_PRESCRIPTEUR%')
+                            ->orderBy('d.id', 'ASC');
+                    },
+                ])
+            ;
+        }
+
         if ($route == 'app_gestapp_prescription_new') {
             $builder
                 ->add('beneficiaire', EntityType::class, [
@@ -79,6 +96,7 @@ class PrescriptionType extends AbstractType
             $builder
                 ->add('beneficiaire', BeneficiaryType::class, [
                     'empty_data' => new Beneficiary(),
+
                 ]);
         }
 
@@ -88,6 +106,7 @@ class PrescriptionType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Prescription::class,
+            'user' => null,
         ]);
     }
 }

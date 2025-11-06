@@ -1,7 +1,3 @@
-
-{{ dump(app.user.roles) }}
-{{ dump(app.request.attributes.get('_route')) }}
-
 <div class="row">
     <div class="col-md-3">
         <p>Reférence : {{ prescription.ref }}</p>
@@ -10,7 +6,6 @@
 
     {{ form_start(form) }}
 
-    {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_PRESCRIPTEUR') or is_granted('ROLE_MEDIATEUR') %}
         {# Bloc Bénéficiaire #}
         <div class="col-12 mb-2">
             <div class="row">
@@ -71,9 +66,7 @@
                 {% endif %}
             </div>
         </div>
-    {% endif %}
 
-    {% if is_granted('ROLE_PRESCRIPTEUR') or is_granted('ROLE_ADMIN') %}
         {#  Bloc Prescripteur #}
         <div class="col-12 mb-2">
             <div class="row">
@@ -81,56 +74,63 @@
                     <h3>Le prescripteur</h3>
                 </div>
 
-                <div class="col-12">
-                    <p>Structure : {{ app.user.nameStructure }}</p>
-                    <p>
-                        Nom et prenom du prescripteur :
-                        {% if app.user.contactResponsableFirstname is empty and app.user.contactResponsableLastname is empty %}
-                            -
-                        {% else %}
-                            {{ app.user.contactResponsableFirstname }} {{ app.user.contactResponsableLastname }}
-                        {% endif %}
-                    </p>
-                    <p>
-                        Telephone :
-                        {% if app.user.contactPhone is empty %}
-                            -
-                        {% else %}
-                            {{ app.user.contactPhone }}
-                        {% endif %}
-                    </p>
-                    <p>
-                        <i class="fa-duotone fa-solid fa-inbox"></i> Email :
-                        {% if app.user.contactEmail is empty %}
-                            -
-                        {% else %}
-                            {{ app.user.contactEmail }}
-                        {% endif %}
-                    </p>
-                </div>
+                {% if app.user.roles|first == 'ROLE_MEDIATEUR' %}
+                    <div class="col-12">
+                        <div class="col-md-6">
+                            {% include 'composants/inputs/input_select.html.twig' with {
+                                label: 'Sélectionner la structure de prescription',
+                                field: form.membre
+                            } %}
+                        </div>
+                    </div>
+                {% else %}
+                    <div class="col-12">
+                        <p>Structure : {{ app.user.nameStructure }}</p>
+                        <p>
+                            Nom et prenom du prescripteur :
+                            {% if app.user.contactResponsableFirstname is empty and app.user.contactResponsableLastname is empty %}
+                                -
+                            {% else %}
+                                {{ app.user.contactResponsableFirstname }} {{ app.user.contactResponsableLastname }}
+                            {% endif %}
+                        </p>
+                        <p>
+                            Telephone :
+                            {% if app.user.contactPhone is empty %}
+                                -
+                            {% else %}
+                                {{ app.user.contactPhone }}
+                            {% endif %}
+                        </p>
+                        <p>
+                            <i class="fa-duotone fa-solid fa-inbox"></i> Email :
+                            {% if app.user.contactEmail is empty %}
+                                -
+                            {% else %}
+                                {{ app.user.contactEmail }}
+                            {% endif %}
+                        </p>
+                    </div>
+                {% endif %}
             </div>
         </div>
-    {% endif %}
 
-    {% if is_granted('ROLE_PRESCRIPTEUR') %}
         {#  Bloc Médiateur numérique #}
         <div class="col-12 mb-2">
             <div class="row">
                 <div class="col-12 bg-light border-bottom border-dark">
-                    <h3>Le mediateur numérique</h3>
+                    <h3>Le médiateur numérique</h3>
                 </div>
 
                 <div class="col-md-6">
                     {% include 'composants/inputs/input_select.html.twig' with {
                         label: 'Lieu de Médiation',
-                        field: form.lieuMediation
+                        field: form.lieuMediation,
                     } %}
                 </div>
             </div>
         </div>
-    {% endif %}
 
-    {% if is_granted('ROLE_PRESCRIPTEUR') %}
         {#  Bloc Motivation de la prescription #}
         <div class="col-12 mb-2">
             <div class="row">
@@ -153,12 +153,10 @@
                 </div>
             </div>
         </div>
-    {% endif %}
 
 
         {#  Bloc diagnostic competences numeriques #}
 
-        {% if is_granted('ROLE_PRESCRIPTEUR') %}
         <div class="row">
             <div class="col-12 bg-light border-bottom border-dark mb-2">
                 <h3>Diagnostic des compétences numériques</h3>
@@ -199,9 +197,7 @@
                 </div>
             </div>
         </div>
-    {% endif %}
 
-    {% if is_granted('ROLE_MEDIATEUR') %}
         <div class="row">
             <div class="col-12 bg-light border-bottom border-dark mb-2">
                 <h3>Les objectifs de la mediation</h3>
@@ -272,7 +268,6 @@
                 } %}
             </div>
         </div>
-    {% endif %}
 
     <div class="row">
         <div class="col-6">
