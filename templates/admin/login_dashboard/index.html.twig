@@ -70,14 +70,19 @@
                         <td>{{ prescription.lieuMediation }}</td>
 
                         <td>
-                            <a href="{{ path('app_gestapp_prescription_edit', {'id': prescription.id}) }}"
-                               
-                               title="Décrire en 5 ou 6 lignes, les motivations du bénéficiaire">
-
-                                <i class="fa-solid fa-pen-to-square"></i>
-                            </a>
+                            <button
+                                href="{{ path('app_gestapp_prescription_edit', {'id': prescription.id}) }}"
+                                type="button"
+                                data-bs-toggle="tooltip"
+                                data-bs-placement="top"
+                                data-bs-custom-class="custom-tooltip"
+                                data-bs-title="Décrire en 5 ou 6 lignes les motivations du bénéficiaire">
+                                    <i class="fa-solid fa-pen-to-square"></i>
+                            </button>
                         </td>
                     </tr>
+                    {
+
                 {% else %}
                     <tr>
                         <td colspan="5" class="text-start text-muted">Aucune prescription disponible</td>

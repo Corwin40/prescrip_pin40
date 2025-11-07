@@ -27,6 +27,7 @@
         "autoprefixer": "^10.4.21",
         "axios": "^1.12.2",
         "bootstrap": "^5.3.8",
+        "popper": "^1.0.1",
         "postcss-loader": "^8.2.0"
     }
 }
