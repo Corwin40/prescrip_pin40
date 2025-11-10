@@ -1,5 +1,6 @@
 {% extends 'base.html.twig' %}
 
+
 {% block body %}
     <div class="container py-4">
 
@@ -70,16 +71,17 @@
                         <td>{{ prescription.lieuMediation }}</td>
 
                         <td>
-                            <button
+                            <a
                                 href="{{ path('app_gestapp_prescription_edit', {'id': prescription.id}) }}"
-                                type="button"
+                                class="btn btn-primary"
                                 data-bs-toggle="tooltip"
                                 data-bs-placement="top"
                                 data-bs-custom-class="custom-tooltip"
-                                data-bs-title="Décrire en 5 ou 6 lignes les motivations du bénéficiaire">
-                                    <i class="fa-solid fa-pen-to-square"></i>
-                            </button>
+                                title="Décrire en 5 ou 6 lignes les motivations du bénéficiaire">
+                                <i class="fa-solid fa-pen-to-square"></i>
+                            </a>
                         </td>
+
                     </tr>
                     {
 
@@ -91,9 +93,7 @@
                 </tbody>
             </table>
         </div>
-        <div class="col-12 justify-content-evenly">
-            {# --- Admin ? Médiateur ? Prescripteur ? --- #}
-
+        <div class="col-12 d-flex flex-wrap justify-content-between mt-4 my-3">
             {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_MEDIATEUR') or is_granted('ROLE_PRESCRIPTEUR') %}
                 {% include 'composants/forms/button_creatnew.html.twig' with {
                     label: 'Créer un nouveau bénéficiaire',
@@ -124,5 +124,6 @@
                 } %}
             {% endif %}
         </div>
+
     </div>
 {% endblock %}

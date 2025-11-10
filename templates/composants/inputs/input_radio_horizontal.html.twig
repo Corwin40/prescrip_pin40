@@ -5,7 +5,10 @@
     <div class="radio-group w-75">
         {% for choice in form_field %}
             <label class="form-check-label mx-2">
-                {{ form_widget(choice, {'attr': {'class': 'form-check-input'}}) }}
+                {{ form_widget(choice, {'attr': {
+                    'class': 'form-check-input',
+                    'style': 'border: 2px solid black;'
+                }}) }}
                 {{ form_label(choice) }}
             </label>
         {% endfor %}

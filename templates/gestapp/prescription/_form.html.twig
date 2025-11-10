@@ -269,15 +269,24 @@
             </div>
         </div>
 
-    <div class="row">
-        <div class="col-6">
-            <a href="{{ path('app_admin_dashboard_index') }}" class="btn btn-outline-dark btn-sm">
-                <i class="fa-light fa-chevrons-left"></i> Retour au dashboard
+    <div class="row mt-md-1 mb-4 text-center">
+        <div class="col-md-12 d-flex justify-content-center gap-3 flex-wrap">
+            <a href="{{ path('app_admin_dashboard_index') }}"
+               class="btn btn-outline-success btn-lg shadow-sm px-4 py-2">
+                <i class="fa-solid fa-house me-2"></i>
+                Retour au <span class="fw-bold">Dashboard</span>
             </a>
-            <button id="btnAddPrescription" class="btn btn-outline-primary btn-sm">Préenregistrer la demande</button>
+
+            <button id="btnAddPrescription" type="submit" class="btn btn-outline-success btn-lg shadow-sm px-4 py-2 border-2">
+                <i class="fa-solid fa-floppy-disk me-2"></i>
+                <span class="fw-semibold">Préenregistrer la demande</span>
+            </button>
+
         </div>
-        <div class="col-6 text-end"></div>
     </div>
 
+
+
     {{ form_end(form) }}
+    <div class="py-5"></div>
 </div>
