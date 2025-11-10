@@ -3,7 +3,7 @@
 {% block body %}
     <div class="bg-light min-vh-100 py-5">
         <div class="container">
-            <div class="card shadow-sm p-4">
+            <div class="card shadow-sm p-4 mb-4">
                 <h1 class="mb-4 text-center text-success">Mentions légales</h1>
 
                 <p>
@@ -27,7 +27,6 @@
                     <li class="list-group-item">Signalement d’erreurs (Erratum)</li>
                 </ol>
 
-                <!-- 1 -->
                 <h2 class="mt-5 h4 text-success border-bottom pb-2">1. Identification de l’éditeur du site</h2>
                 <p>
                     <a href="https://www.openpixl.fr/" class="text-decoration-none fw-bold" target="_blank">OpenPixl</a><br>
@@ -35,7 +34,6 @@
                     <strong>Directeur :</strong> Mr Xavier Burke
                 </p>
 
-                <!-- 2 -->
                 <h2 class="mt-5 h4 text-success border-bottom pb-2">2. Hébergement, conception graphique et développement</h2>
                 <p>
                     <strong>Hébergeur :</strong><br>
@@ -49,45 +47,49 @@
                     Réalisé par <a href="https://www.openpixl.fr/" class="text-decoration-none fw-bold" target="_blank">OpenPixl</a>
                 </p>
 
-                <!-- 3 -->
                 <h2 class="mt-5 h4 text-success border-bottom pb-2">3. Données personnelles et confidentialité</h2>
                 <p>
-                    <a href="https://www.clubmicrosaintpierre.fr/" class="text-decoration-none fw-bold" target="_blank">Numerik and Co</a>, traite et conserve certaines données personnelles dans le cadre de ses missions.
+                    <a href="https://www.clubmicrosaintpierre.fr/" class="text-decoration-none fw-bold" target="_blank">Numerik and Co</a>,
+                    traite et conserve certaines données personnelles dans le cadre de ses missions.
                 </p>
 
-                <!-- 4 -->
                 <h2 class="mt-5 h4 text-success border-bottom pb-2">4. Propriété intellectuelle et crédits</h2>
                 <p>
                     Le contenu du site (textes, images, graphismes, logos, vidéos, etc.) est protégé par le droit de la propriété intellectuelle.
                     Toute reproduction, représentation, modification ou distribution sans autorisation préalable est interdite.
                 </p>
 
-                <!-- 5 -->
                 <h2 class="mt-5 h4 text-success border-bottom pb-2">5. Reproduction des contenus</h2>
                 <p>
                     Vous pouvez reproduire partiellement le contenu de ce site à des fins non commerciales, sous réserve de mentionner clairement la source
                     <strong>ALPI / OpenPixl</strong> et de ne pas en altérer le sens.
                 </p>
 
-                <!-- 6 -->
                 <h2 class="mt-5 h4 text-success border-bottom pb-2">6. Mention légale conforme au RGPD</h2>
                 <p>
                     Les données collectées sont uniquement destinées à améliorer le service. Aucune donnée n’est transmise à des tiers sans consentement.
                 </p>
 
-                <!-- 7 -->
                 <h2 class="mt-5 h4 text-success border-bottom pb-2">7. Liens hypertextes</h2>
                 <p>
                     Le site peut contenir des liens vers d'autres sites. ALPI et OpenPixl ne peuvent être tenus responsables du contenu de ces sites externes.
                 </p>
 
-                <!-- 8 -->
                 <h2 class="mt-5 h4 text-success border-bottom pb-2">8. Signalement d’erreurs (Erratum)</h2>
                 <p>
                     Si vous constatez une erreur ou un lien brisé, vous pouvez le signaler par mail à
                     <a href="mailto:contact@openpixl.fr" class="text-decoration-none fw-bold">contact@openpixl.fr</a>.
                 </p>
             </div>
+
+
+            <div class="text-center mt-3 mb-5">
+                <a href="{{ path('app_admin_dashboard_index') }}"
+                   class="btn btn-outline-success btn-lg shadow-sm px-4 py-2 border-2 fw-semibold">
+                    Retour au dashboard
+                </a>
+            </div>
+
         </div>
     </div>
 {% endblock %}

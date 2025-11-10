@@ -63,10 +63,18 @@
     </div>
 
     <!-- Bouton -->
-    <div class="col-12 text-end mt-4">
-        <button type="submit" class="btn btn-primary px-4">
-            {{ button_label|default('Mettre à jour') }}
-        </button>
+    <div class="col-3">
+    <button type="{{ type|default('submit') }}"
+            class="
+    {% if style is defined and style is not null %}
+        {{ style }}
+    {% else %}
+        btn btn-outline-success btn-sm shadow-sm px-3 py-1 border-2
+    {% endif %}
+">
+        <i class="fa-solid {{ icon|default('fa-floppy-disk') }} me-1"></i>
+        <span class="fw-normal">{{ label|default('Valider') }}</span>
+    </button>
     </div>
 </div>
 

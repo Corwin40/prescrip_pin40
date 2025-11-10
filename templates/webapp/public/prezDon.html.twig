@@ -1,15 +1,15 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    <div class="container my-5">
-        <div class="text-center mb-5">
+    <div class="container my-1 mb-5 pb-5">
+        <div class="text-center mb-md-3">
             <h1 class="text-success fw-bold">Dispositif « Mon Ordi Pin40 »</h1>
             <p class="text-muted fst-italic">Un projet solidaire pour favoriser l'inclusion numérique dans les Landes</p>
         </div>
 
-        <div class="card shadow-sm mb-4">
+        <div class="card shadow-sm mb-2">
             <div class="card-body">
-                <h2 class="h5 bg-success-subtle text-success-emphasis border-bottom pb-2 mb-3">Présentation</h2>
+                <h2 class="h5 bg-success-subtle text-success-emphasis border-bottom pb-2 mb-1">Présentation</h2>
                 <p>
                     Le dispositif vise la dotation à titre gracieux d’un ordinateur portable reconditionné à des personnes physiques
                     (associations exclues). Les ordinateurs, issus de l’opération
@@ -27,7 +27,7 @@
             </div>
         </div>
 
-        <div class="card shadow-sm mb-4">
+        <div class="card shadow-sm mb-2">
             <div class="card-body">
                 <h2 class="h5 bg-success-subtle text-success-emphasis border-bottom pb-2 mb-3">Critères d’éligibilité</h2>
                 <p>Pour être éligibles, les bénéficiaires doivent répondre à au moins un des trois critères suivants :</p>
@@ -39,7 +39,7 @@
             </div>
         </div>
 
-        <div class="card shadow-sm mb-5">
+        <div class="card shadow-sm mb-4">
             <div class="card-body">
                 <h2 class="h5 bg-success-subtle text-success-emphasis border-bottom pb-2 mb-3">Engagement du bénéficiaire</h2>
                 <p>
@@ -49,9 +49,9 @@
             </div>
         </div>
 
-        <div class="text-center">
-            <a href="{{ path('app_webapp_public_accueil') }}" class="btn btn-outline-success px-4">
-                accueil
+        <div class="text-center mt-4">
+            <a href="{{ path('app_webapp_public_accueil') }}" class="btn btn-outline-success px-4 py-2 shadow-sm">
+                Accueil
             </a>
         </div>
     </div>
