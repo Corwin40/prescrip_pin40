@@ -90,7 +90,7 @@
                                     type: 'warning'
                                 } %}
 
-                                {# Bouton "Supprimer" (optionnel, si ton composant existe) #}
+                                {# Bouton "Supprimer" si  il existe #}
                                 {% include 'composants/forms/buttons_delete.html.twig' with {
                                     id: member.id,
                                     route: 'app_admin_member_delete'
