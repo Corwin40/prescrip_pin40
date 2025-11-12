@@ -1,35 +1,34 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    <div class="container mt-5 mb-5">
-        <div class="card shadow-lg border-1 rounded-4 p-4 bg-light">
-            <div class="card-body text-center">
-                <h1 class="mb-4 text-success fw-bold"> Contactez-nous</h1>
+    <div class="container mt-4 ">
 
-                <p class="fs-5 mb-3">
+        <div class="row justify-content-between ">
+            <div class="col-md-6  p-3">
+                <h1 class="mb-2 text-success fw-bold">Contactez-nous</h1>
+                <p class="mt-2 mb-3">
                     <strong>Adresse :</strong><br>
                     40, impasse Georges SABDE<br>
                     40280 <span class="text-uppercase">Saint-Pierre-du-Mont</span>
                 </p>
-
-                <hr class="w-50 mx-auto my-4">
-
-                <p class="fs-5">
+                <p class="mt-2 mb-2">
                     <strong>Localisation :</strong><br>
                     Maison des associations, située derrière l'ancienne mairie
                 </p>
-
-                <p class="fs-5 mt-3">
+                <p class="fs-4 mt-2 mb-2">
                     <strong>Téléphone :</strong>
                     <a href="#" class="text-decoration-none text-dark">09 51 93 77 06</a>
                 </p>
+            </div>
 
-                <hr class="w-50 mx-auto my-4">
-                <p class="fs-5">
-                    <strong>Plan d'acces :</strong><br>
-                    Image provenant de google earth
+
+            <div class="col-md-4 d-flex justify-content-center">
+                <p class="text-center">
+                    <img src="{{ asset('assets/images/plan.jpg') }}"
+                         alt="plan géolocalisation du site"
+                         class="img-fluid">
                 </p>
-                <img src="{{ asset('assets/images/planjpg.jpg') }}" style="width:30%; height:auto;" alt="plan accès au site">
+
             </div>
         </div>
     </div>
