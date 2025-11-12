@@ -1,3 +1,11 @@
-<a href="{{ href|default('#') }}" class="btn btn-secondary">
-    <i class="bi bi-arrow-left"></i> {{ label }}
+<a href="{{ href|default('#') }}"
+   class="
+    {% if style is defined and style is not null %}
+        {{ style }}
+    {% else %}
+        btn btn-outline-success btn-sm shadow-sm px-3 py-1 border-2
+    {% endif %}
+">
+    <i class="fa-solid fa-circle-plus me-1"></i>
+    <span class="fw-normal">{{ label }}</span>
 </a>
