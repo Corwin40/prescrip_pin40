@@ -31,6 +31,11 @@
             <div class="d-flex d-flex-inline mb-3 border-bottom border-dark bg-light justify-content-between py-2 px-1">
                 <div class="col-6">
                     <h3 class="text-uppercase mb-0">Liste des prescriptions</h3>
+
+                    <button type="button" class="btn btn-secondary" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Tooltip on top">
+                        Tooltip on top
+                    </button>
+
                 </div>
                 <div class="col-6">
                     <p class="mb-0 text-end">
@@ -71,13 +76,10 @@
                         <td>{{ prescription.lieuMediation }}</td>
 
                         <td>
-                            <a
-                                href="{{ path('app_gestapp_prescription_edit', {'id': prescription.id}) }}"
-                                class="btn btn-primary"
-                                data-bs-toggle="tooltip"
-                                data-bs-placement="top"
-                                data-bs-custom-class="custom-tooltip"
-                                title="Décrire en 5 ou 6 lignes les motivations du bénéficiaire">
+                            <a href="{{ path('app_gestapp_prescription_edit', {'id': prescription.id}) }}"
+
+                               title="Décrire en 5 ou 6 lignes, les motivations du bénéficiaire">
+
                                 <i class="fa-solid fa-pen-to-square"></i>
                             </a>
                         </td>
