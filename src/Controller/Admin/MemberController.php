@@ -87,13 +87,13 @@ final class MemberController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            // ✅ Rôle
+            //  Rôle
             $selectedRole = $form->get('role')->getData();
             if ($selectedRole) {
                 $member->setRoles([$selectedRole]);
             }
 
-            // 🔐 Nouveau mot de passe si saisi
+            //  Nouveau mot de passe si saisi
             $plainPassword = $form->get('plainPassword')->getData();
             if (!empty($plainPassword)) {
                 $hashedPassword = $passwordHasher->hashPassword($member, $plainPassword);

@@ -1,5 +1,7 @@
 <div class="mb-3">
     <label class="form-label">{{ label }}</label>
-    {{ form_widget(field, {'attr': {'class': 'form-control'}}) }}
+    {{ form_widget(field, {
+        'attr': {'class': 'form-control border border-1 border-dark shadow-sm'} })
+    }}
     {{ form_errors(field) }}
 </div>

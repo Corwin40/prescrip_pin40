@@ -5,7 +5,12 @@
     {% for choice in form_field %}
         <td>
             <label class="form-check-label mx-2">
-                {{ form_widget(choice, {'attr': {'class': 'form-check-input'}}) }}
+                {{ form_widget(choice, {
+                    'attr': {
+                        'class': 'form-check-input',
+                        'style': 'border: 2px solid black;'
+                    }
+                }) }}
                 {{ form_label(choice) }}
             </label>
         </td>

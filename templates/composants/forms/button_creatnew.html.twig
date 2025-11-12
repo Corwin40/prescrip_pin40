@@ -1,8 +1,11 @@
-<a href="{{ href|default('#') }}" class="
-    {% if style is defined and style is not null%}
+<a href="{{ href|default('#') }}"
+   class="
+    {% if style is defined and style is not null %}
         {{ style }}
     {% else %}
-        btn btn-primary
-{% endif %}">
-    <i class="bi bi-plus-circle"></i> {{ label }}
+        btn btn-outline-success btn-sm shadow-sm px-3 py-1 border-2
+    {% endif %}
+">
+    <i class="fa-solid fa-circle-plus me-1"></i>
+    <span class="fw-normal">{{ label }}</span>
 </a>

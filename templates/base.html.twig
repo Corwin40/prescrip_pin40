@@ -39,7 +39,7 @@
                     <!-- Dropdown Login -->
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            Mon espace
+                            <strong>Mon espace</strong>
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end">
                             <li>
@@ -52,14 +52,14 @@
 
 
                             <li>
-                                <a class="dropdown-item" href="{{ path('app_logout') }}">Se deconnecter</a>
+                                <a class="dropdown-item text-danger" href="{{ path('app_logout') }}">Se deconnecter</a>
                             </li>
                         </ul>
                     </li>
                 {% else %}
                     <!-- Liens simples -->
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ path('app_admin_dashboard_index') }}">Espace de connexion</a>
+                        <a class="nav-link" href="{{ path('app_admin_dashboard_index') }}"><strong>Espace de connexion</strong></a>
                     </li>
                 {% endif %}
             </ul>
@@ -97,11 +97,12 @@
 
 </body>
 <!-- FOOTER -->
-<footer class=" container-fluid mt-auto  text-dark py-4">
+<footer class="fixed-bottom container-fluid mt-auto text-dark py-3 bg-body-secondary border-top border-dark">
     <div class="row text-center">
-        <div class="col"><a class="nav-link" href="{{ path('app_webapp_public_accueil') }}">© 2025 - Precrip Ordi Pin40</a></div>
-        <div class="col"> <a class="nav-link" href="{{ path('app_webapp_public_mentions') }}">Mentions Légales</a></div>
-        <div class="col">Contact</div>
+        <div class="col"><a class="nav-link" href="{{ path('app_webapp_public_accueil') }}"><strong>© 2025 - Precrip Ordi Pin40</strong></a></div>
+        <div class="col"> <a class="nav-link" href="{{ path('app_webapp_public_mentions') }}"><strong>Mentions Légales</strong></a></div>
+        <div class="col"><a class="nav-link" href="{{ path('app_webapp_public_contact') }}"><strong>Contact</strong></a></div>
+    </div>
     </div>
 </footer>
 </html>
