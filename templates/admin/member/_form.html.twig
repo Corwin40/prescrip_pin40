@@ -1,73 +1,74 @@
 {{ form_start(form, {'attr': {'id': 'member_form'}}) }}
 
 <div class="row g-4">
+    <div class="col-md-6">
+        {{ form_label(form.nameStructure, 'Nom de la structure', {'label_attr': {'class': 'form-label fw-semibold'}}) }}
+        {{ form_widget(form.nameStructure, {'attr': {'class': 'form-control'}}) }}
+    </div>
     <!-- Email -->
     <div class="col-md-6">
         {{ form_label(form.email, 'Email', {'label_attr': {'class': 'form-label fw-semibold'}}) }}
         {{ form_widget(form.email, {'attr': {'class': 'form-control'}}) }}
     </div>
-    <div class="col-md-6"></div>
 
+    <div class="col-md-12"></div>
     <!-- Structure & adresse -->
-    <div class="col-md-6">
-        {{ form_label(form.nameStructure, 'Nom de la structure', {'label_attr': {'class': 'form-label fw-semibold'}}) }}
-        {{ form_widget(form.nameStructure, {'attr': {'class': 'form-control'}}) }}
-    </div>
+
     <div class="col-md-6">
         {{ form_label(form.address, 'Adresse', {'label_attr': {'class': 'form-label fw-semibold'}}) }}
         {{ form_widget(form.address, {'attr': {'class': 'form-control'}}) }}
     </div>
-
     <!-- Code postal & ville -->
-    <div class="col-md-6">
+    <div class="col-md-2">
         {{ form_label(form.zipcode, 'Code postal', {'label_attr': {'class': 'form-label fw-semibold'}}) }}
         {{ form_widget(form.zipcode, {'attr': {'class': 'form-control'}}) }}
     </div>
-    <div class="col-md-6">
+    <div class="col-md-4">
         {{ form_label(form.city, 'Ville', {'label_attr': {'class': 'form-label fw-semibold'}}) }}
         {{ form_widget(form.city, {'attr': {'class': 'form-control'}}) }}
     </div>
+    <!-- Civilité -->
+    <div class="col-md-4">
+        {{ form_label(form.contactResponsableCivility, 'Civilité du responsable', {'label_attr': {'class': 'form-label fw-semibold'}}) }}
+        {{ form_widget(form.contactResponsableCivility, {'attr': {'class': 'form-select'}}) }}
+    </div>
+    <div class="col-md-4">
+        {{ form_label(form.ContactResponsableFirstname, 'Prénom du responsable', {'label_attr': {'class': 'form-label fw-semibold'}}) }}
+        {{ form_widget(form.ContactResponsableFirstname, {'attr': {'class': 'form-control'}}) }}
+    </div>
+    <div class="col-md-4">
+        {{ form_label(form.contactResponsableLastname, 'Nom du responsable', {'label_attr': {'class': 'form-label fw-semibold'}}) }}
+        {{ form_widget(form.contactResponsableLastname, {'attr': {'class': 'form-control'}}) }}
+    </div>
+
 
     <!-- Téléphone & email de contact -->
     <div class="col-md-12">
         <div class="row">
-            <div class="col-md-6">
-                {{ form_label(form.contactPhone, 'Téléphone de contact', {'label_attr': {'class': 'form-label fw-semibold'}}) }}
-                {{ form_widget(form.contactPhone, {'attr': {'class': 'form-control'}}) }}
-            </div>
-            <div class="col-md-6">
+            <div class="col-md-10">
                 {{ form_label(form.contactEmail, 'Email de contact', {'label_attr': {'class': 'form-label fw-semibold'}}) }}
                 {{ form_widget(form.contactEmail, {'attr': {'class': 'form-control'}}) }}
             </div>
-        </div>
-    </div>
-
-    <!-- Responsable -->
-    <div class="col-md-12">
-        <div class="row">
-            <div class="col-md-6">
-                {{ form_label(form.ContactResponsableFirstname, 'Prénom du responsable', {'label_attr': {'class': 'form-label fw-semibold'}}) }}
-                {{ form_widget(form.ContactResponsableFirstname, {'attr': {'class': 'form-control'}}) }}
-            </div>
-            <div class="col-md-6">
-                {{ form_label(form.contactResponsableLastname, 'Nom du responsable', {'label_attr': {'class': 'form-label fw-semibold'}}) }}
-                {{ form_widget(form.contactResponsableLastname, {'attr': {'class': 'form-control'}}) }}
+            <div class="col-md-2">
+                {{ form_label(form.contactPhone, 'Téléphone', {'label_attr': {'class': 'form-label fw-semibold'}}) }}
+                {{ form_widget(form.contactPhone, {'attr': {'class': 'form-control'}}) }}
             </div>
         </div>
     </div>
 
-    <!-- Civilité -->
     <div class="col-md-6">
-        {{ form_label(form.contactResponsableCivility, 'Civilité du responsable', {'label_attr': {'class': 'form-label fw-semibold'}}) }}
-        {{ form_widget(form.contactResponsableCivility, {'attr': {'class': 'form-select'}}) }}
+        {{ form_label(form.password, '', {'label_attr': {'class': 'form-label fw-semibold'}}) }}
+        {{ form_widget(form.password, {'attr': {'class': 'form-control'}}) }}
     </div>
 
     <!-- Bouton -->
-    <div class="col-12 text-end mt-4">
-        <button type="submit" class="btn btn-primary px-4">
-            {{ button_label|default('Mettre à jour') }}
-        </button>
-    </div>
+    <div class="mt-4">
+        <a class="btn btn-secondary" href="{{ path('app_admin_dashboard_index') }}">Retour</a>
+        <button class="btn btn-primary">{{ button_label|default('Enregistrer') }}</button>
+    </div
+
 </div>
 
 {{ form_end(form) }}
+
+

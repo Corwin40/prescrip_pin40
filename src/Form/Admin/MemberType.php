@@ -42,8 +42,7 @@ class MemberType extends AbstractType
                 'label' => 'Civilité',
                 'placeholder' => 'Sélectionnez une civilité',
                 'required' => true,
-            ])
-            ;
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void
