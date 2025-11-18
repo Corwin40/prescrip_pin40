@@ -59,6 +59,7 @@ class PrescriptionType extends AbstractType
                 'label' => 'COMPETENCE',
                 'empty_data' => new Competence(),
             ])
+            ->add('commune')
         ;
 
         if($user && in_array('ROLE_MEDIATEUR', $user->getRoles())){

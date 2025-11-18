@@ -1,0 +1,148 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Editer fiche en pdf{% endblock %}
+
+{% block body %}
+
+
+{# ------------------ page 1 ---------------------------------------- #}
+
+
+    <div class="container">
+        <img src="{{ asset('assets/images/bandeau1.jpg') }}" alt="bandeau du site">
+    </div>
+    <div class="col-12">
+        <h1>Prescription Mon Ordi Pin40</h1>
+    </div>
+    <div class="col-6">
+        <h3>Le dispositif</h3>
+        <p>Le dispositif vise la dotation à titre gracieux d’un ordinateur portable reconditionné
+            à des personnes physiques (associations exclues).
+            Les ordinateurs, issus de l’opération « 1 collégien, 1 ordinateur »
+            du Département des Landes, puis mis à disposition des écoles primaires
+            du département, sont reconditionnés pour alimenter le dispositif « Mon Ordi Pin40 ».
+        </p>
+
+        <p>
+            Le prescripteur organise l’accueil du bénéficiaire auprès d’un lieu de médiation
+            numérique partenaire du dispositif. La liste des partenaires est consultable
+            sur le lien : https://www.pin40.fr/le-reseau/la-carte-des-acteurs-du-reseau.
+        </p>
+
+        <p>
+            Pour être éligibles, les Bénéficiaires doivent répondre
+            à au moins un des trois critères suivants :
+        </p>
+
+        <ul>
+            <li> besoin d’équipement mais des ressources financières limitées</li>
+            <li>un besoin de montée en compétences techniques entravé par l’absence de matériel</li>
+            <li>un besoin d’accéder à l’autonomie numérique.</li>
+        </ul>
+        <p>
+            Les bénéficiaires s’engagent à suivre jusqu’au bout le parcours défini
+            par le médiateur numérique à l’issue duquel il se verra remettre l’ordinateur.
+        </p>
+    </div>
+<div class="col-12">
+    <h3>Le bénéficiaire</h3>
+    <p>A completer par le prescripteur</p>
+    {# found in the Entity Beneficiary  #}
+    <p>Civilité</p>{# $civility #}
+    <p>Nom:</p>{# $lastname #}
+    <p>Prenom</p>{# $firstname #}
+    <p>genre</p>{# $gender #}
+    <p>Tranche d'age</p>{# AgeGroup #}
+    <p>Situation</p>{# $professionnalStatus #}
+</div>
+    {# ------------------------------------------- page 2 ----------------------------------- #}
+    <div class="col-12">
+        <h3>Le prescripteur</h3>
+        {# found in the Entity member #}
+        <p>Structure</p>{#$nameStructure  #}
+        <p>nom et prenom du prescripteur</p>{# $contactResponsableLastname et  $ContactResponsableFirstname#}
+        <p>Telephone du prescripteur</p>{# $contactPhone #}
+        <p>Mail du prescripteur</p>{# $contactEmail #}
+
+
+    </div>
+
+<div class="col-12">
+    <h3>Motivation de la prescription</h3>
+    {# ajouter la variable de motivation #}
+    <p>A completer par le prescripteur :</p>
+    <p>Evaluation des competences de base par le prescripteur :</p>
+    {# ajouter le tableaux des competences de base de la page 2 #}
+</div>
+
+{# --------------------------------------page 3--------------------------------------- #}
+<div class="col-12">
+    <h3>Le mediateur numerique</h3>
+    <p>A completer par le mediateur numerique </p>
+    <p>Lieu de mediation numerique choisi pour organiser la dotation:</p>
+    {# in the entity prescription $lieuMediation#}
+</div>
+<div class="col-12">
+    <h3>Diagnostique des compétences numeriques</h3>
+
+    <p>Diagnostic des « compétences numériques de base » réalisé par le médiateur lors
+        de la rencontre initiale en appui au référentiel du
+        CLEA Numérique (https://www.certificat-clea.fr/clea-numerique/referentiel-clea-numerique/)
+    </p>
+    <p>A completer par le mediateur </p>
+    {# inserer le tableau des compétences aquises, en cour ou non acquise page 3 #}
+</div>
+
+<div class="col-12">
+    <p>L'auto évaluation du bénéficiaire a été réalisée avant l'action</p>
+    {# $validcase in the entity prescription #}
+</div>
+
+{# ----------------------------------- page 4 ---------------------------------------------#}
+
+
+ <div class="col-12">
+     <h3>Les objectifs de la mediation</h3>
+     <p>Compétences à travailler (référentiel DIGCOMP)
+         : https://eduscol.education.fr/document/20392/download</p>
+     <p>A completer par le mediateur</p>
+     {# tableau des competences a travailler #}
+     <p>A completer par le mediateur</p>
+     <p>Parcours de médiation acté entre le bénéficiaire et le mediateur</p>
+     {# variable parcour du beneficiaire #}
+     <p>Signature du Beneficiaire</p>
+     {# signature du beneficiare #}
+     <p>Auto evalutaion du beneficiaire a été réalisé apres l'action</p>
+     {# inserer le check de la page 4 #}
+ </div>
+
+    {# ---------------------------------- page 5 ------------------------------------ #}
+    <div class="col-12">
+        <h3>Date de la remise de l'ordinateur</h3>
+        <p>Fait à</p>
+        {# $lieuMediation #}
+        <p>le</p>
+        {# variable createdAT #}
+        <p>ID de l'ordinateur remis :</p>
+        {# $matriculEquipment #}
+    </div>
+
+    <div class="col-12">
+        <h3>Mentions légales conformes au RGPD</h3>
+        <p>
+            Les informations personnelles collectées pourront faire l'objet d'un traitement
+            ayant pour finalité l'envoi de compte-rendu ou d'informations en lien avec les
+            objectifs du séminaire. Ces informations sont à destination exclusive des services
+            de l'ALPI. Elles sont conservées 3 ans. Conformément au Règlement (UE) 2016/679
+            relatif à la protection des données à caractère personnel, vous disposez des droits
+            suivants sur vos données : droit d’accès, droit de rectification,
+            droit à l’effacement (droit à l’oubli), droit d’opposition,
+            droit à la limitation du traitement, droit à la portabilité.
+            Pour exercer vos droits, merci d’adresser votre demande par courrier postale
+            au 175 place de la Caserne Bosquet - 40000 Mont-de-Marsan ou par mail à dpo@alpi40.fr
+            Sous réserve d’un manquement à aux dispositions ci-dessus, vous avez le droit
+            d’introduire une réclamation auprès de la CNIL.
+        </p>
+    </div>
+
+{% endblock %}
