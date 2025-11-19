@@ -50,12 +50,12 @@
         <h2>Le bénéficiaire</h2>
         <p>A completer par le prescripteur</p>
 
-        <p>Civilité: {civility }</p>
-        <p>Nom : { $lastname }</p>
-        <p>Prénom : {firstname }</p>
-        <p>Genre : {gender}</p>
-        <p>Tranche d'âge : { AgeGroup }</p>
-        <p>Situation : { $professionnalStatus }</p>
+        <p>Civilité: {{civility}}</p>
+        <p>Nom : {{lastname}}</p>
+        <p>Prénom : {{firstname}}</p>
+        <p>Genre : {{gender}}</p>
+        <p>Tranche d'âge : {{AgeGroup}}</p>
+        <p>Situation : {{professionnalStatus}}</p>
     </section>
 
     {# ------------------------------------------- page 2 ----------------------------------- #}
@@ -63,10 +63,10 @@
     <section>
         <h2>Le prescripteur</h2>
 
-        <p>Structure : {nameStructure }</p>
-        <p>Nom et prénom du prescripteur :  {{ contactResponsableLastname ~ ' ' ~ contactResponsableFirstname }}</p>
-        <p>Téléphone du prescripteur : {contactPhone }</p>
-        <p>Mail du prescripteur : {contactEmail }</p>
+        <p>Structure : {{nameStructure}}</p>
+        <p>Nom et prénom du prescripteur :{{ contactResponsableLastname ~ ' ' ~ contactResponsableFirstname }}</p>
+        <p>Téléphone du prescripteur : {{contactPhone}}</p>
+        <p>Mail du prescripteur : {{contactEmail}}</p>
     </section>
 
     <section>
@@ -147,13 +147,13 @@
     <section>
         <h2>Date de la remise de l'ordinateur</h2>
 
-        <p>Fait à :{lieuMediation } </p>
+        <p>Fait à :{{lieuMediation}} </p>
 
 
-        <p>Le :{ variable createdAT } </p>
+        <p>Le :{{createdAT}} </p>
 
 
-        <p>ID de l'ordinateur remis :  {matriculEquipment }</p>
+        <p>ID de l'ordinateur remis :  {{matriculEquipment }}</p>
 
     </section>
 
