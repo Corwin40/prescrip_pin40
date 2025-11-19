@@ -50,12 +50,12 @@
         <h2>Le bénéficiaire</h2>
         <p>A completer par le prescripteur</p>
 
-        <p>Civilité</p> {# $civility #}
-        <p>Nom :</p> {# $lastname #}
-        <p>Prénom :</p> {# $firstname #}
-        <p>Genre :</p> {# $gender #}
-        <p>Tranche d'âge :</p> {# AgeGroup #}
-        <p>Situation :</p> {# $professionnalStatus #}
+        <p>Civilité: {civility }</p>
+        <p>Nom : { $lastname }</p>
+        <p>Prénom : {firstname }</p>
+        <p>Genre : {gender}</p>
+        <p>Tranche d'âge : { AgeGroup }</p>
+        <p>Situation : { $professionnalStatus }</p>
     </section>
 
     {# ------------------------------------------- page 2 ----------------------------------- #}
@@ -63,10 +63,10 @@
     <section>
         <h2>Le prescripteur</h2>
 
-        <p>Structure</p> {# $nameStructure #}
-        <p>Nom et prénom du prescripteur</p> {# $contactResponsableLastname et $ContactResponsableFirstname #}
-        <p>Téléphone du prescripteur</p> {# $contactPhone #}
-        <p>Mail du prescripteur</p> {# $contactEmail #}
+        <p>Structure : {nameStructure }</p>
+        <p>Nom et prénom du prescripteur :  {{ contactResponsableLastname ~ ' ' ~ contactResponsableFirstname }}</p>
+        <p>Téléphone du prescripteur : {contactPhone }</p>
+        <p>Mail du prescripteur : {contactEmail }</p>
     </section>
 
     <section>
@@ -88,8 +88,8 @@
 
         <p>A compléter par le médiateur numérique</p>
 
-        <p>Lieu de médiation numérique choisi pour organiser la dotation :</p>
-        {# in the entity prescription $lieuMediation #}
+        <p>Lieu de médiation numérique choisi pour organiser la dotation : {lieuMediation}</p>
+
     </section>
 
     <section>
@@ -107,9 +107,11 @@
     </section>
 
     <section>
-        <p>L'auto évaluation du bénéficiaire a été réalisée avant l'action</p>
-        {# $validcase in the entity prescription #}
+        <p>L'auto évaluation du bénéficiaire a été réalisée avant l'action :
+            {{ isAutoEva ? 'Oui' : 'Non' }}
+        </p>
     </section>
+
 
     {# ----------------------------------- page 4 ---------------------------------------------#}
 
@@ -137,7 +139,7 @@
 
         <p>Auto évaluation du bénéficiaire a été réalisée après l'action</p>
 
-        {# inserer le check de la page 4 #}
+        {{ isAutoEvaEnd ? 'Oui' : 'Non' }}
     </section>
 
     {# ---------------------------------- page 5 ------------------------------------ #}
@@ -145,14 +147,14 @@
     <section>
         <h2>Date de la remise de l'ordinateur</h2>
 
-        <p>Fait à</p>
-        {# $lieuMediation #}
+        <p>Fait à :{lieuMediation } </p>
 
-        <p>Le</p>
-        {# variable createdAT #}
 
-        <p>ID de l'ordinateur remis :</p>
-        {# $matriculEquipment #}
+        <p>Le :{ variable createdAT } </p>
+
+
+        <p>ID de l'ordinateur remis :  {matriculEquipment }</p>
+
     </section>
 
     <section>
