@@ -47,7 +47,7 @@ class Competence
     #[ORM\Column]
     private ?bool $isDigComp5 = false;
 
-    #[ORM\Column(type: Types::TEXT)]
+    #[ORM\Column(type: Types::TEXT,nullable: true)]
     private ?string $detailParcour = null;
 
     #[ORM\Column]
