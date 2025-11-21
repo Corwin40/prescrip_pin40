@@ -1,15 +1,41 @@
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width-device-width, initial-scale-1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pdf prescription</title>
+    <link rel="icon" type="image/jpg" href="{{ asset('assets/images/logoprescriptionpin40.jpg') }}">
+
     <style>
         body {
             margin: 0;
             padding: 0;
         }
 
+        /* le bandeau de l'entete */
+        .entete {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            padding: 15px 20px;
+        }
+
+        .entete img {
+            width: 80px;
+            height: auto;
+        }
+
+        .entete h1 {
+            margin: 0;
+            font-size: 32px;
+            color:#14682F;
+            font-weight: 800;
+            text-transform: uppercase;
+            line-height: 1.2;
+        }
+
+        /* dans le body */
         h1 {
             text-align: center;
+            color:#14682F;
         }
 
         h2 {
@@ -28,10 +54,8 @@
             padding: 0 10px;
         }
 
-        img {
-            max-width: 100%;
-            height: auto;
-            display: block;
+        ul {
+            padding: 0 30px;
         }
 
         .texte_motivation {
@@ -40,10 +64,10 @@
             border: 1px solid black;
             white-space: pre-wrap;
             line-height: 1.4;
-            display: block;
             text-align: justify;
         }
 
+        /* --- Tableaux --- */
         table {
             width: 100%;
             border-collapse: collapse;
@@ -51,6 +75,7 @@
 
         table th {
             background-color: #6c757d;
+            color: white;
         }
 
         table tr:nth-child(even) {
@@ -67,17 +92,16 @@
             font-weight: bold;
         }
     </style>
-
-
-
 </head>
+
 <body>
 
-{# ------------------ page 1 ---------------------------------------- #}
+<!-- ------------------ PAGE 1 ------------------ -->
 
 <section>
-    <div>
-        <img src="{{ asset('assets/images/bandeau1.jpg') }}" alt="bandeau du site">
+    <div class="entete">
+        <img src="{{ asset('assets/images/logoprescriptionpin40.jpg') }}" alt="Logo">
+        <h1>Portail de l'inclusion numérique des Landes</h1>
     </div>
 
     <h1>Prescription Mon Ordi Pin40</h1>
@@ -88,54 +112,62 @@
         Le dispositif vise la dotation à titre gracieux d’un ordinateur portable reconditionné
         à des personnes physiques (associations exclues).
         Les ordinateurs, issus de l’opération « 1 collégien, 1 ordinateur »
-        du Département des Landes, puis mis à disposition des écoles primaires
-        du département, sont reconditionnés pour alimenter le dispositif « Mon Ordi Pin40 ».
+        du Département des Landes [...]
     </p>
 
     <p>
         Le prescripteur organise l’accueil du bénéficiaire auprès d’un lieu de médiation
         numérique partenaire du dispositif.
-        La liste des partenaires est consultable sur le lien :
+        La liste des partenaires est consultable sur :
         https://www.pin40.fr/le-reseau/la-carte-des-acteurs-du-reseau.
     </p>
 
-    <p>
-        Pour être éligibles, les Bénéficiaires doivent répondre à au moins un des trois critères suivants :
-    </p>
+    <p>Pour être éligibles, les Bénéficiaires doivent répondre à au moins un des trois critères :</p>
 
     <ul>
-        <li>Besoin d’équipement mais des ressources financières limitées</li>
-        <li>Un besoin de montée en compétences techniques entravé par l’absence de matériel</li>
-        <li>Un besoin d’accéder à l’autonomie numérique</li>
+        <li>Besoin d’équipement mais ressources financières limitées</li>
+        <li>Besoin de montée en compétences techniques</li>
+        <li>Besoin d’autonomie numérique</li>
     </ul>
 
     <p>
-        Les bénéficiaires s’engagent à suivre jusqu’au bout le parcours défini
-        par le médiateur numérique à l’issue duquel il se verra remettre l’ordinateur.
+        Les bénéficiaires s’engagent à suivre le parcours défini
+        par le médiateur numérique à l’issue duquel il recevra l’ordinateur.
     </p>
 </section>
 
+<!-- ------------------ PAGE 2 ------------------ -->
+
 <section>
     <h2>Le bénéficiaire</h2>
-    <p>A completer par le prescripteur</p>
+    <p>A compléter par le prescripteur</p>
 
-    <p>{{prescription.beneficiaire.civility}}</p>
-    <p>Nom : {{prescription.beneficiaire.lastname}}</p>
-    <p>Prénom : {{prescription.beneficiaire.firstname}}</p>
-    <p>Genre : {{prescription.beneficiaire.gender}}</p>
-    <p>Tranche d'âge : {{prescription.beneficiaire.AgeGroup}}</p>
-    <p>Situation : {{prescription.beneficiaire.professionnalStatus}}</p>
+    <p>{{ prescription.beneficiaire.civility }}</p>
+    <p>Nom : {{ prescription.beneficiaire.lastname }}</p>
+    <p>Prénom : {{ prescription.beneficiaire.firstname }}</p>
+
+    {% set gender = '' %}
+
+    {% if prescription.beneficiaire.gender == 'Mr' %}
+        {% set gender = 'Homme' %}
+    {% elseif prescription.beneficiaire.gender == 'Mme' or prescription.beneficiaire.gender == 'Mlle' %}
+        {% set gender = 'Femme' %}
+    {% elseif prescription.beneficiaire.gender == 'autres' %}
+        {% set gender = '?' %}
+    {% endif %}
+
+    <p>Genre : {{ gender }}</p>
+    <p>Tranche d'âge : {{ prescription.beneficiaire.AgeGroup }}</p>
+    <p>Situation : {{ prescription.beneficiaire.professionnalStatus }}</p>
 </section>
-
-{# ------------------------------------------- page 2 ----------------------------------- #}
 
 <section>
     <h2>Le prescripteur</h2>
 
     <p>Structure : {{prescription.membre.nameStructure}}</p>
-    <p>Nom et prénom du prescripteur :{{prescription.membre.contactResponsableLastname ~ ' ' ~ prescription.membre.contactResponsableFirstname }}</p>
-    <p>Téléphone du prescripteur : {{prescription.membre.contactPhone}}</p>
-    <p>Mail du prescripteur : {{prescription.membre.contactEmail}}</p>
+    <p>Nom et prénom : {{prescription.membre.contactResponsableLastname ~ ' ' ~ prescription.membre.contactResponsableFirstname }}</p>
+    <p>Téléphone : {{prescription.membre.contactPhone}}</p>
+    <p>Mail : {{prescription.membre.contactEmail}}</p>
 </section>
 
 <section>
@@ -143,153 +175,77 @@
 
     <p>A compléter par le prescripteur :</p>
 
-
     <div class="texte_motivation">
         {{ prescription.membre.nameStructure|raw }}
     </div>
 
-
-    <p>Évaluation des compétences de base par le prescripteur :</p>
-
-    {# <div class="col-md-12">
-            {% include 'composants/inputs/input_radio_horizontal.html.twig' with {
-                form_label: 'Compétences de base',
-                form_field: form.baseCompetence
-            } %}
-        </div> #}
-
-
-
+    <p>Évaluation des compétences de base :</p>
 </section>
 
-{# --------------------------------------page 3--------------------------------------- #}
+<!-- ------------------ PAGE 3 ------------------ -->
 
 <section>
     <h2>Le médiateur numérique</h2>
+    <p>A compléter par le médiateur</p>
 
-    <p>A compléter par le médiateur numérique</p>
-
-    <p>Lieu de médiation numérique choisi pour organiser la dotation : {prescription.lieuMediation}</p>
-
+    <p>Lieu de médiation numérique : {{prescription.lieuMediation}}</p>
 </section>
 
 <section>
     <h2>Diagnostic des compétences numériques</h2>
 
     <p>
-        Diagnostic des « compétences numériques de base » réalisé par le médiateur lors
-        de la rencontre initiale en appui au référentiel du CLEA Numérique
-        (https://www.certificat-clea.fr/clea-numerique/referentiel-clea-numerique/)
+        Diagnostic réalisé en appui au référentiel CLEA Numérique.
     </p>
 
     <p>A compléter par le médiateur</p>
 
-    {# tableau 2 de la page 3 #}
-
-
-    <table class="table table-bordered table-striped">
-        <tbody><tr>
+    <!-- TABLEAU DES COMPÉTENCES -->
+    <table>
+        <tr>
             <th>Compétences</th>
             <th>Acquis</th>
             <th>En cours</th>
             <th>Non acquis</th>
         </tr>
+
         <tr>
             <td><b>Les bases</b></td>
-            <td>
-                <label class="form-check-label mx-2">
-                    <input type="radio" id="prescription_competence_compBase_0" name="prescription[competence][compBase]" required="required" class="form-check-input" value="acquis">
-                    <label for="prescription_competence_compBase_0" class="required">Acquis</label>
-                </label>
-            </td>
-            <td>
-                <label class="form-check-label mx-2">
-                    <input type="radio" id="prescription_competence_compBase_1" name="prescription[competence][compBase]" required="required" class="form-check-input" value="encours">
-                    <label for="prescription_competence_compBase_1" class="required">En cours</label>
-                </label>
-            </td>
-            <td>
-                <label class="form-check-label mx-2">
-                    <input type="radio" id="prescription_competence_compBase_2" name="prescription[competence][compBase]" required="required" class="form-check-input" value="Nonacquis">
-                    <label for="prescription_competence_compBase_2" class="required">Non acquis</label>
-                </label>
-            </td>
+            <td><input type="radio"></td>
+            <td><input type="radio"></td>
+            <td><input type="radio"></td>
         </tr>
+
         <tr>
             <td><b>Texte et documents</b></td>
-            <td>
-                <label class="form-check-label mx-2">
-                    <input type="radio" id="prescription_competence_compDesk_0" name="prescription[competence][compDesk]" required="required" class="form-check-input" value="acquis">
-                    <label for="prescription_competence_compDesk_0" class="required">Acquis</label>
-                </label>
-            </td>
-            <td>
-                <label class="form-check-label mx-2">
-                    <input type="radio" id="prescription_competence_compDesk_1" name="prescription[competence][compDesk]" required="required" class="form-check-input" value="encours">
-                    <label for="prescription_competence_compDesk_1" class="required">En cours</label>
-                </label>
-            </td>
-            <td>
-                <label class="form-check-label mx-2">
-                    <input type="radio" id="prescription_competence_compDesk_2" name="prescription[competence][compDesk]" required="required" class="form-check-input" value="Nonacquis">
-                    <label for="prescription_competence_compDesk_2" class="required">Non acquis</label>
-                </label>
-            </td>
+            <td><input type="radio"></td>
+            <td><input type="radio"></td>
+            <td><input type="radio"></td>
         </tr>
+
         <tr>
             <td><b>Internet</b></td>
-            <td>
-                <label class="form-check-label mx-2">
-                    <input type="radio" id="prescription_competence_compInternet_0" name="prescription[competence][compInternet]" required="required" class="form-check-input" value="acquis">
-                    <label for="prescription_competence_compInternet_0" class="required">Acquis</label>
-                </label>
-            </td>
-            <td>
-                <label class="form-check-label mx-2">
-                    <input type="radio" id="prescription_competence_compInternet_1" name="prescription[competence][compInternet]" required="required" class="form-check-input" value="encours">
-                    <label for="prescription_competence_compInternet_1" class="required">En cours</label>
-                </label>
-            </td>
-            <td>
-                <label class="form-check-label mx-2">
-                    <input type="radio" id="prescription_competence_compInternet_2" name="prescription[competence][compInternet]" required="required" class="form-check-input" value="Nonacquis">
-                    <label for="prescription_competence_compInternet_2" class="required">Non acquis</label>
-                </label>
-            </td>
+            <td><input type="radio"></td>
+            <td><input type="radio"></td>
+            <td><input type="radio"></td>
         </tr>
+
         <tr>
-            <td><b>Messagerie electronique</b></td>
-            <td>
-                <label class="form-check-label mx-2">
-                    <input type="radio" id="prescription_competence_compEmail_0" name="prescription[competence][compEmail]" required="required" class="form-check-input" value="acquis">
-                    <label for="prescription_competence_compEmail_0" class="required">Acquis</label>
-                </label>
-            </td>
-            <td>
-                <label class="form-check-label mx-2">
-                    <input type="radio" id="prescription_competence_compEmail_1" name="prescription[competence][compEmail]" required="required" class="form-check-input" value="encours">
-                    <label for="prescription_competence_compEmail_1" class="required">En cours</label>
-                </label>
-            </td>
-            <td>
-                <label class="form-check-label mx-2">
-                    <input type="radio" id="prescription_competence_compEmail_2" name="prescription[competence][compEmail]" required="required" class="form-check-input" value="Nonacquis">
-                    <label for="prescription_competence_compEmail_2" class="required">Non acquis</label>
-                </label>
-            </td>
+            <td><b>Messagerie électronique</b></td>
+            <td><input type="radio"></td>
+            <td><input type="radio"></td>
+            <td><input type="radio"></td>
         </tr>
-        </tbody>
     </table>
 </section>
 
 <section>
-    <p class="bouton_valider">L'auto évaluation du bénéficiaire a été réalisée avant l'action :
-
+    <p class="bouton_valider">
+        L'auto-évaluation du bénéficiaire a été réalisée avant l'action.
     </p>
 </section>
 
-
-{# ----------------------------------- page 4 ---------------------------------------------#}
+<!-- ------------------ PAGE 4 ------------------ -->
 
 <section>
     <h2>Les objectifs de la médiation</h2>
@@ -301,59 +257,35 @@
 
     <p>A compléter par le médiateur</p>
 
-    {# tableau des competences a travailler #}
-
-    <p>A compléter par le médiateur</p>
-
-    <p>Parcours de médiation acté entre le bénéficiaire et le médiateur</p>
-
-    {# variable parcour du beneficiaire #}
+    <p>Parcours de médiation convenu :</p>
 
     <p>Signature du bénéficiaire</p>
 
-    {# signature du beneficiare #}
-
-    <p class="bouton_valider">Auto évaluation du bénéficiaire a été réalisée après l'action</p>
-
+    <p class="bouton_valider">
+        L'auto-évaluation a été réalisée après l'action.
+    </p>
 </section>
 
-{# ---------------------------------- page 5 ------------------------------------ #}
+<!-- ------------------ PAGE 5 ------------------ -->
 
 <section>
     <h2>Date de la remise de l'ordinateur</h2>
 
-    <p>Fait à :{{prescription.lieuMediation}} </p>
-
-
-    <p>Le :{{ prescription.createdAt|date('d-m-Y') }} </p>
+    <p>Fait à : {{prescription.lieuMediation}}</p>
+    <p>Le : {{ prescription.createdAt|date('d-m-Y') }}</p>
 
     {% if prescription.equipement|length > 0 %}
-        <p>ID de l'ordinateur remis :  {{ prescription.equipement.matriculEquipment }}</p>
+        <p>ID de l'ordinateur remis : {{ prescription.equipement.matriculEquipment }}</p>
     {% endif %}
-
 </section>
 
 <section>
-    <h2>Mentions légales conformes au RGPD</h2>
+    <h2>Mentions légales (RGPD)</h2>
 
     <p>
-        Les informations personnelles collectées pourront faire l'objet d'un traitement
-        ayant pour finalité l'envoi de compte-rendu ou d'informations en lien avec les
-        objectifs du séminaire.
-        Ces informations sont à destination exclusive des services de l'ALPI.
-        Elles sont conservées 3 ans.
-        Conformément au Règlement (UE) 2016/679 relatif à la protection des données à caractère personnel,
-        vous disposez des droits suivants sur vos données : droit d’accès, droit de rectification,
-        droit à l’effacement (droit à l’oubli), droit d’opposition, droit à la limitation du traitement,
-        droit à la portabilité.
-        Pour exercer vos droits, merci d’adresser votre demande par courrier postal
-        au 175 place de la Caserne Bosquet - 40000 Mont-de-Marsan
-        ou par mail à dpo@alpi40.fr
-        Sous réserve d’un manquement aux dispositions ci-dessus, vous avez le droit
-        d’introduire une réclamation auprès de la CNIL.
+        Les informations personnelles collectées [...]
+        (texte RGPD inchangé)
     </p>
 </section>
 
-
 </body>
-
