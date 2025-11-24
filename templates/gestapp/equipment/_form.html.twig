@@ -30,24 +30,27 @@
         } %}
     </div>
 
-    <div class="col-md-12">
-        {% include 'composants/inputs/input_radios.html.twig' with {
+    <div class="col-md-4">
+        {% include 'composants/inputs/input_select.html.twig' with {
             label: 'Statut',
             field: form.statusEquipment
         } %}
     </div>
 
-    {% include 'composants/forms/check_verif.html.twig' with {
-        label: 'Disponible',
-        field: form.isDispo
-    } %}
+    <div class="col-4 pt-4 mt-4 ps-4">
+        {% include 'composants/forms/check_verif.html.twig' with {
+            label: 'Disponible',
+            field: form.isDispo
+        } %}
+    </div>
 
+    <div class="col-12">
 
-</div>
+        <a class="btn btn-secondary" href="{{ path('app_admin_dashboard_index') }}">Retour</a>
+        <button class="btn btn-primary">{{ button_label|default('Enregistrer') }}</button>
 
-<div class="mt-4">
-    <button class="btn btn-primary">{{ button_label|default('Enregistrer') }}
-        <a href="/{{ path('app_admin_dashboard_index') }}"></a></button>
+    </div>
+
 </div>
 
 {{ form_end(form) }}

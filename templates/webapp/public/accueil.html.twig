@@ -1,22 +1,10 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    <div class="bg-success-subtle min-vh-100 d-flex flex-column justify-content-center align-items-center text-center">
-        <div class="container">
-            <h1 class="display-4 fw-bold text-success mb-4">Bienvenue sur la plateforme</h1>
-
-            <p class="lead text-success-emphasis mb-5">
-            <h2 class="fw-bold mb-5">Bénéficiaire · Prescripteur · Médiateur</h2>
-            </p>
-
-            <div class="d-flex justify-content-center gap-3 mt-5">
-                <a href="{{ path('app_webapp_public_mentions') }}" class="btn btn-outline-success">
-                    Mentions légales
-                </a>
-                <a href="{{ path('app_webapp_public_prezDon') }}" class="btn btn-success">
-                    Présentation du dispositif
-                </a>
-            </div>
-        </div>
-    </div>
+<div class="container mt-4 ">
+  <div class="col-6 text-start  ">
+    <h1>Accueil</h1>
+    <h2>Bienvenue sur la plateforme.</h2>
+  </div>
+</div>
 {% endblock %}

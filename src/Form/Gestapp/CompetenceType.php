@@ -8,8 +8,10 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use function Symfony\Component\Translation\t;
 
 class CompetenceType extends AbstractType
 {
@@ -68,7 +70,7 @@ class CompetenceType extends AbstractType
 
             ->add('isAutoEvaEnd' ,CheckboxType::class, [
                 'label' => 'L\'auto évaluation du bénéficiaire a été réalisée après l\'action.',
-                'required' => true,
+                'required' => false,
             ])
 
             ->add('isDigComp0')
@@ -77,7 +79,10 @@ class CompetenceType extends AbstractType
             ->add('isDigComp3')
             ->add('isDigComp4')
             ->add('isDigComp5')
-            ->add('detailParcour')
+            ->add('detailParcour',TextareaType::class,[
+                'label' => 'detail parcour',
+                'required' => false,
+            ])
     ;
     }
 

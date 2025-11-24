@@ -2,88 +2,90 @@
 
 
 {% block body %}
-    <div class="container py-4">
+    <div class="container py-2">
 
-        <h2 class="text-center mb-4">Bienvenue sur votre tableau de bord</h2>
+        <!-- Titre -->
+        <h2 class="text-center mt-2 mb-2 ">Bienvenue sur votre tableau de bord</h2>
 
-        {# --- Section chiffre ordi dispo et nombre prescriptions --- #}
+        {# --- Section chiffres : ordis dispo & prescriptions --- #}
         <div class="row mb-4">
+
             <div class="col-md-3 mb-3">
-                <div class="card text-center h-100">
-                    <div class="card-body">
-                        <h5 class="card-title">Machines disponibles</h5>
-                        <p class="display-6">{{ equipments|length }}</p>
-                    </div>
+                <div class="border rounded border-success-subtle p-3 text-center h-100">
+                    <h5 class="card-title">Machines disponibles</h5>
+                    <p class="display-6">{{ equipments|length }}</p>
                 </div>
             </div>
 
-            <div class="col-md-3 mb-3">
-                <div class="card text-center h-100">
-                    <div class="card-body">
-                        <h5 class="card-title">Prescriptions enregistrées</h5>
-                        <p class="display-6">{{ prescriptions|length }}</p>
-                    </div>
+            <div class="col-md-3 mb-2">
+                <div class="border rounded border-success-subtle p-3 text-center h-100">
+                    <h5 class="card-title">Prescriptions enregistrées</h5>
+                    <p class="display-6">{{ prescriptions|length }}</p>
                 </div>
             </div>
+
         </div>
 
+        <!-- En-tête de la liste des prescriptions -->
         <div class="col-12">
-            <div class="d-flex d-flex-inline mb-3 border-bottom border-dark bg-light justify-content-between py-2 px-1">
+            <div class="d-flex mt-2 mb-2 border-bottom border-dark bg-light justify-content-between py-2 px-1">
+
                 <div class="col-6">
                     <h3 class="text-uppercase mb-0">Liste des prescriptions</h3>
-
-                    <button type="button" class="btn btn-secondary" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Tooltip on top">
-                        Tooltip on top
-                    </button>
-
                 </div>
+
                 <div class="col-6">
                     <p class="mb-0 text-end">
                         {% include 'composants/forms/button_creatnew.html.twig' with {
                             label: 'nouvelle prescription',
-                            style: 'btn btn-outline-dark btn-sm',
+
                             href: path('app_gestapp_prescription_new')
                         } %}
                     </p>
-
                 </div>
+
             </div>
+        </div>
 
-            <table class="table table-hover">
-                <thead class="table-light">
-                    <th>Ref</th>
-                    <th>Nom et Prénom</th>
-                    <th>Structure</th>
-                    <th>Espace</th>
-                    <th></th>
-                </tr>
-                </thead>
-                <tbody>
-                {% for prescription in prescriptions %}
-                    <tr>
-                        <td>{{ prescription.ref }}</td>
+        <!-- Tableau prescriptions -->
+        <table class="table table-hover">
+            <thead class="table-light">
+            <tr>
+                <th>Ref</th>
+                <th>Nom et Prénom</th>
+                <th>Structure</th>
+                <th>Espace</th>
+                <th></th>
+            </tr>
+            </thead>
+
+            <tbody>
+            {% for prescription in prescriptions %}
+                <tr>
+                    <td>{{ prescription.ref }}</td>
+
+                    <td>
+                        {% if prescription.beneficiaire is not empty %}
+                            {{ prescription.beneficiaire.firstname }} {{ prescription.beneficiaire.lastname }}
+                        {% else %}
+                            non disponible
+                        {% endif %}
+                    </td>
+
+                    <td>{{ prescription.membre.nameStructure }}</td>
+                    <td>{{ prescription.lieuMediation }}</td>
 
                         <td>
-                            {% if prescription.beneficiaire is not empty %}
-                                {{ prescription.beneficiaire.firstname }} {{ prescription.beneficiaire.lastname }}
-                            {% else %}
-                                non disponible
-                            {% endif %}
+                            <button
+                                href="{{ path('app_gestapp_prescription_edit', {'id': prescription.id}) }}"
+                                type="button"
+                                data-bs-toggle="tooltip"
+                                data-bs-placement="top"
+                                data-bs-custom-class="custom-tooltip"
+                                data-bs-title="Décrire en 5 ou 6 lignes les motivations du bénéficiaire">
+                                    <i class="fa-solid fa-pen-to-square"></i>
+                            </button>
                         </td>
-
-                        <td>{{ prescription.membre.nameStructure }}</td>
-
-                        <td>{{ prescription.lieuMediation }}</td>
-
-                        <td>
-                            <a href="{{ path('app_gestapp_prescription_edit', {'id': prescription.id}) }}"
-
-                               title="Décrire en 5 ou 6 lignes, les motivations du bénéficiaire">
-
-                                <i class="fa-solid fa-pen-to-square"></i>
-                            </a>
-                        </td>
-
                     </tr>
                     {
 
@@ -95,8 +97,11 @@
                 </tbody>
             </table>
         </div>
-        <div class="col-12 d-flex flex-wrap justify-content-between mt-4 my-3">
+        <div class="col-12 justify-content-evenly">
+            {# --- Admin ? Médiateur ? Prescripteur ? --- #}
+
             {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_MEDIATEUR') or is_granted('ROLE_PRESCRIPTEUR') %}
+
                 {% include 'composants/forms/button_creatnew.html.twig' with {
                     label: 'Créer un nouveau bénéficiaire',
                     style: null,
@@ -124,6 +129,7 @@
                     style: null,
                     href: path('app_gestapp_equipment_new')
                 } %}
+
             {% endif %}
         </div>
 
