@@ -6,7 +6,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pdf prescription</title>
     <!-- <link rel="icon" type="image/jpg" href="{{ asset('assets/images/logoprescriptionpin40.jpg') }}"> -->
-
+   <!-- <i class="fa-regular fa-square"></i>  le square not checked-->
+    <!-- <i class="fa-regular fa-square-check"></i> le square checked-->
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
 
     <style>
         body {
@@ -69,6 +72,18 @@
 
 
         /* --- Tableaux --- */
+/* les square no checked et checked recuperes sur fontawesome*/
+        .fa-col {
+            text-align: center;
+            font-size: 22px;
+            color: black;
+        }
+
+        .fa-square, .fa-square-check {
+            vertical-align: middle;
+        }
+
+
         table {
             width: 100%;
             border-collapse: collapse;
@@ -197,26 +212,51 @@
 
     <table>
         <thead>
-            <tr>
-                <th>statut</th>
-                <th>oui ou non</th>
-            </tr>
+        <tr>
+            <th>Statut</th>
+            <th>État</th>
+        </tr>
         </thead>
         <tbody>
+
         <tr>
             <td><b>Acquise</b></td>
-             <td><input type="radio"></td>
+            <td class="fa-col">
+                {% if prescription.baseCompetence == 'Acquises' %}
+                    <i class="fa-regular fa-square-check"></i>
+                {% else %}
+                    <i class="fa-regular fa-square"></i>
+                {% endif %}
+            </td>
         </tr>
+
         <tr>
-            <td><b>A verifier</b></td>
-             <td><input type="radio"></td>
+            <td><b>A vérifier</b></td>
+            <td class="fa-col">
+                {% if prescription.baseCompetence == 'A verifier' %}
+                    <i class="fa-regular fa-square-check"></i>
+                {% else %}
+                    <i class="fa-regular fa-square"></i>
+                {% endif %}
+            </td>
         </tr>
+
         <tr>
             <td><b>Non acquise</b></td>
-             <td><input type="radio"></td>
+            <td class="fa-col">
+                {% if prescription.baseCompetence == 'Non acquises' %}
+                    <i class="fa-regular fa-square-check"></i>
+                {% else %}
+                    <i class="fa-regular fa-square"></i>
+                {% endif %}
+            </td>
         </tr>
+
         </tbody>
     </table>
+
+
+
 </section>
 
 
@@ -239,42 +279,138 @@
     <p>A compléter par le médiateur</p>
 
     <!-- TABLEAU DES COMPÉTENCES -->
+    {% set comp = prescription.competence %}
+
     <table>
+        <thead>
         <tr>
             <th>Compétences</th>
             <th>Acquis</th>
             <th>En cours</th>
             <th>Non acquis</th>
         </tr>
+        </thead>
+        <tbody>
 
+        <!-- LES BASES -->
         <tr>
             <td><b>Les bases</b></td>
-            <td><input type="radio"></td>
-            <td><input type="radio"></td>
-            <td><input type="radio"></td>
+
+            <td class="fa-col">
+                {% if comp.compBase == 'acquis' %}
+                    <i class="fa-regular fa-square-check"></i>
+                {% else %}
+                    <i class="fa-regular fa-square"></i>
+                {% endif %}
+            </td>
+
+            <td class="fa-col">
+                {% if comp.compBase == 'encours' %}
+                    <i class="fa-regular fa-square-check"></i>
+                {% else %}
+                    <i class="fa-regular fa-square"></i>
+                {% endif %}
+            </td>
+
+            <td class="fa-col">
+                {% if comp.compBase == 'Nonacquis' %}
+                    <i class="fa-regular fa-square-check"></i>
+                {% else %}
+                    <i class="fa-regular fa-square"></i>
+                {% endif %}
+            </td>
         </tr>
 
+        <!-- TEXTE & DOCUMENTS -->
         <tr>
             <td><b>Texte et documents</b></td>
-            <td><input type="radio"></td>
-            <td><input type="radio"></td>
-            <td><input type="radio"></td>
+
+            <td class="fa-col">
+                {% if comp.compDesk == 'acquis' %}
+                    <i class="fa-regular fa-square-check"></i>
+                {% else %}
+                    <i class="fa-regular fa-square"></i>
+                {% endif %}
+            </td>
+
+            <td class="fa-col">
+                {% if comp.compDesk == 'encours' %}
+                    <i class="fa-regular fa-square-check"></i>
+                {% else %}
+                    <i class="fa-regular fa-square"></i>
+                {% endif %}
+            </td>
+
+            <td class="fa-col">
+                {% if comp.compDesk == 'Nonacquis' %}
+                    <i class="fa-regular fa-square-check"></i>
+                {% else %}
+                    <i class="fa-regular fa-square"></i>
+                {% endif %}
+            </td>
         </tr>
 
+        <!-- INTERNET -->
         <tr>
             <td><b>Internet</b></td>
-            <td><input type="radio"></td>
-            <td><input type="radio"></td>
-            <td><input type="radio"></td>
+
+            <td class="fa-col">
+                {% if comp.compInternet == 'acquis' %}
+                    <i class="fa-regular fa-square-check"></i>
+                {% else %}
+                    <i class="fa-regular fa-square"></i>
+                {% endif %}
+            </td>
+
+            <td class="fa-col">
+                {% if comp.compInternet == 'encours' %}
+                    <i class="fa-regular fa-square-check"></i>
+                {% else %}
+                    <i class="fa-regular fa-square"></i>
+                {% endif %}
+            </td>
+
+            <td class="fa-col">
+                {% if comp.compInternet == 'Nonacquis' %}
+                    <i class="fa-regular fa-square-check"></i>
+                {% else %}
+                    <i class="fa-regular fa-square"></i>
+                {% endif %}
+            </td>
         </tr>
 
+        <!-- EMAIL -->
         <tr>
             <td><b>Messagerie électronique</b></td>
-            <td><input type="radio"></td>
-            <td><input type="radio"></td>
-            <td><input type="radio"></td>
+
+            <td class="fa-col">
+                {% if comp.compEmail == 'acquis' %}
+                    <i class="fa-regular fa-square-check"></i>
+                {% else %}
+                    <i class="fa-regular fa-square"></i>
+                {% endif %}
+            </td>
+
+            <td class="fa-col">
+                {% if comp.compEmail == 'encours' %}
+                    <i class="fa-regular fa-square-check"></i>
+                {% else %}
+                    <i class="fa-regular fa-square"></i>
+                {% endif %}
+            </td>
+
+            <td class="fa-col">
+                {% if comp.compEmail == 'Nonacquis' %}
+                    <i class="fa-regular fa-square-check"></i>
+                {% else %}
+                    <i class="fa-regular fa-square"></i>
+                {% endif %}
+            </td>
         </tr>
+
+        </tbody>
     </table>
+
 </section>
 
 <section>
