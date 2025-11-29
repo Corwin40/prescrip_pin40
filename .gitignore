@@ -15,10 +15,10 @@
 ###< phpunit/phpunit ###
 
 ###> symfony/asset-mapper ###
-/public/assets/
+
 /assets/vendor/
 ###< symfony/asset-mapper ###
-
+/public/assets/
 ###> symfony/webpack-encore-bundle ###
 /node_modules/
 /public/build/

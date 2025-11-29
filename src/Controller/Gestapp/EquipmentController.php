@@ -10,15 +10,66 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Knp\Component\Pager\PaginatorInterface;
 
 #[Route('/gestapp/equipment')]
 final class EquipmentController extends AbstractController
 {
-    #[Route(name: 'app_gestapp_equipment_index', methods: ['GET'])]
-    public function index(EquipmentRepository $equipmentRepository): Response
-    {
+    #[Route('/', name: 'app_gestapp_equipment_index', methods: ['GET'])]
+    public function index(
+        Request $request,
+        EquipmentRepository $equipmentRepository,
+        PaginatorInterface $paginator
+    ): Response {
+
+        $search = $request->query->get('search');
+        $dispo = $request->query->get('dispo');
+        $statut = $request->query->get('statut');
+        $tri = $request->query->get('tri', 'e.typeEquipment');
+        $ordre = $request->query->get('ordre', 'ASC');
+
+        $qb = $equipmentRepository->createQueryBuilder('e');
+
+        // FILTRE TEXTE
+        if ($search) {
+            $qb->andWhere(
+                'e.typeEquipment LIKE :search
+                OR e.brandEquipment LIKE :search
+                OR e.matriculEquipment LIKE :search'
+            )->setParameter('search', '%' . $search . '%');
+        }
+
+        // FILTRE DISPONIBILITE
+        if ($dispo === '1') {
+            $qb->andWhere('e.isDispo = 1');
+        }
+        if ($dispo === '0') {
+            $qb->andWhere('e.isDispo = 0');
+        }
+
+        // FILTRE STATUT
+        if ($statut && $statut !== 'all') {
+            $qb->andWhere('e.statusEquipment = :statut')
+                ->setParameter('statut', $statut);
+        }
+
+        // TRI
+        $qb->orderBy($tri, $ordre);
+
+        // PAGINATION
+        $pagination = $paginator->paginate(
+            $qb->getQuery(),
+            $request->query->getInt('page', 1),
+            5
+        );
+
         return $this->render('gestapp/equipment/index.html.twig', [
-            'equipment' => $equipmentRepository->findAll(),
+            'pagination' => $pagination,
+            'search' => $search,
+            'dispo' => $dispo,
+            'statut' => $statut,
+            'tri' => $tri,
+            'ordre' => $ordre,
         ]);
     }
 
@@ -33,7 +84,7 @@ final class EquipmentController extends AbstractController
             $entityManager->persist($equipment);
             $entityManager->flush();
 
-            return $this->redirectToRoute('app_gestapp_equipment_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_gestapp_equipment_index');
         }
 
         return $this->render('gestapp/equipment/new.html.twig', [
@@ -59,7 +110,7 @@ final class EquipmentController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->flush();
 
-            return $this->redirectToRoute('app_gestapp_equipment_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_gestapp_equipment_index');
         }
 
         return $this->render('gestapp/equipment/edit.html.twig', [
@@ -71,11 +122,11 @@ final class EquipmentController extends AbstractController
     #[Route('/{id}', name: 'app_gestapp_equipment_delete', methods: ['POST'])]
     public function delete(Request $request, Equipment $equipment, EntityManagerInterface $entityManager): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$equipment->getId(), $request->getPayload()->getString('_token'))) {
+        if ($this->isCsrfTokenValid('delete' . $equipment->getId(), $request->getPayload()->getString('_token'))) {
             $entityManager->remove($equipment);
             $entityManager->flush();
         }
 
-        return $this->redirectToRoute('app_gestapp_equipment_index', [], Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute('app_gestapp_equipment_index');
     }
 }

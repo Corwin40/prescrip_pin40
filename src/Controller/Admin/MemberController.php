@@ -11,15 +11,38 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Attribute\Route;
+use Knp\Component\Pager\PaginatorInterface;
 
 #[Route('/admin/member')]
 final class MemberController extends AbstractController
 {
     #[Route('/', name: 'app_admin_member_index', methods: ['GET'])]
-    public function index(MemberRepository $memberRepository): Response
-    {
+    public function index(
+        Request $request,
+        MemberRepository $memberRepository,
+        PaginatorInterface $paginator
+    ): Response {
+
+        // 🔍 Récupération du filtre (email ou structure)
+        $search = $request->query->get('search');
+
+        // 🔧 Construction de la requête dynamique
+        $qb = $memberRepository->createQueryBuilder('m');
+
+        if ($search) {
+            $qb->andWhere('m.email LIKE :search OR m.nameStructure LIKE :search')
+                ->setParameter('search', '%' . $search . '%');
+        }
+
+        // 📄 Pagination (5 résultats par page)
+        $pagination = $paginator->paginate(
+            $qb->getQuery(),
+            $request->query->getInt('page', 1),
+            5
+        );
+
         return $this->render('admin/member/index.html.twig', [
-            'members' => $memberRepository->findAll(),
+            'pagination' => $pagination,
         ]);
     }
 
@@ -41,9 +64,10 @@ final class MemberController extends AbstractController
 
             if ($role === 'prescripteur') {
                 $member->setRoles(['ROLE_PRESCRIPTEUR']);
-            }else if($role === 'mediateur'){
+            } else if ($role === 'mediateur') {
                 $member->setRoles(['ROLE_MEDIATEUR']);
             }
+
             if ($password) {
                 $hashedPassword = $passwordHasher->hashPassword($member, $password);
                 $member->setPassword($hashedPassword);
@@ -87,13 +111,13 @@ final class MemberController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            // ✅ Rôle
+            // Rôle
             $selectedRole = $form->get('role')->getData();
             if ($selectedRole) {
                 $member->setRoles([$selectedRole]);
             }
 
-            // 🔐 Nouveau mot de passe si saisi
+            // Nouveau mot de passe si saisi
             $plainPassword = $form->get('plainPassword')->getData();
             if (!empty($plainPassword)) {
                 $hashedPassword = $passwordHasher->hashPassword($member, $plainPassword);

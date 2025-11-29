@@ -1,0 +1,18 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Page introuvable (404){% endblock %}
+
+{% block body %}
+    <div class="container text-center mt-5">
+        <h1 class="display-3 text-warning">404</h1>
+        <h2>La page demandée est introuvable</h2>
+
+        <p class="mt-3">
+            L’URL que vous tentez d’accéder n’existe pas ou plus.
+        </p>
+
+        <a href="{{ path('app_admin_dashboard_index') }}" class="btn btn-primary mt-3">
+            Retour au tableau de bord
+        </a>
+    </div>
+{% endblock %}

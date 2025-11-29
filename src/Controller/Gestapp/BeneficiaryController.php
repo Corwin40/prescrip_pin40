@@ -10,15 +10,40 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Knp\Component\Pager\PaginatorInterface;
 
 #[Route('/gestapp/beneficiary')]
 final class BeneficiaryController extends AbstractController
 {
-    #[Route(name: 'app_gestapp_beneficiary_index', methods: ['GET'])]
-    public function index(BeneficiaryRepository $beneficiaryRepository): Response
-    {
+    #[Route('/', name: 'app_gestapp_beneficiary_index', methods: ['GET'])]
+    public function index(
+        Request $request,
+        BeneficiaryRepository $beneficiaryRepository,
+        PaginatorInterface $paginator
+    ): Response {
+
+        $search = $request->query->get('search');
+
+        // TRI DESC → les plus récents en premier
+        $qb = $beneficiaryRepository->createQueryBuilder('b')
+            ->orderBy('b.createdAt', 'DESC');
+
+        if (!empty($search)) {
+            $qb->andWhere('b.firstname LIKE :search
+                           OR b.lastname LIKE :search
+                           OR b.civility LIKE :search')
+                ->setParameter('search', '%' . $search . '%');
+        }
+
+        $pagination = $paginator->paginate(
+            $qb->getQuery(),
+            $request->query->getInt('page', 1),
+            5
+        );
+
         return $this->render('gestapp/beneficiary/index.html.twig', [
-            'beneficiaries' => $beneficiaryRepository->findAll(),
+            'pagination' => $pagination,
+            'search' => $search,
         ]);
     }
 
@@ -32,13 +57,12 @@ final class BeneficiaryController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
 
             $civility = $form->get('civility')->getData();
-
             $beneficiary->setGender($civility);
 
             $entityManager->persist($beneficiary);
             $entityManager->flush();
 
-            return $this->redirectToRoute('app_gestapp_beneficiary_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_gestapp_beneficiary_index');
         }
 
         return $this->render('gestapp/beneficiary/new.html.twig', [
@@ -63,16 +87,16 @@ final class BeneficiaryController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
 
             $civility = $form->get('civility')->getData();
-
             $beneficiary->setGender($civility);
+
             $entityManager->persist($beneficiary);
             $entityManager->flush();
 
             return $this->json([
-                'message' => 'le béneficiaire est ajouté au formulaire de prescription.',
+                'message' => 'le beneficiaire est ajouté au formulaire de prescription.',
                 'beneficiaire' => $beneficiary->getFirstname() . ' ' . $beneficiary->getLastname(),
                 'value' => $beneficiary->getId(),
-            ],200);
+            ], 200);
         }
 
         return $this->json([
@@ -81,7 +105,7 @@ final class BeneficiaryController extends AbstractController
                 'beneficiary' => $beneficiary,
                 'form' => $form,
             ])
-        ],200);
+        ], 200);
     }
 
     #[Route('/{id}', name: 'app_gestapp_beneficiary_show', methods: ['GET'])]
@@ -105,9 +129,10 @@ final class BeneficiaryController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+
             $entityManager->flush();
 
-            return $this->redirectToRoute('app_gestapp_beneficiary_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_gestapp_beneficiary_index');
         }
 
         return $this->render('gestapp/beneficiary/edit.html.twig', [
@@ -129,9 +154,10 @@ final class BeneficiaryController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+
             $entityManager->flush();
 
-            return $this->redirectToRoute('app_gestapp_beneficiary_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_gestapp_beneficiary_index');
         }
 
         return $this->render('gestapp/beneficiary/_form.html.twig', [
@@ -143,11 +169,11 @@ final class BeneficiaryController extends AbstractController
     #[Route('/{id}', name: 'app_gestapp_beneficiary_delete', methods: ['POST'])]
     public function delete(Request $request, Beneficiary $beneficiary, EntityManagerInterface $entityManager): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$beneficiary->getId(), $request->getPayload()->getString('_token'))) {
+        if ($this->isCsrfTokenValid('delete' . $beneficiary->getId(), $request->getPayload()->getString('_token'))) {
             $entityManager->remove($beneficiary);
             $entityManager->flush();
         }
 
-        return $this->redirectToRoute('app_gestapp_beneficiary_index', [], Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute('app_gestapp_beneficiary_index');
     }
 }
