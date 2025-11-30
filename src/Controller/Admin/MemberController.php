@@ -23,10 +23,10 @@ final class MemberController extends AbstractController
         PaginatorInterface $paginator
     ): Response {
 
-        // 🔍 Récupération du filtre (email ou structure)
+        //  Récupération du filtre (email ou structure)
         $search = $request->query->get('search');
 
-        // 🔧 Construction de la requête dynamique
+        //  Construction de la requête dynamique
         $qb = $memberRepository->createQueryBuilder('m');
 
         if ($search) {
@@ -34,7 +34,7 @@ final class MemberController extends AbstractController
                 ->setParameter('search', '%' . $search . '%');
         }
 
-        // 📄 Pagination (5 résultats par page)
+        //  Pagination (5 résultats par page)
         $pagination = $paginator->paginate(
             $qb->getQuery(),
             $request->query->getInt('page', 1),
