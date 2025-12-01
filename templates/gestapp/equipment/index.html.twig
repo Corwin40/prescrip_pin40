@@ -41,7 +41,7 @@
                 <div class="col-md-3">
                     <select name="statut" class="form-select">
                         <option value="all" {% if statut is null or statut == 'all' %}selected{% endif %}>Tous statuts</option>
-                        {% for s in ['Neuf','Bon etat','HS','Pret','Maintenance'] %}
+                        {% for s in ['Neuf','Bon etat','satisfaisant'] %}
                             <option value="{{ s }}" {% if statut == s %}selected{% endif %}>{{ s }}</option>
                         {% endfor %}
                     </select>
