@@ -2,12 +2,31 @@
 
 namespace App\Entity\Gestapp;
 
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Post;
+use ApiPlatform\Metadata\Put;
+use ApiPlatform\Metadata\Delete;
 use App\Repository\Gestapp\BeneficiaryRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: BeneficiaryRepository::class)]
 #[ORM\HasLifecycleCallbacks]
+
+
+#[ApiResource(
+    operations: [
+        new Get(),
+        new GetCollection(),
+        new Post(),
+        new Put(),
+        new Delete(),
+    ]
+)]
+// -----------------------------------------------------------------
+
 class Beneficiary
 {
     #[ORM\Id]
@@ -138,8 +157,6 @@ class Beneficiary
         return $this;
     }
 
-
-
     public function getPrescription(): ?Prescription
     {
         return $this->prescription;
@@ -147,12 +164,10 @@ class Beneficiary
 
     public function setPrescription(?Prescription $prescription): static
     {
-        // unset the owning side of the relation if necessary
         if ($prescription === null && $this->prescription !== null) {
             $this->prescription->setBeneficiaire(null);
         }
 
-        // set the owning side of the relation if necessary
         if ($prescription !== null && $prescription->getBeneficiaire() !== $this) {
             $prescription->setBeneficiaire($this);
         }

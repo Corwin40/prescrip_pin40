@@ -2,6 +2,7 @@
 
 namespace App\Entity\Admin;
 
+use ApiPlatform\Metadata\ApiResource;
 use App\Entity\Gestapp\Prescription;
 use App\Repository\MemberRepository;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -12,6 +13,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
+#[ApiResource]
 #[ORM\Entity(repositoryClass: MemberRepository::class)]
 #[ORM\Table(name: '`member`')]
 #[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_EMAIL', fields: ['email'])]

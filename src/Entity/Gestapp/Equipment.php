@@ -5,6 +5,9 @@ namespace App\Entity\Gestapp;
 use App\Repository\Gestapp\EquipmentRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use ApiPlatform\Metadata\ApiResource;
+
+#[ApiResource]
 
 #[ORM\Entity(repositoryClass: EquipmentRepository::class)]
 #[ORM\HasLifecycleCallbacks]
