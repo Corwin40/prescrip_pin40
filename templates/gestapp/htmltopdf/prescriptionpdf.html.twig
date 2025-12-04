@@ -1,0 +1,476 @@
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pdf prescription</title>
+    <!-- <link rel="icon" type="image/jpg" href="{{ asset('assets/images/logoprescriptionpin40.jpg') }}"> -->
+   <!-- <i class="fa-regular fa-square"></i>  le square not checked-->
+    <!-- <i class="fa-regular fa-square-check"></i> le square checked-->
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+        }
+
+        /* le bandeau de l'entête */
+        .entete {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            padding: 15px 20px;
+        }
+
+        .entete img {
+            width: 80px;
+            height: auto;
+        }
+
+        .entete h1 {
+            margin: 0;
+            font-size: 32px;
+            color:#14682F;
+            font-weight: 800;
+            text-transform: uppercase;
+            line-height: 1.2;
+        }
+
+        /* dans le body */
+        h1 {
+            text-align: center;
+            color:#14682F;
+        }
+
+        h2 {
+            width: 100%;
+            display: block;
+            text-align: start;
+            background-color: #14682F;
+            color: white;
+            font-weight: bold;
+            padding: 8px 12px;
+        }
+
+        p {
+            text-align: justify;
+            margin: 8px 0;
+            padding: 0 10px;
+        }
+        .text_motivation{
+            font-weight: bold;
+            color:#14682F;
+        }
+
+        ul {
+            padding: 0 30px;
+        }
+
+
+
+        /* --- Tableaux --- */
+/* les square no checked et checked recuperes sur fontawesome*/
+        .fa-col {
+            text-align: center;
+            font-size: 22px;
+            color: black;
+        }
+
+        .fa-square, .fa-square-check {
+            vertical-align: middle;
+        }
+
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        table th {
+            background-color: #6c757d;
+            color: white;
+        }
+
+        .table_base{
+            font-weight: bold;
+        }
+
+        table tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        table th,
+        table td {
+
+            border: 1px solid #000;
+            padding: 5px;
+        }
+        td input[type="radio"] {
+            display: block;
+            margin: 0 auto;
+        }
+
+        .bouton_valider {
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+
+<!-- ------------------ PAGE 1 ------------------ -->
+
+<section>
+    <div class="entete">
+      <!--  <img src="{{ asset('assets/images/logoprescriptionpin40.jpg') }}" alt="Logo"> -->
+        <h1>Portail de l'inclusion numérique des Landes</h1>
+    </div>
+
+    <h1>Prescription Mon Ordi Pin40</h1>
+
+    <h2>Le dispositif</h2>
+
+    <p>
+        Le dispositif vise la dotation à titre gracieux d’un ordinateur portable reconditionné
+        à des personnes physiques (associations exclues).
+        Les ordinateurs, issus de l’opération « 1 collégien, 1 ordinateur »
+        du Département des Landes [...]
+    </p>
+
+    <p>
+        Le prescripteur organise l’accueil du bénéficiaire auprès d’un lieu de médiation
+        numérique partenaire du dispositif.
+        La liste des partenaires est consultable sur :
+        https://www.pin40.fr/le-reseau/la-carte-des-acteurs-du-reseau.
+    </p>
+
+    <p>Pour être éligibles, les Bénéficiaires doivent répondre à au moins un des trois critères :</p>
+
+    <ul>
+        <li>Besoin d’équipement mais ressources financières limitées</li>
+        <li>Besoin de montée en compétences techniques</li>
+        <li>Besoin d’autonomie numérique</li>
+    </ul>
+
+    <p>
+        Les bénéficiaires s’engagent à suivre le parcours défini
+        par le médiateur numérique à l’issue duquel il recevra l’ordinateur.
+    </p>
+</section>
+
+
+
+<section>
+    <h2>Le bénéficiaire</h2>
+    <p>A compléter par le prescripteur</p>
+
+    <p>{{ prescription.beneficiaire.civility }}</p>
+    <p>Nom : {{ prescription.beneficiaire.lastname }}</p>
+    <p>Prénom : {{ prescription.beneficiaire.firstname }}</p>
+
+    {% set gender = '' %}
+
+    {% if prescription.beneficiaire.gender == 'Mr' %}
+        {% set gender = 'Homme' %}
+    {% elseif prescription.beneficiaire.gender == 'Mme' or prescription.beneficiaire.gender == 'Mlle' %}
+        {% set gender = 'Femme' %}
+    {% elseif prescription.beneficiaire.gender == 'autres' %}
+        {% set gender = 'Autre' %}
+    {% endif %}
+
+    <p>Genre : {{ gender }}</p>
+
+    <p>Tranche d'âge : {{ prescription.beneficiaire.AgeGroup }}</p>
+    <p>Situation : {{ prescription.beneficiaire.professionnalStatus }}</p>
+</section>
+
+
+<!-- ------------------ PAGE 2 ------------------ -->
+
+<section>
+    <h2>Le prescripteur</h2>
+
+    <p>Structure : {{prescription.membre.nameStructure}}</p>
+    <p>Nom et prénom : {{prescription.membre.contactResponsableLastname ~ ' ' ~ prescription.membre.contactResponsableFirstname }}</p>
+    <p>Téléphone : {{prescription.membre.contactPhone}}</p>
+    <p>Mail : {{prescription.membre.contactEmail}}</p>
+</section>
+
+<section>
+    <h2>Motivation de la prescription</h2>
+
+    <p>A compléter par le prescripteur :</p>
+
+
+     <p class="text_motivation">{{ prescription.membre.nameStructure|raw }}</p>
+
+
+    <p>Évaluation des compétences de base :</p>
+
+    <table>
+        <thead>
+        <tr>
+            <th>Statut</th>
+            <th>État</th>
+        </tr>
+        </thead>
+        <tbody>
+
+        <tr>
+            <td><b>Acquise</b></td>
+            <td class="fa-col">
+                {% if prescription.baseCompetence == 'Acquises' %}
+                    <i class="fa-regular fa-square-check"></i>
+                {% else %}
+                    <i class="fa-regular fa-square"></i>
+                {% endif %}
+            </td>
+        </tr>
+
+        <tr>
+            <td><b>A vérifier</b></td>
+            <td class="fa-col">
+                {% if prescription.baseCompetence == 'A verifier' %}
+                    <i class="fa-regular fa-square-check"></i>
+                {% else %}
+                    <i class="fa-regular fa-square"></i>
+                {% endif %}
+            </td>
+        </tr>
+
+        <tr>
+            <td><b>Non acquise</b></td>
+            <td class="fa-col">
+                {% if prescription.baseCompetence == 'Non acquises' %}
+                    <i class="fa-regular fa-square-check"></i>
+                {% else %}
+                    <i class="fa-regular fa-square"></i>
+                {% endif %}
+            </td>
+        </tr>
+
+        </tbody>
+    </table>
+
+
+
+</section>
+
+
+<!-- ------------------ PAGE 3 ------------------ -->
+
+<section>
+    <h2>Le médiateur numérique</h2>
+    <p>A compléter par le médiateur</p>
+
+    <p>Lieu de médiation numérique : {{prescription.lieuMediation}}</p>
+</section>
+
+<section>
+    <h2>Diagnostic des compétences numériques</h2>
+
+    <p>
+        Diagnostic réalisé en appui au référentiel CLEA Numérique.
+    </p>
+
+    <p>A compléter par le médiateur</p>
+
+    <!-- TABLEAU DES COMPÉTENCES -->
+    {% set comp = prescription.competence %}
+
+    <table>
+        <thead>
+        <tr>
+            <th>Compétences</th>
+            <th>Acquis</th>
+            <th>En cours</th>
+            <th>Non acquis</th>
+        </tr>
+        </thead>
+        <tbody>
+
+        <!-- LES BASES -->
+        <tr>
+            <td><b>Les bases</b></td>
+
+            <td class="fa-col">
+                {% if comp.compBase == 'acquis' %}
+                    <i class="fa-regular fa-square-check"></i>
+                {% else %}
+                    <i class="fa-regular fa-square"></i>
+                {% endif %}
+            </td>
+
+            <td class="fa-col">
+                {% if comp.compBase == 'encours' %}
+                    <i class="fa-regular fa-square-check"></i>
+                {% else %}
+                    <i class="fa-regular fa-square"></i>
+                {% endif %}
+            </td>
+
+            <td class="fa-col">
+                {% if comp.compBase == 'Nonacquis' %}
+                    <i class="fa-regular fa-square-check"></i>
+                {% else %}
+                    <i class="fa-regular fa-square"></i>
+                {% endif %}
+            </td>
+        </tr>
+
+        <!-- TEXTE & DOCUMENTS -->
+        <tr>
+            <td><b>Texte et documents</b></td>
+
+            <td class="fa-col">
+                {% if comp.compDesk == 'acquis' %}
+                    <i class="fa-regular fa-square-check"></i>
+                {% else %}
+                    <i class="fa-regular fa-square"></i>
+                {% endif %}
+            </td>
+
+            <td class="fa-col">
+                {% if comp.compDesk == 'encours' %}
+                    <i class="fa-regular fa-square-check"></i>
+                {% else %}
+                    <i class="fa-regular fa-square"></i>
+                {% endif %}
+            </td>
+
+            <td class="fa-col">
+                {% if comp.compDesk == 'Nonacquis' %}
+                    <i class="fa-regular fa-square-check"></i>
+                {% else %}
+                    <i class="fa-regular fa-square"></i>
+                {% endif %}
+            </td>
+        </tr>
+
+        <!-- INTERNET -->
+        <tr>
+            <td><b>Internet</b></td>
+
+            <td class="fa-col">
+                {% if comp.compInternet == 'acquis' %}
+                    <i class="fa-regular fa-square-check"></i>
+                {% else %}
+                    <i class="fa-regular fa-square"></i>
+                {% endif %}
+            </td>
+
+            <td class="fa-col">
+                {% if comp.compInternet == 'encours' %}
+                    <i class="fa-regular fa-square-check"></i>
+                {% else %}
+                    <i class="fa-regular fa-square"></i>
+                {% endif %}
+            </td>
+
+            <td class="fa-col">
+                {% if comp.compInternet == 'Nonacquis' %}
+                    <i class="fa-regular fa-square-check"></i>
+                {% else %}
+                    <i class="fa-regular fa-square"></i>
+                {% endif %}
+            </td>
+        </tr>
+
+        <!-- EMAIL -->
+        <tr>
+            <td><b>Messagerie électronique</b></td>
+
+            <td class="fa-col">
+                {% if comp.compEmail == 'acquis' %}
+                    <i class="fa-regular fa-square-check"></i>
+                {% else %}
+                    <i class="fa-regular fa-square"></i>
+                {% endif %}
+            </td>
+
+            <td class="fa-col">
+                {% if comp.compEmail == 'encours' %}
+                    <i class="fa-regular fa-square-check"></i>
+                {% else %}
+                    <i class="fa-regular fa-square"></i>
+                {% endif %}
+            </td>
+
+            <td class="fa-col">
+                {% if comp.compEmail == 'Nonacquis' %}
+                    <i class="fa-regular fa-square-check"></i>
+                {% else %}
+                    <i class="fa-regular fa-square"></i>
+                {% endif %}
+            </td>
+        </tr>
+
+        </tbody>
+    </table>
+
+</section>
+
+<section>
+    <p class="bouton_valider">
+        L'auto-évaluation du bénéficiaire a été réalisée avant l'action.
+    </p>
+</section>
+
+<!-- ------------------ PAGE 4 ------------------ -->
+
+<section>
+    <h2>Les objectifs de la médiation</h2>
+
+    <p>
+        Compétences à travailler (référentiel DIGCOMP) :
+        https://eduscol.education.fr/document/20392/download
+    </p>
+    <p><br></p>
+
+    <p><b>A compléter par le médiateur</b></p>
+
+    <p>Parcours de médiation convenu :</p>
+    <p class="text_motivation">{{ prescription.competence.detailParcour|raw }}</p>
+
+    <p>Signature du bénéficiaire</p>
+
+    <p class="bouton_valider">
+        L'auto-évaluation a été réalisée après l'action.
+    </p>
+</section>
+
+<!-- ------------------ PAGE 5 ------------------ -->
+
+<section>
+    <h2>Date de la remise de l'ordinateur</h2>
+
+    <p>Fait à : {{prescription.lieuMediation}}</p>
+    <p>Le : {{ prescription.createdAt|date('d-m-Y') }}</p>
+
+    {% if prescription.equipement|length > 0 %}
+        <p>ID de l'ordinateur remis : {{ prescription.equipement.matriculEquipment }}</p>
+    {% endif %}
+</section>
+
+<section>
+    <h2>Mentions légales (RGPD)</h2>
+
+    <p>
+        Les informations personnelles collectées pourront faire l'objet d'un traitement ayant pour finalité l'envoi de compterendu ou d'informations en lien avec les objectifs du séminaire. Ces informations sont à destination exclusive des
+        services de l'ALPI. Elles sont conservées 3 ans. Conformément au Règlement (UE) 2016/679 relatif à la protection des
+        données à caractère personnel, vous disposez des droits suivants sur vos données : droit d’accès, droit de rectification,
+        droit à l’effacement (droit à l’oubli), droit d’opposition, droit à la limitation du traitement, droit à la portabilité. Pour
+        exercer vos droits, merci d’adresser votre demande par courrier postale au 175 place de la Caserne Bosquet - 40000
+        Mont-de-Marsan ou par mail à dpo@alpi40.fr Sous réserve d’un manquement à aux dispositions ci-dessus, vous avez
+        le droit d’introduire une réclamation auprès de la CNIL.
+    </p>
+</section>
+
+<! -------------------------------------bouton imprimer sauvegarder le pdf----------------->
+
+
+</body>
+</html>

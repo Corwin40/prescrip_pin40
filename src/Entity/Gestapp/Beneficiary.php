@@ -39,10 +39,8 @@ class Beneficiary
     #[ORM\Column(type: Types::DATE_MUTABLE)]
     private ?\DateTimeInterface $updatedAt = null;
 
-    #[ORM\OneToOne(inversedBy: 'beneficiary', cascade: ['persist', 'remove'])]
-    private ?Competence $beneficiaryCompetences = null;
-
-
+    #[ORM\OneToOne(mappedBy: 'beneficiaire', cascade: ['persist'])]
+    private ?Prescription $prescription = null;
 
     public function getId(): ?int
     {
@@ -140,14 +138,27 @@ class Beneficiary
         return $this;
     }
 
-    public function getBeneficiaryCompetences(): ?Competence
+
+
+    public function getPrescription(): ?Prescription
     {
-        return $this->beneficiaryCompetences;
+        return $this->prescription;
     }
 
-    public function setBeneficiaryCompetences(?Competence $beneficiaryCompetences): static
+    public function setPrescription(?Prescription $prescription): static
     {
-        $this->beneficiaryCompetences = $beneficiaryCompetences;
+        // unset the owning side of the relation if necessary
+        if ($prescription === null && $this->prescription !== null) {
+            $this->prescription->setBeneficiaire(null);
+        }
+
+        // set the owning side of the relation if necessary
+        if ($prescription !== null && $prescription->getBeneficiaire() !== $this) {
+            $prescription->setBeneficiaire($this);
+        }
+
+        $this->prescription = $prescription;
+
         return $this;
     }
 }

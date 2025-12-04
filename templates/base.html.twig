@@ -6,96 +6,93 @@
 
     <title>{% block title %}Welcome!{% endblock %}</title>
 
+    {% block stylesheets %}
+        {{ encore_entry_link_tags('app') }}
+    {% endblock %}
+
     {% block javascripts %}
         {{ encore_entry_script_tags('app') }}
         <script src="https://kit.fontawesome.com/1fb9149f4c.js" crossorigin="anonymous"></script>
     {% endblock %}
-
-    {% block stylesheets %}
-        {{ encore_entry_link_tags('app') }}
-    {% endblock %}
 </head>
-<body class="min-vh-100" data-page="{{ app.current_route }}">
 
-    <!-- NAVBAR -->
-    <nav class="navbar navbar-expand-lg shadow">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="{{ path('app_webapp_public_accueil')}}">Prescription Ordi PIN40</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-                    data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown"
-                    aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
+<body class="d-flex flex-column min-vh-100" data-page="{{ app.current_route }}">
 
-            <div class="collapse navbar-collapse" id="navbarNavDropdown">
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                    <!-- Liens simples -->
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ path('app_webapp_public_prezDon') }}">Le dispositif</a>
-                    </li>
-                </ul>
-                <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-                    {% if app.user %}
-                    <!-- Dropdown Login -->
+<!-- NAVBAR -->
+<nav class="navbar navbar-expand-lg shadow">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="{{ path('app_webapp_public_accueil')}}">Prescription Ordi PIN40</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown"
+                aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarNavDropdown">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ path('app_webapp_public_prezDon') }}">Le dispositif</a>
+                </li>
+            </ul>
+
+            <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                {% if app.user %}
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
                             Mon espace
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end">
-                            <li>
-                                <a class="dropdown-item" href="{{ path('app_admin_member_edit', {'id': app.user.id}) }}">Mes informations</a>
-                            </li>
-                            <li>
-                                <a class="dropdown-item" href="{{ path('app_logout') }}">Se deconnecter</a>
-                            </li>
+                            <li><a class="dropdown-item" href="{{ path('app_admin_member_edit', {'id': app.user.id}) }}">Mes informations</a></li>
+                            <li><a class="dropdown-item" href="{{ path('app_admin_dashboard_index') }}">Tableau de bord</a></li>
+                            <li><a class="dropdown-item" href="{{ path('app_logout') }}">Se déconnecter</a></li>
                         </ul>
                     </li>
-                    {% else %}
-                    <!-- Liens simples -->
+                {% else %}
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ path('app_admin_dashboard_index') }}">Espace de connexion</a>
+                        <a class="nav-link" href="{{ path('app_admin_dashboard_index') }}"><strong>Espace de connexion</strong></a>
                     </li>
-                    {% endif %}
-                </ul>
-            </div>
+                {% endif %}
+            </ul>
         </div>
-    </nav>
+    </div>
+</nav>
 
-    <!-- CONTENU -->
-    <main class="container justify-content-center align-items-center">
-        {% block body %}{% endblock %}
-        <!-- Modal -->
-        <div class="modal fade" id="modal" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered modal-xl">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <div class="d-flex justify-content-center">
-                            <div class="spinner-border" role="status">
-                                <span class="visually-hidden">En attente...</span>
-                            </div>
+<!-- CONTENU -->
+<main class="container flex-fill">
+    {% block body %}{% endblock %}
+
+    <!-- Modal -->
+    <div class="modal fade" id="modal" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="d-flex justify-content-center">
+                        <div class="spinner-border" role="status">
+                            <span class="visually-hidden">En attente...</span>
                         </div>
                     </div>
-                    <div class="modal-footer">
-                        <a href="#" class="btn btn-primary btnSubmit">Ajouter</a>
-                        <button type="button" class="btn btn-secondary " data-bs-dismiss="modal">Close</button>
-                    </div>
+                </div>
+                <div class="modal-footer">
+                    <a href="#" class="btn btn-primary btnSubmit">Ajouter</a>
+                    <button class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
                 </div>
             </div>
         </div>
-    </main>
+    </div>
+</main>
 
-
-</body>
 <!-- FOOTER -->
-<footer class=" container-fluid mt-auto  text-dark py-4">
+<footer class="container-fluid mt-auto bg-dark text-light pt-2 pb-2">
     <div class="row text-center">
         <div class="col"><a class="nav-link" href="{{ path('app_webapp_public_accueil') }}">© 2025 - Precrip Ordi Pin40</a></div>
-        <div class="col"> <a class="nav-link" href="{{ path('app_webapp_public_mentions') }}">Mentions Légales</a></div>
-        <div class="col">Contact</div>
+        <div class="col"><a class="nav-link" href="{{ path('app_webapp_public_mentions') }}">Mentions Légales</a></div>
+        <div class="col"><a class="nav-link" href="{{ path('app_webapp_public_contact') }}">Contact</a></div>
     </div>
 </footer>
+
+</body>
 </html>

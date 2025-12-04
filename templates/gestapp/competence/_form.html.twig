@@ -1,7 +1,8 @@
-    <div class="col-12 bg-light border-bottom border-dark">
-        <h3>Diagnostique des compétences numériques</h3>
+{{ form_start(form) }}
+<div class="row">
+    <div class="col-12 bg-light border-bottom border-dark mb-2">
+        <h3>Diagnostic des compétences numériques</h3>
     </div>
-
     <div class="col-12">
         <table class="table table-bordered table-striped">
             <tr>
@@ -11,71 +12,110 @@
                 <th>Non acquis</th>
             </tr>
             {% include 'composants/inputs/input_radio_tablerow.html.twig' with {
-                form_label: 'Compétence de base',
+                form_label: 'Les bases',
                 form_field: form.compBase
+            } %}
+            {% include 'composants/inputs/input_radio_tablerow.html.twig' with {
+                form_label: 'Texte et documents',
+                form_field: form.compDesk
+            } %}
+            {% include 'composants/inputs/input_radio_tablerow.html.twig' with {
+                form_label: 'Internet',
+                form_field: form.compInternet
+            } %}
+            {% include 'composants/inputs/input_radio_tablerow.html.twig' with {
+                form_label: 'Messagerie electronique',
+                form_field: form.compEmail
             } %}
         </table>
 
 
-        <!-- Compétence Texte et documents -->
-        <div class="row align-items-center text-center border-bottom py-2 ">
-            <div class="col-4 text-start fw-semibold">Compétence Texte et documents</div>
-            <div class="col d-flex justify-content-around">
-                {% include 'composants/inputs/input_radios.html.twig' with { field: form.compDesk, attr: {'label': false} } %}
-            </div>
-        </div>
-        <!-- Compétence Internet -->
-        <div class="row align-items-center text-center border-bottom py-2 bg-light">
-            <div class="col-4 text-start fw-semibold">Compétence Internet</div>
-            <div class="col d-flex justify-content-around">
-                {% include 'composants/inputs/input_radios.html.twig' with { field: form.compInternet, attr: {'label': false} } %}
-            </div>
-        </div>
-        <!-- Compétence Messagerie email -->
-        <div class="row align-items-center text-center py-2">
-            <div class="col-4 text-start fw-semibold">Compétence Messagerie email</div>
-            <div class="col d-flex justify-content-around">
-                {% include 'composants/inputs/input_radios.html.twig' with { field: form.compEmail, attr: {'label': false} } %}
-            </div>
-        </div>
+
     </div>
-
-
-
-
-
-
-
-
-
-
-
-    <hr class="my-4">
-
     <div class="row g-3">
-        <div class="col-md-6">{{ form_row(form.isAutoEva) }}</div>
-        <div class="col-md-6">{{ form_row(form.isAutoEvalEnd) }}</div>
-    </div>
-
-    <!-- Compétences numériques -->
-    <div class="row g-3 align-items-center mt-3">
-        <div class="col d-flex flex-wrap justify-content-between">
-            {% for i in 1..5 %}
-                <div class="flex-fill text-center mx-1">
-
-                </div>{{ form_row(attribute(form, 'isDigComp' ~ i)) }}
-            {% endfor %}
+        <div class="col-md-6">
+            {% include 'composants/inputs/input_checkbox_switch.html.twig' with {
+                form_field: form.isAutoEva
+            } %}
         </div>
+
+    </div>
+</div>
+<div class="row">
+    <div class="col-12 bg-light border-bottom border-dark mb-2">
+        <h3>Les objectifs de la mediation</h3>
+    </div>
+    <div class="col-12 mb-2">
+        <p class="mb-0">Compétences à travailler (référentiel DIGCOMP) : https//eduscol.education.fr/document/20392/download</p>
     </div>
 
-    <!-- Détail du parcours -->
-    <div class="row g-3 mt-4">
-        <div class="col-md-12">
-            <div class="form-group">
-                <label class="fw-bold mb-2 d-block">Détail du parcours</label>
-                {{ form_widget(form.detailParcour, {'attr': {'class': 'form-control', 'rows': 4}}) }}
-            </div>
-        </div>
+    <div class="col-12 mb-2">
+        <table class="table table-bordered table-hover">
+            <tbody>
+
+            <tr>
+                <th>Compétences</th>
+                <th>Objectifs</th>
+            </tr>
+
+            <tr>
+                {% include 'composants/inputs/input_checkbox_tablerow.html.twig' with {
+                    form_label: '0 - Compétences matérielles',
+                    form_field: form.isDigComp0
+                } %}
+            </tr>
+
+            <tr>
+                {% include 'composants/inputs/input_checkbox_tablerow.html.twig' with {
+                    form_label: '1 - Information et données',
+                    form_field: form.isDigComp1
+                } %}
+            </tr>
+
+            <tr>
+                {% include 'composants/inputs/input_checkbox_tablerow.html.twig' with {
+                    form_label: '2 - Communication et collaboration',
+                    form_field: form.isDigComp2
+                } %}
+            </tr>
+
+            <tr>
+                {% include 'composants/inputs/input_checkbox_tablerow.html.twig' with {
+                    form_label: '3 - Création de contenu',
+                    form_field: form.isDigComp3
+                } %}
+            </tr>
+
+            <tr>
+                {% include 'composants/inputs/input_checkbox_tablerow.html.twig' with {
+                    form_label: '4 - Protection et securité',
+                    form_field: form.isDigComp4
+                } %}
+            </tr>
+
+            <tr>
+                {% include 'composants/inputs/input_checkbox_tablerow.html.twig' with {
+                    form_label: '5 - Environnement numérique',
+                    form_field: form.isDigComp5
+                } %}
+            </tr>
+
+            </tbody>
+        </table>
+
+        {% include 'composants/inputs/input_checkbox_switch.html.twig' with {
+            form_field: form.isAutoEvaEnd
+        } %}
+
     </div>
+
+    <div class="col-md-12 mb-2">
+        {% include 'composants/inputs/input_aera.html.twig' with {
+            label: 'A completer par le médiateur',
+            field: form.detailParcour
+        } %}
+    </div>
+
+</div>
 
 {{ form_end(form) }}

@@ -1,0 +1,35 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="container mt-4 ">
+
+        <div class="row justify-content-between ">
+            <div class="col-md-6  p-3">
+                <h1 class="mb-2  fw-bold">Contactez-nous</h1>
+                <p class="mt-2 mb-3">
+                    <strong>Adresse :</strong><br>
+                    40, impasse Georges SABDE<br>
+                    40280 <span class="text-uppercase">Saint-Pierre-du-Mont</span>
+                </p>
+                <p class="mt-2 mb-2">
+                    <strong>Localisation :</strong><br>
+                    Maison des associations, située derrière l'ancienne mairie
+                </p>
+                <p class="fs-4 mt-2 mb-2">
+                    <strong>Téléphone :</strong>
+                    <a href="#" class="text-decoration-none text-dark">09 51 93 77 06</a>
+                </p>
+            </div>
+
+
+            <div class="col-md-4 d-flex justify-content-center">
+                <p class="text-center">
+                    <img src="{{ asset('assets/images/plan.jpg') }}"
+                         alt="plan géolocalisation du site"
+                         class="img-fluid">
+                </p>
+
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -1,76 +1,137 @@
 {% extends 'base.html.twig' %}
+
+
 {% block body %}
-    <div class="container my-5">
-        <h2 class="text-center mb-4">Bienvenue sur votre tableau de bord</h2>
+    <div class="container py-2">
 
-        <div class="row justify-content-center text-center g-4">
+        <!-- Titre -->
+        <h2 class="text-center mt-2 mb-2 ">Bienvenue sur votre tableau de bord</h2>
 
-            {# 👉 Si le user est ADMIN : afficher les 2 cartes #}
-            {% if is_granted('ROLE_ADMIN') %}
-                <div class="col-md-4">
-                    <div class="card h-100 shadow-sm">
-                        <img
-                            src="{{ asset('assets/images/dashboard_beneficiary.jpg') }}"
-                            class="card-img-top mx-auto d-block mt-3"
-                            alt="Médiation"
-                            style="width: 100px; height: 100px; object-fit: contain;"
-                        >
-                        <div class="card-body">
-                            <h6 class="card-title">Médiation</h6>
-                            <a href="{{ path('app_gestapp_equipment_index') }}" class="btn btn-primary mt-2">Voir plus</a>
-                        </div>
-                    </div>
+        {# --- Section chiffres : ordis dispo & prescriptions --- #}
+        <div class="row mb-4">
+
+            <div class="col-md-3 mb-3">
+                <div class="border rounded border-success-subtle p-3 text-center h-100">
+                    <h5 class="card-title">Machines disponibles</h5>
+                    <p class="display-6">{{ equipments|length }}</p>
+                </div>
+            </div>
+
+            <div class="col-md-3 mb-2">
+                <div class="border rounded border-success-subtle p-3 text-center h-100">
+                    <h5 class="card-title">Prescriptions enregistrées</h5>
+                    <p class="display-6">{{ prescriptions|length }}</p>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- En-tête de la liste des prescriptions -->
+        <div class="col-12">
+            <div class="d-flex mt-2 mb-2 border-bottom border-dark bg-light justify-content-between py-2 px-1">
+
+                <div class="col-6">
+                    <h3 class="text-uppercase mb-0">Liste des prescriptions</h3>
                 </div>
 
-                <div class="col-md-4">
-                    <div class="card h-100 shadow-sm">
-                        <img
-                            src="{{ asset('assets/images/dashboard_prescription.jpg') }}"
-                            class="card-img-top mx-auto d-block mt-3"
-                            alt="Prescription"
-                            style="width: 100px; height: 100px; object-fit: contain;"
-                        >
-                        <div class="card-body">
-                            <h6 class="card-title">Prescription</h6>
-                            <a href="{{ path('app_gestapp_prescription_index') }}" class="btn btn-primary mt-2">Voir plus</a>
-                        </div>
-                    </div>
+                <div class="col-6">
+                    <p class="mb-0 text-end">
+                        {% include 'composants/forms/button_creatnew.html.twig' with {
+                            label: 'nouvelle prescription',
+
+                            href: path('app_gestapp_prescription_new')
+                        } %}
+                    </p>
                 </div>
 
-                {#  afficher uniquement la carte Médiation #}
-            {% elseif is_granted('ROLE_MEDIATEUR') %}
-                <div class="col-md-4">
-                    <div class="card h-100 shadow-sm">
-                        <img
-                            src="{{ asset('assets/images/dashboard_beneficiary.jpg') }}"
-                            class="card-img-top mx-auto d-block mt-3"
-                            alt="Médiation"
-                            style="width: 100px; height: 100px; object-fit: contain;"
-                        >
-                        <div class="card-body">
-                            <h6 class="card-title">Médiation</h6>
-                            <a href="{{ path('app_gestapp_equipment_index') }}" class="btn btn-primary mt-2">Voir plus</a>
-                        </div>
-                    </div>
-                </div>
+            </div>
+        </div>
 
-                {#  afficher uniquement la carte Prescription #}
-            {% elseif is_granted('ROLE_PRESCRIPTEUR') %}
-                <div class="col-md-4">
-                    <div class="card h-100 shadow-sm">
-                        <img
-                            src="{{ asset('assets/images/dashboard_prescription.jpg') }}"
-                            class="card-img-top mx-auto d-block mt-3"
-                            alt="Prescription"
-                            style="width: 100px; height: 100px; object-fit: contain;"
-                        >
-                        <div class="card-body">
-                            <h6 class="card-title">Prescription</h6>
-                            <a href="{{ path('app_gestapp_prescription_index') }}" class="btn btn-primary mt-2">Voir plus</a>
-                        </div>
-                    </div>
-                </div>
+        <!-- Tableau prescriptions -->
+        <table class="table table-hover">
+            <thead class="table-light">
+            <tr>
+                <th>Ref</th>
+                <th>Nom et Prénom</th>
+                <th>Structure</th>
+                <th>Espace</th>
+                <th></th>
+            </tr>
+            </thead>
+
+            <tbody>
+            {% for prescription in prescriptions %}
+                <tr>
+                    <td>{{ prescription.ref }}</td>
+
+                    <td>
+                        {% if prescription.beneficiaire is not empty %}
+                            {{ prescription.beneficiaire.firstname }} {{ prescription.beneficiaire.lastname }}
+                        {% else %}
+                            non disponible
+                        {% endif %}
+                    </td>
+
+                    <td>{{ prescription.membre.nameStructure }}</td>
+                    <td>{{ prescription.lieuMediation }}</td>
+
+                        <td>
+                            <button
+                                href="{{ path('app_gestapp_prescription_edit', {'id': prescription.id}) }}"
+                                type="button"
+                                data-bs-toggle="tooltip"
+                                data-bs-placement="top"
+                                data-bs-custom-class="custom-tooltip"
+                                data-bs-title="Décrire en 5 ou 6 lignes les motivations du bénéficiaire">
+                                    <i class="fa-solid fa-pen-to-square"></i>
+                            </button>
+                        </td>
+                    </tr>
+                    {
+
+                {% else %}
+                    <tr>
+                        <td colspan="5" class="text-start text-muted">Aucune prescription disponible</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="col-12 justify-content-evenly">
+            {# --- Admin ? Médiateur ? Prescripteur ? --- #}
+
+            {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_MEDIATEUR') or is_granted('ROLE_PRESCRIPTEUR') %}
+
+                {% include 'composants/forms/button_creatnew.html.twig' with {
+                    label: 'Créer un nouveau bénéficiaire',
+                    style: null,
+                    href: path('app_gestapp_beneficiary_new')
+                } %}
+
+                {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_MEDIATEUR') %}
+                    {% include 'composants/forms/button_creatnew.html.twig' with {
+                        label: 'Créer un nouveau prescripteur',
+                        style: null,
+                        href: path('app_admin_member_new', {'role': 'prescripteur'})
+                    } %}
+                {% endif %}
+
+                {% if is_granted('ROLE_ADMIN') %}
+                    {% include 'composants/forms/button_creatnew.html.twig' with {
+                        label: 'Créer un nouveau médiateur',
+                        style: null,
+                        href: path('app_admin_member_new', {'role': 'mediateur'})
+                    } %}
+                {% endif %}
+
+                {% include 'composants/forms/button_creatnew.html.twig' with {
+                    label: 'Nouveau équipement',
+                    style: null,
+                    href: path('app_gestapp_equipment_new')
+                } %}
+
             {% endif %}
         </div>
+
     </div>
 {% endblock %}

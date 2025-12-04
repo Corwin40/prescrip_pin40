@@ -40,10 +40,10 @@
         } %}
     </div>
 
-
 </div>
 {% if app.request.attributes.get('_route') == 'app_gestapp_beneficiary_new' or app.request.attributes.get('_route') == 'app_gestapp_beneficiary_edit'%}
     <div class="mt-4">
+        <a class="btn btn-secondary" href="{{ path('app_admin_dashboard_index') }}">Retour</a>
         <button class="btn btn-primary">{{ button_label|default('Enregistrer') }}</button>
     </div>
 {% endif %}

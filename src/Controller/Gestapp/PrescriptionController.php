@@ -2,6 +2,7 @@
 
 namespace App\Controller\Gestapp;
 
+use App\Entity\Gestapp\Competence;
 use App\Entity\Gestapp\Prescription;
 use App\Form\Gestapp\PrescriptionType;
 use App\Repository\Gestapp\PrescriptionRepository;
@@ -43,7 +44,17 @@ final class PrescriptionController extends AbstractController
 
         $prescription = new Prescription();
         $prescription->setRef($ref);
-        $form = $this->createForm(PrescriptionType::class, $prescription);
+        $prescription->setCompteur($compteur);
+        $prescription->setCompetence(new Competence());
+
+        $form = $this->createForm(PrescriptionType::class, $prescription, [
+            'action' => $this->generateUrl('app_gestapp_prescription_new'),
+            'method' => 'POST',
+            'attr' => [
+                'id' => 'formPrescription',
+            ],
+            'user' => $this->getUser(),
+        ]);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -87,6 +98,19 @@ final class PrescriptionController extends AbstractController
             'prescription' => $prescription,
             'form' => $form,
         ]);
+    }
+
+    #[Route('/{id}/closecase', name: 'app_gestapp_prescription_closecase', methods: ['POST'])]
+    public function closecase(Prescription $prescription, EntityManagerInterface $entityManager)
+    {
+        $prescription->setValidcase(1);
+        $entityManager->flush();
+
+        return $this->json([
+            'code' => 200,
+            'message' => 'Le fichier PDF correspondant à la prescription est en cours de génération',
+            'prescription' => $prescription,
+        ], 200);
     }
 
     #[Route('/{id}', name: 'app_gestapp_prescription_delete', methods: ['POST'])]

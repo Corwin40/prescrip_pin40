@@ -1,4 +1,3 @@
-import './bootstrap.js';
 /*
  * Welcome to your app's main JavaScript file!
  *
@@ -10,7 +9,7 @@ import './bootstrap.js';
 // this "modifies" the jquery module: adding behavior to it
 // the bootstrap module doesn't export/return anything
 import 'bootstrap';
-import  * as bootstrap from 'bootstrap';
+import * as bootstrap from 'bootstrap';
 window.bootstrap = bootstrap;
 
 import './styles/app.scss';

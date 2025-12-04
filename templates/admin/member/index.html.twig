@@ -13,11 +13,18 @@
         <div class="d-flex justify-content-between align-items-center mb-4">
             <h1 class="h3">Liste des membres</h1>
 
-            {# Bouton pour créer un membre #}
+            {# Bouton pour créer un prescripteur #}
             {% include 'composants/forms/button_creatnew.html.twig' with {
-                label: 'Créer un nouveau membre',
-                href: path('app_admin_member_new')
+                label: 'Créer un nouveau prescripteur',
+                href: path('app_admin_member_new', {'role' : 'prescripteur'})
             } %}
+
+            {# Bouton pour créer un prescripteur #}
+            {% include 'composants/forms/button_creatnew.html.twig' with {
+                label: 'Créer un nouveau médiateur',
+                href: path('app_admin_member_new', {'role' : 'mediateur'})
+            } %}
+
         </div>
 
         {% if members is not empty %}
@@ -83,7 +90,7 @@
                                     type: 'warning'
                                 } %}
 
-                                {# Bouton "Supprimer" (optionnel, si ton composant existe) #}
+                                {# Bouton "Supprimer" si  il existe #}
                                 {% include 'composants/forms/buttons_delete.html.twig' with {
                                     id: member.id,
                                     route: 'app_admin_member_delete'

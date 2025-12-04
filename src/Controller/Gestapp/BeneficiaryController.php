@@ -51,7 +51,13 @@ final class BeneficiaryController extends AbstractController
     public function new2(Request $request, EntityManagerInterface $entityManager): Response
     {
         $beneficiary = new Beneficiary();
-        $form = $this->createForm(BeneficiaryType::class, $beneficiary);
+        $form = $this->createForm(BeneficiaryType::class, $beneficiary, [
+            'action' => $this->generateUrl('app_gestapp_beneficiary_new2'),
+            'method' => 'POST',
+            'attr' => [
+                'id' => 'formBenficiary',
+            ]
+        ]);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -62,7 +68,11 @@ final class BeneficiaryController extends AbstractController
             $entityManager->persist($beneficiary);
             $entityManager->flush();
 
-            return $this->redirectToRoute('app_gestapp_beneficiary_index', [], Response::HTTP_SEE_OTHER);
+            return $this->json([
+                'message' => 'le béneficiaire est ajouté au formulaire de prescription.',
+                'beneficiaire' => $beneficiary->getFirstname() . ' ' . $beneficiary->getLastname(),
+                'value' => $beneficiary->getId(),
+            ],200);
         }
 
         return $this->json([
@@ -85,7 +95,13 @@ final class BeneficiaryController extends AbstractController
     #[Route('/{id}/edit', name: 'app_gestapp_beneficiary_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Beneficiary $beneficiary, EntityManagerInterface $entityManager): Response
     {
-        $form = $this->createForm(BeneficiaryType::class, $beneficiary);
+        $form = $this->createForm(BeneficiaryType::class, $beneficiary, [
+            'action' => $this->generateUrl('app_gestapp_beneficiary_edit', ['id' => $beneficiary->getId()]),
+            'method' => 'POST',
+            'attr' => [
+                'id' => 'formBenficiary',
+            ]
+        ]);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -103,7 +119,13 @@ final class BeneficiaryController extends AbstractController
     #[Route('/{id}/edit2', name: 'app_gestapp_beneficiary_edit2', methods: ['GET', 'POST'])]
     public function edit2(Request $request, Beneficiary $beneficiary, EntityManagerInterface $entityManager): Response
     {
-        $form = $this->createForm(BeneficiaryType::class, $beneficiary);
+        $form = $this->createForm(BeneficiaryType::class, $beneficiary, [
+            'action' => $this->generateUrl('app_gestapp_beneficiary_edit', ['id' => $beneficiary->getId()]),
+            'method' => 'POST',
+            'attr' => [
+                'id' => 'formBenficiary',
+            ]
+        ]);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {

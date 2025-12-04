@@ -23,30 +23,31 @@ final class MemberController extends AbstractController
         ]);
     }
 
-    #[Route('/new', name: 'app_admin_member_new', methods: ['GET', 'POST'])]
+    #[Route('/new/{role}', name: 'app_admin_member_new', methods: ['GET', 'POST'])]
     public function new(
         Request $request,
         EntityManagerInterface $entityManager,
-        UserPasswordHasherInterface $passwordHasher
+        UserPasswordHasherInterface $passwordHasher,
+        $role
     ): Response {
         $member = new Member();
         $form = $this->createForm(MemberType::class, $member);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            // ✅ Rôle
-            $selectedRole = $form->get('role')->getData();
-            if ($selectedRole) {
-                $member->setRoles([$selectedRole]);
-            }
+            $password = $form->get('password')->getData();
 
-            // 🔐 Hachage du mot de passe
-            $plainPassword = $form->get('plainPassword')->getData();
-            if ($plainPassword) {
-                $hashedPassword = $passwordHasher->hashPassword($member, $plainPassword);
+            $member->setIsVerified(1);
+
+            if ($role === 'prescripteur') {
+                $member->setRoles(['ROLE_PRESCRIPTEUR']);
+            }else if($role === 'mediateur'){
+                $member->setRoles(['ROLE_MEDIATEUR']);
+            }
+            if ($password) {
+                $hashedPassword = $passwordHasher->hashPassword($member, $password);
                 $member->setPassword($hashedPassword);
             } else {
-                $this->addFlash('error', 'Le mot de passe est obligatoire.');
                 return $this->render('admin/member/new.html.twig', [
                     'member' => $member,
                     'form' => $form,
@@ -61,6 +62,7 @@ final class MemberController extends AbstractController
         }
 
         return $this->render('admin/member/new.html.twig', [
+            'role' => $role,
             'member' => $member,
             'form' => $form,
         ]);
@@ -85,13 +87,13 @@ final class MemberController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            // ✅ Rôle
+            //  Rôle
             $selectedRole = $form->get('role')->getData();
             if ($selectedRole) {
                 $member->setRoles([$selectedRole]);
             }
 
-            // 🔐 Nouveau mot de passe si saisi
+            //  Nouveau mot de passe si saisi
             $plainPassword = $form->get('plainPassword')->getData();
             if (!empty($plainPassword)) {
                 $hashedPassword = $passwordHasher->hashPassword($member, $plainPassword);

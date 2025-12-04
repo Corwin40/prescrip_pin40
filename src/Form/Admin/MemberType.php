@@ -15,9 +15,9 @@ class MemberType extends AbstractType
     {
         $builder
             ->add('email')
-            ->add('plainPassword', PasswordType::class, [
-                'mapped' => false, // ⚠️ ne lie pas directement à l'entité
-                'required' => true, // ✅ obligatoire à la création
+            ->add('password', PasswordType::class, [
+                'mapped' => false, //  ne lie pas directement à l'entité
+                'required' => true, // obligatoire à la création
                 'label' => 'Mot de passe',
                 'attr' => [
                     'autocomplete' => 'new-password',
@@ -41,18 +41,6 @@ class MemberType extends AbstractType
                 ],
                 'label' => 'Civilité',
                 'placeholder' => 'Sélectionnez une civilité',
-                'required' => true,
-            ])
-            ->add('isVerified')
-            ->add('role', ChoiceType::class, [
-                'label' => 'Rôle proposé',
-                'choices' => [
-                    'Prescripteur' => 'ROLE_PRESCRIPTEUR',
-                    'Médiateur' => 'ROLE_MEDIATEUR',
-                ],
-                'expanded' => true,   // ✅ boutons radio
-                'multiple' => false,  // un seul rôle
-                'mapped' => false,    // ⚠️ géré dans le contrôleur
                 'required' => true,
             ]);
     }

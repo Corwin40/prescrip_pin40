@@ -29,9 +29,6 @@ class Prescription
     private ?Member $membre = null;
 
     #[ORM\OneToOne(cascade: ['persist', 'remove'])]
-    private ?Beneficiary $beneficiaire = null;
-
-    #[ORM\OneToOne(cascade: ['persist', 'remove'])]
     private ?Equipment $equipement = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
@@ -40,11 +37,26 @@ class Prescription
     #[ORM\Column(length: 100)]
     private ?string $baseCompetence = null;
 
-    #[ORM\Column(length: 100)]
-    private ?string $lieuMediation = null;
-
     #[ORM\Column(type: Types::SMALLINT)]
     private ?int $compteur = null;
+
+    #[ORM\ManyToOne(inversedBy: 'lieuxmediation')]
+    private ?Member $lieuMediation = null;
+
+    #[ORM\OneToOne(inversedBy: 'prescription', cascade: ['persist'])]
+    private ?Beneficiary $beneficiaire = null;
+
+    #[ORM\OneToOne(cascade: ['persist', 'remove'])]
+    private ?Competence $competence = null;
+
+    #[ORM\Column(length: 100, nullable: true)]
+    private ?string $commune = null;
+
+    #[ORM\Column(length: 5, nullable: true)]
+    private ?string $cp = null;
+
+    #[ORM\Column]
+    private ?bool $validcase = false;
 
     public function getId(): ?int
     {
@@ -102,18 +114,6 @@ class Prescription
         return $this;
     }
 
-    public function getBeneficiaire(): ?Beneficiary
-    {
-        return $this->beneficiaire;
-    }
-
-    public function setBeneficiaire(?Beneficiary $beneficiaire): static
-    {
-        $this->beneficiaire = $beneficiaire;
-
-        return $this;
-    }
-
     public function getEquipement(): ?Equipment
     {
         return $this->equipement;
@@ -150,18 +150,6 @@ class Prescription
         return $this;
     }
 
-    public function getLieuMediation(): ?string
-    {
-        return $this->lieuMediation;
-    }
-
-    public function setLieuMediation(string $lieuMediation): static
-    {
-        $this->lieuMediation = $lieuMediation;
-
-        return $this;
-    }
-
     public function getCompteur(): ?int
     {
         return $this->compteur;
@@ -170,6 +158,78 @@ class Prescription
     public function setCompteur(int $compteur): static
     {
         $this->compteur = $compteur;
+
+        return $this;
+    }
+
+    public function getLieuMediation(): ?Member
+    {
+        return $this->lieuMediation;
+    }
+
+    public function setLieuMediation(?Member $lieuMediation): static
+    {
+        $this->lieuMediation = $lieuMediation;
+
+        return $this;
+    }
+
+    public function getBeneficiaire(): ?Beneficiary
+    {
+        return $this->beneficiaire;
+    }
+
+    public function setBeneficiaire(?Beneficiary $beneficiaire): static
+    {
+        $this->beneficiaire = $beneficiaire;
+
+        return $this;
+    }
+
+    public function getCompetence(): ?Competence
+    {
+        return $this->competence;
+    }
+
+    public function setCompetence(?Competence $competence): static
+    {
+        $this->competence = $competence;
+
+        return $this;
+    }
+
+    public function getCommune(): ?string
+    {
+        return $this->commune;
+    }
+
+    public function setCommune(string $commune): static
+    {
+        $this->commune = $commune;
+
+        return $this;
+    }
+
+    public function getCp(): ?string
+    {
+        return $this->cp;
+    }
+
+    public function setCp(string $cp): static
+    {
+        $this->cp = $cp;
+
+        return $this;
+    }
+
+    public function isValidcase(): ?bool
+    {
+        return $this->validcase;
+    }
+
+    public function setValidcase(bool $validcase): static
+    {
+        $this->validcase = $validcase;
 
         return $this;
     }

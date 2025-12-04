@@ -81,9 +81,16 @@ class Member implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(targetEntity: Prescription::class, mappedBy: 'membre')]
     private Collection $prescriptions;
 
+    /**
+     * @var Collection<int, Prescription>
+     */
+    #[ORM\OneToMany(targetEntity: Prescription::class, mappedBy: 'lieuMediation')]
+    private Collection $lieuxmediation;
+
     public function __construct()
     {
         $this->prescriptions = new ArrayCollection();
+        $this->lieuxmediation = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -309,5 +316,39 @@ class Member implements UserInterface, PasswordAuthenticatedUserInterface
         }
 
         return $this;
+    }
+
+    /**
+     * @return Collection<int, Prescription>
+     */
+    public function getLieuxmediation(): Collection
+    {
+        return $this->lieuxmediation;
+    }
+
+    public function addLieuxmediation(Prescription $lieuxmediation): static
+    {
+        if (!$this->lieuxmediation->contains($lieuxmediation)) {
+            $this->lieuxmediation->add($lieuxmediation);
+            $lieuxmediation->setLieuMediation($this);
+        }
+
+        return $this;
+    }
+
+    public function removeLieuxmediation(Prescription $lieuxmediation): static
+    {
+        if ($this->lieuxmediation->removeElement($lieuxmediation)) {
+            // set the owning side to null (unless already changed)
+            if ($lieuxmediation->getLieuMediation() === $this) {
+                $lieuxmediation->setLieuMediation(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function __toString(){
+        return $this->nameStructure;
     }
 }
