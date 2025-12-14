@@ -18,9 +18,9 @@ class BeneficiaryType extends AbstractType
             ->add('civility', ChoiceType::class, [
                 'label' => 'Civilité',
                 'choices' => [
+                    'Mr' => 'Mr',
                     'Mme' => 'Mme',
                     'Mlle' => 'Mlle',
-                    'Mr' => 'Mr',
                     'Autre' => 'Autre',
                 ],
                 'placeholder' => 'veuillez choisir',

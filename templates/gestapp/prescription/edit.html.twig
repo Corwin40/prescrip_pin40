@@ -3,21 +3,16 @@
 {% block title %}Modifier la prescription{% endblock %}
 
 {% block body %}
-    <div class="row">
-        <div class="col-12">
-            <h1 class="mb-4">Modifier la prescription</h1>
-        </div>
-    </div>
 
-    {{ include('gestapp/prescription/_form.html.twig') }}
+<div class="container mt-5">
+    <div class="row mb-4">
+        <div class="col-md-12">
+            <h1 class="mb-0">Poursuivre la prescription</h1>
+            <p class="text-secondary">Référence : {{ prescription.ref }}</p>
+        </div>
 
-    <div class="row">
-        <div class="col-6">
-            <a href="{{ path('app_gestapp_prescription_index') }}" class="btn btn-outline-dark btn-sm" ><i class="fa-light fa-chevrons-left"></i> Retour au dashboard</a>
-            <a href="{{ path('app_gestapp_prescription_delete', {'id': prescription.id}) }}" class="btn btn-outline-danger btn-sm"><i class="fa-light fa-trash-can-xmark"></i> Suppression</a>
-        </div>
-        <div class="col-6 text-end">
-            <a href="{{ path('app_gestapp_prescription_delete', {'id': prescription.id}) }}" class="btn btn-outline-primary btn-sm"><i class="fa-light fa-check"></i> Valider la prescription</a>
-        </div>
+
     </div>
+    {{ include('gestapp/prescription/_form.html.twig', {'button_label': 'Mettre à jour'}) }}
+</div>
 {% endblock %}
