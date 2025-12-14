@@ -30,43 +30,28 @@
         {% if members is not empty %}
             <div class="table-responsive">
                 <table class="table table-striped table-bordered align-middle">
-                    <thead class="table-dark">
-                    <tr>
-                        <th>ID</th>
-                        <th>Email</th>
-                        <th>Rôles</th>
-                        <th>Nom de la structure</th>
-                        <th>Adresse</th>
-                        <th>Code postal</th>
-                        <th>Ville</th>
-                        <th>Email de contact</th>
-                        <th>Téléphone</th>
-                        <th>Responsable (Prénom / Nom)</th>
-                        <th>Civilité</th>
-                        <th>Vérifié</th>
-                        <th>Actions</th>
-                    </tr>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Membre</th>
+                            <th>Structure</th>
+                            <th>Adresse</th>
+                            <th>Contacts</th>
+                            <th>Vérifié</th>
+                            <th>Actions</th>
+                        </tr>
                     </thead>
                     <tbody>
                     {% for member in members %}
                         <tr>
                             <td>{{ member.id }}</td>
-                            <td>{{ member.email }}</td>
+                            <td>{{ member.contactResponsableCivility }} {{ member.contactResponsableFirstname }} {{ member.contactResponsableLastname }}</td>
                             <td>
-                                {% if member.roles is defined and member.roles is iterable %}
-                                    {{ member.roles|join(', ') }}
-                                {% else %}
-                                    -
-                                {% endif %}
+                                {{ member.nameStructure }}<br>
+                                {{ member.email }}
                             </td>
-                            <td>{{ member.nameStructure }}</td>
-                            <td>{{ member.address }}</td>
-                            <td>{{ member.zipcode }}</td>
-                            <td>{{ member.city }}</td>
-                            <td>{{ member.contactEmail }}</td>
-                            <td>{{ member.contactPhone }}</td>
-                            <td>{{ member.contactResponsableFirstname }} {{ member.contactResponsableLastname }}</td>
-                            <td>{{ member.contactResponsableCivility }}</td>
+                            <td>{{ member.address }}<br>{{ member.zipcode }} {{ member.city }}</td>
+                            <td>{{ member.contactEmail }}<br>{{ member.contactPhone }}</td>
                             <td>
                                 {% if member.isVerified %}
                                     <span class="badge bg-success">Oui</span>

@@ -56,16 +56,18 @@
         </div>
     </div>
 
+    {% if app.request.attributes.get('_route') == 'app_admin_member_new' %}
     <div class="col-md-6">
         {{ form_label(form.password, '', {'label_attr': {'class': 'form-label fw-semibold'}}) }}
         {{ form_widget(form.password, {'attr': {'class': 'form-control'}}) }}
     </div>
+    {% endif %}
 
     <!-- Bouton -->
     <div class="mt-4">
         <a class="btn btn-secondary" href="{{ path('app_admin_dashboard_index') }}">Retour</a>
         <button class="btn btn-primary">{{ button_label|default('Enregistrer') }}</button>
-    </div
+    </div>
 
 </div>
 

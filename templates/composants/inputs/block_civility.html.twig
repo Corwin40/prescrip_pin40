@@ -1,0 +1,17 @@
+<div class="mb-3">
+    <label class="form-label">{{ label }}</label>
+    <div class="input-group">
+        {{ form_widget(civility, {
+            'attr': {'class': 'form-select border border-1 border-dark shadow-sm'} })
+        }}
+        {{ form_errors(firstname) }}
+        {{ form_widget(firstname, {
+            'attr': {'class': 'form-control border border-1 border-dark shadow-sm'} })
+        }}
+        {{ form_errors(firstname) }}
+        {{ form_widget(lastname, {
+            'attr': {'class': 'form-control border border-1 border-dark shadow-sm'} })
+        }}
+        {{ form_errors(lastname) }}
+    </div>
+</div>
