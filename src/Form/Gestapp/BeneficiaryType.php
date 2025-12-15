@@ -2,7 +2,11 @@
 
 namespace App\Form\Gestapp;
 
+use App\Entity\Admin\Member;
 use App\Entity\Gestapp\Beneficiary;
+use App\Entity\Gestapp\Prescription;
+use Doctrine\ORM\EntityRepository;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -39,7 +43,19 @@ class BeneficiaryType extends AbstractType
                 'placeholder' => 'Veuillez choisir',
                 'required' => true,
             ])
-
+            ->add('prescriptor', EntityType::class, [
+                'class' => Member::class,
+                'choice_label' => function ($prescriptor) {
+                    return $prescriptor->getNameStructure();
+                },
+                'query_builder' => function (EntityRepository $er) {
+                    return $er
+                        ->createQueryBuilder('p')
+                        ->where('p.roles LIKE :roles')
+                        ->setParameter('roles', '%ROLE_PRESCRIPTEUR%')
+                        ->orderBy('p.id', 'ASC');
+                },
+            ])
             ->add('professionnalStatus', ChoiceType::class, [
                 'label' => 'Statut professionnel',
                 'choices' => [

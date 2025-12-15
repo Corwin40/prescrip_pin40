@@ -2,6 +2,7 @@
 
 namespace App\Entity\Gestapp;
 
+use App\Entity\Admin\Member;
 use App\Repository\Gestapp\BeneficiaryRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
@@ -41,6 +42,9 @@ class Beneficiary
 
     #[ORM\OneToOne(mappedBy: 'beneficiaire', cascade: ['persist'])]
     private ?Prescription $prescription = null;
+
+    #[ORM\ManyToOne(inversedBy: 'beneficiaries')]
+    private ?Member $prescriptor = null;
 
     public function getId(): ?int
     {
@@ -158,6 +162,18 @@ class Beneficiary
         }
 
         $this->prescription = $prescription;
+
+        return $this;
+    }
+
+    public function getPrescriptor(): ?Member
+    {
+        return $this->prescriptor;
+    }
+
+    public function setPrescriptor(?Member $prescriptor): static
+    {
+        $this->prescriptor = $prescriptor;
 
         return $this;
     }

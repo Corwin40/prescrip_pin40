@@ -10,6 +10,11 @@
                 <p class="text-secondary">Référence : {{ prescription.ref }}</p>
             </div>
         </div>
+        <div class="row mb-4">
+            <div class="col-md-12">
+                <p class="text-secondary">Ce dossier est ouvert par : </p>
+            </div>
+        </div>
         {{ include('gestapp/prescription/_form.html.twig') }}
     </div>
 {% endblock %}

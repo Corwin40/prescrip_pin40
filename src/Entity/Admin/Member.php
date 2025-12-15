@@ -2,6 +2,7 @@
 
 namespace App\Entity\Admin;
 
+use App\Entity\Gestapp\Beneficiary;
 use App\Entity\Gestapp\Prescription;
 use App\Repository\MemberRepository;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -87,10 +88,17 @@ class Member implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(targetEntity: Prescription::class, mappedBy: 'lieuMediation')]
     private Collection $lieuxmediation;
 
+    /**
+     * @var Collection<int, Beneficiary>
+     */
+    #[ORM\OneToMany(targetEntity: Beneficiary::class, mappedBy: 'prescriptor')]
+    private Collection $beneficiaries;
+
     public function __construct()
     {
         $this->prescriptions = new ArrayCollection();
         $this->lieuxmediation = new ArrayCollection();
+        $this->beneficiaries = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -350,5 +358,35 @@ class Member implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function __toString(){
         return $this->nameStructure;
+    }
+
+    /**
+     * @return Collection<int, Beneficiary>
+     */
+    public function getBeneficiaries(): Collection
+    {
+        return $this->beneficiaries;
+    }
+
+    public function addBeneficiary(Beneficiary $beneficiary): static
+    {
+        if (!$this->beneficiaries->contains($beneficiary)) {
+            $this->beneficiaries->add($beneficiary);
+            $beneficiary->setPrescriptor($this);
+        }
+
+        return $this;
+    }
+
+    public function removeBeneficiary(Beneficiary $beneficiary): static
+    {
+        if ($this->beneficiaries->removeElement($beneficiary)) {
+            // set the owning side to null (unless already changed)
+            if ($beneficiary->getPrescriptor() === $this) {
+                $beneficiary->setPrescriptor(null);
+            }
+        }
+
+        return $this;
     }
 }
