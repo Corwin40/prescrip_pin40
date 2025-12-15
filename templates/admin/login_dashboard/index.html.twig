@@ -2,13 +2,25 @@
 
 
 {% block body %}
+
+    {% set role = 'aucun' %}
+    {% if app.user.roles|first == 'ROLE_SUPER_ADMIN' or app.user.roles|first == 'ROLE_ADMIN' %}
+        {% set role = 'Administrateur' %}
+    {% elseif app.user.roles|first == 'ROLE_MEDIATEUR' %}
+        {% set role = 'Médiateur' %}
+    {% elseif app.user.roles|first == 'ROLE_PRESCRIPTEUR' %}
+        {% set role = 'Prescripteur' %}
+    {% endif %}
+
     <div class="container mt-5">
 
         <!-- Titre -->
         <h2 class="text-start text-uppercase mt-3 mb-3">Bienvenue sur votre tableau de bord</h2>
+        <p>Vous êtes enregistré en tant que structure {{ role }}.</p>
 
         {# --- Section chiffres : ordis dispo & prescriptions --- #}
         <div class="row g-2 mb-4">
+            {% if role == 'Médiateur' %}
             <div class="col-md-3 mb-3">
                 <div class="card">
                     <div class="card-body p-3">
@@ -18,6 +30,7 @@
                     </div>
                 </div>
             </div>
+            {% endif %}
             <div class="col-md-3 mb-3">
                 <div class="card">
                     <div class="card-body p-3">
@@ -27,6 +40,7 @@
                     </div>
                 </div>
             </div>
+            {% if role == 'Prescripteur' %}
             <div class="col-md-3 mb-3">
                 <div class="card">
                     <div class="card-body p-3">
@@ -36,6 +50,7 @@
                     </div>
                 </div>
             </div>
+            {% endif %}
         </div>
 
         <!-- En-tête de la liste des prescriptions -->
@@ -131,12 +146,13 @@
                             href: path('app_admin_member_new', {'role': 'mediateur'})
                         } %}
                     {% endif %}
-
-                    {% include 'composants/forms/button_creatnew.html.twig' with {
-                        label: 'Nouveau équipement',
-                        style: null,
-                        href: path('app_gestapp_equipment_new')
-                    } %}
+                    {% if is_granted('ROLE_ADMIN') %}
+                        {% include 'composants/forms/button_creatnew.html.twig' with {
+                            label: 'Nouveau équipement',
+                            style: null,
+                            href: path('app_gestapp_equipment_new')
+                        } %}
+                    {% endif %}
 
                 {% endif %}
             </div>

@@ -7,23 +7,9 @@
 
         <h1 class="mb-4">Modifier le bénéficiaire</h1>
 
-        <div class="card p-4 shadow-sm">
-            {# Inclusion du formulaire principal #}
-            {{ include('gestapp/beneficiary/_form.html.twig', {'button_label': 'Mettre à jour'}) }}
-        </div>
+        {# Inclusion du formulaire principal #}
+        {{ include('gestapp/beneficiary/_form.html.twig', {'button_label': 'Mettre à jour'}) }}
 
-        <div class="mt-3 d-flex gap-2">
-            {# Bouton de retour (composant showsTable) #}
-            {% include 'composants/showsTable/button_return_list.html.twig' with {
-                href: path('app_admin_dashboard_index'),
-                label: 'Retour'
-            } %}
 
-            {# Bouton de suppression (composant showsTable) #}
-            {% include 'composants/showsTable/buttons_delete.html.twig' with {
-                id: beneficiary.id,
-                route: 'app_gestapp_beneficiary_delete'
-            } %}
-        </div>
     </div>
 {% endblock %}

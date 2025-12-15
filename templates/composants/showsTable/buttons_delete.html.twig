@@ -3,7 +3,7 @@
       onsubmit="return confirm('Confirmer la suppression ?');">
     <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ id) }}">
 
-    <button class="btn btn-outline-danger btn-sm shadow-sm px-3 py-1 border-2 fw-semibold">
-        <i class="fa-solid fa-trash-can me-2"></i> Supprimer
+    <button class="btn btn-outline-danger btn-sm shadow-sm px-3 py-1">
+        <i class="fa-solid fa-trash-can"></i> Supprimer
     </button>
 </form>

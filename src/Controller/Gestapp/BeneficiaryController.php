@@ -25,9 +25,11 @@ final class BeneficiaryController extends AbstractController
     #[Route('/new', name: 'app_gestapp_beneficiary_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
+        $user = $this->getUser();
         $beneficiary = new Beneficiary();
         $form = $this->createForm(BeneficiaryType::class, $beneficiary);
         $form->handleRequest($request);
+        $beneficiary->setPrescriptor($user);
 
         if ($form->isSubmitted() && $form->isValid()) {
 
@@ -55,7 +57,7 @@ final class BeneficiaryController extends AbstractController
             'action' => $this->generateUrl('app_gestapp_beneficiary_new2'),
             'method' => 'POST',
             'attr' => [
-                'id' => 'formBenficiary',
+                'id' => 'formBeneficiary',
             ]
         ]);
         $form->handleRequest($request);

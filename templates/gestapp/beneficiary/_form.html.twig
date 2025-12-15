@@ -2,50 +2,65 @@
 
 <div class="row">
 
-    <div class="col-md-2">
-        {% include 'composants/inputs/input_select.html.twig' with {
-            label: 'Civilité',
-            field: form.civility
-        } %}
+    <div class="col-12 mb-4">
+        <div class="row">
+            <div class="col-12 bg-light border-bottom border-dark mb-2">
+                <h3 class="mt-2 mb-2">Administratif</h3>
+            </div>
+            <div class="col-3">
+                {% include 'composants/inputs/input_select.html.twig' with {
+                    label: 'Structure accompagnatrice',
+                    field: form.prescriptor
+                } %}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12 bg-light border-bottom border-dark mb-2">
+                <h3 class="mt-2 mb-2">Le bénéficiaire</h3>
+            </div>
+
+            <div class="col-md-4">
+                {% include 'composants/inputs/block_civility.html.twig' with {
+                    label: 'Prénom & Nom',
+                    civility: form.civility,
+                    firstname: form.firstname,
+                    lastname: form.lastname
+                } %}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                {% include 'composants/inputs/input_radio_horizontal.html.twig' with {
+                    form_label: 'Age',
+                    form_field: form.ageGroup
+                } %}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                {% include 'composants/inputs/input_radio_horizontal.html.twig' with {
+                    form_label: 'Situation',
+                    form_field: form.professionnalStatus
+                } %}
+            </div>
+        </div>
     </div>
-
-    <div class="col-md-4">
-        {% include 'composants/inputs/input_text.html.twig' with {
-            label: 'Prénom',
-            field: form.firstname
-        } %}
-    </div>
-
-    <div class="col-md-4">
-        {% include 'composants/inputs/input_text.html.twig' with {
-            label: 'Nom',
-            field: form.lastname
-        } %}
-    </div>
-
-
-    <div class="col-md-12">
-        {% include 'composants/inputs/input_radio_horizontal.html.twig' with {
-            form_label: 'Age',
-            form_field: form.ageGroup
-        } %}
-    </div>
-
-    <div class="col-md-10"></div>
-
-    <div class="col-md-12">
-        {% include 'composants/inputs/input_radio_horizontal.html.twig' with {
-            form_label: 'Situation',
-            form_field: form.professionnalStatus
-        } %}
-    </div>
-
 </div>
+<hr>
 {% if app.request.attributes.get('_route') == 'app_gestapp_beneficiary_new' or app.request.attributes.get('_route') == 'app_gestapp_beneficiary_edit'%}
-    <div class="mt-4">
-        <a class="btn btn-secondary" href="{{ path('app_admin_dashboard_index') }}">Retour</a>
-        <button class="btn btn-primary">{{ button_label|default('Enregistrer') }}</button>
+<div class="row align-items-center">
+    <div class="col-6">
+        <a class="btn btn-outline-dark btn-sm" href="{{ path('app_admin_dashboard_index') }}">Retour</a>
+        <button class="btn btn-outline-primary btn-sm">{{ button_label|default('Enregistrer') }}</button>
     </div>
+    <div class="col-6">
+        {# Bouton de suppression (composant showsTable) #}
+        {% include 'composants/showsTable/buttons_delete.html.twig' with {
+            id: beneficiary.id,
+            route: 'app_gestapp_beneficiary_delete'
+        } %}
+    </div>
+</div>
 {% endif %}
 
 
