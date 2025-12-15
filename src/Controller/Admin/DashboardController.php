@@ -21,7 +21,7 @@ final class DashboardController extends AbstractController
         $prescriptions = $prescriptionRepository->findAll();
         $beneficiaries = $beneficiaryRepository->findAll();
 
-        return $this->render('admin/login_dashboard/index.html.twig', [
+        return $this->render('admin/dashboard/index.html.twig', [
             'equipments' => $equipments,
             'prescriptions' => $prescriptions,
             'beneficiaries' => $beneficiaries

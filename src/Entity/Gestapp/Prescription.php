@@ -58,6 +58,12 @@ class Prescription
     #[ORM\Column]
     private ?bool $validcase = false;
 
+    #[ORM\Column]
+    private ?bool $isOpenByPrescriptor = false;
+
+    #[ORM\Column(nullable: true)]
+    private ?bool $isOpenByMediator = false;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -230,6 +236,30 @@ class Prescription
     public function setValidcase(bool $validcase): static
     {
         $this->validcase = $validcase;
+
+        return $this;
+    }
+
+    public function isOpenByPrescriptor(): ?bool
+    {
+        return $this->isOpenByPrescriptor;
+    }
+
+    public function setIsOpenByPrescriptor(bool $isOpenByPrescriptor): static
+    {
+        $this->isOpenByPrescriptor = $isOpenByPrescriptor;
+
+        return $this;
+    }
+
+    public function isOpenByMediator(): ?bool
+    {
+        return $this->isOpenByMediator;
+    }
+
+    public function setIsOpenByMediator(?bool $isOpenByMediator): static
+    {
+        $this->isOpenByMediator = $isOpenByMediator;
 
         return $this;
     }
