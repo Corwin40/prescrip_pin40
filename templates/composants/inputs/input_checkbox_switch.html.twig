@@ -1,10 +1,13 @@
+{% set disabled = disabled|default(false) %}
 <div class="form-check form-switch">
     {{ form_widget(form_field, {
-        'attr': {
-            'class': 'form-check-input',
-            'role': 'switch',
-            'style': 'border: 1px solid black;'
-        }
+        attr: {
+            class: 'form-check-input',
+            role: 'switch',
+            style: 'border: 1px solid black;'
+        } | merge(disabled ? { disabled: 'disabled' } : {})
     }) }}
+    {% if form_label is defined %}
     {{ form_label(form_field) }}
+    {% endif %}
 </div>

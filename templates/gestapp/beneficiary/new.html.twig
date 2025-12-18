@@ -3,9 +3,9 @@
 {% block title %}New Beneficiary{% endblock %}
 
 {% block body %}
-    <h1>Créer un nouveau bénéficiaire</h1>
-
-    {{ include('gestapp/beneficiary/_form.html.twig') }}
-
-
+    <div class=" mt-5">
+        <h1 class="mb-4">Créer un nouveau bénéficiaire</h1>
+        {# Inclusion du formulaire principal #}
+        {{ include('gestapp/beneficiary/_form.html.twig') }}
+    </div>
 {% endblock %}

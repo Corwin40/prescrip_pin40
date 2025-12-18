@@ -35,15 +35,15 @@ final class PrescriptionController extends AbstractController
         $date = new \DateTime('now');
         $structure = $this->getUser()->getNameStructure();
 
-        $lastPrescription = $prescriptionRepository->findOneBy(['membre' => $this->getUser(), 'id' => 'DESC']);
-        $compteur = 0;
+        $lastPrescription = $prescriptionRepository->findOneBy(['membre' => $this->getUser()],[ 'id' => 'DESC']);
         if(!$lastPrescription){
             $compteur = 1;
         }else{
             $compteur = $lastPrescription->getCompteur() + 1;
         }
+        //dd($compteur);
 
-        $ref = $date->format('mY')."-".$structure."-".$compteur;// mois-année-structure-compteur
+        $ref = $date->format('Ym')."-".$structure."-".$compteur;// mois-année-structure-compteur
 
         $prescription = new Prescription();
         $prescription->setRef($ref);
@@ -56,7 +56,7 @@ final class PrescriptionController extends AbstractController
             'attr' => [
                 'id' => 'formPrescription',
             ],
-            'user' => $this->getUser(),
+            'user' => $user,
         ]);
         $form->handleRequest($request);
 
@@ -88,7 +88,18 @@ final class PrescriptionController extends AbstractController
     #[Route('/{id}/edit', name: 'app_gestapp_prescription_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Prescription $prescription, EntityManagerInterface $entityManager): Response
     {
-        $form = $this->createForm(PrescriptionType::class, $prescription);
+        $user = $this->getUser();
+
+        $form = $this->createForm(PrescriptionType::class, $prescription, [
+            'action' => $this->generateUrl('app_gestapp_prescription_edit',[
+                'id' => $prescription->getId()
+            ]),
+            'method' => 'POST',
+            'attr' => [
+                'id' => 'formPrescription',
+            ],
+            'user' => $user,
+        ]);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {

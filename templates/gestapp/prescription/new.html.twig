@@ -3,6 +3,16 @@
 {% block title %}Nouvelle prescription{% endblock %}
 
 {% block body %}
+
+    {% set role = 'aucun' %}
+    {% if app.user.roles|first == 'ROLE_SUPER_ADMIN' or app.user.roles|first == 'ROLE_ADMIN' %}
+        {% set role = 'Administrateur' %}
+    {% elseif app.user.roles|first == 'ROLE_MEDIATEUR' %}
+        {% set role = 'Médiateur' %}
+    {% elseif app.user.roles|first == 'ROLE_PRESCRIPTEUR' %}
+        {% set role = 'Prescripteur' %}
+    {% endif %}
+
     <div class="container mt-5">
         <div class="row mb-4">
             <div class="col-md-12">

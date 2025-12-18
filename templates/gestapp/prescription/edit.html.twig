@@ -4,15 +4,23 @@
 
 {% block body %}
 
-<div class="container mt-5">
-    <div class="row mb-4">
-        <div class="col-md-12">
-            <h1 class="mb-0">Poursuivre la prescription</h1>
-            <p class="text-secondary">Référence : {{ prescription.ref }}</p>
+    {% set role = 'aucun' %}
+    {% if app.user.roles|first == 'ROLE_SUPER_ADMIN' or app.user.roles|first == 'ROLE_ADMIN' %}
+        {% set role = 'Administrateur' %}
+    {% elseif app.user.roles|first == 'ROLE_MEDIATEUR' %}
+        {% set role = 'Médiateur' %}
+    {% elseif app.user.roles|first == 'ROLE_PRESCRIPTEUR' %}
+        {% set role = 'Prescripteur' %}
+    {% endif %}
+
+    <div class="mt-5">
+        <div class="row mb-4">
+            <div class="col-md-12">
+                <h1 class="mb-0">Poursuivre la prescription</h1>
+                <p class="text-secondary">Référence : {{ prescription.ref }}</p>
+            </div>
         </div>
-
-
+        {{ include('gestapp/prescription/_form.html.twig', {'button_label': 'Mettre à jour'}) }}
     </div>
-    {{ include('gestapp/prescription/_form.html.twig', {'button_label': 'Mettre à jour'}) }}
-</div>
+
 {% endblock %}

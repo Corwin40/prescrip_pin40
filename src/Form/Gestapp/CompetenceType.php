@@ -29,6 +29,7 @@ class CompetenceType extends AbstractType
                 'required' => true,
                 'expanded' => true,
                 'multiple' => false,
+                'data' => 'Nonacquis',
             ])
             ->add('compDesk', ChoiceType::class, [
                 'label' => 'competence',
@@ -40,6 +41,7 @@ class CompetenceType extends AbstractType
                 'required' => true,
                 'expanded' => true,
                 'multiple' => false,
+                'data' => 'Nonacquis',
             ])
             ->add('compInternet', ChoiceType::class, [
                 'label' => 'competence',
@@ -51,6 +53,7 @@ class CompetenceType extends AbstractType
                 'required' => true,
                 'expanded' => true,
                 'multiple' => false,
+                'data' => 'Nonacquis',
             ])
             ->add('compEmail', ChoiceType::class, [
                 'label' => 'competence',
@@ -62,17 +65,16 @@ class CompetenceType extends AbstractType
                 'required' => true,
                 'expanded' => true,
                 'multiple' => false,
+                'data' => 'Nonacquis',
             ])
             ->add('isAutoEva',CheckboxType::class, [
                 'label' => 'L\'auto évaluation du bénéficiaire a été réalisée avant l\'action.',
-                'required' => true,
+                'required' => false,
             ])
-
             ->add('isAutoEvaEnd' ,CheckboxType::class, [
                 'label' => 'L\'auto évaluation du bénéficiaire a été réalisée après l\'action.',
                 'required' => false,
             ])
-
             ->add('isDigComp0')
             ->add('isDigComp1')
             ->add('isDigComp2')

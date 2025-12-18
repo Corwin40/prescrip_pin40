@@ -96,7 +96,6 @@ class PrescriptionType extends AbstractType
             $builder
                 ->add('beneficiaire', BeneficiaryType::class, [
                     'empty_data' => new Beneficiary(),
-
                 ]);
         }
 

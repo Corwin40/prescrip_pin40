@@ -46,21 +46,31 @@
         </div>
     </div>
 </div>
-<hr>
-{% if app.request.attributes.get('_route') == 'app_gestapp_beneficiary_new' or app.request.attributes.get('_route') == 'app_gestapp_beneficiary_edit'%}
-<div class="row align-items-center">
+{% if app.request.attributes.get('_route') == 'app_gestapp_beneficiary_new'%}
+    <hr>
+    <div class="row align-items-center">
     <div class="col-6">
-        <a class="btn btn-outline-dark btn-sm" href="{{ path('app_admin_dashboard_index') }}">Retour</a>
-        <button class="btn btn-outline-primary btn-sm">{{ button_label|default('Enregistrer') }}</button>
+        <a class="btn btn-outline-dark" href="{{ path('app_admin_dashboard_index') }}">Retour</a>
+        <button class="btn btn-outline-primary">{{ button_label|default('Enregistrer') }}</button>
     </div>
     <div class="col-6">
-        {# Bouton de suppression (composant showsTable) #}
-        {% include 'composants/showsTable/buttons_delete.html.twig' with {
-            id: beneficiary.id,
-            route: 'app_gestapp_beneficiary_delete'
-        } %}
     </div>
 </div>
+{% elseif app.request.attributes.get('_route') == 'app_gestapp_beneficiary_edit' %}
+    <hr>
+    <div class="row align-items-center">
+        <div class="col-6">
+            <a class="btn btn-outline-dark" href="{{ path('app_admin_dashboard_index') }}">Retour</a>
+            <button class="btn btn-outline-primary">{{ button_label|default('Enregistrer') }}</button>
+        </div>
+        <div class="col-6">
+            {# Bouton de suppression (composant showsTable) #}
+            {% include 'composants/showsTable/buttons_delete.html.twig' with {
+                id: beneficiary.id,
+                route: 'app_gestapp_beneficiary_delete'
+            } %}
+        </div>
+    </div>
 {% endif %}
 
 
