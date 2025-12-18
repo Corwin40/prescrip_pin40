@@ -62,6 +62,8 @@ final class PrescriptionController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
 
+            //dd($form->getData());
+
             // Ajout du membre dans la prescription
             $prescription->setMembre($this->getUser());
 
