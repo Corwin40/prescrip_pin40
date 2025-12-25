@@ -47,12 +47,17 @@
                                         &nbsp;
                                         {% if beneficiary.prescription|length > 0 %}
                                             {% set prescription = beneficiary.prescription %}
-                                            {% if prescription.isOpenByPrescriptor is true and prescription.isOpenByMediator is not true %}
+                                            {% if prescription.isOpenByPrescriptor == 1 and prescription.isOpenByMediator == 0 %}
                                                 <span class="badge text-bg-info">
                                                 Prescription en cours&nbsp;<i class="fa-light fa-badge-check"></i>
                                                 </span>
                                             {% endif %}
-                                            {% if prescription.isOpenByPrescriptor is true and prescription.isOpenByMediator is true and prescription.validcase is true %}
+                                            {% if prescription.isOpenByPrescriptor == 0 and prescription.isOpenByMediator == 1 %}
+                                                <span class="badge text-bg-info">
+                                                Prescription en cours&nbsp;<i class="fa-light fa-badge-check"></i>
+                                                </span>
+                                            {% endif %}
+                                            {% if prescription.isOpenByPrescriptor == 1 and prescription.isOpenByMediator == 1 and prescription.validcase is true %}
                                                 <span class="badge text-bg-success">
                                                 Prescription éditée&nbsp;<i class="fa-light fa-badge-check"></i>
                                                 </span>

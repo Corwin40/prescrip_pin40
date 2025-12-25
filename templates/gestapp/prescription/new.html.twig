@@ -17,12 +17,17 @@
         <div class="row mb-4">
             <div class="col-md-12">
                 <h1 class="mb-0">Ouvrir une nouvelle prescription</h1>
-                <p class="text-secondary">Référence : {{ prescription.ref }}</p>
+                <p class="mb-0 text-secondary">Référence : {{ prescription.ref }}</p>
             </div>
         </div>
         <div class="row mb-4">
             <div class="col-md-12">
-                <p class="text-secondary">Ce dossier est ouvert par : </p>
+                {% if prescription.isOpenByPrescriptor == 1 and prescription.isOpenByMediator == 0 %}
+                    <p>Ce dossier est ouvert par : {{ prescription.membre.nameStructure }}</p>
+                {% endif %}
+                {% if prescription.isOpenByPrescriptor == 0 and prescription.isOpenByMediator == 1 %}
+                    <p>Ce dossier est ouvert par : {{ prescription.lieuMediation.nameStructure }}</p>
+                {% endif %}
             </div>
         </div>
         {{ include('gestapp/prescription/_form.html.twig') }}

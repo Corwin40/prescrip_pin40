@@ -17,7 +17,17 @@
         <div class="row mb-4">
             <div class="col-md-12">
                 <h1 class="mb-0">Poursuivre la prescription</h1>
-                <p class="text-secondary">Référence : {{ prescription.ref }}</p>
+                <p class="mb-0 text-secondary">Référence : {{ prescription.ref }}</p>
+            </div>
+        </div>
+        <div class="row mb-4">
+            <div class="col-md-12">
+                {% if prescription.isOpenByPrescriptor == 1 and prescription.isOpenByMediator == 0 %}
+                    <p class="mb-0">Ce dossier a été ouvert par : {{ prescription.membre.nameStructure }}</p>
+                {% endif %}
+                {% if prescription.isOpenByPrescriptor == 0 and prescription.isOpenByMediator == 1 %}
+                    <p class="mb-0">Ce dossier a été ouvert par l'espace de médiation : {{ prescription.lieuMediation.nameStructure }}. Il est en attente d'être compléte ou validé par le prescripteur : {{ prescription.membre.nameStructure }}</p>
+                {% endif %}
             </div>
         </div>
         {{ include('gestapp/prescription/_form.html.twig', {'button_label': 'Mettre à jour'}) }}

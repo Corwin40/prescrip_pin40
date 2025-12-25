@@ -19,7 +19,17 @@ final class PrescriptionController extends AbstractController
     public function index(PrescriptionRepository $prescriptionRepository): Response
     {
         $member = $this->getUser();
-        $prescriptions = $prescriptionRepository->findBy(['membre' => $member]);
+        if($member && in_array('ROLE_PRESCRIPTEUR', $member->getRoles())){
+            $prescriptions = $prescriptionRepository->findBy(['membre' => $member]);
+        }
+        if($member && in_array('ROLE_MEDIATEUR', $member->getRoles())){
+            $prescriptions = $prescriptionRepository->findBy(['lieuMediation' => $member]);
+        }
+        if($member && in_array('ROLE_ADMIN', $member->getRoles())){
+            $prescriptions = $prescriptionRepository->findAll();
+        }
+
+        ///dd($prescriptions);
 
         return $this->render('gestapp/prescription/index.html.twig', [
             'prescriptions' => $prescriptions,
@@ -62,10 +72,18 @@ final class PrescriptionController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
 
-            //dd($form->getData());
+            if($user && in_array('ROLE_MEDIATEUR', $user->getRoles())){
+                $prescription->setIsOpenByMediator(1);
+                // Ajout du membre dans la prescription
+                $prescription->setMembre($form->get('membre')->getData());
+            }
+            if($user && in_array('ROLE_PRESCRIPTEUR', $user->getRoles())){
+                $prescription->setIsOpenByPrescriptor(1);
+                // Ajout du membre dans la prescription
+                $prescription->setMembre($this->getUser());
+            }
 
-            // Ajout du membre dans la prescription
-            $prescription->setMembre($this->getUser());
+
 
             $entityManager->persist($prescription);
             $entityManager->flush();
