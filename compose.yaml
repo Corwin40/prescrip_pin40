@@ -14,6 +14,8 @@ services:
       - SERVER_NAME=:80
     depends_on:
       - db
+    networks:
+      - prescriptpin40
 
   # Base de données MariaDB
   db:
@@ -21,7 +23,7 @@ services:
     container_name: pin40prescription_db
     restart: unless-stopped
     environment:
-      - MYSQL_DATABASE=francas2025_db
+      - MYSQL_DATABASE=prescrippin40_db
       - MYSQL_USER=xavier
       - MYSQL_PASSWORD=Corwin_40280
       - MYSQL_ROOT_PASSWORD=Corwin_40280
@@ -29,6 +31,8 @@ services:
       - "3307:3306"
     volumes:
       - db_data:/var/lib/mysql
+    networks:
+      - prescriptpin40
 
   # phpMyAdmin pour gérer la base de données
   phpmyadmin:
@@ -43,6 +47,13 @@ services:
       - MYSQL_ROOT_PASSWORD=Corwin_40280
     depends_on:
       - db
+    networks:
+      - prescriptpin40
 
 volumes:
   db_data:
+
+networks:
+  prescriptpin40:
+    external: true
+
