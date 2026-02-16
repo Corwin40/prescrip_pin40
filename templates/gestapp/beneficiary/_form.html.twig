@@ -1,8 +1,7 @@
 {{ form_start(form) }}
 
 <div class="row">
-
-    <div class="col-12 mb-4">
+    <div class="col-12">
         <div class="row">
             <div class="col-12 bg-light border-bottom border-dark mb-2">
                 <h3 class="mt-2 mb-2">Administratif</h3>
@@ -46,23 +45,13 @@
         </div>
     </div>
 </div>
-{% if app.request.attributes.get('_route') == 'app_gestapp_beneficiary_new'%}
-    <hr>
-    <div class="row align-items-center">
+
+<div class="row">
     <div class="col-6">
-        <a class="btn btn-outline-dark" href="{{ path('app_admin_dashboard_index') }}">Retour</a>
-        <button class="btn btn-outline-primary">{{ button_label|default('Enregistrer') }}</button>
+        <a class="btn btn-sm btn-outline-dark" href="{{ path('app_admin_dashboard_index') }}"><i class="fa-duotone fa-solid fa-chevrons-left"></i>&nbsp;Retour</a>
+        <button id="btnAddPrescription" class="btn btn-outline-primary btn-sm"><i class="fa-duotone fa-solid fa-circle-check"></i> Ajouter l'équipement</button>
     </div>
-    <div class="col-6">
-    </div>
-</div>
-{% elseif app.request.attributes.get('_route') == 'app_gestapp_beneficiary_edit' %}
-    <hr>
-    <div class="row align-items-center">
-        <div class="col-6">
-            <a class="btn btn-outline-dark" href="{{ path('app_admin_dashboard_index') }}">Retour</a>
-            <button class="btn btn-outline-primary">{{ button_label|default('Enregistrer') }}</button>
-        </div>
+    {% if app.request.attributes.get('_route') == 'app_gestapp_beneficiary_edit'%}
         <div class="col-6">
             {# Bouton de suppression (composant showsTable) #}
             {% include 'composants/showsTable/buttons_delete.html.twig' with {
@@ -70,8 +59,7 @@
                 route: 'app_gestapp_beneficiary_delete'
             } %}
         </div>
-    </div>
-{% endif %}
-
+    {% endif %}
+</div>
 
 {{ form_end(form) }}

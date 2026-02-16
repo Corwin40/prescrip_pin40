@@ -1,98 +1,41 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>{% block title %}Welcome!{% endblock %}</title>
+        <title>{% block title %}Welcome!{% endblock %}</title>
 
-    {% block stylesheets %}
-        {{ encore_entry_link_tags('app') }}
-    {% endblock %}
+        {% block stylesheets %}
+            {{ encore_entry_link_tags('app') }}
+        {% endblock %}
 
-    {% block javascripts %}
-        {{ encore_entry_script_tags('app') }}
-        <script src="https://kit.fontawesome.com/1fb9149f4c.js" crossorigin="anonymous"></script>
-    {% endblock %}
-</head>
+        {% block javascripts %}
+            {{ encore_entry_script_tags('app') }}
+            <script src="https://kit.fontawesome.com/1fb9149f4c.js" crossorigin="anonymous"></script>
+        {% endblock %}
+    </head>
 
-<body class="d-flex flex-column min-vh-100" data-page="{{ app.current_route }}">
+    <body data-page="{{ app.current_route }}">
+        <header class="mb-3">
+            <!-- NAVBAR -->
+            {% include 'include/navbar.html.twig' %}
+        </header>
 
-<!-- NAVBAR -->
-<nav class="navbar navbar-expand-lg shadow">
-    <div class="container-fluid">
-        <a class="navbar-brand" href="{{ path('app_webapp_public_accueil')}}">Prescription Ordi PIN40</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-                data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown"
-                aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
+        <!-- CONTENU -->
+        <main class="container">
+            {% block body %}
+            {% endblock %}
+            {% block modals %}
+                {% include 'include/modals.html.twig' %}
+            {% endblock %}
+            <!-- Modal -->
+        </main>
 
-        <div class="collapse navbar-collapse" id="navbarNavDropdown">
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ path('app_webapp_public_prezDon') }}">Le dispositif</a>
-                </li>
-            </ul>
+        <!-- FOOTER -->
+        <footer class="mt-5">
+            {% include 'include/footer.html.twig' %}
+        </footer>
 
-            <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-                {% if app.user %}
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
-                            <i class="fa-duotone fa-solid fa-circle-user"></i>&nbsp;{{ app.user.contactResponsableFirstname }} {{ app.user.contactResponsableLastname }} | {{ app.user.nameStructure }}
-                        </a>
-                        <ul class="dropdown-menu dropdown-menu-end">
-                            <li><a class="dropdown-item" href="{{ path('app_admin_member_edit', {'id': app.user.id}) }}">Mes informations</a></li>
-                            <li><a class="dropdown-item" href="{{ path('app_admin_dashboard_index') }}">Tableau de bord</a></li>
-                            <li><a class="dropdown-item" href="{{ path('app_logout') }}">Se déconnecter</a></li>
-                        </ul>
-                    </li>
-                {% else %}
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ path('app_admin_dashboard_index') }}"><strong>Espace de connexion</strong></a>
-                    </li>
-                {% endif %}
-            </ul>
-        </div>
-    </div>
-</nav>
-
-<!-- CONTENU -->
-<main class="container">
-    {% block body %}{% endblock %}
-
-    <!-- Modal -->
-    <div class="modal fade" id="modal" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-xl">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body">
-                    <div class="d-flex justify-content-center">
-                        <div class="spinner-border" role="status">
-                            <span class="visually-hidden">En attente...</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <a href="#" class="btn btn-primary btnSubmit">Ajouter</a>
-                    <button class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
-                </div>
-            </div>
-        </div>
-    </div>
-</main>
-
-<!-- FOOTER -->
-<footer class="container-fluid mt-auto bg-dark text-light pt-2 pb-2">
-    <div class="row text-center">
-        <div class="col"><a class="nav-link" href="{{ path('app_webapp_public_accueil') }}">© 2025 - Precrip Ordi Pin40</a></div>
-        <div class="col"><a class="nav-link" href="{{ path('app_webapp_public_mentions') }}">Mentions Légales</a></div>
-        <div class="col"><a class="nav-link" href="{{ path('app_webapp_public_contact') }}">Contact</a></div>
-    </div>
-</footer>
-
-</body>
+    </body>
 </html>

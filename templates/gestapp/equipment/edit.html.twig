@@ -3,6 +3,23 @@
 {% block title %}Modifier l’équipement{% endblock %}
 
 {% block body %}
+
+    {# Bloc entête de page #}
+    {%
+        include 'composants/pages/pages_headers.html.twig' with {
+        'page_title' : 'Liste des équipements disponibles à la dotation',
+        'li_items': [
+            { path: 'app_admin_dashboard_index', fa_class: 'fa-sharp-duotone fa-solid fa-house-blank', a_title: 'Dashboard' },
+            { path: 'app_gestapp_equipment_index', fa_class: 'fa-sharp fa-light fa-laptop', a_title: 'équipements' },
+            { path: null, fa_class: 'fa-sharp fa-light fa-laptop', a_title: 'Ajouter un nouvel équipement' },
+        ],
+        'add_btn_path': 'app_gestapp_equipment_new',
+        'btn_add_id':'btnAddEquipment',
+        'add_btn_fa_class' : 'fa-duotone fa-solid fa-circle-user-circle-plus',
+        'add_btn_textcontent' : 'Ajouter un équipement'
+    }
+    %}
+
     <div class="container mt-5">
 
         <h1 class="mb-4">Modifier l’équipement</h1>

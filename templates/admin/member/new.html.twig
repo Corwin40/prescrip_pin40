@@ -3,6 +3,23 @@
 {% block title %}Nouveau membre{% endblock %}
 
 {% block body %}
+
+    {%
+        include 'composants/pages/pages_headers.html.twig' with {
+        'page_title' : 'Liste des Membres',
+        'li_items': [
+            { path: 'app_admin_dashboard_index', fa_class: 'fa-sharp-duotone fa-solid fa-house-blank', a_title: 'Dashboard' },
+            { path: 'app_admin_member_index', fa_class: 'fa-sharp fa-light fa-laptop', a_title: 'Membres' },
+            { path: null, fa_class: null , a_title: 'Ajout d\'un.e membre' },
+        ],
+        'btns' : [
+            {'path': path('app_admin_member_new', {'role': 'prescripteur'}), 'id':'btnAddMembre', 'class' : 'btn btn-outline-dark btn-sm', 'fa_class' : 'fa-duotone fa-solid fa-circle-user-circle-plus', 'textcontent' : 'Ajouter un.e prescripteur'},
+            {'path': path('app_admin_member_new', {'role': 'mediateur'}), 'id':'btnAddMembre', 'class' : 'btn btn-outline-dark btn-sm', 'fa_class' : 'fa-duotone fa-solid fa-circle-user-circle-plus', 'textcontent' : 'Ajouter un.e mediateur'},
+        ]
+
+    }
+    %}
+
     <div class="container mt-5">
 
         <h1 class="mb-4 fw-bold">Créer un nouveau {{ role }}</h1>

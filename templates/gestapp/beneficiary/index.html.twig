@@ -4,27 +4,28 @@
 {% block title %}Liste des bénéficiaires{% endblock %}
 
 {% block body %}
-    <div class="mt-5">
+    {# Bloc entête de page #}
+    {%
+        include 'composants/pages/pages_headers.html.twig' with {
+        'page_title' : 'Liste des Bénéficiaires',
+        'li_items': [
+            { path: 'app_admin_dashboard_index', fa_class: 'fa-sharp-duotone fa-solid fa-house-blank', a_title: 'Dashboard' },
+            { path: null, fa_class: 'fa-sharp fa-light fa-laptop', a_title: 'Bénéficiaires' },
+        ],
+        'btns' : [
+            {'path': path('app_gestapp_beneficiary_new'), 'id':'btnAddBeneficiaire', 'class' : 'btn btn-outline-dark btn-sm', 'fa_class' : 'fa-duotone fa-solid fa-circle-user-circle-plus', 'textcontent' : 'Ajouter un.e bénéficiaire'},
+        ]
 
-        {# Bouton de retour au tableau de bord #}
-        <div class="mb-4">
-            {% include 'composants/forms/button_return_dashboard.html.twig' %}
-        </div>
+    }
+    %}
 
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <h1 class="h3">Liste des bénéficiaires</h1>
-
-            {# Bouton pour créer un bénéficiaire via ton composant #}
-            {% include 'composants/forms/button_creatnew.html.twig' with {
-                label: 'Créer un nouveau bénéficiaire',
-                href: path('app_gestapp_beneficiary_new')
-            } %}
-        </div>
-
-        {% if beneficiaries is not empty %}
-            <div class="table-responsive">
-                <table class="table table-hover table-bordered align-middle">
-                    <thead class="">
+    {# Bloc contenu de la page #}
+    <div class="row mt-3">
+        <div class="col-12">
+            {% if beneficiaries is not empty %}
+                <div class="table-responsive">
+                    <table class="table table-hover table-bordered align-middle">
+                        <thead class="">
                         <tr>
                             <th>Le bénéficiaire</th>
                             <th>Tranche d’âge</th>
@@ -32,57 +33,74 @@
                             <th>Modifié le</th>
                             <th>Actions</th>
                         </tr>
-                    </thead>
-                    <tbody>
-                    {% for beneficiary in beneficiaries %}
-                        <tr>
-                            <td>
-                                <div class="d-flex justify-content-between">
-                                    <p class="mb-0 fs-6">
-                                        {{ beneficiary.civility }} {{ beneficiary.firstname }} {{ beneficiary.lastname }}</p>
-                                    <p class="mb-0">
+                        </thead>
+                        <tbody>
+                        {% for beneficiary in beneficiaries %}
+                            <tr>
+                                <td>
+                                    <div class="d-flex justify-content-between">
+                                        <p class="mb-0 fs-6">
+                                            {{ beneficiary.civility }} {{ beneficiary.firstname }} {{ beneficiary.lastname }}</p>
+                                        <p class="mb-0">
                                         <span class="badge text-bg-light">
                                             {{ beneficiary.prescriptor.nameStructure }}
                                         </span>
-                                        &nbsp;
-                                        {% if beneficiary.prescription|length > 0 %}
-                                            {% set prescription = beneficiary.prescription %}
-                                            {% if prescription.isOpenByPrescriptor == 1 and prescription.isOpenByMediator == 0 %}
-                                                <span class="badge text-bg-info">
+                                            &nbsp;
+                                            {% if beneficiary.prescription|length > 0 %}
+                                                {% set prescription = beneficiary.prescription %}
+                                                {% if prescription.isOpenByPrescriptor == 1 and prescription.isOpenByMediator == 0 %}
+                                                    <span class="badge text-bg-info">
                                                 Prescription en cours&nbsp;<i class="fa-light fa-badge-check"></i>
                                                 </span>
-                                            {% endif %}
-                                            {% if prescription.isOpenByPrescriptor == 0 and prescription.isOpenByMediator == 1 %}
-                                                <span class="badge text-bg-info">
+                                                {% endif %}
+                                                {% if prescription.isOpenByPrescriptor == 0 and prescription.isOpenByMediator == 1 %}
+                                                    <span class="badge text-bg-info">
                                                 Prescription en cours&nbsp;<i class="fa-light fa-badge-check"></i>
                                                 </span>
-                                            {% endif %}
-                                            {% if prescription.isOpenByPrescriptor == 1 and prescription.isOpenByMediator == 1 and prescription.validcase is true %}
-                                                <span class="badge text-bg-success">
+                                                {% endif %}
+                                                {% if prescription.isOpenByPrescriptor == 1 and prescription.isOpenByMediator == 1 and prescription.validcase is true %}
+                                                    <span class="badge text-bg-success">
                                                 Prescription éditée&nbsp;<i class="fa-light fa-badge-check"></i>
                                                 </span>
+                                                {% endif %}
                                             {% endif %}
-                                        {% endif %}
-                                    </p>
-                                </div>
+                                        </p>
+                                    </div>
 
-                            </td>
-                            <td><p class="mb-0 fs-6">{{ beneficiary.ageGroup }} ans</p></td>
-                            <td><p class="mb-0 fs-6">{{ beneficiary.professionnalStatus }}</p></td>
-                            <td><p class="mb-0 fs-6">{{ beneficiary.updatedAt ? beneficiary.updatedAt|date('d/m/Y') : '' }}</p></td>
-                            <td class="text-center">
-                                <a href="{{ path('app_gestapp_beneficiary_show', {'id': beneficiary.id}) }}" class="text-dark text-decoration-none"><i class="fa-duotone fa-solid fa-eye"></i>&nbsp;Voir</a>
-                                <a href="{{ path('app_gestapp_beneficiary_edit', {'id': beneficiary.id}) }}" class="text-dark text-decoration-none"><i class="fa-duotone fa-solid fa-user-pen"></i>&nbsp;Modifier</a>
-                                <a href="{{ path('app_admin_member_delete', {'id': beneficiary.id}) }}" class="text-dark text-decoration-none"><i class="fa-duotone fa-solid fa-user-circle-minus"></i>&nbsp;Supprimer</a>
-                            </td>
+                                </td>
+                                <td><p class="mb-0 fs-6">{{ beneficiary.ageGroup }} ans</p></td>
+                                <td><p class="mb-0 fs-6">{{ beneficiary.professionnalStatus }}</p></td>
+                                <td><p class="mb-0 fs-6">{{ beneficiary.updatedAt ? beneficiary.updatedAt|date('d/m/Y') : '' }}</p></td>
+                                <td class="text-center">
+                                    <a href="{{ path('app_gestapp_beneficiary_show', {'id': beneficiary.id}) }}" class="text-dark text-decoration-none"><i class="fa-duotone fa-solid fa-eye"></i>&nbsp;Voir</a>
+                                    <a href="{{ path('app_gestapp_beneficiary_edit', {'id': beneficiary.id}) }}" class="text-dark text-decoration-none"><i class="fa-duotone fa-solid fa-user-pen"></i>&nbsp;Modifier</a>
+                                    <a href="{{ path('app_gestapp_beneficiary_delete', {'id': beneficiary.id}) }}" class="text-dark text-decoration-none"><i class="fa-duotone fa-solid fa-user-circle-minus"></i>&nbsp;Supprimer</a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+            <div class="table-responsive">
+                <table class="table table-hover table-bordered align-middle">
+                    <thead class="">
+                    <tr>
+                        <th>Le bénéficiaire</th>
+                        <th>Tranche d’âge</th>
+                        <th>Situation professionnelle</th>
+                        <th>Modifié le</th>
+                        <th>Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="text-start text-muted" colspan="5">Aucun bénéficiaire trouvé.</td>
                         </tr>
-                    {% endfor %}
                     </tbody>
                 </table>
             </div>
-        {% else %}
-            <p class="text-center">Aucun bénéficiaire trouvé.</p>
-        {% endif %}
-
+            {% endif %}
+        </div>
     </div>
 {% endblock %}

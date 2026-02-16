@@ -25,11 +25,9 @@ final class PrescriptionController extends AbstractController
         if($member && in_array('ROLE_MEDIATEUR', $member->getRoles())){
             $prescriptions = $prescriptionRepository->findBy(['lieuMediation' => $member]);
         }
-        if($member && in_array('ROLE_ADMIN', $member->getRoles())){
+        if($member && in_array('ROLE_SUPER_ADMIN', $member->getRoles())){
             $prescriptions = $prescriptionRepository->findAll();
         }
-
-        ///dd($prescriptions);
 
         return $this->render('gestapp/prescription/index.html.twig', [
             'prescriptions' => $prescriptions,

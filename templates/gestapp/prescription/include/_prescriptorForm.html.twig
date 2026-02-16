@@ -1,0 +1,73 @@
+{#  Bloc Prescripteur #}
+<div class="col-12 mb-2">
+    <div class="row">
+        <div class="col-12 bg-light border-bottom border-dark mb-2">
+            <h2 class="mt-1 mb-1 h4">Le prescripteur</h2>
+        </div>
+    </div>
+
+    {% if app.user.roles|first == 'ROLE_MEDIATEUR' %}
+        <div class="row">
+            <div class="col-md-6">
+                {% include 'composants/inputs/input_select.html.twig' with {
+                    label: 'Sélectionner la structure de prescription',
+                    field: form.membre,
+                    disabled: ''
+                } %}
+            </div>
+        </div>
+    {% else %}
+        <table class="table">
+            <tr>
+                <td class="col-1">
+                    <div class="d-flex gap-1">
+                        <div><i class="fa-duotone fa-light fa-building"></i></div>
+                        <div>Structure&nbsp;</div>
+                    </div>
+                </td>
+                <td class="col-2">
+                    <p class="mb-0 fw-semibold">{{ app.user.nameStructure }}</p>
+                </td>
+                <td class="col-1">
+                    <div class="d-flex gap-1">
+                        <div><i class="fa-duotone fa-solid fa-user"></i></div>
+                        <div>Responsable&nbsp;</div>
+                    </div>
+                </td>
+                <td class="col-2">
+                    {% if app.user.contactResponsableFirstname is empty and app.user.contactResponsableLastname is empty %}
+                        -
+                    {% else %}
+                        <p class="mb-0 fw-semibold">{{ app.user.contactResponsableFirstname }} {{ app.user.contactResponsableLastname }}</p>
+                    {% endif %}
+                </td>
+                <td class="col-1">
+                    <div class="d-flex gap-1">
+                        <div><i class="fa-duotone fa-light fa-phone"></i></div>
+                        <div>Téléphone&nbsp;</div>
+                    </div>
+                </td>
+                <td class="col-2">
+                    {% if app.user.contactPhone is empty %}
+                        -
+                    {% else %}
+                        <p class="mb-0 fw-semibold">{{ app.user.contactPhone }}</p>
+                    {% endif %}
+                </td>
+                <td class="col-1">
+                    <div class="d-flex gap-1">
+                        <div><i class="fa-duotone fa-solid fa-inbox"></i></div>
+                        <div>Email&nbsp;</div>
+                    </div>
+                </td>
+                <td class="col-2">
+                    {% if app.user.contactEmail is empty %}
+                        -
+                    {% else %}
+                        <p class="mb-0 fw-semibold">{{ app.user.contactEmail }}</p>
+                    {% endif %}
+                </td>
+            </tr>
+        </table>
+    {% endif %}
+</div>

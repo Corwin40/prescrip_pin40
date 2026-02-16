@@ -1,0 +1,23 @@
+{# Bloc entête de page #}
+<div class="row mt-3 mb-3">
+    <div class="col-12">
+        <h1 class="text-start text-uppercase h2 mb-0">{{ page_title }}</h1>
+    </div>
+    <div class="col-5 d-flex align-items-center">
+        <ol class="breadcrumb d-none d-lg-flex mb-0 text-muted">
+            {% for i in li_items %}
+                {% if i.path is not null %}
+                    <li class="breadcrumb-item"><a href="{{ path(i.path) }}" class="text-decoration-none"><i class="{{ i.fa_class }}"></i> {{ i.a_title }}</a></li>
+                {% else %}
+                    <li class="breadcrumb-item"><i class="{{ i.fa_class }}"></i> {{ i.a_title }}</li>
+                {% endif %}
+            {% endfor %}
+        </ol>
+    </div>
+    <div class="col-7 d-flex align-items-center justify-content-end g-2">
+        {% for btn in btns %}
+        <a href="{{ btn.path }}" id="{{ btn.id }}" class="{{ btn.class }}{% if loop.last %}{% else %} me-1{% endif %}"><i class="{{ btn.fa_class }}"></i>
+            {{ btn.textcontent }}</a>
+        {% endfor %}
+    </div>
+</div>

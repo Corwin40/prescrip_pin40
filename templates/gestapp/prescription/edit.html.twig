@@ -13,10 +13,25 @@
         {% set role = 'Prescripteur' %}
     {% endif %}
 
+    {# Bloc entête de page #}
+    {%
+        include 'composants/pages/pages_headers.html.twig' with {
+        'page_title' : 'Liste des prescriptions',
+        'li_items': [
+            { path: 'app_admin_dashboard_index', fa_class: 'fa-sharp-duotone fa-solid fa-house-blank', a_title: 'Dashboard' },
+            { path: 'app_gestapp_prescription_index', fa_class: 'fa-sharp fa-light fa-laptop', a_title: 'prescription' },
+            { path: null, fa_class: 'fa-sharp fa-light fa-laptop', a_title: 'Poursuivre la prescription' },
+        ],
+        'add_btn_path': 'app_gestapp_equipment_new',
+        'btn_add_id':'btnAddEquipment',
+        'add_btn_fa_class' : 'fa-duotone fa-solid fa-circle-user-circle-plus',
+        'add_btn_textcontent' : 'Ajouter une prescription'
+    }
+    %}
+
     <div class="mt-5">
         <div class="row mb-4">
             <div class="col-md-12">
-                <h1 class="mb-0">Poursuivre la prescription</h1>
                 <p class="mb-0 text-secondary">Référence : {{ prescription.ref }}</p>
             </div>
         </div>

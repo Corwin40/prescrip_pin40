@@ -8,14 +8,6 @@ use Symfony\Component\Routing\Attribute\Route;
 
 final class PublicController extends AbstractController
 {
-    #[Route('/', name: 'app_webapp_public_accueil')]
-    public function index(): Response
-    {
-
-        return $this->render('webapp/public/accueil.html.twig');
-
-    }
-
     #[Route('/mentions', name: 'app_webapp_public_mentions')]
     public function mentions(): Response
     {
