@@ -22,30 +22,12 @@
             { path: 'app_gestapp_prescription_index', fa_class: 'fa-sharp fa-light fa-laptop', a_title: 'prescription' },
             { path: null, fa_class: 'fa-sharp fa-light fa-laptop', a_title: 'Poursuivre la prescription' },
         ],
-        'add_btn_path': 'app_gestapp_equipment_new',
-        'btn_add_id':'btnAddEquipment',
-        'add_btn_fa_class' : 'fa-duotone fa-solid fa-circle-user-circle-plus',
-        'add_btn_textcontent' : 'Ajouter une prescription'
+        'btns' : [
+            {'path': path('app_gestapp_equipment_new'), 'id':'btnAddEquipment', 'class' : 'btn btn-outline-dark btn-sm', 'fa_class' : 'fa-duotone fa-solid fa-circle-user-circle-plus', 'textcontent' : 'Ajouter une prescription'},
+        ]
     }
     %}
 
-    <div class="mt-5">
-        <div class="row mb-4">
-            <div class="col-md-12">
-                <p class="mb-0 text-secondary">Référence : {{ prescription.ref }}</p>
-            </div>
-        </div>
-        <div class="row mb-4">
-            <div class="col-md-12">
-                {% if prescription.isOpenByPrescriptor == 1 and prescription.isOpenByMediator == 0 %}
-                    <p class="mb-0">Ce dossier a été ouvert par : {{ prescription.membre.nameStructure }}</p>
-                {% endif %}
-                {% if prescription.isOpenByPrescriptor == 0 and prescription.isOpenByMediator == 1 %}
-                    <p class="mb-0">Ce dossier a été ouvert par l'espace de médiation : {{ prescription.lieuMediation.nameStructure }}. Il est en attente d'être compléte ou validé par le prescripteur : {{ prescription.membre.nameStructure }}</p>
-                {% endif %}
-            </div>
-        </div>
-        {{ include('gestapp/prescription/_form.html.twig', {'button_label': 'Mettre à jour'}) }}
-    </div>
+    {{ include('gestapp/prescription/_form.html.twig', {'button_label': 'Mettre à jour'}) }}
 
 {% endblock %}

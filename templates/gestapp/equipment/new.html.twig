@@ -13,10 +13,9 @@
             { path: 'app_gestapp_equipment_index', fa_class: 'fa-sharp fa-light fa-laptop', a_title: 'équipements' },
             { path: null, fa_class: 'fa-sharp fa-light fa-laptop', a_title: 'Ajouter un nouvel équipement' },
         ],
-        'add_btn_path': 'app_gestapp_equipment_new',
-        'btn_add_id':'btnAddEquipment',
-        'add_btn_fa_class' : 'fa-duotone fa-solid fa-circle-user-circle-plus',
-        'add_btn_textcontent' : 'Ajouter un équipement'
+        'btns' : [
+            {'path': path('app_gestapp_equipment_new'), 'id':'btnAddEquipment', 'class' : 'btn btn-outline-dark btn-sm', 'fa_class' : 'fa-duotone fa-solid fa-circle-user-circle-plus', 'textcontent' : 'Ajouter un équipement'},
+        ]
     }
     %}
 
