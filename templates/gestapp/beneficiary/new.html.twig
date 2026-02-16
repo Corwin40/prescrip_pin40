@@ -3,9 +3,23 @@
 {% block title %}New Beneficiary{% endblock %}
 
 {% block body %}
-    <div class=" mt-5">
-        <h1 class="mb-4">Créer un nouveau bénéficiaire</h1>
-        {# Inclusion du formulaire principal #}
-        {{ include('gestapp/beneficiary/_form.html.twig') }}
-    </div>
+    {# Bloc entête de page #}
+    {%
+        include 'composants/pages/pages_headers.html.twig' with {
+        'page_title' : 'Liste des Bénéficiaires',
+        'li_items': [
+            { path: 'app_admin_dashboard_index', fa_class: 'fa-sharp-duotone fa-solid fa-house-blank', a_title: 'Dashboard' },
+            { path: 'app_gestapp_beneficiary_index', fa_class: 'fa-sharp fa-light fa-laptop', a_title: 'Bénéficiaires' },
+            { path: null, fa_class: null , a_title: 'Ajout d\'un.e bénéficiaire' },
+        ],
+        'btns' : [
+            {'path': path('app_gestapp_beneficiary_new'), 'id':'btnAddBeneficiaire', 'class' : 'btn btn-outline-dark btn-sm', 'fa_class' : 'fa-duotone fa-solid fa-circle-user-circle-plus', 'textcontent' : 'Ajouter un.e bénéficiaire'},
+        ]
+
+    }
+    %}
+
+    {# Inclusion du formulaire principal #}
+    {{ include('gestapp/beneficiary/_form.html.twig') }}
+
 {% endblock %}

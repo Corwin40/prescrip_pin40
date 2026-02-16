@@ -3,77 +3,99 @@
 {% block title %}Liste des équipements{% endblock %}
 
 {% block body %}
-    <div class="container mt-5">
 
-        {# Bouton de retour au tableau de bord #}
-        <div class="mb-4">
-            {% include 'composants/forms/button_return_dashboard.html.twig' %}
-        </div>
+    {# Bloc entête de page #}
+    {%
+        include 'composants/pages/pages_headers.html.twig' with {
+        'page_title' : 'Liste des équipements disponibles à la dotation',
+        'li_items': [
+            { path: 'app_admin_dashboard_index', fa_class: 'fa-sharp-duotone fa-solid fa-house-blank', a_title: 'Dashboard' },
+            { path: null, fa_class: 'fa-sharp fa-light fa-laptop', a_title: 'équipements' },
+        ],
+        'add_btn_path': 'app_gestapp_equipment_new',
+        'btn_add_id':'btnAddEquipment',
+        'add_btn_fa_class' : 'fa-duotone fa-solid fa-circle-user-circle-plus',
+        'add_btn_textcontent' : 'Ajouter un équipement'
+    }
+    %}
 
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <h1 class="h3">Liste des équipements</h1>
+    {# Bloc contenu de la page #}
+    <div class="row mt-3">
+        <div class="col-12">
+            {% if equipment is not empty %}
+                <div class="table-responsive">
+                    <table class="table table-striped table-bordered align-middle">
+                        <thead class="table-dark">
+                        <tr>
+                            <th>Type</th>
+                            <th>Marque</th>
+                            <th>Matricule</th>
+                            <th>OS installé</th>
+                            <th>Statut</th>
+                            <th>Disponible</th>
+                            <th>Actions</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for item in equipment %}
+                            <tr>
+                                <td>{{ item.typeEquipment }}</td>
+                                <td>{{ item.brandEquipment }}</td>
+                                <td>{{ item.matriculEquipment }}</td>
+                                <td>{{ item.osInstalled }}</td>
+                                <td>{{ item.statusEquipment }}</td>
+                                <td>
+                                    {% if item.isDispo %}
+                                        <span class="badge bg-success">Oui</span>
+                                    {% else %}
+                                        <span class="badge bg-danger">Non</span>
+                                    {% endif %}
+                                </td>
+                                <td class="text-center">
+                                    {% include 'composants/forms/button_link.html.twig' with {
+                                        label: 'Voir',
+                                        href: path('app_gestapp_equipment_show', {'id': item.id}),
+                                        type: 'info'
+                                    } %}
 
-            {# Bouton pour créer un équipement via ton composant #}
-            {% include 'composants/forms/button_creatnew.html.twig' with {
-                label: 'Ajouter un équipement',
-                href: path('app_gestapp_equipment_new')
-            } %}
-        </div>
+                                    {% include 'composants/forms/button_link.html.twig' with {
+                                        label: 'Modifier',
+                                        href: path('app_gestapp_equipment_edit', {'id': item.id}),
+                                        type: 'warning'
+                                    } %}
 
-        {% if equipment is not empty %}
+                                    {% include 'composants/forms/buttons_delete.html.twig' with {
+                                        id: item.id,
+                                        route: 'app_gestapp_equipment_delete'
+                                    } %}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
             <div class="table-responsive">
-                <table class="table table-striped table-bordered align-middle">
-                    <thead class="table-dark">
-                    <tr>
-                        <th>Type</th>
-                        <th>Marque</th>
-                        <th>Matricule</th>
-                        <th>OS installé</th>
-                        <th>Statut</th>
-                        <th>Disponible</th>
-                        <th>Actions</th>
-                    </tr>
+                <table class="table table-hover table-bordered align-middle">
+                    <thead class="table">
+                        <tr>
+                            <th>Type</th>
+                            <th>Marque</th>
+                            <th>Matricule</th>
+                            <th>OS installé</th>
+                            <th>Statut</th>
+                            <th>Disponible</th>
+                            <th>Actions</th>
+                        </tr>
                     </thead>
                     <tbody>
-                    {% for item in equipment %}
                         <tr>
-                            <td>{{ item.typeEquipment }}</td>
-                            <td>{{ item.brandEquipment }}</td>
-                            <td>{{ item.matriculEquipment }}</td>
-                            <td>{{ item.osInstalled }}</td>
-                            <td>{{ item.statusEquipment }}</td>
-                            <td>
-                                {% if item.isDispo %}
-                                    <span class="badge bg-success">Oui</span>
-                                {% else %}
-                                    <span class="badge bg-danger">Non</span>
-                                {% endif %}
-                            </td>
-                            <td class="text-center">
-                                {% include 'composants/forms/button_link.html.twig' with {
-                                    label: 'Voir',
-                                    href: path('app_gestapp_equipment_show', {'id': item.id}),
-                                    type: 'info'
-                                } %}
-
-                                {% include 'composants/forms/button_link.html.twig' with {
-                                    label: 'Modifier',
-                                    href: path('app_gestapp_equipment_edit', {'id': item.id}),
-                                    type: 'warning'
-                                } %}
-
-                                {% include 'composants/forms/buttons_delete.html.twig' with {
-                                    id: item.id,
-                                    route: 'app_gestapp_equipment_delete'
-                                } %}
-                            </td>
+                            <td class="text-start text-muted" colspan="7">Aucun équipement trouvé.</td>
                         </tr>
-                    {% endfor %}
                     </tbody>
-                </table>
+                    </table>
             </div>
-        {% else %}
-            <p class="text-center">Aucun équipement trouvé.</p>
-        {% endif %}
+            {% endif %}
+        </div>
     </div>
 {% endblock %}

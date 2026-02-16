@@ -3,6 +3,23 @@
 {% block title %}Détails du bénéficiaire{% endblock %}
 
 {% block body %}
+
+    {# Bloc entête de page #}
+    {%
+        include 'composants/pages/pages_headers.html.twig' with {
+        'page_title' : 'Liste des Bénéficiaires',
+        'li_items': [
+            { path: 'app_admin_dashboard_index', fa_class: 'fa-sharp-duotone fa-solid fa-house-blank', a_title: 'Dashboard' },
+            { path: 'app_gestapp_beneficiary_index', fa_class: 'fa-sharp fa-light fa-laptop', a_title: 'Bénéficiaires' },
+            { path: null, fa_class: null , a_title: 'Voir un.e bénéficiaire' },
+        ],
+        'btns' : [
+            {'path': path('app_gestapp_beneficiary_new'), 'id':'btnAddBeneficiaire', 'class' : 'btn btn-outline-dark btn-sm', 'fa_class' : 'fa-duotone fa-solid fa-circle-user-circle-plus', 'textcontent' : 'Ajouter un.e bénéficiaire'},
+        ]
+
+    }
+    %}
+
     <div class="container mt-5">
 
         <h1 class="mb-4">Détails du bénéficiaire</h1>

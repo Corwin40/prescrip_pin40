@@ -24,6 +24,7 @@ class PrescriptionType extends AbstractType
     {
         $this->requestStack = $requestStack;
     }
+
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $request = $this->requestStack->getCurrentRequest();

@@ -1,56 +1,55 @@
-{{ form_start(form) }}
+<section>
+    {{ form_start(form) }}
+    <h2 class="h3 mb-0">Le matériel</h2>
+    <div class="row g-2">
+        <div class="col-md-3">
+            {% include 'composants/inputs/input_select.html.twig' with {
+                label: 'Type d’équipement',
+                field: form.typeEquipment
+            } %}
+        </div>
+        <div class="col-md-3">
+            {% include 'composants/inputs/input_text.html.twig' with {
+                label: 'Marque',
+                field: form.brandEquipment,
+                disabled: false
+            } %}
+        </div>
+        <div class="col-md-3">
+            {% include 'composants/inputs/input_text.html.twig' with {
+                label: 'Matricule',
+                field: form.matriculEquipment,
+                disabled: false
+            } %}
+        </div>
+        <div class="col-md-3">
+            {% include 'composants/inputs/input_select.html.twig' with {
+                label: 'OS installé',
+                field: form.osInstalled
+            } %}
+        </div>
+        <div class="col-md-4">
+            {% include 'composants/inputs/input_select.html.twig' with {
+                label: 'Statut',
+                field: form.statusEquipment
+            } %}
+        </div>
 
-<div class="row g-3">
-
-    <div class="col-md-6">
-        {% include 'composants/inputs/input_select.html.twig' with {
-            label: 'Type d’équipement',
-            field: form.typeEquipment
-        } %}
-    </div>
-
-    <div class="col-md-6">
-        {% include 'composants/inputs/input_text.html.twig' with {
-            label: 'Marque',
-            field: form.brandEquipment
-        } %}
-    </div>
-
-    <div class="col-md-6">
-        {% include 'composants/inputs/input_text.html.twig' with {
-            label: 'Matricule',
-            field: form.matriculEquipment
-        } %}
-    </div>
-
-    <div class="col-md-6">
-        {% include 'composants/inputs/input_select.html.twig' with {
-            label: 'OS installé',
-            field: form.osInstalled
-        } %}
-    </div>
-
-    <div class="col-md-4">
-        {% include 'composants/inputs/input_select.html.twig' with {
-            label: 'Statut',
-            field: form.statusEquipment
-        } %}
-    </div>
-
-    <div class="col-4 pt-4 mt-4 ps-4">
-        {% include 'composants/forms/check_verif.html.twig' with {
-            label: 'Disponible',
-            field: form.isDispo
-        } %}
-    </div>
-
-    <div class="col-12">
-
-        <a class="btn btn-secondary" href="{{ path('app_admin_dashboard_index') }}">Retour</a>
-        <button class="btn btn-primary">{{ button_label|default('Enregistrer') }}</button>
+        <div class="col-4 pt-4 mt-4 ps-4">
+            {% include 'composants/forms/check_verif.html.twig' with {
+                label: 'Disponible',
+                field: form.isDispo
+            } %}
+        </div>
 
     </div>
 
-</div>
+    <div class="row">
+        <div class="col-6 mt-4 mb-4">
+            <a class="btn btn-sm btn-outline-dark" href="{{ path('app_admin_dashboard_index') }}"><i class="fa-duotone fa-solid fa-chevrons-left"></i>&nbsp;Retour</a>
+            <button id="btnAddPrescription" class="btn btn-outline-primary btn-sm"><i class="fa-duotone fa-solid fa-circle-check"></i> Ajouter l'équipement</button>
+        </div>
+    </div>
+    {{ form_end(form) }}
+</section>
 
-{{ form_end(form) }}

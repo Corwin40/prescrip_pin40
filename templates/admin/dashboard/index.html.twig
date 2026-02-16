@@ -12,34 +12,37 @@
         {% set role = 'Prescripteur' %}
     {% endif %}
 
-    <div class="container mt-5">
-        <!-- Titre -->
-        <h2 class="text-start text-uppercase mt-3 mb-3">Bienvenue sur votre tableau de bord</h2>
-        <p class="mb-2">Vous êtes enregistré en tant que structure {{ role }}.</p>
+    {# Bloc entête de page #}
+    <div class="row mt-3 mb-3">
+        <div class="col-12">
+            <h1 class="text-start text-uppercase h2 mb-0">Bienvenue sur votre tableau de bord</h1>
+            <p class="mb-2">Vous êtes enregistré en tant que structure {{ role }}.</p>
+        </div>
+    </div>
 
-        {# --- Section chiffres : ordis dispo & prescriptions --- #}
-        <div class="row g-2 mb-2">
-            {% if role == 'Médiateur' or role == 'Administrateur'%}
+    {# --- Section chiffres : ordis dispo & prescriptions --- #}
+    <div class="row g-2 mb-2">
+        {% if role == 'Médiateur' or role == 'Administrateur'%}
             <div class="col-md-3 mb-3">
                 <div class="card">
                     <div class="card-body p-3">
                         <h5 class="card-title">Machines disponibles</h5>
-                        <p class="fs-5 text-secondary mb-0"><i class="fa-thumbprint fa-light fa-laptop"></i>&nbsp;{{ equipments|length }}</p>
+                        <p class="fs-5 text-secondary mb-0"><i class="fa-sharp fa-light fa-laptop"></i>&nbsp;{{ equipments|length }}</p>
                         <a href="{{ path('app_gestapp_equipment_index') }}" class="stretched-link"></a>
                     </div>
                 </div>
             </div>
-            {% endif %}
-            <div class="col-md-3 mb-3">
-                <div class="card">
-                    <div class="card-body p-3">
-                        <h5 class="card-title">Prescriptions enregistrées</h5>
-                        <p class="fs-5 text-secondary mb-0"><i class="fa-sharp fa-light fa-file-certificate"></i>&nbsp;{{ prescriptions|length }}</p>
-                        <a href="{{ path('app_gestapp_prescription_index') }}" class="stretched-link"></a>
-                    </div>
+        {% endif %}
+        <div class="col-md-3 mb-3">
+            <div class="card">
+                <div class="card-body p-3">
+                    <h5 class="card-title">Prescriptions enregistrées</h5>
+                    <p class="fs-5 text-secondary mb-0"><i class="fa-sharp fa-light fa-file-certificate"></i>&nbsp;{{ prescriptions|length }}</p>
+                    <a href="{{ path('app_gestapp_prescription_index') }}" class="stretched-link"></a>
                 </div>
             </div>
-            {% if role == 'Prescripteur' or role == 'Médiateur'  or role == 'Administrateur' %}
+        </div>
+        {% if role == 'Prescripteur' or role == 'Médiateur'  or role == 'Administrateur' %}
             <div class="col-md-3 mb-3">
                 <div class="card">
                     <div class="card-body p-3">
@@ -49,115 +52,112 @@
                     </div>
                 </div>
             </div>
-            {% endif %}
-        </div>
+        {% endif %}
+    </div>
 
-        <p class="mb-2">Etat d'ouverture du dossier</p>
-
-        <!-- En-tête de la liste des prescriptions -->
-        <div class="row">
-            <div class="col-12">
-                <div class="d-flex mt-2 mb-2 border-bottom border-dark bg-light justify-content-between py-2 px-1">
-                    <div class="col-6">
-                        <h3 class="text-uppercase mb-0">Liste des prescriptions</h3>
-                    </div>
-                    <div class="col-6">
-                        <p class="mb-0 text-end">
-                            {% include 'composants/forms/button_creatnew.html.twig' with {
-                                label: 'nouvelle prescription',
-                                href: path('app_gestapp_prescription_new')
-                            } %}
-                        </p>
-                    </div>
+    <!-- En-tête de la liste des prescriptions -->
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex mt-2 mb-2 border-bottom border-dark bg-light justify-content-between py-2 px-1">
+                <div class="col-6">
+                    <h3 class="text-uppercase mb-0">Liste des prescriptions</h3>
+                </div>
+                <div class="col-6">
+                    <p class="mb-0 text-end">
+                        {% include 'composants/forms/button_creatnew.html.twig' with {
+                            label: 'nouvelle prescription',
+                            href: path('app_gestapp_prescription_new')
+                        } %}
+                    </p>
                 </div>
             </div>
-            <div class="col-12">
-                <!-- Tableau prescriptions -->
-                <table class="table table-hover">
-                    <thead class="table-light">
+        </div>
+        <div class="col-12">
+            <!-- Tableau prescriptions -->
+            <table class="table table-hover">
+                <thead class="table-light">
+                <tr>
+                    <th class="col-2">Ref</th>
+                    <th class="col-2">Bénéficiaire</th>
+                    <th class="col-3">Prescripteur</th>
+                    <th class="col-2">Espace de médiation</th>
+                    <th class="col-2">Etat</th>
+                    <th class="col-1"></th>
+                </tr>
+                </thead>
+
+                <tbody>
+                {% for prescription in prescriptions %}
                     <tr>
-                        <th class="col-2">Ref</th>
-                        <th class="col-2">Bénéficiaire</th>
-                        <th class="col-3">Prescripteur</th>
-                        <th class="col-2">Espace de médiation</th>
-                        <th class="col-2">Etat</th>
-                        <th class="col-1"></th>
+                        <td>{{ prescription.ref }}</td>
+
+                        <td>
+                            {% if prescription.beneficiaire is not empty %}
+                                {{ prescription.beneficiaire.firstname }} {{ prescription.beneficiaire.lastname }}
+                            {% else %}
+                                non disponible
+                            {% endif %}
+                        </td>
+
+                        <td>{{ prescription.membre.nameStructure }}</td>
+                        <td>{{ prescription.lieuMediation }}</td>
+                        <td></td>
+                        <td>
+                            <a
+                                href="{{ path('app_gestapp_prescription_edit', {'id': prescription.id}) }}"
+                                class="text-dark"
+                                type="button"
+                                data-bs-toggle="tooltip"
+                                data-bs-placement="top"
+                                data-bs-custom-class="custom-tooltip"
+                                data-bs-title="Décrire en 5 ou 6 lignes les motivations du bénéficiaire">
+                                <i class="fa-solid fa-pen-to-square"></i>
+                            </a>
+                        </td>
                     </tr>
-                    </thead>
+                {% else %}
+                    <tr>
+                        <td colspan="6" class="text-start text-muted">Aucune prescription disponible</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="col-12 justify-content-evenly">
+            {# --- Admin ? Médiateur ? Prescripteur ? --- #}
 
-                    <tbody>
-                    {% for prescription in prescriptions %}
-                        <tr>
-                            <td>{{ prescription.ref }}</td>
+            {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_MEDIATEUR') or is_granted('ROLE_PRESCRIPTEUR') %}
 
-                            <td>
-                                {% if prescription.beneficiaire is not empty %}
-                                    {{ prescription.beneficiaire.firstname }} {{ prescription.beneficiaire.lastname }}
-                                {% else %}
-                                    non disponible
-                                {% endif %}
-                            </td>
+                {% include 'composants/forms/button_creatnew.html.twig' with {
+                    label: 'Créer un nouveau bénéficiaire',
+                    style: null,
+                    href: path('app_gestapp_beneficiary_new')
+                } %}
 
-                            <td>{{ prescription.membre.nameStructure }}</td>
-                            <td>{{ prescription.lieuMediation }}</td>
-                            <td></td>
-                            <td>
-                                <a
-                                    href="{{ path('app_gestapp_prescription_edit', {'id': prescription.id}) }}"
-                                    class="text-dark"
-                                    type="button"
-                                    data-bs-toggle="tooltip"
-                                    data-bs-placement="top"
-                                    data-bs-custom-class="custom-tooltip"
-                                    data-bs-title="Décrire en 5 ou 6 lignes les motivations du bénéficiaire">
-                                    <i class="fa-solid fa-pen-to-square"></i>
-                                </a>
-                            </td>
-                        </tr>
-                    {% else %}
-                        <tr>
-                            <td colspan="6" class="text-start text-muted">Aucune prescription disponible</td>
-                        </tr>
-                    {% endfor %}
-                    </tbody>
-                </table>
-            </div>
-            <div class="col-12 justify-content-evenly">
-                {# --- Admin ? Médiateur ? Prescripteur ? --- #}
-
-                {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_MEDIATEUR') or is_granted('ROLE_PRESCRIPTEUR') %}
-
+                {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_MEDIATEUR') %}
                     {% include 'composants/forms/button_creatnew.html.twig' with {
-                        label: 'Créer un nouveau bénéficiaire',
+                        label: 'Créer un nouveau prescripteur',
                         style: null,
-                        href: path('app_gestapp_beneficiary_new')
+                        href: path('app_admin_member_new', {'role': 'prescripteur'})
                     } %}
-
-                    {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_MEDIATEUR') %}
-                        {% include 'composants/forms/button_creatnew.html.twig' with {
-                            label: 'Créer un nouveau prescripteur',
-                            style: null,
-                            href: path('app_admin_member_new', {'role': 'prescripteur'})
-                        } %}
-                    {% endif %}
-
-                    {% if is_granted('ROLE_ADMIN') %}
-                        {% include 'composants/forms/button_creatnew.html.twig' with {
-                            label: 'Créer un nouveau médiateur',
-                            style: null,
-                            href: path('app_admin_member_new', {'role': 'mediateur'})
-                        } %}
-                    {% endif %}
-                    {% if is_granted('ROLE_ADMIN') %}
-                        {% include 'composants/forms/button_creatnew.html.twig' with {
-                            label: 'Nouveau équipement',
-                            style: null,
-                            href: path('app_gestapp_equipment_new')
-                        } %}
-                    {% endif %}
-
                 {% endif %}
-            </div>
+
+                {% if is_granted('ROLE_ADMIN') %}
+                    {% include 'composants/forms/button_creatnew.html.twig' with {
+                        label: 'Créer un nouveau médiateur',
+                        style: null,
+                        href: path('app_admin_member_new', {'role': 'mediateur'})
+                    } %}
+                {% endif %}
+                {% if is_granted('ROLE_ADMIN') %}
+                    {% include 'composants/forms/button_creatnew.html.twig' with {
+                        label: 'Nouveau équipement',
+                        style: null,
+                        href: path('app_gestapp_equipment_new')
+                    } %}
+                {% endif %}
+
+            {% endif %}
         </div>
     </div>
 {% endblock %}

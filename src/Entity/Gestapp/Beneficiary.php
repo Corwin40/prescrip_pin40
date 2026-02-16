@@ -44,6 +44,7 @@ class Beneficiary
     private ?Prescription $prescription = null;
 
     #[ORM\ManyToOne(inversedBy: 'beneficiaries')]
+    #[ORM\JoinColumn(nullable: true, onDelete: 'SET NULL')]
     private ?Member $prescriptor = null;
 
     public function getId(): ?int

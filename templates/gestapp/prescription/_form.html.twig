@@ -1,113 +1,31 @@
+<div class="row mb-1">
+    <div class="col-12">
+        <p class="mb-0 text-secondary">Référence : {{ prescription.ref }} | Ce dossier à été ouvert par
+            {% if prescription.isOpenByPrescriptor == 1 and prescription.isOpenByMediator == 0 %}
+                un precripteur : {{ prescription.membre.nameStructure }}.
+            {% elseif prescription.isOpenByPrescriptor == 0 and prescription.isOpenByMediator == 1 %}
+                un epace de médiation : {{ prescription.lieuMediation.nameStructure }}.
+            {% else %}
+                un administrateur.
+            {% endif %}
+        </p>
+    </div>
+</div>
+
 {{ form_start(form) }}
     <div class="row">
 
         {# Bloc Bénéficiaire #}
-        <div class="col-12 mb-4">
-            <div class="row">
-                <div class="col-12 bg-light border-bottom border-dark mb-2">
-                    <h3 class="mt-2 mb-2">Le bénéficiaire</h3>
-                </div>
-                {# Boucle selon la route #}
-                {% if app.request.attributes.get('_route') == 'app_gestapp_prescription_new' %}
-                    <div class="col-md-6">
-                        {% include 'composants/inputs/input_select.html.twig' with {
-                            label: 'Bénéficiaire',
-                            field: form.beneficiaire,
-                            disabled: ''
-                        } %}
-                    </div>
-                    <div class="col-md-6 d-flex align-items-end">
-                        <a id="btnAddBeneficiary" href="{{ path('app_gestapp_beneficiary_new2') }}" class="btn btn-primary mb-3">
-                            Ajouter un bénéficiaire
-                        </a>
-                    </div>
-                {% elseif app.request.attributes.get('_route') == 'app_gestapp_prescription_edit' %}
-                    <div class="row">
-
-                        <div class="col-md-4">
-                            {% include 'composants/inputs/block_civility.html.twig' with {
-                                label: 'Prénom & Nom',
-                                civility: form.beneficiaire.civility,
-                                firstname: form.beneficiaire.firstname,
-                                lastname: form.beneficiaire.lastname
-                            } %}
-                        </div>
-
-                        <div class="col-md-12">
-                            {% include 'composants/inputs/input_radio_horizontal.html.twig' with {
-                                form_label: 'Age',
-                                form_field: form.beneficiaire.ageGroup
-                            } %}
-                        </div>
-
-                        <div class="col-md-12">
-                            {% include 'composants/inputs/input_radio_horizontal.html.twig' with {
-                                form_label: 'Situation',
-                                form_field: form.beneficiaire.professionnalStatus
-                            } %}
-                        </div>
-                    </div>
-                {% endif %}
-            </div>
-        </div>
+        {{ include('gestapp/prescription/include/_beneficiaryForm.html.twig') }}
 
         {#  Bloc Prescripteur #}
-        <div class="col-12 mt-4 mb-4">
-            <div class="row">
-                <div class="col-12 bg-light border-bottom border-dark mb-2">
-                    <h3 class="mt-2 mb-2">Le prescripteur</h3>
-                </div>
-
-                {% if app.user.roles|first == 'ROLE_MEDIATEUR' %}
-                    <div class="col-12">
-                        <div class="col-md-6">
-                            {% include 'composants/inputs/input_select.html.twig' with {
-                                label: 'Sélectionner la structure de prescription',
-                                field: form.membre,
-                                disabled: ''
-                            } %}
-                        </div>
-                    </div>
-                {% else %}
-                    <div class="col-12">
-                        <table>
-                            <tr>
-                                <td><i class="fa-duotone fa-light fa-building"></i></td>
-                                <td>Structure&nbsp;</td>
-                                <td>{{ app.user.nameStructure }}</td>
-                            </tr>
-                            <tr>
-                                <td><i class="fa-duotone fa-solid fa-user"></i></td>
-                                <td>Responsable&nbsp;</td>
-                                <td>
-                                    {% if app.user.contactResponsableFirstname is empty and app.user.contactResponsableLastname is empty %}
-                                        -
-                                    {% else %}
-                                        {{ app.user.contactResponsableFirstname }} {{ app.user.contactResponsableLastname }}
-                                    {% endif %}
-                                </td>
-                            </tr>
-                            <tr>
-                                <td><i class="fa-duotone fa-light fa-phone"></i></td>
-                                <td>Téléphone&nbsp;</td>
-                                <td>{% if app.user.contactPhone is empty %}-{% else %}{{ app.user.contactPhone }}{% endif %}</td>
-                            </tr>
-                            <tr>
-                                <td><i class="fa-duotone fa-solid fa-inbox"></i></td>
-                                <td>Email&nbsp;</td>
-                                <td>{% if app.user.contactEmail is empty %}-{% else %}{{ app.user.contactEmail }}{% endif %}</td>
-                            </tr>
-                        </table>
-                    </div>
-                {% endif %}
-            </div>
-        </div>
+        {{ include('gestapp/prescription/include/_prescriptorForm.html.twig') }}
 
         {#  Bloc Médiateur numérique #}
-        <div class="col-12 mt-4 mb-4">
+        <div class="col-12 mt-2 mb-2">
             <div class="row">
                 <div class="col-12 bg-light border-bottom border-dark mb-2">
-                    <h3 class="mt-2 mb-2">La médiation numérique</h3>
+                    <h2 class="mt-1 mb-1 h4">La médiation numérique</h2>
                 </div>
 
                 <div class="col-md-6">
@@ -121,10 +39,10 @@
         </div>
 
         {#  Bloc Motivation de la prescription #}
-        <div class="col-12 mt-4 mb-4">
+        <div class="col-12 mt-2 mb-2">
             <div class="row">
                 <div class="col-12 bg-light border-bottom border-dark mb-2">
-                    <h3 class="mt-2 mb-2">Motivation de la prescription</h3>
+                    <h2 class="mt-1 mb-1 h4">Motivation de la prescription</h2>
                 </div>
 
                 <div class="col-md-12">
@@ -146,10 +64,10 @@
         </div>
 
         {#  Bloc diagnostic competences numeriques #}
-        <div class="col-12 mt-4 mb-4">
+        <div class="col-12 mt-2 mb-2">
             <div class="row">
                 <div class="col-12 bg-light border-bottom border-dark mb-2">
-                    <h3 class="mt-2 mb-2">Diagnostic des compétences numériques</h3>
+                    <h2 class="mt-1 mb-1 h4">Diagnostic des compétences numériques</h2>
                 </div>
 
                 <div class="col-12">
@@ -259,10 +177,10 @@
         </div>
 
         {#  Bloc des objectifs de la médiation à complêter par le Médiateur sélectionné #}
-        <div class="col-12 mt-4 mb-4">
+        <div class="col-12 mt-2 mb-2">
             <div class="row">
                 <div class="col-12 bg-light border-bottom border-dark mb-2">
-                    <h3 class="mt-2 mb-2">Les objectifs de la mediation</h3>
+                    <h2 class="mt-1 mb-1 h4">Les objectifs de la médiation</h2>
                 </div>
 
                 <div class="col-12 mb-2">
@@ -446,10 +364,21 @@
         </div>
     </div>
 
+    {% if prescription.isOpenByPrescriptor == false and prescription.isOpenByMediator == false %}
+    {% elseif prescription.isOpenByPrescriptor == true and prescription.isOpenByMediator == false %}
+    {% elseif prescription.isOpenByPrescriptor == false and prescription.isOpenByMediator == true %}
+    {% elseif prescription.isOpenByPrescriptor == true and prescription.isOpenByMediator == true %}
+        <div class="row">
+            <div class="col-12 bg-light border-bottom border-dark mb-2">
+                <h3 class="mt-2 mb-2">Finalisation du dossier</h3>
+            </div>
+        </div>
+    {% endif %}
+
     <div class="row">
         <div class="col-6 mt-4 mb-4">
             <a class="btn btn-sm btn-outline-dark" href="{{ path('app_admin_dashboard_index') }}"><i class="fa-duotone fa-solid fa-chevrons-left"></i>&nbsp;Retour</a>
-            <button id="btnAddPrescription" class="btn btn-outline-primary btn-sm"><i class="fa-duotone fa-solid fa-circle-check"></i>&nbspPréenregistrer la demande</button>
+            <button id="btnAddPrescription" class="btn btn-outline-primary btn-sm"><i class="fa-duotone fa-solid fa-circle-check"></i> Préenregistrer la demande</button>
         </div>
     </div>
 {{ form_widget(form._token) }}
