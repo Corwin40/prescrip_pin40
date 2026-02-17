@@ -14,7 +14,7 @@
             {% endfor %}
         </ol>
     </div>
-    <div class="col-7 d-flex align-items-center justify-content-end g-2">
+    <div class="col-7 d-flex align-items-center justify-content-end">
         {% for btn in btns %}
         <a href="{{ btn.path }}" id="{{ btn.id }}" class="{{ btn.class }}{% if loop.last %}{% else %} me-1{% endif %}"><i class="{{ btn.fa_class }}"></i>
             {{ btn.textcontent }}</a>

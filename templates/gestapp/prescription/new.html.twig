@@ -14,20 +14,27 @@
     {% endif %}
 
     {# Bloc entête de page #}
-    {%
-        include 'composants/pages/pages_headers.html.twig' with {
-        'page_title' : 'Liste des prescriptions',
-        'li_items': [
-            { path: 'app_admin_dashboard_index', fa_class: 'fa-sharp-duotone fa-solid fa-house-blank', a_title: 'Dashboard' },
-            { path: 'app_gestapp_prescription_index', fa_class: 'fa-sharp fa-light fa-laptop', a_title: 'prescription' },
-            { path: null, fa_class: 'fa-sharp fa-light fa-laptop', a_title: 'Poursuivre la prescription' },
-        ],
-        'btns' : [
-            {'path': path('app_gestapp_equipment_new'), 'id':'btnAddEquipment', 'class' : 'btn btn-outline-dark btn-sm', 'fa_class' : 'fa-duotone fa-solid fa-circle-user-circle-plus', 'textcontent' : 'Ajouter une prescription'},
-        ]
-    }
-    %}
+    <section id="page_header">
+        {%
+            include 'composants/pages/pages_headers.html.twig' with {
+            'page_title' : 'Liste des prescriptions',
+            'li_items': [
+                { path: 'app_admin_dashboard_index', fa_class: 'fa-sharp-duotone fa-solid fa-house-blank', a_title: 'Dashboard' },
+                { path: 'app_gestapp_prescription_index', fa_class: 'fa-sharp fa-light fa-laptop', a_title: 'prescription' },
+                { path: null, fa_class: 'fa-sharp fa-light fa-laptop', a_title: 'Poursuivre la prescription' },
+            ],
+            'btns' : [
+                {'path': path('app_gestapp_prescription_new'), 'id':'btnAddprescription', 'class' : 'btn btn-outline-dark btn-sm', 'fa_class' : 'fa-duotone fa-solid fa-circle-user-circle-plus', 'textcontent' : 'Ajouter une prescription'},
+            ]
+        }
+        %}
+    </section>
+    <section id="page_content">
+        {{ include('gestapp/prescription/_form.html.twig') }}
+    </section>
+    <section id="page_footer">
 
-    {{ include('gestapp/prescription/_form.html.twig') }}
+    </section>
+
 
 {% endblock %}

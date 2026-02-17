@@ -2,7 +2,7 @@
     <label class="form-label">{{ label }}</label>
     {{ form_widget(field, {
         attr: {
-            class: 'form-control border border-1 border-dark shadow-sm'
+            class: 'form-control form-control-sm border border-1 border-dark shadow-sm'
         } | merge(disabled ? {disabled:'disabled'} : {})
     }) }}
     {{ form_errors(field) }}

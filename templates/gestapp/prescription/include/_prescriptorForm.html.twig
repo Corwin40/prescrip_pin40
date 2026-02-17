@@ -6,17 +6,26 @@
         </div>
     </div>
 
-    {% if app.user.roles|first == 'ROLE_MEDIATEUR' %}
+    {% if role == 'Administrateur' or role == 'Médiateur' %}
         <div class="row">
             <div class="col-md-6">
-                {% include 'composants/inputs/input_select.html.twig' with {
-                    label: 'Sélectionner la structure de prescription',
-                    field: form.membre,
-                    disabled: ''
-                } %}
+                {% if role == 'Médiateur' %}
+                    {% include 'composants/inputs/input_select.html.twig' with {
+                        label: 'Sélectionner la structure de prescription',
+                        field: form.membre,
+                        disabled: ''
+                    } %}
+                {% else %}
+                    <p class="mb-0 alert alert-warning">Le bénéficiaire étant enregistré par ou avec un organisme de prescription, le prescripteur choisi sera ce dernier.</p>
+                    {% include 'composants/inputs/input_select.html.twig' with {
+                        label: 'Sélectionner la structure de prescription',
+                        field: form.membre,
+                        disabled: true
+                    } %}
+                {% endif %}
             </div>
         </div>
-    {% else %}
+    {% elseif role == 'Prescripteur' %}
         <table class="table">
             <tr>
                 <td class="col-1">

@@ -14,6 +14,7 @@
     {% endif %}
 
     {# Bloc entête de page #}
+    <section id="page_header">
     {%
         include 'composants/pages/pages_headers.html.twig' with {
         'page_title' : 'Liste des prescriptions',
@@ -23,11 +24,18 @@
             { path: null, fa_class: 'fa-sharp fa-light fa-laptop', a_title: 'Poursuivre la prescription' },
         ],
         'btns' : [
-            {'path': path('app_gestapp_equipment_new'), 'id':'btnAddEquipment', 'class' : 'btn btn-outline-dark btn-sm', 'fa_class' : 'fa-duotone fa-solid fa-circle-user-circle-plus', 'textcontent' : 'Ajouter une prescription'},
+            {'path': path('app_gestapp_prescription_new'), 'id':'btnAddprescription', 'class' : 'btn btn-outline-dark btn-sm', 'fa_class' : 'fa-duotone fa-solid fa-circle-user-circle-plus', 'textcontent' : 'Ajouter une prescription'},
         ]
     }
     %}
+    </section>
 
-    {{ include('gestapp/prescription/_form.html.twig', {'button_label': 'Mettre à jour'}) }}
+    <section id="page_content">
+        {{ include('gestapp/prescription/_form.html.twig', {'button_label': 'Mettre à jour'}) }}
+    </section>
+    <section id="page_footer">
+
+    </section>
+
 
 {% endblock %}

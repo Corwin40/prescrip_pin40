@@ -1444,75 +1444,71 @@
       <Position>17</Position>
       <StoredType>tinyint(1)|0s</StoredType>
     </column>
-    <column id="403" parent="304" name="column_name">
-      <Position>18</Position>
-      <StoredType>int(11)|0s</StoredType>
-    </column>
-    <foreign-key id="404" parent="304" name="FK_1FBFB8D96A99F74A">
+    <foreign-key id="403" parent="304" name="FK_1FBFB8D96A99F74A">
       <ColNames>membre_id</ColNames>
       <RefColNames>id</RefColNames>
       <RefTableName>member</RefTableName>
     </foreign-key>
-    <foreign-key id="405" parent="304" name="FK_1FBFB8D95AF81F68">
+    <foreign-key id="404" parent="304" name="FK_1FBFB8D95AF81F68">
       <ColNames>beneficiaire_id</ColNames>
       <RefColNames>id</RefColNames>
       <RefTableName>beneficiary</RefTableName>
     </foreign-key>
-    <foreign-key id="406" parent="304" name="FK_1FBFB8D9806F0F5C">
+    <foreign-key id="405" parent="304" name="FK_1FBFB8D9806F0F5C">
       <ColNames>equipement_id</ColNames>
       <RefColNames>id</RefColNames>
       <RefTableName>equipment</RefTableName>
     </foreign-key>
-    <foreign-key id="407" parent="304" name="FK_1FBFB8D937133BD7">
+    <foreign-key id="406" parent="304" name="FK_1FBFB8D937133BD7">
       <ColNames>lieu_mediation_id</ColNames>
       <RefColNames>id</RefColNames>
       <RefTableName>member</RefTableName>
     </foreign-key>
-    <foreign-key id="408" parent="304" name="FK_1FBFB8D915761DAB">
+    <foreign-key id="407" parent="304" name="FK_1FBFB8D915761DAB">
       <ColNames>competence_id</ColNames>
       <RefColNames>id</RefColNames>
       <RefTableName>competence</RefTableName>
     </foreign-key>
-    <index id="409" parent="304" name="PRIMARY">
+    <index id="408" parent="304" name="PRIMARY">
       <ColNames>id</ColNames>
       <Type>btree</Type>
       <Unique>1</Unique>
     </index>
-    <index id="410" parent="304" name="UNIQ_1FBFB8D95AF81F68">
+    <index id="409" parent="304" name="UNIQ_1FBFB8D95AF81F68">
       <ColNames>beneficiaire_id</ColNames>
       <Type>btree</Type>
       <Unique>1</Unique>
     </index>
-    <index id="411" parent="304" name="UNIQ_1FBFB8D9806F0F5C">
+    <index id="410" parent="304" name="UNIQ_1FBFB8D9806F0F5C">
       <ColNames>equipement_id</ColNames>
       <Type>btree</Type>
       <Unique>1</Unique>
     </index>
-    <index id="412" parent="304" name="UNIQ_1FBFB8D915761DAB">
+    <index id="411" parent="304" name="UNIQ_1FBFB8D915761DAB">
       <ColNames>competence_id</ColNames>
       <Type>btree</Type>
       <Unique>1</Unique>
     </index>
-    <index id="413" parent="304" name="IDX_1FBFB8D96A99F74A">
+    <index id="412" parent="304" name="IDX_1FBFB8D96A99F74A">
       <ColNames>membre_id</ColNames>
       <Type>btree</Type>
     </index>
-    <index id="414" parent="304" name="IDX_1FBFB8D937133BD7">
+    <index id="413" parent="304" name="IDX_1FBFB8D937133BD7">
       <ColNames>lieu_mediation_id</ColNames>
       <Type>btree</Type>
     </index>
-    <key id="415" parent="304" name="PRIMARY">
+    <key id="414" parent="304" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <Primary>1</Primary>
       <UnderlyingIndexName>PRIMARY</UnderlyingIndexName>
     </key>
-    <key id="416" parent="304" name="UNIQ_1FBFB8D95AF81F68">
+    <key id="415" parent="304" name="UNIQ_1FBFB8D95AF81F68">
       <UnderlyingIndexName>UNIQ_1FBFB8D95AF81F68</UnderlyingIndexName>
     </key>
-    <key id="417" parent="304" name="UNIQ_1FBFB8D9806F0F5C">
+    <key id="416" parent="304" name="UNIQ_1FBFB8D9806F0F5C">
       <UnderlyingIndexName>UNIQ_1FBFB8D9806F0F5C</UnderlyingIndexName>
     </key>
-    <key id="418" parent="304" name="UNIQ_1FBFB8D915761DAB">
+    <key id="417" parent="304" name="UNIQ_1FBFB8D915761DAB">
       <UnderlyingIndexName>UNIQ_1FBFB8D915761DAB</UnderlyingIndexName>
     </key>
   </database-model>
