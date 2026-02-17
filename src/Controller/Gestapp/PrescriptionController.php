@@ -2,6 +2,7 @@
 
 namespace App\Controller\Gestapp;
 
+use App\Config\StatusPrescription;
 use App\Entity\Gestapp\Competence;
 use App\Entity\Gestapp\Prescription;
 use App\Form\Gestapp\PrescriptionType;
@@ -41,7 +42,6 @@ final class PrescriptionController extends AbstractController
 
         // Construction de la variable Ref
         $date = new \DateTime('now');
-        $structure = $this->getUser()->getNameStructure();
 
         $lastPrescription = $prescriptionRepository->findOneBy(['membre' => $this->getUser()],[ 'id' => 'DESC']);
         if(!$lastPrescription){
@@ -49,9 +49,8 @@ final class PrescriptionController extends AbstractController
         }else{
             $compteur = $lastPrescription->getCompteur() + 1;
         }
-        //dd($compteur);
 
-        $ref = $date->format('Ym')."-".$structure."-".$compteur;// mois-année-structure-compteur
+        $ref = $date->format('Ym')."-xxxxx-".$compteur;// mois-année-structure-compteur
 
         $prescription = new Prescription();
         $prescription->setRef($ref);
@@ -70,18 +69,34 @@ final class PrescriptionController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
 
+            if($user && (in_array('ROLE_SUPER_ADMIN', $user->getRoles()) || in_array('ROLE_ADMIN', $user->getRoles()) ) ){
+                $beneficiary = $form->get('beneficiaire')->getData();
+                $structure = $beneficiary->getPrescriptor()->getNameStructure();
+                $ref = $date->format('Ym')."-".$structure."-".$compteur;// mois-année-structure-compteur
+
+                $prescription->setRef($ref);
+                $prescription->setStatus(StatusPrescription::OpenByAdministrator);
+                $prescription->setMembre($beneficiary->getPrescriptor());
+            }
             if($user && in_array('ROLE_MEDIATEUR', $user->getRoles())){
+                $beneficiary = $form->get('beneficiary')->getData();
+                $structure = $beneficiary->getNameStructure();
+                $ref = $date->format('Ym')."-".$structure."-".$compteur;// mois-année-structure-compteur
+
+                $prescription->setRef($ref);
+                $prescription->setStatus(StatusPrescription::OpenByMediator);
                 $prescription->setIsOpenByMediator(1);
-                // Ajout du membre dans la prescription
                 $prescription->setMembre($form->get('membre')->getData());
             }
             if($user && in_array('ROLE_PRESCRIPTEUR', $user->getRoles())){
+                $structure = $this->getUser()->getNameStructure();
+                $ref = $date->format('Ym')."-".$structure."-".$compteur;// mois-année-structure-compteur
+
+                $prescription->setRef($ref);
+                $prescription->setStatus(StatusPrescription::OpenByPrescriptor);
                 $prescription->setIsOpenByPrescriptor(1);
-                // Ajout du membre dans la prescription
                 $prescription->setMembre($this->getUser());
             }
-
-
 
             $entityManager->persist($prescription);
             $entityManager->flush();

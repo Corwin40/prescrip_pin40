@@ -3,6 +3,8 @@
 namespace App\Controller\Admin;
 
 use App\Entity\Admin\Member;
+use App\Entity\Gestapp\Beneficiary;
+use App\Entity\Gestapp\Prescription;
 use App\Form\Admin\MemberType;
 use App\Repository\MemberRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -11,8 +13,10 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/admin/member')]
+#[IsGranted('ROLE_ADMIN')]
 final class MemberController extends AbstractController
 {
     #[Route('/', name: 'app_admin_member_index', methods: ['GET'])]
@@ -101,9 +105,24 @@ final class MemberController extends AbstractController
     }
 
     #[Route('/{id}', name: 'app_admin_member_delete', methods: ['POST'])]
-    public function delete(Request $request, Member $member, EntityManagerInterface $entityManager): Response
+    public function delete(Request $request, Member $member, EntityManagerInterface $entityManager, Beneficiary $beneficiary, Prescription $prescription): Response
     {
         if ($this->isCsrfTokenValid('delete' . $member->getId(), $request->getPayload()->getString('_token'))) {
+            if($member->getRoles()[0] === 'ROLE_PRESCRIPTEUR')
+            {
+                $beneficiaries = $member->getBeneficiaries();
+                foreach($beneficiaries as $beneficiary)
+                {
+                    $beneficiary->setPrescriptor(null);
+                    $entityManager->persist($beneficiary);
+                }
+                $prescriptions = $member->getPrescriptions();
+                foreach($prescriptions as $prescription){
+                    $prescription->setMembre(null);
+                    $entityManager->persist($prescription);
+                }
+            }
+
             $entityManager->remove($member);
             $entityManager->flush();
             $this->addFlash('danger', 'Le membre a bien été supprimé.');

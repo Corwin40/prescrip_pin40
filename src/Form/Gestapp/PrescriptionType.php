@@ -62,7 +62,12 @@ class PrescriptionType extends AbstractType
             ])
         ;
 
-        if($user && in_array('ROLE_MEDIATEUR', $user->getRoles())){
+        if ( $user && (
+                in_array('ROLE_SUPER_ADMIN', $user->getRoles()) ||
+                in_array('ROLE_ADMIN', $user->getRoles()) ||
+                in_array('ROLE_MEDIATEUR', $user->getRoles())
+            ))
+        {
             $builder
                 ->add('membre', EntityType::class, [
                     'class' => Member::class,

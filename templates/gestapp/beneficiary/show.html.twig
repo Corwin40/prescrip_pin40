@@ -20,72 +20,86 @@
     }
     %}
 
-    <div class="container mt-5">
+    <div class="row">
+        <div class="col-12">
+            <div class="card shadow-sm border-1 border-dark">
+                <div class="card-body">
+                    <div class="row g-4">
 
-        <h1 class="mb-4">Détails du bénéficiaire</h1>
-
-        <div class="border border-1 p-4 shadow-sm">
-            <div class="table-responsive">
-                <table class="table table-bordered align-middle">
-                    <tbody>
-                    {# Ligne : Prénom + Nom #}
-                    <tr>
-                        <th scope="row" style="width: 30%;">Prénom et Nom</th>
-                        <td>{{ beneficiary.firstname }} {{ beneficiary.lastname }}</td>
-                    </tr>
-
-                    {# Ligne : Civilité + Genre + Tranche d’âge (3 colonnes md-4) #}
-                    <tr>
-                        <td colspan="2">
-                            <div class="row ps-2">
-                                <div class="col-md-4 col-12 mb-2">
-                                    <label class="fw-bold me-1">Civilité :</label>
-                                    <span>{{ beneficiary.civility }}</span>
+                        {# =======================
+                            COLONNE BÉNÉFICIAIRE
+                        ======================== #}
+                        <div class="col-lg-8">
+                            <div class="d-flex align-items-center mb-3">
+                                <div class="bg-primary bg-opacity-10 text-primary rounded-circle d-flex align-items-center justify-content-center me-3" style="width:60px;height:60px;">
+                                    <i class="fa-duotone fa-light fa-user-vneck-hair-long fs-3"></i>
                                 </div>
-
-                                <div class="col-md-4 col-12 mb-2">
-                                    <label class="fw-bold me-1">Tranche d’âge :</label>
-                                    <span>{{ beneficiary.ageGroup }}</span>
+                                <div>
+                                    <h4 class="mb-0">
+                                        {{ beneficiary.civility }} {{ beneficiary.firstname }} {{ beneficiary.lastname }}
+                                    </h4>
+                                    <p class="mb-0">Tranche d'age : <span class="badge bg-primary-subtle text-primary fw-normal">{{ beneficiary.ageGroup }} ans</span></p>
                                 </div>
                             </div>
-                        </td>
-                    </tr>
 
-                    {# Ligne : Statut professionnel #}
-                    <tr>
-                        <th scope="row">Situation</th>
-                        <td>{{ beneficiary.professionnalStatus }}</td>
-                    </tr>
+                            <hr>
 
-                    {# Ligne : Dates de création / modification #}
-                    <tr>
-                        <th scope="row">Créé le</th>
-                        <td>{{ beneficiary.createdAt ? beneficiary.createdAt|date('d/m/Y') : '' }}</td>
-                    </tr>
-                    <tr>
-                        <th scope="row">Modifié le</th>
-                        <td>{{ beneficiary.updatedAt ? beneficiary.updatedAt|date('d/m/Y') : '' }}</td>
-                    </tr>
-                    </tbody>
-                </table>
+                            <div class="row mb-1 justify-content-between">
+                                <div class="col-sm-4 text-muted">Situation :</div>
+                                <div class="col-sm-8 fw-semibold text-end">{{ beneficiary.professionnalStatus }}</div>
+                            </div>
+
+                            <div class="row mb-1 justify-content-between">
+                                <div class="col-sm-4 text-muted">Prescription :</div>
+                                {% if beneficiary.prescription|length > 0 %}
+                                    <div class="col-sm-8 fw-semibold text-end">{{ beneficiary.prescription.ref }}</div>
+                                {% else %}
+                                    <div class="col-sm-8 fw-semibold text-end">Aucune prescription en cours</div>
+                                {% endif %}
+                            </div>
+
+                            <div class="row small text-muted mt-4">
+                                <div class="col-sm-6">
+                                    <i class="bi bi-calendar-plus me-1"></i>
+                                    Créé le : {{ beneficiary.createdAt ? beneficiary.createdAt|date('d/m/Y') : '' }}
+                                </div>
+                                <div class="col-sm-6">
+                                    <i class="bi bi-pencil-square me-1"></i>
+                                    Modifié le : {{ beneficiary.updatedAt ? beneficiary.updatedAt|date('d/m/Y') : '' }}
+                                </div>
+                            </div>
+
+                        </div>
+
+                        {# =======================
+                            COLONNE PRESCRIPTEUR
+                        ======================== #}
+                        <div class="col-lg-4">
+                            <div class="card bg-light border-0 h-100">
+                                <div class="card-body">
+                                    <h6 class="text-uppercase text-muted mb-3">
+                                        Prescripteur
+                                    </h6>
+                                    <div class="d-flex align-items-center">
+                                        <div class="bg-secondary bg-opacity-10 text-secondary rounded-circle d-flex align-items-center justify-content-center me-3" style="width:50px;height:50px;">
+                                            <i class="bi bi-building"></i>
+                                        </div>
+                                        <div>
+                                            <div class="fw-semibold">
+                                                {{ beneficiary.prescriptor.nameStructure }}
+                                            </div>
+                                            <small class="text-muted">{{ beneficiary.prescriptor.address }}<br>{{ beneficiary.prescriptor.zipcode }} {{ beneficiary.prescriptor.city }}</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
             </div>
         </div>
-
-        <div class="mt-4 d-flex flex-wrap gap-2">
-            {% include 'composants/showsTable/button_return_list.html.twig' with {
-                href: path('app_gestapp_beneficiary_index'),
-                label: 'Retour à la liste'
-            } %}
-
-            {% include 'composants/showsTable/button_update.html.twig' with {
-                href: path('app_gestapp_beneficiary_edit', {'id': beneficiary.id}),
-                label: 'Modifier'
-            } %}
-
-            {% include 'composants/showsTable/buttons_delete.html.twig' with {
-                id: beneficiary.id,
-                route: 'app_gestapp_beneficiary_delete'
-            } %}
-        </div>
     </div>
+
+
 {% endblock %}

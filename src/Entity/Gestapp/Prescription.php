@@ -2,6 +2,7 @@
 
 namespace App\Entity\Gestapp;
 
+use App\Config\StatusPrescription;
 use App\Entity\Admin\Member;
 use App\Repository\Gestapp\PrescriptionRepository;
 use Doctrine\DBAL\Types\Types;
@@ -63,6 +64,9 @@ class Prescription
 
     #[ORM\Column(nullable: true)]
     private ?bool $isOpenByMediator = false;
+
+    #[ORM\Column(enumType: StatusPrescription::class)]
+    private ?StatusPrescription $status = null;
 
     public function getId(): ?int
     {
@@ -260,6 +264,18 @@ class Prescription
     public function setIsOpenByMediator(?bool $isOpenByMediator): static
     {
         $this->isOpenByMediator = $isOpenByMediator;
+
+        return $this;
+    }
+
+    public function getStatus(): ?StatusPrescription
+    {
+        return $this->status;
+    }
+
+    public function setStatus(StatusPrescription $status): static
+    {
+        $this->status = $status;
 
         return $this;
     }

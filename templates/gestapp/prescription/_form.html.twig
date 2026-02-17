@@ -161,6 +161,7 @@
                     <div class="col-md-6">
                         {% include 'composants/inputs/input_checkbox_switch.html.twig' with {
                             form_field: form.competence.isAutoEva,
+                            form_label: 'L\'auto évaluation du bénéficiaire a été réalisée avant l\'action.',
                             disabled: false
                         } %}
                     </div>
@@ -168,6 +169,7 @@
                     <div class="col-md-6">
                         {% include 'composants/inputs/input_checkbox_switch.html.twig' with {
                             form_field: form.competence.isAutoEva,
+                            form_label: 'L\'auto évaluation du bénéficiaire a été réalisée avant l\'action.',
                             disabled: false
                         } %}
                     </div>
@@ -341,11 +343,13 @@
                     {% elseif role == "Mediateur" %}
                         {% include 'composants/inputs/input_checkbox_switch.html.twig' with {
                             form_field: form.competence.isAutoEvaEnd,
+                            form_label: 'L\'auto évaluation du bénéficiaire a été réalisée après l\'action.',
                             disabled: false
                         } %}
                     {% else %}
                         {% include 'composants/inputs/input_checkbox_switch.html.twig' with {
                             form_field: form.competence.isAutoEvaEnd,
+                            form_label: 'L\'auto évaluation du bénéficiaire a été réalisée après l\'action.',
                             disabled: false
                         } %}
                     {% endif %}
@@ -365,8 +369,40 @@
     </div>
 
     {% if prescription.isOpenByPrescriptor == false and prescription.isOpenByMediator == false %}
+        <div class="row">
+            <div class="col-12 bg-light border-bottom border-dark mb-2">
+                <h2 class="h4 mt-1 mb-1">Finalisation du dossier</h2>
+            </div>
+            <div class="col-12">
+                <p class="mb-0">Ce dossier ne pourras pas être finalisé sans la validation par les 2 parties : l'organisme de prescriptions et le lieu de médiation.</p>
+            </div>
+            <div class="col-6 mt-4 mb-4">
+                <a class="btn btn-sm btn-outline-dark" href="{{ path('app_admin_dashboard_index') }}"><i class="fa-duotone fa-solid fa-chevrons-left"></i>&nbsp;Retour</a>
+                <button id="btnAddPrescription" class="btn btn-outline-primary btn-sm"><i class="fa-duotone fa-solid fa-circle-check"></i> Préenregistrer la demande</button>
+            </div>
+        </div>
     {% elseif prescription.isOpenByPrescriptor == true and prescription.isOpenByMediator == false %}
+        <div class="row">
+            <div class="col-12 bg-light border-bottom border-dark mb-2">
+                <h3 class="mt-2 mb-2">Construction du dossier</h3>
+                <p class="mb-0">Une fois validé de votre côté, le lieu de médiation doit completer la fiche.</p>
+            </div>
+            <div class="col-6 mt-4 mb-4">
+                <a class="btn btn-sm btn-outline-dark" href="{{ path('app_admin_dashboard_index') }}"><i class="fa-duotone fa-solid fa-chevrons-left"></i>&nbsp;Retour</a>
+                <button id="btnAddPrescription" class="btn btn-outline-primary btn-sm"><i class="fa-duotone fa-solid fa-circle-check"></i> Préenregistrer la demande</button>
+            </div>
+        </div>
     {% elseif prescription.isOpenByPrescriptor == false and prescription.isOpenByMediator == true %}
+        <div class="row">
+            <div class="col-12 bg-light border-bottom border-dark mb-2">
+                <h3 class="mt-2 mb-2">Construction du dossier</h3>
+                <p class="mb-0">Vous avez ouvert ce dossier en amont du prescripteur. Le dossier ne pourra être valide uniquement lorsque le prescriptueur aura validé les renseignements fournis.</p>
+            </div>
+            <div class="col-6 mt-4 mb-4">
+                <a class="btn btn-sm btn-outline-dark" href="{{ path('app_admin_dashboard_index') }}"><i class="fa-duotone fa-solid fa-chevrons-left"></i>&nbsp;Retour</a>
+                <button id="btnAddPrescription" class="btn btn-outline-primary btn-sm"><i class="fa-duotone fa-solid fa-circle-check"></i> Préenregistrer la demande</button>
+            </div>
+        </div>
     {% elseif prescription.isOpenByPrescriptor == true and prescription.isOpenByMediator == true %}
         <div class="row">
             <div class="col-12 bg-light border-bottom border-dark mb-2">
@@ -375,12 +411,8 @@
         </div>
     {% endif %}
 
-    <div class="row">
-        <div class="col-6 mt-4 mb-4">
-            <a class="btn btn-sm btn-outline-dark" href="{{ path('app_admin_dashboard_index') }}"><i class="fa-duotone fa-solid fa-chevrons-left"></i>&nbsp;Retour</a>
-            <button id="btnAddPrescription" class="btn btn-outline-primary btn-sm"><i class="fa-duotone fa-solid fa-circle-check"></i> Préenregistrer la demande</button>
-        </div>
-    </div>
+
+
 {{ form_widget(form._token) }}
 {{ form_end(form, { render_rest: false }) }}
 

@@ -2,4 +2,11 @@ body{
     min-height: 100vh;
     display: grid;
     grid-template-rows: auto 1fr auto;
+    overflow: hidden;
+}
+
+#page_content {
+    height: calc(90vh - 150px);
+    overflow-y: auto;
+    overflow-x: hidden;
 }
