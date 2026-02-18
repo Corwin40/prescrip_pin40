@@ -21,26 +21,11 @@
         {% elseif app.request.attributes.get('_route') == 'app_gestapp_prescription_edit' %}
             <div class="row">
 
-                <div class="col-md-4">
-                    {% include 'composants/inputs/block_civility.html.twig' with {
-                        label: 'Prénom & Nom',
-                        civility: form.beneficiaire.civility,
-                        firstname: form.beneficiaire.firstname,
-                        lastname: form.beneficiaire.lastname
-                    } %}
-                </div>
-
-                <div class="col-md-12">
-                    {% include 'composants/inputs/input_radio_horizontal.html.twig' with {
-                        form_label: 'Age',
-                        form_field: form.beneficiaire.ageGroup
-                    } %}
-                </div>
-
-                <div class="col-md-12">
-                    {% include 'composants/inputs/input_radio_horizontal.html.twig' with {
-                        form_label: 'Situation',
-                        form_field: form.beneficiaire.professionnalStatus
+                <div class="col-md-3">
+                    {% include 'composants/inputs/input_select.html.twig' with {
+                        label: 'Bénéficiaire',
+                        field: form.beneficiaire,
+                        disabled: ''
                     } %}
                 </div>
             </div>

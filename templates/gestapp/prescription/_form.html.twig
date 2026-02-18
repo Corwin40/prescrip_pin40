@@ -85,22 +85,22 @@
                             {% include 'composants/inputs/input_radio_tablerow.html.twig' with {
                                 form_label: 'Les bases',
                                 form_field: form.competence.compBase,
-                                disabled: true
+                                disabled: false
                             } %}
                             {% include 'composants/inputs/input_radio_tablerow.html.twig' with {
                                 form_label: 'Texte et documents',
                                 form_field: form.competence.compDesk,
-                                disabled: true
+                                disabled: false
                             } %}
                             {% include 'composants/inputs/input_radio_tablerow.html.twig' with {
                                 form_label: 'Internet',
                                 form_field: form.competence.compInternet,
-                                disabled: true
+                                disabled: false
                             } %}
                             {% include 'composants/inputs/input_radio_tablerow.html.twig' with {
                                 form_label: 'Messagerie electronique',
                                 form_field: form.competence.compEmail,
-                                disabled: true
+                                disabled: false
                             } %}
                         {% elseif role == 'Mediateur' %}
                             {% include 'composants/inputs/input_radio_tablerow.html.twig' with {
@@ -368,7 +368,7 @@
         </div>
     </div>
 
-    {% if prescription.isOpenByPrescriptor == false and prescription.isOpenByMediator == false %}
+    {% if prescription.isOpenByPrescriptor == false and prescription.isOpenByMediator == false and prescription.validcase == false %}
         <div class="row">
             <div class="col-12 bg-light border-bottom border-dark mb-2">
                 <h2 class="h4 mt-1 mb-1">Finalisation du dossier</h2>
@@ -381,7 +381,7 @@
                 <button id="btnAddPrescription" class="btn btn-outline-primary btn-sm"><i class="fa-duotone fa-solid fa-circle-check"></i> Préenregistrer la demande</button>
             </div>
         </div>
-    {% elseif prescription.isOpenByPrescriptor == true and prescription.isOpenByMediator == false %}
+    {% elseif prescription.isOpenByPrescriptor == true and prescription.isOpenByMediator == false and prescription.validcase == false %}
         <div class="row">
             <div class="col-12 bg-light border-bottom border-dark mb-2">
                 <h3 class="mt-2 mb-2">Construction du dossier</h3>
@@ -392,7 +392,7 @@
                 <button id="btnAddPrescription" class="btn btn-outline-primary btn-sm"><i class="fa-duotone fa-solid fa-circle-check"></i> Préenregistrer la demande</button>
             </div>
         </div>
-    {% elseif prescription.isOpenByPrescriptor == false and prescription.isOpenByMediator == true %}
+    {% elseif prescription.isOpenByPrescriptor == false and prescription.isOpenByMediator == true and prescription.validcase == false %}
         <div class="row">
             <div class="col-12 bg-light border-bottom border-dark mb-2">
                 <h3 class="mt-2 mb-2">Construction du dossier</h3>
@@ -403,15 +403,35 @@
                 <button id="btnAddPrescription" class="btn btn-outline-primary btn-sm"><i class="fa-duotone fa-solid fa-circle-check"></i> Préenregistrer la demande</button>
             </div>
         </div>
-    {% elseif prescription.isOpenByPrescriptor == true and prescription.isOpenByMediator == true %}
+    {% elseif prescription.isOpenByPrescriptor == true and prescription.isOpenByMediator == true and prescription.validcase == false %}
         <div class="row">
             <div class="col-12 bg-light border-bottom border-dark mb-2">
-                <h3 class="mt-2 mb-2">Finalisation du dossier</h3>
+                <h3 class="mt-1 mb-1 h4">Finalisation du dossier</h3>
+            </div>
+            <div class="col-12">
+                <p class="mb-0">Cette prescription a été consulté par l'organisme de prescription et le lieu de médiation.</p>
+                {% if role == 'Médiateur' or role == "Administrateur" %}
+                    <p class="mb-0">En tant {% if role == "Médiateur" %}que lieu de médiation{% elseif role == "Administrateur" %}qu'administrateur{% endif %} vous pouvez valider la prescription en précisant le poste qui sera transmis au bénéficiaire.</p>
+                {% endif %}
+            </div>
+            <div class="row mt-2">
+                <div class="col-4">
+                    {% include 'composants/inputs/input_select.html.twig' with {
+                        label: 'Référence de l\'équipement doté',
+                        field: form.equipement,
+                        disabled: ''
+                    } %}
+                </div>
+                <div class="clear"></div>
+                <div class="col-4">
+                    <a class="btn btn-sm btn-outline-dark" href="{{ path('app_admin_dashboard_index') }}"><i class="fa-duotone fa-solid fa-chevrons-left"></i>&nbsp;Retour</a>
+                    <button id="btnValidCase" class="btn btn-outline-primary btn-sm"><i class="fa-duotone fa-solid fa-circle-check"></i> Validation de la prescription</button>
+                </div>
             </div>
         </div>
+    {% elseif prescription.isOpenByPrescriptor == true and prescription.isOpenByMediator == true and prescription.validcase == true %}
+
     {% endif %}
-
-
 
 {{ form_widget(form._token) }}
 {{ form_end(form, { render_rest: false }) }}
