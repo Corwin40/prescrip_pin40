@@ -13,6 +13,8 @@ class EquipmentType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
+            ->add('equipmentId')
+            ->add('matriculEquipment')
             ->add('typeEquipment',ChoiceType::class, [
                 'label'=>'Type Equipment',
                 'choices'=>[
@@ -24,10 +26,7 @@ class EquipmentType extends AbstractType
                 'placeholder'=>'Veuillez choisir un type',
                 'required'=>true,
             ])
-
-
             ->add('brandEquipment')
-            ->add('matriculEquipment')
             ->add('osInstalled',ChoiceType::class, [
                 'label'=>'OS Installé',
                 'choices'=>[
@@ -39,7 +38,6 @@ class EquipmentType extends AbstractType
                 'placeholder'=>'Veuillez choisir',
                 'required'=>true,
             ])
-
             ->add('statusEquipment',ChoiceType::class, [
                 'label'=>'Status',
                 'choices'=>[
@@ -50,7 +48,8 @@ class EquipmentType extends AbstractType
                 'placeholder'=>'Veuillez choisir',
                 'required'=>true,
             ])
-
+            ->add('note')
+            ->add('recoveryAt')
             ->add('isDispo')
         ;
     }

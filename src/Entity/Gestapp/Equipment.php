@@ -39,6 +39,15 @@ class Equipment
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $updatedAt = null;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $equipmentId = null;
+
+    #[ORM\Column(type: Types::DATE_MUTABLE)]
+    private ?\DateTime $recoveryAt = null;
+
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $note = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -133,5 +142,46 @@ class Equipment
     {
         $this->updatedAt = new \DateTime('now');
         return $this;
+    }
+
+    public function getEquipmentId(): ?string
+    {
+        return $this->equipmentId;
+    }
+
+    public function setEquipmentId(?string $equipmentId): static
+    {
+        $this->equipmentId = $equipmentId;
+
+        return $this;
+    }
+
+    public function getRecoveryAt(): ?\DateTime
+    {
+        return $this->recoveryAt;
+    }
+
+    public function setRecoveryAt(\DateTime $recoveryAt): static
+    {
+        $this->recoveryAt = $recoveryAt;
+
+        return $this;
+    }
+
+    public function getNote(): ?string
+    {
+        return $this->note;
+    }
+
+    public function setNote(?string $note): static
+    {
+        $this->note = $note;
+
+        return $this;
+    }
+
+    public function __toString()
+    {
+        return $this->equipmentId;
     }
 }

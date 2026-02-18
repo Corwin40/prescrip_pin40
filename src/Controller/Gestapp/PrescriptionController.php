@@ -5,6 +5,7 @@ namespace App\Controller\Gestapp;
 use App\Config\StatusPrescription;
 use App\Entity\Gestapp\Competence;
 use App\Entity\Gestapp\Prescription;
+use App\Form\Gestapp\closedCaseType;
 use App\Form\Gestapp\PrescriptionType;
 use App\Repository\Gestapp\PrescriptionRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -136,7 +137,24 @@ final class PrescriptionController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+
+            if($user && (in_array('ROLE_SUPER_ADMIN', $user->getRoles()) || in_array('ROLE_ADMIN', $user->getRoles()) ) ){
+
+            }
+            if($user && in_array('ROLE_MEDIATEUR', $user->getRoles())){
+                $prescription->setIsOpenByMediator(1);
+            }
+            if($user && in_array('ROLE_PRESCRIPTEUR', $user->getRoles())){
+                $competence = $prescription->getCompetence();
+                $prescription->setIsOpenByPrescriptor(1);
+            }
+            if ($prescription->isOpenByPrescriptor() == true && $prescription->IsOpenByMediator() == true)
+            {
+                $prescription->setValidcase(1);
+            }
+
             $entityManager->flush();
+            //dd($prescription);
 
             return $this->redirectToRoute('app_gestapp_prescription_index', [], Response::HTTP_SEE_OTHER);
         }
@@ -147,17 +165,39 @@ final class PrescriptionController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}/closecase', name: 'app_gestapp_prescription_closecase', methods: ['POST'])]
-    public function closecase(Prescription $prescription, EntityManagerInterface $entityManager)
+    #[Route('/{id}/closedcase', name: 'app_gestapp_prescription_closedcase', methods: ['POST'])]
+    public function closedcase(Prescription $prescription, EntityManagerInterface $entityManager, Request $request)
     {
-        $prescription->setValidcase(1);
-        $entityManager->flush();
 
-        return $this->json([
-            'code' => 200,
-            'message' => 'Le fichier PDF correspondant à la prescription est en cours de génération',
+        $form = $this->createForm(ClosedCaseType::class, $prescription, [
+            'action' => $this->generateUrl('app_gestapp_prescription_closedcase',[
+                'id' => $prescription->getId()
+            ]),
+            'method' => 'POST',
+            'attr' => [
+                'id' => 'formClosedCase',
+            ],
+        ]);
+        $form->handleRequest($request);
+
+        if($form->isSubmitted() && $form->isValid())
+        {
+            $prescription->setValidcase(1);
+            $entityManager->flush();
+
+            return $this->redirectToRoute('app_admin_dashboard_index', [], Response::HTTP_SEE_OTHER);
+        }
+
+        return $this->render('gestapp/prescription/_formClosedCase.html.twig', [
             'prescription' => $prescription,
-        ], 200);
+            'form' => $form,
+        ]);
+
+        //return $this->json([
+        //    'code' => 200,
+        //    'message' => 'Le fichier PDF correspondant à la prescription est en cours de génération',
+        //    'prescription' => $prescription,
+        //], 200);
     }
 
     #[Route('/{id}', name: 'app_gestapp_prescription_delete', methods: ['POST'])]

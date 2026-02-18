@@ -101,7 +101,17 @@
 
                         <td>{{ prescription.membre }}</td>
                         <td>{{ prescription.lieuMediation }}</td>
-                        <td></td>
+                        <td>
+                            {% if prescription.isOpenByPrescriptor == false and prescription.isOpenByMediator == false %}
+                            <span class="badge text-bg-info">Ouvert par Administrateur</span>
+                            {% elseif prescription.isOpenByPrescriptor == true and prescription.isOpenByMediator == false %}
+                                <span class="badge text-bg-info">Vu par prescripteur</span>
+                            {% elseif prescription.isOpenByPrescriptor == false and prescription.isOpenByMediator == true %}
+                                <span class="badge text-bg-info">Vu par médiateur</span>
+                            {% elseif prescription.isOpenByPrescriptor == false and prescription.isOpenByMediator == true %}
+                                <span class="badge text-bg-info">Fiche dispo</span>
+                            {% endif %}
+                        </td>
                         <td>
                             <a
                                 href="{{ path('app_gestapp_prescription_edit', {'id': prescription.id}) }}"

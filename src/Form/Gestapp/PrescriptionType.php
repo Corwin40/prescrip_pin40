@@ -11,7 +11,7 @@ use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\CollectionType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -45,6 +45,7 @@ class PrescriptionType extends AbstractType
                 'required' => true,
                 'expanded' => true,
                 'multiple' => false,
+                'data' => 'Non acquises',
             ])
             ->add('lieuMediation', EntityType::class, [
                 'class' => Member::class,
@@ -56,10 +57,7 @@ class PrescriptionType extends AbstractType
                         ->orderBy('d.id', 'ASC');
                 },
             ])
-            ->add('competence', CompetenceType::class, [
-                'label' => 'COMPETENCE',
-                'empty_data' => new Competence(),
-            ])
+
         ;
 
         if ( $user && (
@@ -79,6 +77,27 @@ class PrescriptionType extends AbstractType
                             ->orderBy('d.id', 'ASC');
                     },
                 ])
+                ->add('competence', CompetenceType::class, [
+                    'label' => 'COMPETENCE',
+                    'empty_data' => new Competence(),
+                ])
+                ->add('equipement', EntityType::class, [
+                    'label' => 'Choix de l\'équipement',
+                    'class' => Equipment::class,
+                ])
+            ;
+        }
+
+        if($user && in_array('ROLE_PRESCRIPTEUR', $user->getRoles())){
+            $builder
+                ->add('competence', CompetenceType::class, [
+                    'label' => 'COMPETENCE',
+                    'empty_data' => new Competence(),
+                    'attr' => [
+                        'readonly' => true,
+                    ],
+                ])
+                ->add('equipement', HiddenType::class, ['data' => ''])
             ;
         }
 
@@ -100,9 +119,8 @@ class PrescriptionType extends AbstractType
         }
         if($route == 'app_gestapp_prescription_edit') {
             $builder
-                ->add('beneficiaire', BeneficiaryType::class, [
-                    'empty_data' => new Beneficiary(),
-                ]);
+                ->add('beneficiaire')
+            ;
         }
 
     }
