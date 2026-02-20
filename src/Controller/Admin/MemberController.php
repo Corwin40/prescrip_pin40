@@ -14,6 +14,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
+use Symfony\Component\String\Slugger\SluggerInterface;
 
 #[Route('/admin/member')]
 #[IsGranted('ROLE_ADMIN')]
@@ -32,6 +33,7 @@ final class MemberController extends AbstractController
         Request $request,
         EntityManagerInterface $entityManager,
         UserPasswordHasherInterface $passwordHasher,
+        SluggerInterface $slugger,
         $role
     ): Response {
         $member = new Member();
@@ -40,6 +42,11 @@ final class MemberController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $password = $form->get('password')->getData();
+
+            $name = $form->get('nameStructure')->getData();
+            if($name){
+                $member->setSlug($slugger->slug($name, '_')->lower());
+            }
 
             $member->setIsVerified(1);
 
@@ -85,12 +92,18 @@ final class MemberController extends AbstractController
         Request $request,
         Member $member,
         EntityManagerInterface $entityManager,
+        SluggerInterface $slugger,
         UserPasswordHasherInterface $passwordHasher
     ): Response {
         $form = $this->createForm(MemberType::class, $member);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+
+            $name = $form->get('nameStructure')->getData();
+            if($name){
+                $member->setSlug($slugger->slug($name, '_')->lower());
+            }
 
             $entityManager->flush();
 

@@ -2,6 +2,7 @@
 
 namespace App\Entity\Gestapp;
 
+use App\Entity\Admin\Member;
 use App\Repository\Gestapp\EquipmentRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
@@ -47,6 +48,9 @@ class Equipment
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $note = null;
+
+    #[ORM\ManyToOne(inversedBy: 'equipment')]
+    private ?Member $reconditioner = null;
 
     public function getId(): ?int
     {
@@ -183,5 +187,17 @@ class Equipment
     public function __toString()
     {
         return $this->equipmentId;
+    }
+
+    public function getReconditioner(): ?Member
+    {
+        return $this->reconditioner;
+    }
+
+    public function setReconditioner(?Member $reconditioner): static
+    {
+        $this->reconditioner = $reconditioner;
+
+        return $this;
     }
 }

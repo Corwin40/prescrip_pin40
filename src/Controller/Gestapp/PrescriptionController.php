@@ -72,27 +72,31 @@ final class PrescriptionController extends AbstractController
 
             if($user && (in_array('ROLE_SUPER_ADMIN', $user->getRoles()) || in_array('ROLE_ADMIN', $user->getRoles()) ) ){
                 $beneficiary = $form->get('beneficiaire')->getData();
-                $structure = $beneficiary->getPrescriptor()->getNameStructure();
-                $ref = $date->format('Ym')."-".$structure."-".$compteur;// mois-année-structure-compteur
+                $structure = $beneficiary->getPrescriptor()->getSlug();
+                if($structure)
+                {
+                    $ref = $date->format('Ym')."-".$structure."-".$compteur;// mois-année-structure-compteur
+                    $prescription->setRef($ref);
+                }
 
-                $prescription->setRef($ref);
                 $prescription->setStatus(StatusPrescription::OpenByAdministrator);
                 $prescription->setMembre($beneficiary->getPrescriptor());
             }
             if($user && in_array('ROLE_MEDIATEUR', $user->getRoles())){
                 $beneficiary = $form->get('beneficiary')->getData();
-                $structure = $beneficiary->getNameStructure();
-                $ref = $date->format('Ym')."-".$structure."-".$compteur;// mois-année-structure-compteur
-
-                $prescription->setRef($ref);
+                $structure = $beneficiary->getPrescriptor()->getSlug();
+                if($structure)
+                {
+                    $ref = $date->format('Ym')."-".$structure."-".$compteur;// mois-année-structure-compteur
+                    $prescription->setRef($ref);
+                }
                 $prescription->setStatus(StatusPrescription::OpenByMediator);
                 $prescription->setIsOpenByMediator(1);
                 $prescription->setMembre($form->get('membre')->getData());
             }
             if($user && in_array('ROLE_PRESCRIPTEUR', $user->getRoles())){
-                $structure = $this->getUser()->getNameStructure();
+                $structure = $this->getUser()->getSlug();
                 $ref = $date->format('Ym')."-".$structure."-".$compteur;// mois-année-structure-compteur
-
                 $prescription->setRef($ref);
                 $prescription->setStatus(StatusPrescription::OpenByPrescriptor);
                 $prescription->setIsOpenByPrescriptor(1);
