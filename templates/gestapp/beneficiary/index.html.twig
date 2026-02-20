@@ -5,24 +5,84 @@
 
 {% block body %}
     {# Bloc entête de page #}
-    {%
-        include 'composants/pages/pages_headers.html.twig' with {
-        'page_title' : 'Liste des Bénéficiaires',
-        'li_items': [
-            { path: 'app_admin_dashboard_index', fa_class: 'fa-sharp-duotone fa-solid fa-house-blank', a_title: 'Dashboard' },
-            { path: null, fa_class: 'fa-sharp fa-light fa-laptop', a_title: 'Bénéficiaires' },
-        ],
-        'btns' : [
-            {'path': path('app_gestapp_beneficiary_new'), 'id':'btnAddBeneficiaire', 'class' : 'btn btn-outline-dark btn-sm', 'fa_class' : 'fa-duotone fa-solid fa-circle-user-circle-plus', 'textcontent' : 'Ajouter un.e bénéficiaire'},
-        ]
+    <section id="page_header">    {%
+            include 'composants/pages/pages_headers.html.twig' with {
+            'page_title' : 'Liste des Bénéficiaires',
+            'li_items': [
+                { path: 'app_admin_dashboard_index', fa_class: 'fa-sharp-duotone fa-solid fa-house-blank', a_title: 'Dashboard' },
+                { path: null, fa_class: 'fa-sharp fa-light fa-laptop', a_title: 'Bénéficiaires' },
+            ],
+            'btns' : [
+                {'path': path('app_gestapp_beneficiary_new'), 'id':'btnAddBeneficiaire', 'class' : 'btn btn-outline-dark btn-sm', 'fa_class' : 'fa-duotone fa-solid fa-circle-user-circle-plus', 'textcontent' : 'Ajouter un.e bénéficiaire'},
+            ]
 
-    }
-    %}
-
+        }
+        %}
+    </section>
     {# Bloc contenu de la page #}
-    <div class="row mt-3">
-        <div class="col-12">
-            {% if beneficiaries is not empty %}
+    <section id="page_content">
+        <div class="row mt-3">
+            <div class="col-12">
+                {% if beneficiaries is not empty %}
+                    <div class="table-responsive">
+                        <table class="table table-hover table-bordered align-middle">
+                            <thead class="">
+                            <tr>
+                                <th>Le bénéficiaire</th>
+                                <th>Tranche d’âge</th>
+                                <th>Situation professionnelle</th>
+                                <th>Modifié le</th>
+                                <th>Actions</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for beneficiary in beneficiaries %}
+                                <tr>
+                                    <td>
+                                        <div class="d-flex justify-content-between">
+                                            <p class="mb-0 fs-6">
+                                                {{ beneficiary.civility }} {{ beneficiary.firstname }} {{ beneficiary.lastname }}</p>
+                                            <p class="mb-0">
+                                            <span class="badge text-bg-light">
+                                                {{ beneficiary.prescriptor.nameStructure }}
+                                            </span>
+                                                &nbsp;
+                                                {% if beneficiary.prescription|length > 0 %}
+                                                    {% set prescription = beneficiary.prescription %}
+                                                    {% if prescription.isOpenByPrescriptor == 1 and prescription.isOpenByMediator == 0 %}
+                                                        <span class="badge text-bg-info">
+                                                    Prescription en cours&nbsp;<i class="fa-light fa-badge-check"></i>
+                                                    </span>
+                                                    {% endif %}
+                                                    {% if prescription.isOpenByPrescriptor == 0 and prescription.isOpenByMediator == 1 %}
+                                                        <span class="badge text-bg-info">
+                                                    Prescription en cours&nbsp;<i class="fa-light fa-badge-check"></i>
+                                                    </span>
+                                                    {% endif %}
+                                                    {% if prescription.isOpenByPrescriptor == 1 and prescription.isOpenByMediator == 1 and prescription.validcase is true %}
+                                                        <span class="badge text-bg-success">
+                                                    Prescription éditée&nbsp;<i class="fa-light fa-badge-check"></i>
+                                                    </span>
+                                                    {% endif %}
+                                                {% endif %}
+                                            </p>
+                                        </div>
+
+                                    </td>
+                                    <td><p class="mb-0 fs-6">{{ beneficiary.ageGroup }} ans</p></td>
+                                    <td><p class="mb-0 fs-6">{{ beneficiary.professionnalStatus }}</p></td>
+                                    <td><p class="mb-0 fs-6">{{ beneficiary.updatedAt ? beneficiary.updatedAt|date('d/m/Y') : '' }}</p></td>
+                                    <td class="text-center">
+                                        <a href="{{ path('app_gestapp_beneficiary_show', {'id': beneficiary.id}) }}" class="text-dark text-decoration-none"><i class="fa-duotone fa-solid fa-eye"></i>&nbsp;Voir</a>
+                                        <a href="{{ path('app_gestapp_beneficiary_edit', {'id': beneficiary.id}) }}" class="text-dark text-decoration-none"><i class="fa-duotone fa-solid fa-user-pen"></i>&nbsp;Modifier</a>
+                                        <a href="{{ path('app_gestapp_beneficiary_delete', {'id': beneficiary.id}) }}" class="text-dark text-decoration-none"><i class="fa-duotone fa-solid fa-user-circle-minus"></i>&nbsp;Supprimer</a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
                 <div class="table-responsive">
                     <table class="table table-hover table-bordered align-middle">
                         <thead class="">
@@ -35,72 +95,17 @@
                         </tr>
                         </thead>
                         <tbody>
-                        {% for beneficiary in beneficiaries %}
                             <tr>
-                                <td>
-                                    <div class="d-flex justify-content-between">
-                                        <p class="mb-0 fs-6">
-                                            {{ beneficiary.civility }} {{ beneficiary.firstname }} {{ beneficiary.lastname }}</p>
-                                        <p class="mb-0">
-                                        <span class="badge text-bg-light">
-                                            {{ beneficiary.prescriptor.nameStructure }}
-                                        </span>
-                                            &nbsp;
-                                            {% if beneficiary.prescription|length > 0 %}
-                                                {% set prescription = beneficiary.prescription %}
-                                                {% if prescription.isOpenByPrescriptor == 1 and prescription.isOpenByMediator == 0 %}
-                                                    <span class="badge text-bg-info">
-                                                Prescription en cours&nbsp;<i class="fa-light fa-badge-check"></i>
-                                                </span>
-                                                {% endif %}
-                                                {% if prescription.isOpenByPrescriptor == 0 and prescription.isOpenByMediator == 1 %}
-                                                    <span class="badge text-bg-info">
-                                                Prescription en cours&nbsp;<i class="fa-light fa-badge-check"></i>
-                                                </span>
-                                                {% endif %}
-                                                {% if prescription.isOpenByPrescriptor == 1 and prescription.isOpenByMediator == 1 and prescription.validcase is true %}
-                                                    <span class="badge text-bg-success">
-                                                Prescription éditée&nbsp;<i class="fa-light fa-badge-check"></i>
-                                                </span>
-                                                {% endif %}
-                                            {% endif %}
-                                        </p>
-                                    </div>
-
-                                </td>
-                                <td><p class="mb-0 fs-6">{{ beneficiary.ageGroup }} ans</p></td>
-                                <td><p class="mb-0 fs-6">{{ beneficiary.professionnalStatus }}</p></td>
-                                <td><p class="mb-0 fs-6">{{ beneficiary.updatedAt ? beneficiary.updatedAt|date('d/m/Y') : '' }}</p></td>
-                                <td class="text-center">
-                                    <a href="{{ path('app_gestapp_beneficiary_show', {'id': beneficiary.id}) }}" class="text-dark text-decoration-none"><i class="fa-duotone fa-solid fa-eye"></i>&nbsp;Voir</a>
-                                    <a href="{{ path('app_gestapp_beneficiary_edit', {'id': beneficiary.id}) }}" class="text-dark text-decoration-none"><i class="fa-duotone fa-solid fa-user-pen"></i>&nbsp;Modifier</a>
-                                    <a href="{{ path('app_gestapp_beneficiary_delete', {'id': beneficiary.id}) }}" class="text-dark text-decoration-none"><i class="fa-duotone fa-solid fa-user-circle-minus"></i>&nbsp;Supprimer</a>
-                                </td>
+                                <td class="text-start text-muted" colspan="5">Aucun bénéficiaire trouvé.</td>
                             </tr>
-                        {% endfor %}
                         </tbody>
                     </table>
                 </div>
-            {% else %}
-            <div class="table-responsive">
-                <table class="table table-hover table-bordered align-middle">
-                    <thead class="">
-                    <tr>
-                        <th>Le bénéficiaire</th>
-                        <th>Tranche d’âge</th>
-                        <th>Situation professionnelle</th>
-                        <th>Modifié le</th>
-                        <th>Actions</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td class="text-start text-muted" colspan="5">Aucun bénéficiaire trouvé.</td>
-                        </tr>
-                    </tbody>
-                </table>
+                {% endif %}
             </div>
-            {% endif %}
         </div>
-    </div>
+    </section>
+        <section id="page_footer">
+
+        </section>
 {% endblock %}

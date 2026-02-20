@@ -2,7 +2,10 @@
 
 namespace App\Form\Gestapp;
 
+use App\Entity\Admin\Member;
 use App\Entity\Gestapp\Equipment;
+use Doctrine\ORM\EntityRepository;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -51,6 +54,19 @@ class EquipmentType extends AbstractType
             ->add('note')
             ->add('recoveryAt')
             ->add('isDispo')
+            ->add('reconditioner', EntityType::class, [
+                'class' => Member::class,
+                'choice_label' => function ($prescriptor) {
+                    return $prescriptor->getNameStructure();
+                },
+                'query_builder' => function (EntityRepository $er) {
+                    return $er
+                        ->createQueryBuilder('p')
+                        ->where('p.roles LIKE :roles')
+                        ->setParameter('roles', '%ROLE_RECONDITIONNEUR%')
+                        ->orderBy('p.id', 'ASC');
+                },
+            ])
         ;
     }
 

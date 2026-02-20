@@ -3,6 +3,7 @@
 namespace App\Entity\Admin;
 
 use App\Entity\Gestapp\Beneficiary;
+use App\Entity\Gestapp\Equipment;
 use App\Entity\Gestapp\Prescription;
 use App\Repository\MemberRepository;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -94,11 +95,21 @@ class Member implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(targetEntity: Beneficiary::class, mappedBy: 'prescriptor')]
     private Collection $beneficiaries;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $slug = null;
+
+    /**
+     * @var Collection<int, Equipment>
+     */
+    #[ORM\OneToMany(targetEntity: Equipment::class, mappedBy: 'reconditioner')]
+    private Collection $equipment;
+
     public function __construct()
     {
         $this->prescriptions = new ArrayCollection();
         $this->lieuxmediation = new ArrayCollection();
         $this->beneficiaries = new ArrayCollection();
+        $this->equipment = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -384,6 +395,48 @@ class Member implements UserInterface, PasswordAuthenticatedUserInterface
             // set the owning side to null (unless already changed)
             if ($beneficiary->getPrescriptor() === $this) {
                 $beneficiary->setPrescriptor(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getSlug(): ?string
+    {
+        return $this->slug;
+    }
+
+    public function setSlug(?string $slug): static
+    {
+        $this->slug = $slug;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Equipment>
+     */
+    public function getEquipment(): Collection
+    {
+        return $this->equipment;
+    }
+
+    public function addEquipment(Equipment $equipment): static
+    {
+        if (!$this->equipment->contains($equipment)) {
+            $this->equipment->add($equipment);
+            $equipment->setReconditioner($this);
+        }
+
+        return $this;
+    }
+
+    public function removeEquipment(Equipment $equipment): static
+    {
+        if ($this->equipment->removeElement($equipment)) {
+            // set the owning side to null (unless already changed)
+            if ($equipment->getReconditioner() === $this) {
+                $equipment->setReconditioner(null);
             }
         }
 
