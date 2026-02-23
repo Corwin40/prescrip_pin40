@@ -5,96 +5,101 @@
 {% block body %}
 
     {# Bloc entête de page #}
-    {%
-        include 'composants/pages/pages_headers.html.twig' with {
-        'page_title' : 'Liste des équipements disponibles à la dotation',
-        'li_items': [
-            { path: 'app_admin_dashboard_index', fa_class: 'fa-sharp-duotone fa-solid fa-house-blank', a_title: 'Dashboard' },
-            { path: null, fa_class: 'fa-sharp fa-light fa-laptop', a_title: 'équipements' },
-        ],
-        'btns' : [
-            {'path': path('app_gestapp_equipment_new'), 'id':'btnAddEquipment', 'class' : 'btn btn-outline-dark btn-sm', 'fa_class' : 'fa-duotone fa-solid fa-circle-user-circle-plus', 'textcontent' : 'Ajouter un équipement'},
-        ]
-    }
-    %}
+    <section>
+        {%
+            include 'composants/pages/pages_headers.html.twig' with {
+            'page_title' : 'Liste des équipements disponibles à la dotation',
+            'li_items': [
+                { path: 'app_admin_dashboard_index', fa_class: 'fa-sharp-duotone fa-solid fa-house-blank', a_title: 'Dashboard' },
+                { path: null, fa_class: 'fa-sharp fa-light fa-laptop', a_title: 'équipements' },
+            ],
+            'btns' : [
+                {'path': path('app_gestapp_equipment_new'), 'id':'btnAddEquipment', 'class' : 'btn btn-outline-dark btn-sm', 'fa_class' : 'fa-duotone fa-solid fa-circle-user-circle-plus', 'textcontent' : 'Ajouter un équipement'},
+            ]
+        }
+        %}
+    </section>
+
 
     {# Bloc contenu de la page #}
-    <div class="row mt-3">
-        <div class="col-12">
-            {% if equipment is not empty %}
-                <div class="table-responsive">
-                    <table class="table table-striped table-bordered align-middle">
-                        <thead class="table-dark">
-                        <tr>
-                            <th>Type</th>
-                            <th>Marque</th>
-                            <th>Matricule</th>
-                            <th>OS installé</th>
-                            <th>Statut</th>
-                            <th>Disponible</th>
-                            <th>Actions</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {% for item in equipment %}
+    <section>
+        <div class="row mt-3">
+            <div class="col-12">
+                {% if equipment is not empty %}
+                    <div class="table-responsive">
+                        <table class="table table-striped table-bordered align-middle">
+                            <thead class="table-dark">
                             <tr>
-                                <td>{{ item.typeEquipment }}</td>
-                                <td>{{ item.brandEquipment }}</td>
-                                <td>{{ item.matriculEquipment }}</td>
-                                <td>{{ item.osInstalled }}</td>
-                                <td>{{ item.statusEquipment }}</td>
-                                <td>
-                                    {% if item.isDispo %}
-                                        <span class="badge bg-success">Oui</span>
-                                    {% else %}
-                                        <span class="badge bg-danger">Non</span>
-                                    {% endif %}
-                                </td>
-                                <td class="text-center">
-                                    {% include 'composants/forms/button_link.html.twig' with {
-                                        label: 'Voir',
-                                        href: path('app_gestapp_equipment_show', {'id': item.id}),
-                                        type: 'info'
-                                    } %}
-
-                                    {% include 'composants/forms/button_link.html.twig' with {
-                                        label: 'Modifier',
-                                        href: path('app_gestapp_equipment_edit', {'id': item.id}),
-                                        type: 'warning'
-                                    } %}
-
-                                    {% include 'composants/forms/buttons_delete.html.twig' with {
-                                        id: item.id,
-                                        route: 'app_gestapp_equipment_delete'
-                                    } %}
-                                </td>
+                                <th>Type</th>
+                                <th>Marque</th>
+                                <th>Matricule</th>
+                                <th>OS installé</th>
+                                <th>Statut</th>
+                                <th>Disponible</th>
+                                <th>Actions</th>
                             </tr>
-                        {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
-            {% else %}
-            <div class="table-responsive">
-                <table class="table table-hover table-bordered align-middle">
-                    <thead class="table">
-                        <tr>
-                            <th>Type</th>
-                            <th>Marque</th>
-                            <th>Matricule</th>
-                            <th>OS installé</th>
-                            <th>Statut</th>
-                            <th>Disponible</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td class="text-start text-muted" colspan="7">Aucun équipement trouvé.</td>
-                        </tr>
-                    </tbody>
-                    </table>
+                            </thead>
+                            <tbody>
+                            {% for item in equipment %}
+                                <tr>
+                                    <td>{{ item.typeEquipment }}</td>
+                                    <td>{{ item.brandEquipment }}</td>
+                                    <td>{{ item.matriculEquipment }}</td>
+                                    <td>{{ item.osInstalled }}</td>
+                                    <td>{{ item.statusEquipment }}</td>
+                                    <td>
+                                        {% if item.isDispo %}
+                                            <span class="badge bg-success">Oui</span>
+                                        {% else %}
+                                            <span class="badge bg-danger">Non</span>
+                                        {% endif %}
+                                    </td>
+                                    <td class="text-center">
+                                        {% include 'composants/forms/button_link.html.twig' with {
+                                            label: 'Voir',
+                                            href: path('app_gestapp_equipment_show', {'id': item.id}),
+                                            type: 'info'
+                                        } %}
+
+                                        {% include 'composants/forms/button_link.html.twig' with {
+                                            label: 'Modifier',
+                                            href: path('app_gestapp_equipment_edit', {'id': item.id}),
+                                            type: 'warning'
+                                        } %}
+
+                                        {% include 'composants/forms/buttons_delete.html.twig' with {
+                                            id: item.id,
+                                            route: 'app_gestapp_equipment_delete'
+                                        } %}
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <div class="table-responsive">
+                        <table class="table table-hover table-bordered align-middle">
+                            <thead class="table">
+                            <tr>
+                                <th>Type</th>
+                                <th>Marque</th>
+                                <th>Matricule</th>
+                                <th>OS installé</th>
+                                <th>Statut</th>
+                                <th>Disponible</th>
+                                <th>Actions</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td class="text-start text-muted" colspan="7">Aucun équipement trouvé.</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                {% endif %}
             </div>
-            {% endif %}
         </div>
-    </div>
+    </section>
 {% endblock %}
