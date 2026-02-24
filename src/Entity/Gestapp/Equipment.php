@@ -16,14 +16,20 @@ class Equipment
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 20)]
-    private ?string $typeEquipment = null;
+    #[ORM\ManyToOne(inversedBy: 'equipment')]
+    private ?Member $reconditioner = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $equipmentId = null;
+
+    #[ORM\Column(length: 100)]
+    private ?string $matriculEquipment = null;
 
     #[ORM\Column(length: 20)]
     private ?string $brandEquipment = null;
 
-    #[ORM\Column(length: 100)]
-    private ?string $matriculEquipment = null;
+    #[ORM\Column(length: 20)]
+    private ?string $typeEquipment = null;
 
     #[ORM\Column(length: 20)]
     private ?string $osInstalled = null;
@@ -34,23 +40,20 @@ class Equipment
     #[ORM\Column]
     private ?bool $isDispo = null;
 
-    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
-    private ?\DateTimeInterface $createdAt = null;
-
-    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
-    private ?\DateTimeInterface $updatedAt = null;
-
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $equipmentId = null;
-
     #[ORM\Column(type: Types::DATE_MUTABLE)]
     private ?\DateTime $recoveryAt = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $note = null;
 
-    #[ORM\ManyToOne(inversedBy: 'equipment')]
-    private ?Member $reconditioner = null;
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $icon = null;
+
+    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
+    private ?\DateTimeInterface $createdAt = null;
+
+    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
+    private ?\DateTimeInterface $updatedAt = null;
 
     public function getId(): ?int
     {
@@ -197,6 +200,18 @@ class Equipment
     public function setReconditioner(?Member $reconditioner): static
     {
         $this->reconditioner = $reconditioner;
+
+        return $this;
+    }
+
+    public function getIcon(): ?string
+    {
+        return $this->icon;
+    }
+
+    public function setIcon(?string $icon): static
+    {
+        $this->icon = $icon;
 
         return $this;
     }

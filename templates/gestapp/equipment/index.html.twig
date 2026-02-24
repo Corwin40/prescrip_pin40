@@ -29,23 +29,26 @@
                     <div class="table-responsive">
                         <table class="table table-striped table-bordered align-middle">
                             <thead class="table-dark">
-                            <tr>
-                                <th>Type</th>
-                                <th>Marque</th>
-                                <th>Matricule</th>
-                                <th>OS installé</th>
-                                <th>Statut</th>
-                                <th>Disponible</th>
-                                <th>Actions</th>
-                            </tr>
+                                <tr>
+                                    <th>Type</th>
+                                    <th>Marque</th>
+                                    <th>Matricule</th>
+                                    <th>Statut</th>
+                                    <th>Disponible</th>
+                                    <th>Actions</th>
+                                </tr>
                             </thead>
                             <tbody>
                             {% for item in equipment %}
                                 <tr>
-                                    <td>{{ item.typeEquipment }}</td>
-                                    <td>{{ item.brandEquipment }}</td>
+                                    <td>{{ item.id }}</td>
                                     <td>{{ item.matriculEquipment }}</td>
-                                    <td>{{ item.osInstalled }}</td>
+                                    <td>
+                                        <div class="d-flex justify-content-between">
+                                            <p class="mb-0">{{ item.brandEquipment }}</p>
+                                            <p class="mb-0">{{ item.icon|raw }}</p>
+                                        </div>
+                                    </td>
                                     <td>{{ item.statusEquipment }}</td>
                                     <td>
                                         {% if item.isDispo %}
