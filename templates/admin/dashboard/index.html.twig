@@ -79,8 +79,9 @@
                 <tr>
                     <th class="col-2">Ref</th>
                     <th class="col-2">Bénéficiaire</th>
-                    <th class="col-3">Prescripteur</th>
+                    <th class="col-2">Prescripteur</th>
                     <th class="col-2">Espace de médiation</th>
+                    <th class="col-1">Equipement</th>
                     <th class="col-2">Etat</th>
                     <th class="col-1"></th>
                 </tr>
@@ -88,10 +89,13 @@
 
                 <tbody>
                 {% for prescription in prescriptions %}
-                    <tr>
-                        <td>{{ prescription.ref }}</td>
-
-                        <td>
+                    <tr >
+                        <td class="position-relative">
+                            <a href="{{ path('app_gestapp_prescription_edit', {'id': prescription.id}) }}" class="stretched-link"></a>
+                            {{ prescription.ref }}
+                        </td>
+                        <td class="position-relative">
+                            <a href="{{ path('app_gestapp_prescription_edit', {'id': prescription.id}) }}" class="stretched-link"></a>
                             {% if prescription.beneficiaire is not empty %}
                                 {{ prescription.beneficiaire.firstname }} {{ prescription.beneficiaire.lastname }}
                             {% else %}
@@ -99,19 +103,29 @@
                             {% endif %}
                         </td>
 
-                        <td>{{ prescription.membre }}</td>
+                        <td class="position-relative">
+                            <a href="{{ path('app_gestapp_prescription_edit', {'id': prescription.id}) }}" class="stretched-link"></a>
+                            {{ prescription.membre }}</td>
                         <td>{{ prescription.lieuMediation }}</td>
                         <td>
-                            {% if prescription.isOpenByPrescriptor == false and prescription.isOpenByMediator == false %}
-                            <span class="badge text-bg-info">Ouvert par Administrateur</span>
-                            {% elseif prescription.isOpenByPrescriptor == true and prescription.isOpenByMediator == false %}
-                                <span class="badge text-bg-info">Vu par prescripteur</span>
-                            {% elseif prescription.isOpenByPrescriptor == false and prescription.isOpenByMediator == true %}
-                                <span class="badge text-bg-info">Vu par médiateur</span>
-                            {% elseif prescription.isOpenByPrescriptor == false and prescription.isOpenByMediator == true %}
-                                <span class="badge text-bg-info">Fiche dispo</span>
+                            {% if prescription.equipement is not null %}
+                                {{ prescription.equipement }}
                             {% endif %}
                         </td>
+                        <td>
+                            {% if prescription.isOpenByPrescriptor == false and prescription.isOpenByMediator == false and prescription.validcase == false %}
+                            <span class="badge text-bg-info">Ouvert par Administrateur</span>
+                            {% elseif prescription.isOpenByPrescriptor == true and prescription.isOpenByMediator == false and prescription.validcase == false %}
+                                <span class="badge text-bg-info">Vu par prescripteur</span>
+                            {% elseif prescription.isOpenByPrescriptor == false and prescription.isOpenByMediator == true and prescription.validcase == false%}
+                                <span class="badge text-bg-info">Vu par médiateur</span>
+                            {% elseif prescription.isOpenByPrescriptor == false and prescription.isOpenByMediator == true and prescription.validcase == false%}
+                                <span class="badge text-bg-info">Fiche dispo</span>
+                            {% elseif prescription.isOpenByPrescriptor == true and prescription.isOpenByMediator == true and prescription.validcase == true %}
+                                <a href="{{ path('app_htmltopdf_generate_prescription_pdf', {'id': prescription.id}) }}">Envoyer à la signature</a>
+                            {% endif %}
+                        </td>
+
                         <td>
                             <a
                                 href="{{ path('app_gestapp_prescription_edit', {'id': prescription.id}) }}"

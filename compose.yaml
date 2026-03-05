@@ -1,59 +1,24 @@
 services:
 
-  php:
-    build: .
-    container_name: pin40prescription_php
-    restart: unless-stopped
-    ports:
-      - "80:80"
-    #  - "443:443"
-    #  - "443:443/udp"
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.17.16
+    container_name: pin40_search
     volumes:
-      - ./:/app
+      - esdata:/usr/share/elasticsearch/data
     environment:
-      - SERVER_NAME=:80
-    depends_on:
-      - db
-    networks:
-      - prescriptpin40
-
-  # Base de données MariaDB
-  db:
-    image: mariadb:10.11.2
-    container_name: pin40prescription_db
-    restart: unless-stopped
-    environment:
-      - MYSQL_DATABASE=prescrippin40_db
-      - MYSQL_USER=xavier
-      - MYSQL_PASSWORD=Corwin_40280
-      - MYSQL_ROOT_PASSWORD=Corwin_40280
+      - discovery.type=single-node
+      - ES_JAVA_OPTS=-Xms2g -Xmx2g
     ports:
-      - "3307:3306"
-    volumes:
-      - db_data:/var/lib/mysql
-    networks:
-      - prescriptpin40
+      - "9201:9200"
+      - "9301:9300"
+    restart: always
 
-  # phpMyAdmin pour gérer la base de données
-  phpmyadmin:
-    image: phpmyadmin/phpmyadmin:latest
-    container_name: pin40prescription_pma
-    restart: unless-stopped
-    ports:
-      - "8080:80"
-    environment:
-      - PMA_HOST=db
-      - PMA_PORT=3306
-      - MYSQL_ROOT_PASSWORD=Corwin_40280
-    depends_on:
-      - db
-    networks:
-      - prescriptpin40
+###> sensiolabs/gotenberg-bundle ###
+  gotenberg:
+    image: 'gotenberg/gotenberg:8'
+###< sensiolabs/gotenberg-bundle ###
 
+###>volumes:
 volumes:
-  db_data:
-
-networks:
-  prescriptpin40:
-    external: true
+  esdata:
 

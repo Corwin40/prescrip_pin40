@@ -143,7 +143,9 @@ final class PrescriptionController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
 
             if($user && (in_array('ROLE_SUPER_ADMIN', $user->getRoles()) || in_array('ROLE_ADMIN', $user->getRoles()) ) ){
-
+                $beneficiaire = $form->get('beneficiaire')->getData();
+                $prescripteur = $beneficiaire->getPrescriptor();
+                $prescription->setMembre($prescripteur);
             }
             if($user && in_array('ROLE_MEDIATEUR', $user->getRoles())){
                 $prescription->setIsOpenByMediator(1);
@@ -155,6 +157,12 @@ final class PrescriptionController extends AbstractController
             if ($prescription->isOpenByPrescriptor() == true && $prescription->IsOpenByMediator() == true)
             {
                 $prescription->setValidcase(1);
+            }
+
+            $equipment = $form->get('equipement')->getData();
+            if($equipment){
+                $prescription->setEquipement($equipment);
+                $equipment->setIsDispo(0);
             }
 
             $entityManager->flush();

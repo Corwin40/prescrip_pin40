@@ -10,6 +10,9 @@ framework:
     #esi: true
     #fragments: true
 
+    assets:
+        base_urls: '%env(APP_URL)%'
+
 when@test:
     framework:
         test: true

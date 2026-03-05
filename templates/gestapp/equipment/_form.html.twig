@@ -60,6 +60,13 @@
                 disabled: false
             } %}
         </div>
+        <div class="col-md-3">
+            {% include 'composants/inputs/input_text.html.twig' with {
+                label: 'Réceptionné par le lieu de médiation',
+                field: form.reconditioner,
+                disabled: false
+            } %}
+        </div>
 
         <div class="col-4 pt-4 mt-4 ps-4">
             {% include 'composants/forms/check_verif.html.twig' with {

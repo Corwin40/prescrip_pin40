@@ -3,28 +3,55 @@
 namespace App\Controller\Gestapp;
 
 use App\Entity\Gestapp\Prescription;
-use Knp\Bundle\SnappyBundle\Snappy\Response\PdfResponse;
-use Knp\Snappy\Pdf;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Sensiolabs\GotenbergBundle\GotenbergPdfInterface;
 
+#[Route("/admin")]
 final class HtmlToPdfController extends AbstractController
 {
-    #[Route('/generateprescriptionpdf/{id}', name: 'app_htmltopdf_generate_prescription_pdf')]
-    public function generatePrescriptionPdf(Prescription $prescription, Pdf $knpSnappyPdf): Response
-    {
-
-        $html = $this->render('gestapp/htmltopdf/prescriptionpdf.html.twig', [
-            'prescription' => $prescription,
-        ]);
-
-        return new PdfResponse(
-            $knpSnappyPdf->getOutputFromHtml($html),
-            'file.pdf'
-        );
-
+    private bool $viewPdf;
+    public function __construct(){
+        $this->viewPdf = true;
     }
+
+    #[Route('/generateprescriptionpdf/{id}', name: 'app_htmltopdf_generate_prescription_pdf')]
+    public function generatePrescriptionPdf(Prescription $prescription, GotenbergPdfInterface $gotenberg): Response
+    {
+        if($this->viewPdf == 1){
+            ob_start();
+            $pdf = $gotenberg
+                ->html()
+                ->content('gestapp/htmltopdf/prescriptionpdf.html.twig', [
+                    'prescription' => $prescription,
+                    'pdf' => $this->viewPdf,
+                ])
+                ->generate()
+                ->stream() // will return directly a stream response
+            ;
+            $pdf->sendContent(); // envoie le PDF dans le buffer
+
+            $pdfContent = ob_get_clean(); // récupère le binaire
+
+            // stockage sur disque
+            $filename = $prescription->getRef().'.pdf';
+            $path = $this->getParameter('prescription_directory').$filename;
+
+            //dd($path, $filename);
+
+            file_put_contents($path, $pdfContent);
+
+            return $this->redirectToRoute('app_gestapp_prescription_index', [], Response::HTTP_SEE_OTHER);
+
+        }else{
+            return $this->render('gestapp/htmltopdf/prescriptionpdf.html.twig', [
+                'prescription' => $prescription,
+                'pdf' => $this->viewPdf,
+            ]);
+        }
+    }
+
     #[Route('/prescription/preview/{id}', name: 'app_prescription_preview')]
     public function preview(Prescription $prescription): Response
     {

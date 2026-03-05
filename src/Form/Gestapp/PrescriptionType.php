@@ -84,6 +84,7 @@ class PrescriptionType extends AbstractType
                 ->add('equipement', EntityType::class, [
                     'label' => 'Choix de l\'équipement',
                     'class' => Equipment::class,
+                    'placeholder' => '-- Choisir un équipement --',
                 ])
             ;
         }

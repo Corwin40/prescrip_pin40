@@ -374,7 +374,7 @@
                 <h2 class="h4 mt-1 mb-1">Finalisation du dossier</h2>
             </div>
             <div class="col-12">
-                <p class="mb-0">Ce dossier ne pourras pas être finalisé sans la validation par les 2 parties : l'organisme de prescriptions et le lieu de médiation.</p>
+                <p class="mb-0">Ce dossier ne pourra pas être finalisé sans la validation par les 2 parties : l'organisme de prescriptions et le lieu de médiation.</p>
             </div>
             <div class="col-6 mt-4 mb-4">
                 <a class="btn btn-sm btn-outline-dark" href="{{ path('app_admin_dashboard_index') }}"><i class="fa-duotone fa-solid fa-chevrons-left"></i>&nbsp;Retour</a>
@@ -430,7 +430,31 @@
             </div>
         </div>
     {% elseif prescription.isOpenByPrescriptor == true and prescription.isOpenByMediator == true and prescription.validcase == true %}
-
+        <div class="row">
+            <div class="col-12 bg-light border-bottom border-dark mb-2">
+                <h3 class="mt-1 mb-1 h4">Finalisation du dossier</h3>
+            </div>
+            <div class="col-12">
+                <p class="mb-0">Cette prescription a été consulté par l'organisme de prescription et le lieu de médiation.</p>
+                {% if role == 'Médiateur' or role == "Administrateur" %}
+                    <p class="mb-0">En tant {% if role == "Médiateur" %}que lieu de médiation{% elseif role == "Administrateur" %}qu'administrateur{% endif %} vous pouvez valider la prescription en précisant le poste qui sera transmis au bénéficiaire.</p>
+                {% endif %}
+            </div>
+            <div class="row mt-2">
+                <div class="col-4">
+                    {% include 'composants/inputs/input_select.html.twig' with {
+                        label: 'Référence de l\'équipement doté',
+                        field: form.equipement,
+                        disabled: ''
+                    } %}
+                </div>
+                <div class="clear"></div>
+                <div class="col-4">
+                    <a class="btn btn-sm btn-outline-dark" href="{{ path('app_admin_dashboard_index') }}"><i class="fa-duotone fa-solid fa-chevrons-left"></i>&nbsp;Retour</a>
+                    <button id="btnValidCase" class="btn btn-outline-primary btn-sm"><i class="fa-duotone fa-solid fa-circle-check"></i> Validation de la prescription</button>
+                </div>
+            </div>
+        </div>
     {% endif %}
 
 {{ form_widget(form._token) }}

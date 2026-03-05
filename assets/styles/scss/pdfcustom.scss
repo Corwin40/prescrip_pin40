@@ -1,0 +1,92 @@
+body {
+    margin: 0;
+    padding: 0;
+}
+
+/* le bandeau de l'entête */
+.entete {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding: 15px 20px;
+}
+
+.entete img {
+    width: 80px;
+    height: auto;
+}
+
+.entete h1 {
+    margin: 0;
+    font-size: 32px;
+    color:#14682F;
+    font-weight: 800;
+    text-transform: uppercase;
+    line-height: 1.2;
+}
+
+/* dans le body */
+h1 {
+    text-align: center;
+    font-size: 24px;
+    color:#14682F;
+}
+
+h2 {
+    width: 100%;
+    display: block;
+    text-align: start;
+    background-color: #14682F;
+    color: white;
+    font-size: 20px;
+    padding: 8px 12px;
+}
+h3 {
+    width: 100%;
+    display: block;
+    text-align: start;
+    background-color: rgba(20, 104, 47, 0.70);
+    color: white;
+    font-size: 20px;
+    padding: 8px 8px;
+}
+
+p {
+    text-align: justify;
+    margin: 8px 0;
+    padding: 0 10px;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+ul, ol {
+    padding: 0 30px;
+    font-size: 14px;
+    line-height: 1.5;
+}
+.textarea-like {
+    min-height: 9em;
+    white-space: pre-line;
+}
+
+.table{
+    font-size: 14px;
+    width: 100%;
+    thead{
+        tr{
+            background-color: #70ad47;
+        }
+        td{}
+    }
+    tbody{
+        tr{
+            background-color: #dde8cb;
+        }
+        td{}
+    }
+    tfoot{
+        tr{}
+        td{}
+    }
+
+}
