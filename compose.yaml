@@ -2,7 +2,7 @@ services:
 
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:7.17.16
-    container_name: pin40_search
+    container_name: pin40prescription_search
     volumes:
       - esdata:/usr/share/elasticsearch/data
     environment:
@@ -12,13 +12,23 @@ services:
       - "9201:9200"
       - "9301:9300"
     restart: always
+    networks:
+      - prescriptpin40
 
 ###> sensiolabs/gotenberg-bundle ###
   gotenberg:
     image: 'gotenberg/gotenberg:8'
+    container_name: pin40prescription_gotenberg
+    restart: always
+    networks:
+      - prescriptpin40
 ###< sensiolabs/gotenberg-bundle ###
 
 ###>volumes:
 volumes:
   esdata:
+
+networks:
+  prescriptpin40:
+    external: true
 
