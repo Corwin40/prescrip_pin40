@@ -14,12 +14,16 @@ window.bootstrap = bootstrap;
 
 import './styles/app.scss';
 
-import {initNewEdit_Prescription} from "./js/pages/gestapp/prescription/newedit_prescription";
+import { initNewEdit_Prescription } from "./js/pages/gestapp/prescription/newedit_prescription";
+import { initIndex_Member } from "./js/pages/admin/member";
 
 document.addEventListener('DOMContentLoaded', () => {
     const page = document.body.dataset.page;
 
     switch (page) {
+        case 'app_admin_member_index':
+            initIndex_Member();
+            break;
         case 'app_gestapp_prescription_new':
         case 'app_gestapp_prescription_edit':
             initNewEdit_Prescription();

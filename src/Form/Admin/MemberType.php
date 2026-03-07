@@ -33,7 +33,7 @@ class MemberType extends AbstractType
             ->add('city')
             ->add('contactEmail')
             ->add('contactPhone')
-            ->add('ContactResponsableFirstname')
+            ->add('contactResponsableFirstname')
             ->add('contactResponsableLastname')
             ->add('contactResponsableCivility', ChoiceType::class, [
                 'choices' => [

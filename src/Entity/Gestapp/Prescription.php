@@ -3,6 +3,7 @@
 namespace App\Entity\Gestapp;
 
 use App\Config\StatusPrescription;
+use App\Config\StepPrescription;
 use App\Entity\Admin\Member;
 use App\Repository\Gestapp\PrescriptionRepository;
 use Doctrine\DBAL\Types\Types;
@@ -65,8 +66,14 @@ class Prescription
     #[ORM\Column(nullable: true)]
     private ?bool $isOpenByMediator = false;
 
+    #[ORM\Column(enumType: StepPrescription::class)]
+    private ?StepPrescription $step = null;
+
     #[ORM\Column(enumType: StatusPrescription::class)]
     private ?StatusPrescription $status = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $path = null;
 
     public function getId(): ?int
     {
@@ -268,6 +275,18 @@ class Prescription
         return $this;
     }
 
+    public function getStep(): ?StepPrescription
+    {
+        return $this->step;
+    }
+
+    public function setStep(StepPrescription $step): static
+    {
+        $this->step = $step;
+
+        return $this;
+    }
+
     public function getStatus(): ?StatusPrescription
     {
         return $this->status;
@@ -276,6 +295,18 @@ class Prescription
     public function setStatus(StatusPrescription $status): static
     {
         $this->status = $status;
+
+        return $this;
+    }
+
+    public function getPath(): ?string
+    {
+        return $this->path;
+    }
+
+    public function setPath(?string $path): static
+    {
+        $this->path = $path;
 
         return $this;
     }

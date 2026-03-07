@@ -60,7 +60,7 @@ class Member implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $contactPhone = null;
 
     #[ORM\Column(length: 100, nullable: true)]
-    private ?string $ContactResponsableFirstname = null;
+    private ?string $contactResponsableFirstname = null;
 
     #[ORM\Column(length: 100, nullable: true)]
     private ?string $contactResponsableLastname = null;
@@ -241,12 +241,12 @@ class Member implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function getContactResponsableFirstname(): ?string
     {
-        return $this->ContactResponsableFirstname;
+        return $this->contactResponsableFirstname;
     }
 
-    public function setContactResponsableFirstname(?string $ContactResponsableFirstname): static
+    public function setContactResponsableFirstname(?string $contactResponsableFirstname): static
     {
-        $this->ContactResponsableFirstname = $ContactResponsableFirstname;
+        $this->contactResponsableFirstname = $contactResponsableFirstname;
         return $this;
     }
 

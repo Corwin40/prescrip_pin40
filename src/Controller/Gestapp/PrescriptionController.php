@@ -3,6 +3,7 @@
 namespace App\Controller\Gestapp;
 
 use App\Config\StatusPrescription;
+use App\Config\StepPrescription;
 use App\Entity\Gestapp\Competence;
 use App\Entity\Gestapp\Prescription;
 use App\Form\Gestapp\closedCaseType;
@@ -57,6 +58,7 @@ final class PrescriptionController extends AbstractController
         $prescription->setRef($ref);
         $prescription->setCompteur($compteur);
         $prescription->setCompetence(new Competence());
+        $prescription->setStep(StepPrescription::Open);
 
         $form = $this->createForm(PrescriptionType::class, $prescription, [
             'action' => $this->generateUrl('app_gestapp_prescription_new'),
@@ -141,22 +143,54 @@ final class PrescriptionController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $step = $prescription->getStep();
 
-            if($user && (in_array('ROLE_SUPER_ADMIN', $user->getRoles()) || in_array('ROLE_ADMIN', $user->getRoles()) ) ){
-                $beneficiaire = $form->get('beneficiaire')->getData();
-                $prescripteur = $beneficiaire->getPrescriptor();
-                $prescription->setMembre($prescripteur);
+            if($step == StepPrescription::Open){
+                if($user && (in_array('ROLE_SUPER_ADMIN', $user->getRoles()) || in_array('ROLE_ADMIN', $user->getRoles()) ) ){
+                    $beneficiaire = $form->get('beneficiaire')->getData();
+                    $prescription->setIsOpenByMediator(1);
+                    $prescription->setIsOpenByPrescriptor(1);
+                    $prescripteur = $beneficiaire->getPrescriptor();
+                    $prescription->setMembre($prescripteur);
+                    $prescription->setStep(StepPrescription::TwoParts);
+                }
+                if($user && in_array('ROLE_MEDIATEUR', $user->getRoles())){
+                    $prescription->setIsOpenByMediator(1);
+                    $prescription->setStep(StepPrescription::Write);
+                }
+                if($user && in_array('ROLE_PRESCRIPTEUR', $user->getRoles())){
+                    $competence = $prescription->getCompetence();
+                    $prescription->setIsOpenByPrescriptor(1);
+                    $prescription->setStep(StepPrescription::Write);
+                }
             }
-            if($user && in_array('ROLE_MEDIATEUR', $user->getRoles())){
-                $prescription->setIsOpenByMediator(1);
+
+            if($step == StepPrescription::Write){
+                if($user && (in_array('ROLE_SUPER_ADMIN', $user->getRoles()) || in_array('ROLE_ADMIN', $user->getRoles()) ) ){
+                    $beneficiaire = $form->get('beneficiaire')->getData();
+                    $prescripteur = $beneficiaire->getPrescriptor();
+                    $prescription->setMembre($prescripteur);
+                    $prescription->setStep(StepPrescription::TwoParts);
+                }
+                if($user && in_array('ROLE_MEDIATEUR', $user->getRoles())){
+                    $prescription->setIsOpenByMediator(1);
+                    $prescription->setStep(StepPrescription::TwoParts);
+                }
+                if($user && in_array('ROLE_PRESCRIPTEUR', $user->getRoles())){
+                    $competence = $prescription->getCompetence();
+                    $prescription->setIsOpenByPrescriptor(1);
+                    $prescription->setStep(StepPrescription::TwoParts);
+                }
             }
-            if($user && in_array('ROLE_PRESCRIPTEUR', $user->getRoles())){
-                $competence = $prescription->getCompetence();
-                $prescription->setIsOpenByPrescriptor(1);
-            }
-            if ($prescription->isOpenByPrescriptor() == true && $prescription->IsOpenByMediator() == true)
-            {
-                $prescription->setValidcase(1);
+
+            if($step == StepPrescription::TwoParts){
+                if($user && (in_array('ROLE_SUPER_ADMIN', $user->getRoles()) || in_array('ROLE_ADMIN', $user->getRoles()) || in_array('ROLE_MEDIATEUR', $user->getRoles()) ) ){
+                    $beneficiaire = $form->get('beneficiaire')->getData();
+                    $prescripteur = $beneficiaire->getPrescriptor();
+                    $prescription->setMembre($prescripteur);
+                    $prescription->setValidcase(1);
+                    $prescription->setStep(StepPrescription::ValidCase);
+                }
             }
 
             $equipment = $form->get('equipement')->getData();
@@ -166,7 +200,6 @@ final class PrescriptionController extends AbstractController
             }
 
             $entityManager->flush();
-            //dd($prescription);
 
             return $this->redirectToRoute('app_gestapp_prescription_index', [], Response::HTTP_SEE_OTHER);
         }
@@ -195,6 +228,7 @@ final class PrescriptionController extends AbstractController
         if($form->isSubmitted() && $form->isValid())
         {
             $prescription->setValidcase(1);
+            $prescription->setStep(StepPrescription::ValidCase);
             $entityManager->flush();
 
             return $this->redirectToRoute('app_admin_dashboard_index', [], Response::HTTP_SEE_OTHER);

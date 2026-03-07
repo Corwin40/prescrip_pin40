@@ -1,6 +1,6 @@
-<div class="row mb-1">
-    <div class="col-12">
-        <p class="mb-0 text-secondary">Référence : {{ prescription.ref }} | Ce dossier à été ouvert par
+<div class="row mb-1 justify-content-between">
+    <div class="col-6">
+        <p class="mb-0 text-secondary fst-italic">Réf : {{ prescription.ref }} | Ce dossier à été ouvert par
             {% if prescription.isOpenByPrescriptor == 1 and prescription.isOpenByMediator == 0 %}
                 un precripteur : {{ prescription.membre.nameStructure }}.
             {% elseif prescription.isOpenByPrescriptor == 0 and prescription.isOpenByMediator == 1 %}
@@ -8,6 +8,11 @@
             {% else %}
                 un administrateur.
             {% endif %}
+        </p>
+    </div>
+    <div class="col-2 align-items-end">
+        <p class="mb-0 me-2 text-end">
+            {{ include('composants/pages/badge.html.twig') }}
         </p>
     </div>
 </div>
@@ -368,10 +373,11 @@
         </div>
     </div>
 
-    {% if prescription.isOpenByPrescriptor == false and prescription.isOpenByMediator == false and prescription.validcase == false %}
+    {% if prescription.step.name == 'Open' or prescription.step.name == 'Write' %}
+
         <div class="row">
             <div class="col-12 bg-light border-bottom border-dark mb-2">
-                <h2 class="h4 mt-1 mb-1">Finalisation du dossier</h2>
+                <h2 class="h4 mt-1 mb-1">Construction du dossier</h2>
             </div>
             <div class="col-12">
                 <p class="mb-0">Ce dossier ne pourra pas être finalisé sans la validation par les 2 parties : l'organisme de prescriptions et le lieu de médiation.</p>
@@ -381,10 +387,14 @@
                 <button id="btnAddPrescription" class="btn btn-outline-primary btn-sm"><i class="fa-duotone fa-solid fa-circle-check"></i> Préenregistrer la demande</button>
             </div>
         </div>
-    {% elseif prescription.isOpenByPrescriptor == true and prescription.isOpenByMediator == false and prescription.validcase == false %}
+
+    {% elseif prescription.step.name == 'TwoParts' %}
+        {# Faire la distenction entre médiatieurs et precripteurs #}
         <div class="row">
             <div class="col-12 bg-light border-bottom border-dark mb-2">
                 <h3 class="mt-2 mb-2">Construction du dossier</h3>
+            </div>
+            <div class="col-12">
                 <p class="mb-0">Une fois validé de votre côté, le lieu de médiation doit completer la fiche.</p>
             </div>
             <div class="col-6 mt-4 mb-4">
@@ -392,7 +402,9 @@
                 <button id="btnAddPrescription" class="btn btn-outline-primary btn-sm"><i class="fa-duotone fa-solid fa-circle-check"></i> Préenregistrer la demande</button>
             </div>
         </div>
-    {% elseif prescription.isOpenByPrescriptor == false and prescription.isOpenByMediator == true and prescription.validcase == false %}
+
+    {% elseif prescription.step.name == 'ValidCase' %}
+
         <div class="row">
             <div class="col-12 bg-light border-bottom border-dark mb-2">
                 <h3 class="mt-2 mb-2">Construction du dossier</h3>
@@ -403,32 +415,56 @@
                 <button id="btnAddPrescription" class="btn btn-outline-primary btn-sm"><i class="fa-duotone fa-solid fa-circle-check"></i> Préenregistrer la demande</button>
             </div>
         </div>
-    {% elseif prescription.isOpenByPrescriptor == true and prescription.isOpenByMediator == true and prescription.validcase == false %}
-        <div class="row">
-            <div class="col-12 bg-light border-bottom border-dark mb-2">
-                <h3 class="mt-1 mb-1 h4">Finalisation du dossier</h3>
-            </div>
-            <div class="col-12">
-                <p class="mb-0">Cette prescription a été consulté par l'organisme de prescription et le lieu de médiation.</p>
-                {% if role == 'Médiateur' or role == "Administrateur" %}
+
+    {% elseif prescription.step.name == 'ValidCase' %}
+        {% if role == 'Médiateur' or 'Administrateur' %}
+            <div class="row">
+                <div class="col-12 bg-light border-bottom border-dark mb-2">
+                    <h3 class="mt-1 mb-1 h4">Finalisation du dossier</h3>
+                </div>
+                <div class="col-12">
+                    <p class="mb-0">Cette prescription a été consulté par l'organisme de prescription et le lieu de médiation.</p>
                     <p class="mb-0">En tant {% if role == "Médiateur" %}que lieu de médiation{% elseif role == "Administrateur" %}qu'administrateur{% endif %} vous pouvez valider la prescription en précisant le poste qui sera transmis au bénéficiaire.</p>
-                {% endif %}
-            </div>
-            <div class="row mt-2">
-                <div class="col-4">
-                    {% include 'composants/inputs/input_select.html.twig' with {
-                        label: 'Référence de l\'équipement doté',
-                        field: form.equipement,
-                        disabled: ''
-                    } %}
                 </div>
-                <div class="clear"></div>
-                <div class="col-4">
-                    <a class="btn btn-sm btn-outline-dark" href="{{ path('app_admin_dashboard_index') }}"><i class="fa-duotone fa-solid fa-chevrons-left"></i>&nbsp;Retour</a>
-                    <button id="btnValidCase" class="btn btn-outline-primary btn-sm"><i class="fa-duotone fa-solid fa-circle-check"></i> Validation de la prescription</button>
+                <div class="row mt-2">
+                    <div class="col-4">
+                        {% include 'composants/inputs/input_select.html.twig' with {
+                            label: 'Référence de l\'équipement doté',
+                            field: form.equipement,
+                            disabled: ''
+                        } %}
+                    </div>
+                    <div class="clear"></div>
+                    <div class="col-4">
+                        <a class="btn btn-sm btn-outline-dark" href="{{ path('app_admin_dashboard_index') }}"><i class="fa-duotone fa-solid fa-chevrons-left"></i>&nbsp;Retour</a>
+                        <button id="btnValidCase" class="btn btn-outline-primary btn-sm"><i class="fa-duotone fa-solid fa-circle-check"></i> Clôture de la prescription</button>
+                    </div>
                 </div>
             </div>
-        </div>
+        {% else %}
+            <div class="row">
+                <div class="col-12 bg-light border-bottom border-dark mb-2">
+                    <h3 class="mt-1 mb-1 h4">Finalisation du dossier</h3>
+                </div>
+                <div class="col-12">
+                    <p class="mb-0">Cette prescription a été consulté par l'organisme de prescription et le lieu de médiation.</p>
+                </div>
+                <div class="row mt-2">
+                    <div class="col-4">
+                        {% include 'composants/inputs/input_select.html.twig' with {
+                            label: 'Référence de l\'équipement doté',
+                            field: form.equipement,
+                            disabled: ''
+                        } %}
+                    </div>
+                    <div class="clear"></div>
+                    <div class="col-4">
+                        <a class="btn btn-sm btn-outline-dark" href="{{ path('app_admin_dashboard_index') }}"><i class="fa-duotone fa-solid fa-chevrons-left"></i>&nbsp;Retour</a>
+                        <button id="btnValidCase" class="btn btn-outline-primary btn-sm"><i class="fa-duotone fa-solid fa-circle-check"></i> Validation de la prescription</button>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
     {% elseif prescription.isOpenByPrescriptor == true and prescription.isOpenByMediator == true and prescription.validcase == true %}
         <div class="row">
             <div class="col-12 bg-light border-bottom border-dark mb-2">
@@ -451,7 +487,7 @@
                 <div class="clear"></div>
                 <div class="col-4">
                     <a class="btn btn-sm btn-outline-dark" href="{{ path('app_admin_dashboard_index') }}"><i class="fa-duotone fa-solid fa-chevrons-left"></i>&nbsp;Retour</a>
-                    <button id="btnValidCase" class="btn btn-outline-primary btn-sm"><i class="fa-duotone fa-solid fa-circle-check"></i> Validation de la prescription</button>
+                    <button id="btnValidCase" class="btn btn-outline-primary btn-sm"><i class="fa-duotone fa-solid fa-circle-check"></i> Génération du Pdf</button>
                 </div>
             </div>
         </div>

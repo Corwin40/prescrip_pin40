@@ -117,6 +117,39 @@ final class MemberController extends AbstractController
         ]);
     }
 
+    #[Route("/renew-password/{id}", name: "app_admin_member_renew_password", methods: ["GET", "POST"])]
+    #[IsGranted("ROLE_SUPER_ADMINADMIN")]
+    public function renewPassword(
+        Request $request,
+        Member $member,
+        EntityManagerInterface $entityManager,
+        SluggerInterface $slugger,
+        UserPasswordHasherInterface $passwordHasher
+    )
+    {
+        $form = $this->createForm(MemberType::class, $member);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+
+            $password = $form->get('password')->getData();
+            if ($password) {
+                $hashedPassword = $passwordHasher->hashPassword($member, $password);
+                $member->setPassword($hashedPassword);
+            }
+
+            $entityManager->flush();
+
+            $this->addFlash('success', 'Le membre a bien été mis à jour.');
+            return $this->redirectToRoute('app_admin_member_index');
+        }
+
+        return $this->render('admin/member/edit.html.twig', [
+            'member' => $member,
+            'form' => $form,
+        ]);
+    }
+
     #[Route('/{id}', name: 'app_admin_member_delete', methods: ['POST'])]
     public function delete(Request $request, Member $member, EntityManagerInterface $entityManager, Beneficiary $beneficiary, Prescription $prescription): Response
     {

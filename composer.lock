@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "39554e06a97e8abce707de097f0ccf04",
+    "content-hash": "6ccd37c5595aeab2ff5a8e296d537515",
     "packages": [
         {
             "name": "doctrine/collections",
@@ -1126,6 +1126,42 @@
                 "source": "https://github.com/doctrine/sql-formatter/tree/1.5.4"
             },
             "time": "2026-02-08T16:21:46+00:00"
+        },
+        {
+            "name": "docusealco/docuseal-php",
+            "version": "1.0.5",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/docusealco/docuseal-php.git",
+                "reference": "f12a490e95bdb13ef61f46b72dffcdc646d8b0a4"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/docusealco/docuseal-php/zipball/f12a490e95bdb13ef61f46b72dffcdc646d8b0a4",
+                "reference": "f12a490e95bdb13ef61f46b72dffcdc646d8b0a4",
+                "shasum": ""
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Docuseal\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "DocuSeal"
+                }
+            ],
+            "description": "PHP bindings for DocuSeal API",
+            "support": {
+                "issues": "https://github.com/docusealco/docuseal-php/issues",
+                "source": "https://github.com/docusealco/docuseal-php/tree/1.0.5"
+            },
+            "time": "2025-09-14T21:27:12+00:00"
         },
         {
             "name": "egulias/email-validator",

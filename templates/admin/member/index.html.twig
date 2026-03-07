@@ -24,7 +24,7 @@
     <section id="page_content">
         {% if members is not empty %}
             <div class="table-responsive">
-                <table class="table table-striped table-bordered align-middle">
+                <table class="table table-hover table-bordered align-middle">
                     <thead>
                     <tr>
                         <th>ID</th>
@@ -55,26 +55,9 @@
                                 {% endif %}
                             </td>
                             <td class="text-center">
-
-                                {# Bouton "Voir" #}
-                                {% include 'composants/forms/button_link.html.twig' with {
-                                    label: 'Voir',
-                                    href: path('app_admin_member_show', {'id': member.id}),
-                                    type: 'info'
-                                } %}
-
-                                {# Bouton "Modifier" #}
-                                {% include 'composants/forms/button_link.html.twig' with {
-                                    label: 'Modifier',
-                                    href: path('app_admin_member_edit', {'id': member.id}),
-                                    type: 'warning'
-                                } %}
-
-                                {# Bouton "Supprimer" si  il existe #}
-                                {% include 'composants/forms/buttons_delete.html.twig' with {
-                                    id: member.id,
-                                    route: 'app_admin_member_delete'
-                                } %}
+                                <a href="{{ path('app_admin_member_edit', {'id': member.id}) }}" class="text-dark text-decoration-none"><i class="fa-duotone fa-solid fa-user-pen"></i></a>&nbsp;&nbsp;&nbsp;
+                                <a href="{{ path('app_admin_member_delete', {'id': member.id}) }}" class="text-dark text-decoration-none"><i class="fa-duotone fa-solid fa-user-circle-minus"></i></a>&nbsp;&nbsp;&nbsp;
+                                <a href="{{ path('app_admin_member_renew_password', {'id': member.id}) }}" class="text-dark text-decoration-none"><i class="fa-light fa-key"></i></a>
                             </td>
                         </tr>
                     {% endfor %}
