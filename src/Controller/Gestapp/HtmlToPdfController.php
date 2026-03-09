@@ -41,6 +41,11 @@ final class HtmlToPdfController extends AbstractController
             // stockage sur disque
             $filename = $prescription->getRef().'.pdf';
             $path = $this->getParameter('prescription_directory_url').$filename;
+
+            if(!is_dir($this->getParameter('prescription_directory_url'))){
+                mkdir($this->getParameter('prescription_directory_url'), 0777, true);
+            }
+            
             if(file_exists($path)){
                 unlink($path);
             }
