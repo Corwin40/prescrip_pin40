@@ -25,11 +25,10 @@
                             <i class="fa-duotone fa-solid fa-circle-user"></i>&nbsp;{{ app.user.contactResponsableFirstname }} {{ app.user.contactResponsableLastname }} | {{ app.user.nameStructure }}
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end">
-                            <li><a class="dropdown-item" href="{{ path('app_admin_member_edit', {'id': app.user.id}) }}">Mes informations</a></li>
-                            <li><a class="dropdown-item" href="{{ path('app_admin_dashboard_index') }}">Tableau de bord</a></li>
-                            <li><a class="dropdown-item" href="{{ path('app_admin_member_index') }}">Utilisateurs</a></li>
+                            <li><a class="dropdown-item" href="{{ path('app_admin_member_edit', {'id': app.user.id}) }}"><i class="fa-sharp-duotone fa-solid fa-circle-info"></i> Mes informations</a></li>
+                            <li><a class="dropdown-item" href="{{ path('app_admin_member_index') }}"><i class="fa-duotone fa-solid fa-users"></i> Utilisateurs</a></li>
                             <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item" href="{{ path('app_logout') }}">Se déconnecter</a></li>
+                            <li><a class="dropdown-item" href="{{ path('app_logout') }}"><i class="fa-duotone fa-solid fa-arrow-left-from-bracket"></i> Se déconnecter</a></li>
                         </ul>
                     </li>
                 {% else %}

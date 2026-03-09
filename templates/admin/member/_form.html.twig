@@ -1,13 +1,16 @@
 {{ form_start(form, {'attr': {'id': 'member_form'}}) }}
 
 <div class="row g-2 mb-3">
+    <div class="col-12 bg-light border-bottom border-dark mb-2">
+        <h3 class="mt-1 mb-1 h4">La structure</h3>
+    </div>
     <div class="col-md-2">
-        {{ form_label(form.nameStructure, 'Nom de la structure', {'label_attr': {'class': 'form-label fw-semibold'}}) }}
+        {{ form_label(form.nameStructure, 'Nom', {'label_attr': {'class': 'form-label fw-semibold'}}) }}
         {{ form_widget(form.nameStructure, {'attr': {'class': 'form-control form-control-sm'}}) }}
     </div>
     <!-- Email -->
     <div class="col-md-2">
-        {{ form_label(form.email, 'Email', {'label_attr': {'class': 'form-label fw-semibold'}}) }}
+        {{ form_label(form.email, 'Email principal', {'label_attr': {'class': 'form-label fw-semibold'}}) }}
         {{ form_widget(form.email, {'attr': {'class': 'form-control form-control-sm'}}) }}
     </div>
     <div class="col-2"></div>
@@ -27,7 +30,9 @@
 </div>
 <div class="row g-1 mb-3">
 
-
+    <div class="col-12 bg-light border-bottom border-dark mb-2">
+        <h3 class="mt-1 mb-1 h4">Contacts</h3>
+    </div>
     <!-- Structure & adresse -->
 
     <div class="col-md-6">
@@ -66,15 +71,19 @@
 
     {% if app.request.attributes.get('_route') == 'app_admin_member_new' %}
     <div class="col-md-6">
-        {{ form_label(form.password, '', {'label_attr': {'class': 'form-label fw-semibold'}}) }}
-        {{ form_widget(form.password, {'attr': {'class': 'form-control form-control-sm'}}) }}
+        {{ form_label(form.password.first, '', {'label_attr': {'class': 'form-label fw-semibold'}}) }}
+        {{ form_widget(form.password.first, {'attr': {'class': 'form-control form-control-sm'}}) }}
     </div>
+        <div class="col-md-6">
+            {{ form_label(form.password.second, '', {'label_attr': {'class': 'form-label fw-semibold'}}) }}
+            {{ form_widget(form.password.second, {'attr': {'class': 'form-control form-control-sm'}}) }}
+        </div>
     {% endif %}
 
     <!-- Bouton -->
     <div class="mt-4">
-        <a class="btn btn-secondary" href="{{ path('app_admin_member_index') }}">Retour</a>
-        <button class="btn btn-primary">{{ button_label|default('Enregistrer') }}</button>
+        <a class="btn btn-sm btn-outline-dark" href="/admin/dashboard"><i class="fa-duotone fa-solid fa-chevrons-left"></i>&nbsp;Retour</a>
+        <button class="btn btn-outline-primary btn-sm">{{ button_label|default('Enregistrer') }}</button>
     </div>
 
 </div>

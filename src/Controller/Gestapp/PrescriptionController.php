@@ -75,8 +75,16 @@ final class PrescriptionController extends AbstractController
             if($user && (in_array('ROLE_SUPER_ADMIN', $user->getRoles()) || in_array('ROLE_ADMIN', $user->getRoles()) ) ){
                 $beneficiary = $form->get('beneficiaire')->getData();
                 $structure = $beneficiary->getPrescriptor()->getSlug();
+                $idStructure = $beneficiary->getPrescriptor()->getId();
                 if($structure)
                 {
+                    $lastPrescription = $prescriptionRepository->findOneBy(['membre' => $idStructure],[ 'id' => 'DESC']);
+
+                    if(!$lastPrescription){
+                        $compteur = 1;
+                    }else{
+                        $compteur = $lastPrescription->getCompteur() + 1;
+                    }
                     $ref = $date->format('Ym')."-".$structure."-".$compteur;// mois-année-structure-compteur
                     $prescription->setRef($ref);
                 }

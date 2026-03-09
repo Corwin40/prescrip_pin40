@@ -16,11 +16,15 @@ import './styles/app.scss';
 
 import { initNewEdit_Prescription } from "./js/pages/gestapp/prescription/newedit_prescription";
 import { initIndex_Member } from "./js/pages/admin/member";
+import {initIndex_Dashboard} from "./js/pages/admin/dashboard";
 
 document.addEventListener('DOMContentLoaded', () => {
     const page = document.body.dataset.page;
 
     switch (page) {
+        case 'app_admin_dashboard_index':
+            initIndex_Dashboard();
+            break;
         case 'app_admin_member_index':
             initIndex_Member();
             break;

@@ -3,8 +3,8 @@
     {% if style is defined and style is not null %}
         {{ style }}
     {% else %}
-        btn btn-outline-dark
+        btn btn-sm btn-outline-dark
     {% endif %}
 ">
-    <i class="bi bi-plus-circle"></i> {{ label }}
+    {{ icon|raw }} {{ label }}
 </a>

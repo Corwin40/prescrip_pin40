@@ -9,12 +9,18 @@ use App\Form\Admin\MemberType;
 use App\Repository\MemberRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\Extension\Core\Type\PasswordType;
+use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Component\String\Slugger\SluggerInterface;
+use Symfony\Component\Validator\Constraints\Length;
+use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints as Assert;
+
 
 #[Route('/admin/member')]
 #[IsGranted('ROLE_ADMIN')]
@@ -45,7 +51,7 @@ final class MemberController extends AbstractController
 
             $name = $form->get('nameStructure')->getData();
             if($name){
-                $member->setSlug($slugger->slug($name, '_')->lower());
+                $member->setSlug($slugger->slug($name, '')->lower());
             }
 
             $member->setIsVerified(1);
@@ -102,7 +108,7 @@ final class MemberController extends AbstractController
 
             $name = $form->get('nameStructure')->getData();
             if($name){
-                $member->setSlug($slugger->slug($name, '_')->lower());
+                $member->setSlug($slugger->slug($name, '')->lower());
             }
 
             $entityManager->flush();
@@ -118,7 +124,7 @@ final class MemberController extends AbstractController
     }
 
     #[Route("/renew-password/{id}", name: "app_admin_member_renew_password", methods: ["GET", "POST"])]
-    #[IsGranted("ROLE_SUPER_ADMINADMIN")]
+    #[IsGranted("ROLE_SUPER_ADMIN")]
     public function renewPassword(
         Request $request,
         Member $member,
@@ -127,7 +133,49 @@ final class MemberController extends AbstractController
         UserPasswordHasherInterface $passwordHasher
     )
     {
-        $form = $this->createForm(MemberType::class, $member);
+        $form = $this->createFormBuilder(MemberType::class, $member)
+            ->add('password', RepeatedType::class, [
+                'type' => PasswordType::class,
+                'first_options'  => ['label' => 'Mot de passe', 'hash_property_path' => 'password'],
+                'second_options' => ['label' => 'Retapez le mot de passe'],
+                'mapped' => false, //  ne lie pas directement à l'entité
+                'required' => true, // obligatoire à la création
+                'attr' => [
+                    'autocomplete' => 'new-password',
+                    'placeholder' => 'Saisir un mot de passe',
+                    'class' => 'form-control',
+                ],
+                'constraints' => [
+                    new NotBlank([
+                        'message' => 'Il nous faut un mot de passe, ne laissez pas ce champs Vide.',
+                    ]),
+                    new Length([
+                        'min' => 12,
+                        'minMessage' => 'Votre mot de passe doit contenir au moins {{ limit }} caractères',
+                        // max length allowed by Symfony for security reasons
+                        'max' => 4096,
+                    ]),
+                    new Assert\Regex([
+                        'pattern' => '/[A-Z]/',
+                        'message' => 'Le mot de passe doit contenir au moins une lettre majuscule.',
+                    ]),
+                    new Assert\Regex([
+                        'pattern' => '/[a-z]/',
+                        'message' => 'Le mot de passe doit contenir au moins une lettre minuscule.',
+                    ]),
+                    new Assert\Regex([
+                        'pattern' => '/[0-9]/',
+                        'message' => 'Le mot de passe doit contenir au moins un chiffre.',
+                    ]),
+                    new Assert\Regex([
+                        'pattern' => '/[\W_]/',
+                        'message' => 'Le mot de passe doit contenir au moins un caractère spécial.',
+                    ]),
+                ],
+            ])
+        ;
+
+
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
