@@ -40,14 +40,14 @@ final class HtmlToPdfController extends AbstractController
 
             // stockage sur disque
             $filename = $prescription->getRef().'.pdf';
-            $path = $this->getParameter('prescription_directory').$filename;
+            $path = $this->getParameter('prescription_directory_url').$filename;
             if(file_exists($path)){
                 unlink($path);
             }
             file_put_contents($path, $pdfContent);
 
             // enregistrement en bdd du nom du fichier
-            $prescription->setPath($path);
+            $prescription->setPath($this->getParameter('prescription_directory').$filename);
             $prescription->setStep(StepPrescription::GeneratePDF);
             $em->flush();
 

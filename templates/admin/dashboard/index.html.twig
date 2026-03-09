@@ -118,7 +118,7 @@
                             {% elseif prescription.step.name == 'TwoParts' %}
                                 <span class="badge text-bg-info py-1">Vu par médiateur</span>
                             {% elseif prescription.step.name == 'ValidCase' %}
-                                <a href="{{ path('app_htmltopdf_generate_prescription_pdf', {'id': prescription.id}) }}">Envoyer à la signature</a>
+                                <a href="{{ path('app_htmltopdf_generate_prescription_pdf', {'id': prescription.id}) }}">Génération du PDF</a>
                             {% elseif prescription.step.name == 'GeneratePDF' %}
                                 <a href="{{ asset(prescription.path) }}" class="openModal" data-bs-data="VIEW_PRESCRIPTION-Vu de la prescription-{{ prescription.id }}">Voir la prescription</a>
                             {% elseif prescription.step.name == 'Signed' %}

@@ -27,33 +27,48 @@
                 <table class="table table-hover table-bordered align-middle">
                     <thead>
                     <tr>
-                        <th>ID</th>
                         <th>Membre</th>
                         <th>Structure</th>
                         <th>Adresse</th>
                         <th>Contacts</th>
-                        <th>Vérifié</th>
                         <th>Actions</th>
                     </tr>
                     </thead>
                     <tbody>
                     {% for member in members %}
+                        {% set role = 'aucun' %}
+                        {% if member.roles|first == 'ROLE_SUPER_ADMIN' or member.roles|first == 'ROLE_ADMIN' %}
+                            {% set role = 'Administrateur' %}
+                        {% elseif member.roles|first == 'ROLE_MEDIATEUR' %}
+                            {% set role = 'Médiateur' %}
+                        {% elseif member.roles|first == 'ROLE_PRESCRIPTEUR' %}
+                            {% set role = 'Prescripteur' %}
+                        {% elseif member.roles|first == 'ROLE_RECONDITIONNEUR' %}
+                            {% set role = 'Reconditionneur' %}
+                        {% endif %}
                         <tr>
-                            <td>{{ member.id }}</td>
-                            <td>{{ member.contactResponsableCivility }} {{ member.contactResponsableFirstname }} {{ member.contactResponsableLastname }}</td>
                             <td>
-                                {{ member.nameStructure }}<br>
+                                <div class="d-flex align-items-center justify-content-between">
+                                    <div>{{ member.contactResponsableCivility }} {{ member.contactResponsableFirstname }} {{ member.contactResponsableLastname }}</div>
+                                    <div>
+                                        {% if role == "Administrateur" %}
+                                            <span class="badge text-bg-secondary py-2">{{ role }}</span>
+                                        {% elseif role == "Médiateur" %}
+                                            <span class="badge text-bg-secondary py-2">{{ role }}</span>
+                                        {% elseif role == "Prescripteur" %}
+                                            <span class="badge text-bg-secondary py-2">{{ role }}</span>
+                                        {% elseif role == "Reconditionneur" %}
+                                            <span class="badge text-bg-secondary py-2">{{ role }}</span>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <span class="fw-semibold">{{ member.nameStructure }}</span><br>
                                 {{ member.email }}
                             </td>
                             <td>{{ member.address }}<br>{{ member.zipcode }} {{ member.city }}</td>
                             <td>{{ member.contactEmail }}<br>{{ member.contactPhone }}</td>
-                            <td>
-                                {% if member.isVerified %}
-                                    <span class="badge bg-success">Oui</span>
-                                {% else %}
-                                    <span class="badge bg-danger">Non</span>
-                                {% endif %}
-                            </td>
                             <td class="text-center">
                                 <a href="{{ path('app_admin_member_edit', {'id': member.id}) }}" class="text-dark text-decoration-none"><i class="fa-duotone fa-solid fa-user-pen"></i></a>&nbsp;&nbsp;&nbsp;
                                 <a href="{{ path('app_admin_member_delete', {'id': member.id}) }}" class="text-dark text-decoration-none"><i class="fa-duotone fa-solid fa-user-circle-minus"></i></a>&nbsp;&nbsp;&nbsp;
