@@ -5,32 +5,38 @@ import axios from 'axios';
 export function initNewEdit_Prescription() {
     console.log('Bonjour, vous êtes sur la page dédiée à la gestion des prescriptions.')
 
-    const btnAddBeneficiary = document.getElementById('btnAddBeneficiary')
-    const modalBS = document.getElementById('modal');
-    const modal = new bootstrap.Modal(modalBS)
-
-    btnAddBeneficiary.addEventListener('click', openModal)
-
-    let btnsSubmit = document.querySelectorAll('.btnSubmit')
-    btnsSubmit.forEach(function(link){
-        link.addEventListener('click', submitModal);
-    });
+    const modalEl = document.getElementById('modal');
+    if (!modalEl) return;
+    const modal = new bootstrap.Modal(modalEl);
 
     function openModal(e){
         e.preventDefault()
-        let url = btnAddBeneficiary.href
-        axios
-            .get(url)
-            .then(({data}) => {
-                modalBS.querySelector('.modal-title').innerHTML = "Ajouter un nouvel bénéficiaire"
-                modalBS.querySelector('.modal-footer .btnSubmit').href = url
-                modalBS.querySelector('.modal-body').innerHTML = data.formView
-
-            })
-            .catch(error => {
-                console.log(error)
-            })
-        modal.show()
+        let a = e.currentTarget;
+        console.log(a)
+        let url = a.href;
+        const [crud, contentTitle, option] = a.dataset.bsData.split('-');
+        if(crud === "ADD_BENEFICIARY")
+        {
+            modalEl.querySelector('.modal-title').innerText = contentTitle;
+            axios
+                .get(url)
+                .then(({data}) => {
+                    modalEl.querySelector('.modal-dialog').classList.add('modal-xl');
+                    modalEl.querySelector('.modal-body').innerHTML = data.formView;
+                    const confirmBtn = modalEl.querySelector('.modal-footer a');
+                    confirmBtn.textContent = 'Ajouter le bénéficiaire';
+                    confirmBtn.href = url;
+                    reloadEvent()
+                })
+                .catch(error => {
+                    console.log(error)
+                })
+            modal.show();
+        }
+        else{
+            reloadEvent()
+            toasterMessage('une erreur est survenue');
+        }
     }
 
     function submitModal(e){
@@ -60,5 +66,17 @@ export function initNewEdit_Prescription() {
             selectElement.remove(i);
         }
     }
+
+    function reloadEvent(){
+        let btnSubmitModal = document.getElementById('btnModalSubmit');
+        let btnsOpenModal = document.querySelectorAll('.openModal');
+
+        btnsOpenModal.forEach(function(link){
+            link.addEventListener('click', openModal);
+        });
+        //btnSubmitModal.addEventListener('click', submitModal);
+    }
+
+    reloadEvent();
 
 }

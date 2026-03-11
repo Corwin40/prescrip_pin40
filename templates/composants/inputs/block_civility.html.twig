@@ -1,17 +1,13 @@
-<div class="mb-3">
-    <label class="form-label">{{ label }}</label>
-    <div class="input-group">
-        {{ form_widget(civility, {
-            'attr': {'class': 'form-select border border-1 border-dark shadow-sm'} })
-        }}
-        {{ form_errors(firstname) }}
-        {{ form_widget(firstname, {
-            'attr': {'class': 'form-control border border-1 border-dark shadow-sm'} })
-        }}
-        {{ form_errors(firstname) }}
-        {{ form_widget(lastname, {
-            'attr': {'class': 'form-control border border-1 border-dark shadow-sm'} })
-        }}
-        {{ form_errors(lastname) }}
+<!-- Civilité -->
+<div class="{{ class_block }}">
+    {{ form_label(form.civility, 'Responsable :', {'label_attr': {'class': 'form-label fw-semibold'}}) }}
+    <div class="row">
+        <div class="col-12">
+            <div class="input-group">
+                {{ form_widget(civility, {'attr': {'class': 'form-select w-25 form-select-sm shadow-sm'}}) }}
+                {{ form_widget(firstname, {'attr': {'class': 'form-control w-auto form-control-sm shadow-sm'}}) }}
+                {{ form_widget(lastname, {'attr': {'class': 'form-control w-auto form-control-sm shadow-sm'}}) }}
+            </div>
+        </div>
     </div>
 </div>

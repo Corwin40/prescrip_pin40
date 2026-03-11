@@ -19,13 +19,12 @@
             </div>
 
             {% include 'composants/inputs/block_civility.html.twig' with {
-                class_block: 'col-8 mb-3',
+                class_block : 'col-8 mb-3',
                 label: 'Prénom & Nom',
                 civility: form.civility,
                 firstname: form.firstname,
                 lastname: form.lastname
             } %}
-            </div>
         </div>
         <div class="row">
             <div class="col-md-12">
@@ -44,14 +43,6 @@
             </div>
         </div>
     </div>
-</div>
-
-<div class="row">
-    <div class="col-6">
-        <a class="btn btn-sm btn-outline-dark" href="{{ path('app_admin_dashboard_index') }}"><i class="fa-duotone fa-solid fa-chevrons-left"></i>&nbsp;Retour</a>
-        <button id="btnAddPrescription" class="btn btn-outline-primary btn-sm"><i class="fa-duotone fa-solid fa-circle-check"></i> Ajouter l'équipement</button>
-    </div>
-
 </div>
 {{ form_rest(form) }}
 {{ form_end(form) }}

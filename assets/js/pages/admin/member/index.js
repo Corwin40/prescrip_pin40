@@ -29,6 +29,7 @@ export function initIndex_Member() {
 
         if(crud === "RESETPASSWORD")
         {
+            modalEl.querySelector('.modal-dialog').classList.add('modal-lg');
             modalEl.querySelector('.modal-title').innerText = contentTitle;
             axios
                 .get(url)

@@ -156,7 +156,7 @@ final class BeneficiaryController extends AbstractController
 
         return $this->json([
             'message' => 'le formulaire est livré.',
-            'formView' => $this->renderView('gestapp/beneficiary/_form.html.twig', [
+            'formView' => $this->renderView('gestapp/beneficiary/_form2.html.twig', [
                 'beneficiary' => $beneficiary,
                 'form' => $form,
             ])

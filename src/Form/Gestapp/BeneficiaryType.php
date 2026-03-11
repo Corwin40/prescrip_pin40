@@ -8,6 +8,7 @@ use App\Entity\Gestapp\Prescription;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -17,8 +18,16 @@ class BeneficiaryType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('firstname')
-            ->add('lastname')
+            ->add('firstname', TextType::class, [
+                'label' => 'Prénom',
+                'required' => true,
+                'attr' => ['placeholder' => 'Prénom']
+            ])
+            ->add('lastname', TextType::class, [
+                'label' => 'Nom',
+                'required' => true,
+                'attr' => ['placeholder' => 'Nom']
+            ])
             ->add('civility', ChoiceType::class, [
                 'label' => 'Civilité',
                 'choices' => [
