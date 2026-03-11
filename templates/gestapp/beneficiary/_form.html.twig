@@ -51,15 +51,7 @@
         <a class="btn btn-sm btn-outline-dark" href="{{ path('app_admin_dashboard_index') }}"><i class="fa-duotone fa-solid fa-chevrons-left"></i>&nbsp;Retour</a>
         <button id="btnAddPrescription" class="btn btn-outline-primary btn-sm"><i class="fa-duotone fa-solid fa-circle-check"></i> Ajouter l'équipement</button>
     </div>
-    {% if app.request.attributes.get('_route') == 'app_gestapp_beneficiary_edit'%}
-        <div class="col-6">
-            {# Bouton de suppression (composant showsTable) #}
-            {% include 'composants/showsTable/buttons_delete.html.twig' with {
-                id: beneficiary.id,
-                route: 'app_gestapp_beneficiary_delete'
-            } %}
-        </div>
-    {% endif %}
-</div>
 
+</div>
+{{ form_rest(form) }}
 {{ form_end(form) }}

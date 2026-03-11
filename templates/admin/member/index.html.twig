@@ -25,7 +25,7 @@
         {% if members is not empty %}
             <div class="table-responsive">
                 <table class="table table-hover table-bordered align-middle">
-                    <thead>
+                    <thead class="table-light">
                     <tr>
                         <th>Membre</th>
                         <th>Structure</th>
@@ -71,8 +71,8 @@
                             <td>{{ member.contactEmail }}<br>{{ member.contactPhone }}</td>
                             <td class="text-center">
                                 <a href="{{ path('app_admin_member_edit', {'id': member.id}) }}" class="text-dark text-decoration-none"><i class="fa-duotone fa-solid fa-user-pen"></i></a>&nbsp;&nbsp;&nbsp;
-                                <a href="{{ path('app_admin_member_delete', {'id': member.id}) }}" class="text-dark text-decoration-none"><i class="fa-duotone fa-solid fa-user-circle-minus"></i></a>&nbsp;&nbsp;&nbsp;
-                                <a href="{{ path('app_admin_member_renew_password', {'id': member.id}) }}" class="text-dark text-decoration-none"><i class="fa-light fa-key"></i></a>
+                                <a href="{{ path('app_admin_member_delete', {'id': member.id}) }}" class="text-dark text-decoration-none openModal" ><i class="fa-duotone fa-solid fa-user-circle-minus"></i></a>&nbsp;&nbsp;&nbsp;
+                                <a href="{{ path('app_admin_member_renew_password', {'id': member.id}) }}" class="text-dark text-decoration-none openModal" data-bs-data="RESETPASSWORD-Changement du mot de passe-"><i class="fa-light fa-key"></i></a>
                             </td>
                         </tr>
                     {% endfor %}

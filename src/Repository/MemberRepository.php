@@ -19,6 +19,16 @@ class MemberRepository extends ServiceEntityRepository implements PasswordUpgrad
         parent::__construct($registry, Member::class);
     }
 
+    public function findByRole(string $role): array
+    {
+        return $this->createQueryBuilder('u')
+            ->select('u.nameStructure')
+            ->andWhere('u.roles LIKE :role')
+            ->setParameter('role', '%"'.$role.'"%')
+            ->getQuery()
+            ->getResult();
+    }
+
     /**
      * Used to upgrade (rehash) the user's password automatically over time.
      */

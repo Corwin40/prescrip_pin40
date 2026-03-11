@@ -26,7 +26,9 @@
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end">
                             <li><a class="dropdown-item" href="{{ path('app_admin_member_edit', {'id': app.user.id}) }}"><i class="fa-sharp-duotone fa-solid fa-circle-info"></i> Mes informations</a></li>
-                            <li><a class="dropdown-item" href="{{ path('app_admin_member_index') }}"><i class="fa-duotone fa-solid fa-users"></i> Utilisateurs</a></li>
+                            {% if is_granted('ROLE_SUPER_ADMIN') %}
+                                <li><a class="dropdown-item" href="{{ path('app_admin_member_index') }}"><i class="fa-duotone fa-solid fa-users"></i> Utilisateurs</a></li>
+                            {% endif %}
                             <li><hr class="dropdown-divider"></li>
                             <li><a class="dropdown-item" href="{{ path('app_logout') }}"><i class="fa-duotone fa-solid fa-arrow-left-from-bracket"></i> Se déconnecter</a></li>
                         </ul>

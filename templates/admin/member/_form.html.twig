@@ -73,10 +73,12 @@
     <div class="col-md-6">
         {{ form_label(form.password.first, '', {'label_attr': {'class': 'form-label fw-semibold'}}) }}
         {{ form_widget(form.password.first, {'attr': {'class': 'form-control form-control-sm'}}) }}
+        {{ form_errors(form.password.first) }}
     </div>
         <div class="col-md-6">
             {{ form_label(form.password.second, '', {'label_attr': {'class': 'form-label fw-semibold'}}) }}
             {{ form_widget(form.password.second, {'attr': {'class': 'form-control form-control-sm'}}) }}
+            {{ form_errors(form.password.first) }}
         </div>
     {% endif %}
 

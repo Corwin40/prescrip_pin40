@@ -16,6 +16,19 @@ class BeneficiaryRepository extends ServiceEntityRepository
         parent::__construct($registry, Beneficiary::class);
     }
 
+    public function findByMediation($member): array
+    {
+        return $this->createQueryBuilder('b')
+            ->join('b.prescriptor', 'p')
+            ->join('p.referent', 'm')
+            ->where('m.id = :member')
+            ->setParameter('member', $member)
+            ->getQuery()
+            ->getResult()
+            ;
+
+    }
+
     //    /**
     //     * @return Beneficiary[] Returns an array of Beneficiary objects
     //     */

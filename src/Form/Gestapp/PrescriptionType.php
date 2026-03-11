@@ -102,23 +102,44 @@ class PrescriptionType extends AbstractType
             ;
         }
 
-        if ($route == 'app_gestapp_prescription_new') {
-            $builder
-                ->add('beneficiaire', EntityType::class, [
-                    'class' => Beneficiary::class,
-                    'choice_label' => function ($beneficiary) {
-                        return $beneficiary->getFirstname() . ' ' . $beneficiary->getLastname();
-                    },
-                    'query_builder' => function (EntityRepository $er) {
-                        return $er->createQueryBuilder('b')
-                            ->leftJoin('b.prescription', 'p')
-                            ->where('p.id IS NULL')
-                            ->orderBy('b.id', 'ASC');
-                    },
-                ])
-            ;
+        if ($route === 'app_gestapp_prescription_new') {
+            if($user && in_array('ROLE_PRESCRIPTEUR', $user->getRoles())) {
+                $builder
+                    ->add('beneficiaire', EntityType::class, [
+                        'class' => Beneficiary::class,
+                        'choice_label' => function ($beneficiary) {
+                            return $beneficiary->getFirstname() . ' ' . $beneficiary->getLastname();
+                        },
+                        'query_builder' => function (EntityRepository $er) use ($user) {
+                            return $er->createQueryBuilder('b')
+                                ->leftJoin('b.prescription', 'p')
+                                ->where('b.prescriptor = :prescriptor')
+                                ->setParameter('prescriptor', $user)
+                                ->andWhere('p.id IS NULL')
+                                ->orderBy('b.id', 'ASC');
+                        },
+                    ])
+                ;
+            }
+            else{
+                $builder
+                    ->add('beneficiaire', EntityType::class, [
+                        'class' => Beneficiary::class,
+                        'choice_label' => function ($beneficiary) {
+                            return $beneficiary->getFirstname() . ' ' . $beneficiary->getLastname();
+                        },
+                        'query_builder' => function (EntityRepository $er) use ($user) {
+                            return $er->createQueryBuilder('b')
+                                ->leftJoin('b.prescription', 'p')
+                                ->andWhere('p.id IS NULL')
+                                ->orderBy('b.id', 'ASC');
+                        },
+                    ])
+                ;
+            }
+
         }
-        if($route == 'app_gestapp_prescription_edit') {
+        if($route === 'app_gestapp_prescription_edit') {
             $builder
                 ->add('beneficiaire')
             ;

@@ -1,0 +1,65 @@
+{# templates/gestapp/beneficiary/index.html.twig #}
+{% extends 'base.html.twig' %}
+
+{% block title %}Liste des bénéficiaires{% endblock %}
+
+{% block body %}
+    {# Bloc entête de page #}
+    <section id="page_header">    {%
+            include 'composants/pages/pages_headers.html.twig' with {
+            'page_title' : 'Liste des Bénéficiaires',
+            'li_items': [
+                { path: 'app_admin_dashboard_index', fa_class: 'fa-sharp-duotone fa-solid fa-house-blank', a_title: 'Dashboard' },
+                { path: null, fa_class: 'fa-sharp fa-light fa-laptop', a_title: 'Bénéficiaires' },
+            ],
+            'btns' : [
+                {'path': path('app_gestapp_beneficiary_new'), 'id':'btnAddBeneficiaire', 'class' : 'btn btn-outline-dark btn-sm', 'fa_class' : 'fa-duotone fa-solid fa-circle-user-circle-plus', 'textcontent' : 'Ajouter un.e bénéficiaire'},
+            ]
+
+        }
+        %}
+    </section>
+    {# Bloc contenu de la page #}
+    <section id="page_content">
+        <div class="row mt-3">
+            <div class="col-12">
+                <h2>Recherche Beneficiaries</h2>
+
+                {{ form_start(form, {'attr': {'class': 'row g-3'}}) }}
+                <div class="col-md-6">{{ form_row(form.query) }}</div>
+                <div class="col-md-4">{{ form_row(form.prescriptor) }}</div>
+                <div class="col-md-2"><button class="btn btn-primary mt-4">Rechercher</button></div>
+                {{ form_end(form) }}
+
+                <hr>
+
+                <h3>Résultats</h3>
+                <table class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Prénom</th>
+                        <th>Nom</th>
+                        <th>Prescripteur</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for b in results %}
+                        <tr>
+                            <td>{{ b.id }}</td>
+                            <td>{{ b.firstName }}</td>
+                            <td>{{ b.lastName }}</td>
+                            <td>{{ b.prescriptor }}</td>
+                        </tr>
+                    {% else %}
+                        <tr><td colspan="4">Aucun résultat</td></tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+        <section id="page_footer">
+
+        </section>
+{% endblock %}

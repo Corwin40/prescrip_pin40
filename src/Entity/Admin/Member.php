@@ -104,12 +104,22 @@ class Member implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(targetEntity: Equipment::class, mappedBy: 'reconditioner')]
     private Collection $equipment;
 
+    #[ORM\ManyToOne(targetEntity: self::class, inversedBy: 'members')]
+    private ?self $referent = null;
+
+    /**
+     * @var Collection<int, self>
+     */
+    #[ORM\OneToMany(targetEntity: self::class, mappedBy: 'referent')]
+    private Collection $members;
+
     public function __construct()
     {
         $this->prescriptions = new ArrayCollection();
         $this->lieuxmediation = new ArrayCollection();
         $this->beneficiaries = new ArrayCollection();
         $this->equipment = new ArrayCollection();
+        $this->members = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -437,6 +447,48 @@ class Member implements UserInterface, PasswordAuthenticatedUserInterface
             // set the owning side to null (unless already changed)
             if ($equipment->getReconditioner() === $this) {
                 $equipment->setReconditioner(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getReferent(): ?self
+    {
+        return $this->referent;
+    }
+
+    public function setReferent(?self $referent): static
+    {
+        $this->referent = $referent;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, self>
+     */
+    public function getMembers(): Collection
+    {
+        return $this->members;
+    }
+
+    public function addMember(self $member): static
+    {
+        if (!$this->members->contains($member)) {
+            $this->members->add($member);
+            $member->setReferent($this);
+        }
+
+        return $this;
+    }
+
+    public function removeMember(self $member): static
+    {
+        if ($this->members->removeElement($member)) {
+            // set the owning side to null (unless already changed)
+            if ($member->getReferent() === $this) {
+                $member->setReferent(null);
             }
         }
 

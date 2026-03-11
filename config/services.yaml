@@ -19,3 +19,12 @@ services:
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
+
+    FOS\ElasticaBundle\Finder\FinderInterface $beneficiaryFinder:
+        alias: fos_elastica.finder.beneficiary
+
+    App\Controller\Gestapp\BeneficiaryController:
+        tags: [ 'controller.service_arguments' ]
+        public: true
+        arguments:
+            - '@fos_elastica.finder.beneficiary'

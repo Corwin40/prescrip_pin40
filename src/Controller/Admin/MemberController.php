@@ -5,6 +5,7 @@ namespace App\Controller\Admin;
 use App\Entity\Admin\Member;
 use App\Entity\Gestapp\Beneficiary;
 use App\Entity\Gestapp\Prescription;
+use App\Form\Admin\MemberResetPasswordType;
 use App\Form\Admin\MemberType;
 use App\Repository\MemberRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -133,54 +134,22 @@ final class MemberController extends AbstractController
         UserPasswordHasherInterface $passwordHasher
     )
     {
-        $form = $this->createFormBuilder(MemberType::class, $member)
-            ->add('password', RepeatedType::class, [
-                'type' => PasswordType::class,
-                'first_options'  => ['label' => 'Mot de passe', 'hash_property_path' => 'password'],
-                'second_options' => ['label' => 'Retapez le mot de passe'],
-                'mapped' => false, //  ne lie pas directement à l'entité
-                'required' => true, // obligatoire à la création
-                'attr' => [
-                    'autocomplete' => 'new-password',
-                    'placeholder' => 'Saisir un mot de passe',
-                    'class' => 'form-control',
-                ],
-                'constraints' => [
-                    new NotBlank([
-                        'message' => 'Il nous faut un mot de passe, ne laissez pas ce champs Vide.',
-                    ]),
-                    new Length([
-                        'min' => 12,
-                        'minMessage' => 'Votre mot de passe doit contenir au moins {{ limit }} caractères',
-                        // max length allowed by Symfony for security reasons
-                        'max' => 4096,
-                    ]),
-                    new Assert\Regex([
-                        'pattern' => '/[A-Z]/',
-                        'message' => 'Le mot de passe doit contenir au moins une lettre majuscule.',
-                    ]),
-                    new Assert\Regex([
-                        'pattern' => '/[a-z]/',
-                        'message' => 'Le mot de passe doit contenir au moins une lettre minuscule.',
-                    ]),
-                    new Assert\Regex([
-                        'pattern' => '/[0-9]/',
-                        'message' => 'Le mot de passe doit contenir au moins un chiffre.',
-                    ]),
-                    new Assert\Regex([
-                        'pattern' => '/[\W_]/',
-                        'message' => 'Le mot de passe doit contenir au moins un caractère spécial.',
-                    ]),
-                ],
-            ])
-        ;
-
-
+        $form = $this->createForm(MemberResetPasswordType::class, $member, [
+            'action' => $this->generateUrl('app_admin_member_renew_password', ['id' => $member->getId()]),
+            'method' => 'POST',
+            'attr' => [
+                'id' => 'form_ResetPassword',
+            ]
+        ]);
         $form->handleRequest($request);
 
+        //dd($form);
+
         if ($form->isSubmitted() && $form->isValid()) {
+            //dd($form->get('password')->getData());
 
             $password = $form->get('password')->getData();
+
             if ($password) {
                 $hashedPassword = $passwordHasher->hashPassword($member, $password);
                 $member->setPassword($hashedPassword);
@@ -188,14 +157,20 @@ final class MemberController extends AbstractController
 
             $entityManager->flush();
 
-            $this->addFlash('success', 'Le membre a bien été mis à jour.');
-            return $this->redirectToRoute('app_admin_member_index');
+            return $this->json([
+                'code' => 200,
+                'message' => 'Mot de passe actualisé'
+            ],200);
         }
 
-        return $this->render('admin/member/edit.html.twig', [
-            'member' => $member,
+        $view = $this->render('admin/member/_formResetPassword.html.twig', [
             'form' => $form,
         ]);
+
+        return $this->json([
+            'code' => 200,
+            'formView' => $view->getContent(),
+        ],200);
     }
 
     #[Route('/{id}', name: 'app_admin_member_delete', methods: ['POST'])]
