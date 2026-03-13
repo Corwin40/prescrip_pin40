@@ -1,11 +1,11 @@
 <div class="row mb-1 justify-content-between">
     <div class="col-6">
         <p class="mb-0 text-secondary fst-italic">Réf : {{ prescription.ref }} | Ce dossier à été ouvert par
-            {% if prescription.isOpenByPrescriptor == 1 and prescription.isOpenByMediator == 0 %}
-                un precripteur : {{ prescription.membre.nameStructure }}.
-            {% elseif prescription.isOpenByPrescriptor == 0 and prescription.isOpenByMediator == 1 %}
-                un epace de médiation : {{ prescription.lieuMediation.nameStructure }}.
-            {% else %}
+            {% if prescription.status.name == 'OpenByPrescriptor' %}
+                un prescripteur.
+            {% elseif prescription.status.name == 'OpenByMediator' %}
+                un epace de médiation.
+            {% elseif prescription.status.name == 'OpenByAdministrator' %}
                 un administrateur.
             {% endif %}
         </p>
@@ -14,6 +14,30 @@
         <p class="mb-0 me-2 text-end">
             {{ include('composants/pages/badge.html.twig') }}
         </p>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-12">
+        {% if role == 'Administrateur' %}
+            <p class="mb-2 alert alert-info">Ce dossier ne pourra pas être finalisé sans la validation par les 2 parties : l'organisme de prescriptions et le lieu de médiation.</p>
+        {% elseif role == 'Prescripteur' %}
+            {% if prescription.status.name == 'OpenByMediator' %}
+                {% if prescription.step.name == 'OneParts' %}{% else %}{% endif %}
+                <p class="mb-2 alert alert-info">Vous devez vérifier que la prescription corresponde aux besoins identifiés pour votre bénéficiaire.</p>
+            {% elseif prescription.status.name == 'OpenByPrescriptor' %}
+                {% if prescription.step.name == 'OneParts' %}
+                    <p class="mb-2 alert alert-info">Pour être complête, cette prescription doit être coécrite par le médiateur choisi. Ce dernier va être averti de l'ouverture du dossier.</p>
+                {% else %}
+                {% endif %}
+            {% endif %}
+        {% elseif role == 'Médiateur' %}
+            {% if prescription.status.name == 'OpenByMediator' %}
+                <p class="mb-2 alert alert-info">Cette prescription doit être vérifiée par le prescripteur dont dépend le bénéficiaire.</p>
+            {% elseif prescription.status.name == 'OpenByPrescriptor' %}
+                <p class="mb-2 alert alert-info">Completez le parcours de formation adapté aux besoins du bénéficiaire.</p>
+            {% endif %}
+        {% endif %}
     </div>
 </div>
 
@@ -90,22 +114,22 @@
                             {% include 'composants/inputs/input_radio_tablerow.html.twig' with {
                                 form_label: 'Les bases',
                                 form_field: form.competence.compBase,
-                                disabled: false
+                                disabled: true
                             } %}
                             {% include 'composants/inputs/input_radio_tablerow.html.twig' with {
                                 form_label: 'Texte et documents',
                                 form_field: form.competence.compDesk,
-                                disabled: false
+                                disabled: true
                             } %}
                             {% include 'composants/inputs/input_radio_tablerow.html.twig' with {
                                 form_label: 'Internet',
                                 form_field: form.competence.compInternet,
-                                disabled: false
+                                disabled: true
                             } %}
                             {% include 'composants/inputs/input_radio_tablerow.html.twig' with {
                                 form_label: 'Messagerie electronique',
                                 form_field: form.competence.compEmail,
-                                disabled: false
+                                disabled: true
                             } %}
                         {% elseif role == 'Mediateur' %}
                             {% include 'composants/inputs/input_radio_tablerow.html.twig' with {
@@ -373,125 +397,117 @@
         </div>
     </div>
 
-    {% if prescription.step.name == 'Open' or prescription.step.name == 'Write' %}
-
+    {% if prescription.step.name == 'Open' or prescription.step.name == 'OneParts' %}
         <div class="row">
             <div class="col-12 bg-light border-bottom border-dark mb-2">
                 <h2 class="h4 mt-1 mb-1">Construction du dossier</h2>
             </div>
             <div class="col-12">
-                <p class="mb-0">Ce dossier ne pourra pas être finalisé sans la validation par les 2 parties : l'organisme de prescriptions et le lieu de médiation.</p>
+                {% if role == 'Administrateur' %}
+                    <p class="mb-0">Ce dossier ne pourra pas être finalisé sans la validation par les 2 parties : l'organisme de prescriptions et le lieu de médiation.</p>
+                {% elseif role == 'Prescripteur' %}
+                    {% if prescription.status.name == 'OpenByMediator' %}
+                        <p class="mb-0">Vous devez vérifier que la prescription corresponde aux besoins identifiés pour votre bénéficiaire.</p>
+                    {% elseif prescription.status.name == 'OpenByPrescriptor' %}
+                        <p class="mb-0">En validant la demande, le médiateur sélectionné va être averti de l'ouverture du dossier.</p>
+                    {% endif %}
+                {% elseif role == 'Médiateur' %}
+                    {% if prescription.status.name == 'OpenByMediator' %}
+                        <p class="mb-0">Cette prescription doit être vérifiée par le prescripteur dont dépend le bénéficiaire.</p>
+                    {% elseif prescription.status.name == 'OpenByPrescriptor' %}
+                        <p class="mb-0"></p>
+                    {% endif %}
+                {% endif %}
             </div>
             <div class="col-6 mt-4 mb-4">
                 <a class="btn btn-sm btn-outline-dark" href="{{ path('app_admin_dashboard_index') }}"><i class="fa-duotone fa-solid fa-chevrons-left"></i>&nbsp;Retour</a>
-                <button id="btnAddPrescription" class="btn btn-outline-primary btn-sm"><i class="fa-duotone fa-solid fa-circle-check"></i> Préenregistrer la demande</button>
+                {% if role == 'Administrateur' %}
+                    <button id="btnAddPrescription" class="btn btn-outline-primary btn-sm"><i class="fa-duotone fa-solid fa-circle-check"></i> Préenregistrer la demande</button>
+                {% elseif role == 'Prescripteur' %}
+                    {% if prescription.status.name == 'OpenByMediator' %}
+                        <button id="btnAddPrescription" class="btn btn-outline-primary btn-sm"><i class="fa-duotone fa-solid fa-circle-check"></i> Poursuivre la demande</button>
+                    {% elseif prescription.status.name == 'OpenByPrescriptor' %}
+                        <button id="btnAddPrescription" class="btn btn-outline-primary btn-sm"><i class="fa-duotone fa-solid fa-circle-check"></i> Préenregistrer la demande</button>
+                    {% endif %}
+                {% elseif role == 'Médiateur' %}
+                    {% if prescription.status.name == 'OpenByMediator' %}
+                        <button id="btnAddPrescription" class="btn btn-outline-primary btn-sm"><i class="fa-duotone fa-solid fa-circle-check"></i> Préenregistrer la demande</button>
+                    {% elseif prescription.status.name == 'OpenByPrescriptor' %}
+                        <button id="btnAddPrescription" class="btn btn-outline-primary btn-sm"><i class="fa-duotone fa-solid fa-circle-check"></i> Poursuivre la demande</button>
+                    {% endif %}
+                {% endif %}
             </div>
         </div>
-
     {% elseif prescription.step.name == 'TwoParts' %}
-        {# Faire la distenction entre médiatieurs et precripteurs #}
-        {% if role == 'Médiateur' or 'Administrateur' %}
-            <div class="row">
-                <div class="col-12 bg-light border-bottom border-dark mb-2">
-                    <h3 class="mt-1 mb-1 h4">Finalisation du dossier</h3>
-                </div>
-                <div class="col-12">
-                    <p class="mb-0">Cette prescription a été consulté par l'organisme de prescription et le lieu de médiation.</p>
-                    <p class="mb-0">En tant {% if role == "Médiateur" %}que lieu de médiation{% elseif role == "Administrateur" %}qu'administrateur{% endif %} vous pouvez valider la prescription en précisant le poste qui sera transmis au bénéficiaire.</p>
-                </div>
-                <div class="row mt-2">
-                    <div class="col-4">
-                        {% include 'composants/inputs/input_select.html.twig' with {
-                            label: 'Référence de l\'équipement doté',
-                            field: form.equipement,
-                            disabled: ''
-                        } %}
-                    </div>
-                    <div class="clear"></div>
-                    <div class="col-4">
-                        <a class="btn btn-sm btn-outline-dark" href="{{ path('app_admin_dashboard_index') }}"><i class="fa-duotone fa-solid fa-chevrons-left"></i>&nbsp;Retour</a>
-                        <button id="btnValidCase" class="btn btn-outline-primary btn-sm"><i class="fa-duotone fa-solid fa-circle-check"></i> Clôture de la prescription</button>
-                    </div>
+        <div class="row">
+            <div class="col-12 bg-light border-bottom border-dark mb-2">
+                <h3 class="mt-1 mb-1 h4">Poursuite du dossier</h3>
+            </div>
+            <div class="col-12">
+
+                {% if role == 'Administrateur' %}
+                    <p class="mb-0">Vous completez en lieu et place de l'un des organismes cette prescription. Le bénéficiaire doit suivre son parcours de formation précisé précédemment avant de recevoir la dotation.</p>
+                {% elseif role == 'Prescripteur' %}
+                    {% if prescription.status.name == 'OpenByMediator' %}
+                        <p class="mb-0">En l'état actuel de la prescription, en tant que prescripteur, vous ne pouvez pas valider le parcours de formation du bénéficiaire.</p>
+                    {% elseif prescription.status.name == 'OpenByPrescriptor' %}
+                        <p class="mb-0">En l'état actuel de la prescription, en tant que prescripteur, vous ne pouvez pas valider le parcours de formation du bénéficiaire.</p>
+                    {% endif %}
+                {% elseif role == 'Médiateur' %}
+                    {% if prescription.status.name == 'OpenByMediator' %}
+                        <p class="mb-0">Vous validez le parcours de formation du bénéficiaire. Ce denier doit suivre son parcours de formation précisé précédemment avant de recevoir la dotation.</p>
+                    {% elseif prescription.status.name == 'OpenByPrescriptor' %}
+                        <p class="mb-0">Vous validez le parcours de formation du bénéficiaire. Ce denier doit suivre son parcours de formation précisé précédemment avant de recevoir la dotation.</p>
+                    {% endif %}
+                {% endif %}
+            </div>
+            <div class="row mt-2">
+                <div class="col-4">
+                    <a class="btn btn-sm btn-outline-dark" href="{{ path('app_admin_dashboard_index') }}"><i class="fa-duotone fa-solid fa-chevrons-left"></i>&nbsp;Retour</a>
+                    {% if role == 'Administrateur' %}
+                        <button id="btnValidCase" class="btn btn-outline-primary btn-sm"><i class="fa-duotone fa-solid fa-circle-check"></i> Validation parcours de formation</button>
+                    {% elseif role == 'Prescripteur' %}
+                    {% elseif role == 'Médiateur' %}
+                        <button id="btnValidCase" class="btn btn-outline-primary btn-sm"><i class="fa-duotone fa-solid fa-circle-check"></i> Validation parcours de formation</button>
+                    {% endif %}
                 </div>
             </div>
-        {% else %}
-            <div class="row">
-                <div class="col-12 bg-light border-bottom border-dark mb-2">
-                    <h3 class="mt-1 mb-1 h4">Finalisation du dossier</h3>
+        </div>
+    {% elseif prescription.step.name == 'ChoiceEquipment' %}
+        <div class="row">
+            <div class="col-12 bg-light border-bottom border-dark mb-2">
+                <h3 class="mt-1 mb-1 h4">Choix de l'équipement</h3>
+            </div>
+            <div class="col-12">
+                {% if role == 'Administrateur' %}
+                    <p class="mb-0">Vous completez en lieu et place de l'un des organismes cette prescription.</p>
+                {% elseif role == 'Prescripteur' %}
+                    <p class="mb-0">En l'état actuel de la prescription, en tant que prescripteur, vous ne pouvez pas choisir un équipement.</p>
+                {% elseif role == 'Médiateur' %}
+                    <p class="mb-0">Choisissez l'ID de l'équipement attribué au bénéficiaire.</p>
+                {% endif %}
+            </div>
+            <div class="row mt-2">
+                {% if role == 'Administrateur' or role =='Médiateur' %}
+                <div class="col-4">
+                    {% include 'composants/inputs/input_select.html.twig' with {
+                        label: 'Référence de l\'équipement doté',
+                        field: form.equipement,
+                        disabled: ''
+                    } %}
                 </div>
-                <div class="col-12">
-                    <p class="mb-0">Cette prescription a été consulté par l'organisme de prescription et le lieu de médiation.</p>
+                <div class="clear"></div>
+                <div class="col-4">
+                    <a class="btn btn-sm btn-outline-dark" href="{{ path('app_admin_dashboard_index') }}"><i class="fa-duotone fa-solid fa-chevrons-left"></i>&nbsp;Retour</a>
+                    <button id="btnValidCase" class="btn btn-outline-primary btn-sm"><i class="fa-duotone fa-solid fa-circle-check"></i> Validation de l'équipement</button>
                 </div>
-                <div class="row mt-2">
-                    <div class="col-4">
-                        {% include 'composants/inputs/input_select.html.twig' with {
-                            label: 'Référence de l\'équipement doté',
-                            field: form.equipement,
-                            disabled: ''
-                        } %}
-                    </div>
-                    <div class="clear"></div>
+                {% elseif role == 'Prescripteur' %}
                     <div class="col-4">
                         <a class="btn btn-sm btn-outline-dark" href="{{ path('app_admin_dashboard_index') }}"><i class="fa-duotone fa-solid fa-chevrons-left"></i>&nbsp;Retour</a>
-                        <button id="btnValidCase" class="btn btn-outline-primary btn-sm"><i class="fa-duotone fa-solid fa-circle-check"></i> Validation de la prescription</button>
                     </div>
-                </div>
+                {% endif %}
             </div>
-        {% endif %}
-
-    {% elseif prescription.step.name == 'ValidCase' %}
-
-
-    {% elseif prescription.step.name == 'ValidCase' %}
-        {% if role == 'Médiateur' or 'Administrateur' %}
-            <div class="row">
-                <div class="col-12 bg-light border-bottom border-dark mb-2">
-                    <h3 class="mt-1 mb-1 h4">Finalisation du dossier</h3>
-                </div>
-                <div class="col-12">
-                    <p class="mb-0">Cette prescription a été consulté par l'organisme de prescription et le lieu de médiation.</p>
-                    <p class="mb-0">En tant {% if role == "Médiateur" %}que lieu de médiation{% elseif role == "Administrateur" %}qu'administrateur{% endif %} vous pouvez valider la prescription en précisant le poste qui sera transmis au bénéficiaire.</p>
-                </div>
-                <div class="row mt-2">
-                    <div class="col-4">
-                        {% include 'composants/inputs/input_select.html.twig' with {
-                            label: 'Référence de l\'équipement doté',
-                            field: form.equipement,
-                            disabled: ''
-                        } %}
-                    </div>
-                    <div class="clear"></div>
-                    <div class="col-4">
-                        <a class="btn btn-sm btn-outline-dark" href="{{ path('app_admin_dashboard_index') }}"><i class="fa-duotone fa-solid fa-chevrons-left"></i>&nbsp;Retour</a>
-                        <button id="btnValidCase" class="btn btn-outline-primary btn-sm"><i class="fa-duotone fa-solid fa-circle-check"></i> Clôture de la prescription</button>
-                    </div>
-                </div>
-            </div>
-        {% else %}
-            <div class="row">
-                <div class="col-12 bg-light border-bottom border-dark mb-2">
-                    <h3 class="mt-1 mb-1 h4">Finalisation du dossier</h3>
-                </div>
-                <div class="col-12">
-                    <p class="mb-0">Cette prescription a été consulté par l'organisme de prescription et le lieu de médiation.</p>
-                </div>
-                <div class="row mt-2">
-                    <div class="col-4">
-                        {% include 'composants/inputs/input_select.html.twig' with {
-                            label: 'Référence de l\'équipement doté',
-                            field: form.equipement,
-                            disabled: ''
-                        } %}
-                    </div>
-                    <div class="clear"></div>
-                    <div class="col-4">
-                        <a class="btn btn-sm btn-outline-dark" href="{{ path('app_admin_dashboard_index') }}"><i class="fa-duotone fa-solid fa-chevrons-left"></i>&nbsp;Retour</a>
-                        <button id="btnValidCase" class="btn btn-outline-primary btn-sm"><i class="fa-duotone fa-solid fa-circle-check"></i> Validation de la prescription</button>
-                    </div>
-                </div>
-            </div>
-        {% endif %}
-
+        </div>
     {% endif %}
 
 {{ form_end(form) }}

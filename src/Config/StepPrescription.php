@@ -19,8 +19,9 @@ namespace App\Config;
 enum StepPrescription: string
 {
     case Open = 'Open';
-    case Write = 'Write';
+    case OneParts = 'OneParts';
     case TwoParts = 'TwoParts';
+    case ChoiceEquipment = 'ChoiceEquipment';
     case ValidCase = 'ValidCase';
     case GeneratePDF = 'GeneratePDF';
     case Signed = 'Signed';

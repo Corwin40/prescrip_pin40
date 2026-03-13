@@ -87,7 +87,7 @@
 
                 <tbody>
                 {% for prescription in prescriptions %}
-                    <tr >
+                    <tr class="align-middle">
                         <td class="position-relative">
                             <a href="{{ path('app_gestapp_prescription_edit', {'id': prescription.id}) }}" class="stretched-link"></a>
                             {{ prescription.ref }}
@@ -111,19 +111,7 @@
                             {% endif %}
                         </td>
                         <td>
-                            {% if prescription.step.name == 'Open' %}
-                                <span class="badge text-bg-info py-1">Prescription ouverte</span>
-                            {% elseif prescription.step.name == 'Write' %}
-                                <span class="badge text-bg-info py-1">En cours de remplissage</span>
-                            {% elseif prescription.step.name == 'TwoParts' %}
-                                <span class="badge text-bg-info py-1">Vu par médiateur</span>
-                            {% elseif prescription.step.name == 'ValidCase' %}
-                                <a href="{{ path('app_htmltopdf_generate_prescription_pdf', {'id': prescription.id}) }}">Génération du PDF</a>
-                            {% elseif prescription.step.name == 'GeneratePDF' %}
-                                <a href="{{ asset(prescription.path) }}" class="openModal" data-bs-data="VIEW_PRESCRIPTION-Vu de la prescription-{{ prescription.id }}">Voir la prescription</a>
-                            {% elseif prescription.step.name == 'Signed' %}
-                                <a href="{{ path('app_prescription_preview', {'id': prescription.id}) }}">Voir la prescription</a>
-                            {% endif %}
+                            {{ include('composants/pages/badge.html.twig') }}
                         </td>
 
                         <td>

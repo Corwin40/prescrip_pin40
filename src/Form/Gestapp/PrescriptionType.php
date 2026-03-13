@@ -31,6 +31,7 @@ class PrescriptionType extends AbstractType
         $route = $request?->attributes->get('_route');
 
         $user = $options['user'];
+        $prescription = $options['prescription'];
 
         $builder
             ->add('details')
@@ -45,7 +46,6 @@ class PrescriptionType extends AbstractType
                 'required' => true,
                 'expanded' => true,
                 'multiple' => false,
-                'data' => 'Non acquises',
             ])
             ->add('lieuMediation', EntityType::class, [
                 'class' => Member::class,
@@ -60,49 +60,85 @@ class PrescriptionType extends AbstractType
 
         ;
 
-        if ( $user && (
-                in_array('ROLE_SUPER_ADMIN', $user->getRoles()) ||
-                in_array('ROLE_ADMIN', $user->getRoles()) ||
-                in_array('ROLE_MEDIATEUR', $user->getRoles())
-            ))
-        {
-            $builder
-                ->add('membre', EntityType::class, [
-                    'class' => Member::class,
-                    'choice_label' => 'nameStructure',
-                    'query_builder' => function (EntityRepository $er) {
-                        return $er->createQueryBuilder('d')
-                            ->where('d.roles LIKE :roles')
-                            ->setParameter('roles', '%ROLE_PRESCRIPTEUR%')
-                            ->orderBy('d.id', 'ASC');
-                    },
-                ])
-                ->add('competence', CompetenceType::class, [
-                    'label' => 'COMPETENCE',
-                    'empty_data' => new Competence(),
-                ])
-                ->add('equipement', EntityType::class, [
-                    'label' => 'Choix de l\'équipement',
-                    'class' => Equipment::class,
-                    'placeholder' => '-- Choisir un équipement --',
-                ])
-            ;
+        if(in_array($prescription->getStep()->name, ['Open', 'OneParts', 'TwoParts'])){
+            if ( $user && (
+                    in_array('ROLE_SUPER_ADMIN', $user->getRoles()) ||
+                    in_array('ROLE_ADMIN', $user->getRoles()) ||
+                    in_array('ROLE_MEDIATEUR', $user->getRoles())
+                ))
+            {
+                $builder
+                    ->add('membre', EntityType::class, [
+                        'class' => Member::class,
+                        'choice_label' => 'nameStructure',
+                        'query_builder' => function (EntityRepository $er) {
+                            return $er->createQueryBuilder('d')
+                                ->where('d.roles LIKE :roles')
+                                ->setParameter('roles', '%ROLE_PRESCRIPTEUR%')
+                                ->orderBy('d.id', 'ASC');
+                        },
+                    ])
+                    ->add('competence', CompetenceType::class, [
+                        'label' => 'COMPETENCE',
+                        'empty_data' => new Competence(),
+                    ])
+                    ->add('equipement', HiddenType::class)
+                ;
+            }
+            elseif ($user && in_array('ROLE_PRESCRIPTEUR', $user->getRoles()))
+            {
+                $builder
+                    ->add('competence', CompetenceType::class, [
+                        'label' => 'COMPETENCE',
+                        'empty_data' => new Competence(),
+                    ])
+                    ->add('equipement', HiddenType::class)
+                ;
+            }
         }
-
-        if($user && in_array('ROLE_PRESCRIPTEUR', $user->getRoles())){
-            $builder
-                ->add('competence', CompetenceType::class, [
-                    'label' => 'COMPETENCE',
-                    'empty_data' => new Competence(),
-                    'attr' => [
-                        'readonly' => true,
-                    ],
-                ])
-                ->add('equipement', HiddenType::class, ['data' => ''])
-            ;
+        elseif(in_array($prescription->getStep()->name, ['ChoiceEquipment', 'ValidCase', 'GeneratePDF'])){
+            if ( $user && (
+                    in_array('ROLE_SUPER_ADMIN', $user->getRoles()) ||
+                    in_array('ROLE_ADMIN', $user->getRoles()) ||
+                    in_array('ROLE_MEDIATEUR', $user->getRoles())
+                ))
+            {
+                $builder
+                    ->add('membre', EntityType::class, [
+                        'class' => Member::class,
+                        'choice_label' => 'nameStructure',
+                        'query_builder' => function (EntityRepository $er) {
+                            return $er->createQueryBuilder('d')
+                                ->where('d.roles LIKE :roles')
+                                ->setParameter('roles', '%ROLE_PRESCRIPTEUR%')
+                                ->orderBy('d.id', 'ASC');
+                        },
+                    ])
+                    ->add('competence', CompetenceType::class, [
+                        'label' => 'COMPETENCE',
+                        'empty_data' => new Competence(),
+                    ])
+                    ->add('equipement', EntityType::class, [
+                        'label' => 'Choix de l\'équipement',
+                        'class' => Equipment::class,
+                        'placeholder' => '-- Choisir un équipement --',
+                    ])
+                ;
+            }
+            elseif ($user && in_array('ROLE_PRESCRIPTEUR', $user->getRoles()))
+            {
+                $builder
+                    ->add('competence', CompetenceType::class, [
+                        'label' => 'COMPETENCE',
+                        'empty_data' => new Competence(),
+                    ])
+                    ->add('equipement', HiddenType::class)
+                ;
+            }
         }
 
         if ($route === 'app_gestapp_prescription_new') {
+            // on filtre les bénéficiaires selon le prescripteur
             if($user && in_array('ROLE_PRESCRIPTEUR', $user->getRoles())) {
                 $builder
                     ->add('beneficiaire', EntityType::class, [
@@ -121,7 +157,8 @@ class PrescriptionType extends AbstractType
                     ])
                 ;
             }
-            else{
+            elseif ($user && in_array('ROLE_MEDIATEUR', $user->getRoles())) {
+                // On, filtre les bénficiaire selon le mediateur
                 $builder
                     ->add('beneficiaire', EntityType::class, [
                         'class' => Beneficiary::class,
@@ -131,6 +168,27 @@ class PrescriptionType extends AbstractType
                         'query_builder' => function (EntityRepository $er) use ($user) {
                             return $er->createQueryBuilder('b')
                                 ->leftJoin('b.prescription', 'p')
+                                ->leftJoin('b.prescriptor', 'm')
+                                ->join('m.referent', 'r')
+                                ->where('r.id = :member')
+                                ->setParameter('member', $user)
+                                ->andWhere('p.id IS NULL')
+                                ->orderBy('b.id', 'ASC');
+                        },
+                    ])
+                ;
+            }
+            // on prends tous les bénéficiaires
+            else{
+                $builder
+                    ->add('beneficiaire', EntityType::class, [
+                        'class' => Beneficiary::class,
+                        'choice_label' => function ($beneficiary) {
+                            return $beneficiary->getFirstname() . ' ' . $beneficiary->getLastname();
+                        },
+                        'query_builder' => function (EntityRepository $er) use ($user) {
+                            return $er->createQueryBuilder('b')
+                                ->leftJoin('b.prescriptor', 'p')
                                 ->andWhere('p.id IS NULL')
                                 ->orderBy('b.id', 'ASC');
                         },
@@ -152,6 +210,7 @@ class PrescriptionType extends AbstractType
         $resolver->setDefaults([
             'data_class' => Prescription::class,
             'user' => null,
+            'prescription' => null,
         ]);
     }
 }

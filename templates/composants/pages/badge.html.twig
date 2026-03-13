@@ -1,13 +1,30 @@
 {% if prescription.step.name == 'Open' %}
     <span class="badge text-bg-info p-2">Prescription ouverte</span>
-{% elseif prescription.step.name == 'Write' %}
-    <span class="badge text-bg-info p-2">En cours de remplissage</span>
+{% elseif prescription.step.name == 'OneParts' %}
+    {% if prescription.status.name == 'OpenByPrescriptor' %}
+        <span class="badge text-bg-info p-2">Vu par le Prescripteur</span>
+    {% elseif prescription.status.name == 'OpenByMediator' %}
+        <span class="badge text-bg-info p-2">Vu par le Médiateur</span>
+    {% else %}
+        <span class="badge text-bg-info p-2">En cours de remplissage</span>
+    {% endif %}
 {% elseif prescription.step.name == 'TwoParts' %}
-    <span class="badge text-bg-info p-2">Vu par les 2 parties</span>
+    {% if prescription.status.name == 'OpenByPrescriptor' %}
+        <span class="badge text-bg-info p-2">Validée par le Médiateur</span>
+    {% elseif prescription.status.name == 'OpenByMediator' %}
+        <span class="badge text-bg-info p-2">Validée par le Prescripteur</span>
+    {% else %}
+        <span class="badge text-bg-info p-2">Vu par les 2 parties</span>
+    {% endif %}
+{% elseif prescription.step.name == 'ChoiceEquipment' %}
+    <span class="badge text-bg-info p-2">Choisir l'équipement</span>
 {% elseif prescription.step.name == 'ValidCase' %}
-    <span class="badge text-bg-info p-2">Prescription validée</span>
+    <a href="{{ path('app_generate_prescription_pdf', {'id': prescription.id}) }}">Générer le PDF</a>
 {% elseif prescription.step.name == 'GeneratePDF' %}
-    <span class="badge text-bg-info p-2">Pdf généré</span>
+    {% if prescription.path is null %}
+    {% else %}
+        <a href="{{ asset(prescription.path) }}" data-bs-data="VIEW_PRESCRIPTION-Voir la prescription-{{ prescription.id }}">Voir le PDF</a>
+    {% endif %}
 {% elseif prescription.step.name == 'Signed' %}
     <span class="badge text-bg-info p-2">pdf signé par le bénéficiaire</span>
 {% endif %}

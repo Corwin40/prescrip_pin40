@@ -12,7 +12,7 @@ use Symfony\Component\Routing\Attribute\Route;
 use Sensiolabs\GotenbergBundle\GotenbergPdfInterface;
 use Doctrine\ORM\EntityManagerInterface;
 
-#[Route("/admin")]
+#[Route("/admin/generatepdf")]
 final class HtmlToPdfController extends AbstractController
 {
     private bool $viewPdf;
@@ -20,7 +20,7 @@ final class HtmlToPdfController extends AbstractController
         $this->viewPdf = true;
     }
 
-    #[Route('/generateprescriptionpdf/{id}', name: 'app_htmltopdf_generate_prescription_pdf')]
+    #[Route('/prescription/{id}', name: 'app_generate_prescription_pdf')]
     public function generatePrescriptionPdf(Prescription $prescription, GotenbergPdfInterface $gotenberg, EntityManagerInterface $em): Response
     {
         if($this->viewPdf == 1){
@@ -45,7 +45,7 @@ final class HtmlToPdfController extends AbstractController
             if(!is_dir($this->getParameter('prescription_directory_url'))){
                 mkdir($this->getParameter('prescription_directory_url'), 0777, true);
             }
-            
+
             if(file_exists($path)){
                 unlink($path);
             }

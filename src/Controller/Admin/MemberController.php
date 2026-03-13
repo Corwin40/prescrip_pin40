@@ -155,6 +155,7 @@ final class MemberController extends AbstractController
                 $member->setPassword($hashedPassword);
             }
 
+            $entityManager->persist($member);
             $entityManager->flush();
 
             return $this->json([

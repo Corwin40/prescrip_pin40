@@ -42,6 +42,7 @@ security:
 
         #  Dashboard accessible à tous les rôles connectés
         - { path: ^/admin/dashboard, roles: [ROLE_ADMIN, ROLE_MEDIATEUR, ROLE_PRESCRIPTEUR] }
+        - { path: ^/admin/generatepdf, roles: [ ROLE_ADMIN, ROLE_MEDIATEUR, ROLE_PRESCRIPTEUR ] }
 
         #  Gestion des membres réservée à admin + médiateur
         - { path: ^/admin/member, roles: [ROLE_ADMIN, ROLE_MEDIATEUR] }

@@ -18,12 +18,6 @@ class Prescription
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 100)]
-    private ?string $ref = null;
-
-    #[ORM\Column(type: Types::DATE_MUTABLE)]
-    private ?\DateTime $createdAt = null;
-
     #[ORM\Column(type: Types::DATE_MUTABLE)]
     private ?\DateTime $updatedAt = null;
 
@@ -74,6 +68,12 @@ class Prescription
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $path = null;
+
+    #[ORM\Column(length: 100)]
+    private ?string $ref = null;
+
+    #[ORM\Column(type: Types::DATE_MUTABLE)]
+    private ?\DateTime $createdAt = null;
 
     public function getId(): ?int
     {
