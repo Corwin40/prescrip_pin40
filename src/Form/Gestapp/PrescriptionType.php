@@ -173,7 +173,8 @@ class PrescriptionType extends AbstractType
                                 ->where('r.id = :member')
                                 ->setParameter('member', $user)
                                 ->andWhere('p.id IS NULL')
-                                ->orderBy('b.id', 'ASC');
+                                ->orderBy('b.id', 'ASC')
+                                ;
                         },
                     ])
                 ;
@@ -188,7 +189,7 @@ class PrescriptionType extends AbstractType
                         },
                         'query_builder' => function (EntityRepository $er) use ($user) {
                             return $er->createQueryBuilder('b')
-                                ->leftJoin('b.prescriptor', 'p')
+                                ->leftJoin('b.prescription', 'p')
                                 ->andWhere('p.id IS NULL')
                                 ->orderBy('b.id', 'ASC');
                         },

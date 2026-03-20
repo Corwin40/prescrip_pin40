@@ -80,6 +80,8 @@ final class BeneficiaryController extends AbstractController
         ]);
     }
 
+
+
     #[Route(name: 'app_gestapp_beneficiary_index', methods: ['GET'])]
     public function index(BeneficiaryRepository $beneficiaryRepository): Response
     {

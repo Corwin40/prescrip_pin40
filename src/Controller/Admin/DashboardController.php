@@ -19,15 +19,19 @@ final class DashboardController extends AbstractController
         $roles = $user->getRoles();
 
         $equipments = $equipmentRepository->findAll();
-        $prescriptions = $prescriptionRepository->findAll();
+
+
         if($user && in_array('ROLE_PRESCRIPTEUR', $user->getRoles())){
             $beneficiaries = $beneficiaryRepository->findBy(['prescriptor' => $user]);
+            $prescriptions = $prescriptionRepository->findBy(['membre' => $user]);
         }
         if($user && in_array('ROLE_MEDIATEUR', $user->getRoles())){
             $beneficiaries = $beneficiaryRepository->findByMediation($user);
+            $prescriptions = $prescriptionRepository->findBy(['lieuMediation' => $user]);
         }
         if($user && in_array('ROLE_SUPER_ADMIN', $user->getRoles())){
             $beneficiaries = $beneficiaryRepository->findAll();
+            $prescriptions = $prescriptionRepository->findAll();
         }
 
         return $this->render('admin/dashboard/index.html.twig', [

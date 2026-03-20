@@ -36,7 +36,7 @@
                             </tr>
                             </thead>
                             <tbody>
-                            {% for beneficiary in beneficiaries %}
+                            {% for beneficiary in beneficiaries|sort((a, b) => b.id <=> a.id) %}
                                 <tr>
                                     <td>
                                         <div class="d-flex justify-content-between align-items-center">
