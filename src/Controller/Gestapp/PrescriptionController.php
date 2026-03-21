@@ -67,7 +67,7 @@ final class PrescriptionController extends AbstractController
             $prescription->setStep(StepPrescription::OneParts);
         } else if ($user && in_array('ROLE_PRESCRIPTEUR', $user->getRoles())) {
             $prescription->setStatus(StatusPrescription::OpenByPrescriptor);
-            $prescription->setStep(StepPrescription::OneParts);
+            $prescription->setStep(StepPrescription::TwoParts);
         }
 
 
