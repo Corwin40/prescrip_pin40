@@ -67,9 +67,8 @@ final class PrescriptionController extends AbstractController
             $prescription->setStep(StepPrescription::OneParts);
         } else if ($user && in_array('ROLE_PRESCRIPTEUR', $user->getRoles())) {
             $prescription->setStatus(StatusPrescription::OpenByPrescriptor);
-            $prescription->setStep(StepPrescription::TwoParts);
+            $prescription->setStep(StepPrescription::OneParts);
         }
-
 
         $form = $this->createForm(PrescriptionType::class, $prescription, [
             'action' => $this->generateUrl('app_gestapp_prescription_new'),
@@ -123,6 +122,8 @@ final class PrescriptionController extends AbstractController
                 $prescription->setMembre($beneficiary->getPrescriptor());
                 if($prescription->getStatus()->name == StatusPrescription::OpenByPrescriptor){
                     $prescription->setStep(StepPrescription::TwoParts);
+                }else{
+                    $prescription->setStep(StepPrescription::OneParts);
                 }
             }
             if($user && in_array('ROLE_PRESCRIPTEUR', $user->getRoles())){
@@ -132,7 +133,7 @@ final class PrescriptionController extends AbstractController
                 $prescription->setStatus(StatusPrescription::OpenByPrescriptor);
                 $prescription->setIsOpenByPrescriptor(1);
                 $prescription->setMembre($this->getUser());
-                $prescription->setStep(StepPrescription::OneParts);
+                $prescription->setStep(StepPrescription::TwoParts);
             }
 
             $entityManager->persist($prescription);
