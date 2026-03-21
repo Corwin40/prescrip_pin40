@@ -10,9 +10,9 @@
     {% endif %}
 {% elseif prescription.step.name == 'TwoParts' %}
     {% if prescription.status.name == 'OpenByPrescriptor' %}
-        <span class="badge text-bg-info p-2">a Valider par le Médiateur</span>
+        <span class="badge text-bg-info p-2">A valider par le Médiateur</span>
     {% elseif prescription.status.name == 'OpenByMediator' %}
-        <span class="badge text-bg-info p-2">A Valider par le Prescripteur</span>
+        <span class="badge text-bg-info p-2">A valider par le Prescripteur</span>
     {% else %}
         <span class="badge text-bg-info p-2">Vu par les 2 parties</span>
     {% endif %}
