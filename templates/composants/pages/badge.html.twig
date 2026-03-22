@@ -23,7 +23,7 @@
 {% elseif prescription.step.name == 'GeneratePDF' %}
     {% if prescription.path is null %}
     {% else %}
-        <a href="{{ asset(prescription.path) }}" data-bs-data="VIEW_PRESCRIPTION-Voir la prescription-{{ prescription.id }}">Voir le PDF</a>
+        <a href="{{ asset(prescription.path) }}" class="openModal" data-bs-data="VIEW_PRESCRIPTION-Voir la prescription-{{ prescription.id }}">Voir le PDF</a>
     {% endif %}
 {% elseif prescription.step.name == 'Signed' %}
     <span class="badge text-bg-info p-2">pdf signé par le bénéficiaire</span>
