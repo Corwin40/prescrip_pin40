@@ -17,3 +17,22 @@ table{
         font-size: 13px;
     }
 }
+
+.table-container {
+    max-height: 400px; /* ajuste selon ton besoin */
+    overflow-y: auto;
+}
+
+/* Header sticky */
+.table-container thead th {
+    position: sticky;
+    top: 0;
+    //background: #f8f9fa; /* équivalent table-light Bootstrap */
+    z-index: 2;
+}
+
+/* Optionnel mais recommandé */
+.table-container table {
+    border-collapse: separate;
+    border-spacing: 0;
+}

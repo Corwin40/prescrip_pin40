@@ -70,23 +70,23 @@
             </div>
         </div>
         <div class="col-12">
-
             <!-- Tableau prescriptions -->
-            <table class="table table-hover">
-                <thead class="table-light">
-                <tr>
-                    <th class="col-3">Ref</th>
-                    <th class="col-2">Bénéficiaire</th>
-                    <th class="col-2">Prescripteur</th>
-                    <th class="col-2">Espace de médiation</th>
-                    <th class="col-1">Equipement</th>
-                    <th class="col-2">Etat</th>
-                    <th></th>
-                </tr>
-                </thead>
+            <div class="table-container">
+                <table class="table table-hover">
+                    <thead class="table-light">
+                        <tr>
+                            <th class="col-3">Ref</th>
+                            <th class="col-2">Bénéficiaire</th>
+                            <th class="col-2">Prescripteur</th>
+                            <th class="col-2">Espace de médiation</th>
+                            <th class="col-1">Equipement</th>
+                            <th class="col-2">Etat</th>
+                            <th></th>
+                        </tr>
+                    </thead>
 
                 <tbody id="tbody_index_prescription">
-                {% for prescription in prescriptions|slice(0, 10) %}
+                {% for prescription in prescriptions %}
                     <tr class="align-middle">
                         <td class="position-relative">
                             <a href="{{ path('app_gestapp_prescription_edit', {'id': prescription.id}) }}" class="stretched-link"></a>
@@ -134,6 +134,7 @@
                 {% endfor %}
                 </tbody>
             </table>
+            </div>
         </div>
 
         <div class="col-12 justify-content-evenly">
