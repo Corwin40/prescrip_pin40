@@ -113,6 +113,12 @@ class Member implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(targetEntity: self::class, mappedBy: 'referent')]
     private Collection $members;
 
+    /**
+     * @var Collection<int, Equipment>
+     */
+    #[ORM\OneToMany(targetEntity: Equipment::class, mappedBy: 'structure')]
+    private Collection $equipments;
+
     public function __construct()
     {
         $this->prescriptions = new ArrayCollection();
@@ -120,6 +126,7 @@ class Member implements UserInterface, PasswordAuthenticatedUserInterface
         $this->beneficiaries = new ArrayCollection();
         $this->equipment = new ArrayCollection();
         $this->members = new ArrayCollection();
+        $this->equipments = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -493,5 +500,13 @@ class Member implements UserInterface, PasswordAuthenticatedUserInterface
         }
 
         return $this;
+    }
+
+    /**
+     * @return Collection<int, Equipment>
+     */
+    public function getEquipments(): Collection
+    {
+        return $this->equipments;
     }
 }

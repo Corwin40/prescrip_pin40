@@ -16,6 +16,15 @@ class EquipmentRepository extends ServiceEntityRepository
         parent::__construct($registry, Equipment::class);
     }
 
+    public function findByDispos(): array
+    {
+        return $this->createQueryBuilder('e')
+            ->andWhere('e.isDispo = 1')
+            ->getQuery()
+            ->getResult()
+            ;
+    }
+
     //    /**
     //     * @return Equipment[] Returns an array of Equipment objects
     //     */

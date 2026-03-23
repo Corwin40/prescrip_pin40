@@ -57,8 +57,8 @@
 
     <!-- En-tête de la liste des prescriptions -->
     <div class="row">
-        <div class="col-12 border-bottom border-dark bg-light mb-2">
-            <div class="row align-items-center">
+        <div class="col-12 mb-2">
+            <div class="row border-bottom border-dark bg-light align-items-center g-0 px-3">
                 <div class="col-6">
                     <h2 class="text-uppercase mb-0 py-2 h4">Liste des prescriptions</h2>
                 </div>
@@ -86,7 +86,7 @@
                 </thead>
 
                 <tbody id="tbody_index_prescription">
-                {% for prescription in prescriptions %}
+                {% for prescription in prescriptions|slice(0, 10) %}
                     <tr class="align-middle">
                         <td class="position-relative">
                             <a href="{{ path('app_gestapp_prescription_edit', {'id': prescription.id}) }}" class="stretched-link"></a>

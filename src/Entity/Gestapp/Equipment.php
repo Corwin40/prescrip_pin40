@@ -55,6 +55,10 @@ class Equipment
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $updatedAt = null;
 
+    #[ORM\ManyToOne(inversedBy: 'equipments')]
+    #[ORM\JoinColumn(nullable: true)]
+    private ?Member $structure = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -212,6 +216,18 @@ class Equipment
     public function setIcon(?string $icon): static
     {
         $this->icon = $icon;
+
+        return $this;
+    }
+
+    public function getStructure(): ?Member
+    {
+        return $this->structure;
+    }
+
+    public function setStructure(?Member $structure): static
+    {
+        $this->structure = $structure;
 
         return $this;
     }
