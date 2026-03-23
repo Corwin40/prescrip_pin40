@@ -44,6 +44,17 @@
 {{ form_start(form) }}
     <div class="row">
 
+        {#  Bloc Objet de la prescription #}
+        <div class="col-12 mt-2 mb-2">
+            <div class="col-md-12">
+                {% include 'composants/inputs/input_text.html.twig' with {
+                    label: 'Indiquez l\'objet de la prescription',
+                    field: form.objectName,
+                    disabled: ''
+                } %}
+            </div>
+        </div>
+
         {# Bloc Bénéficiaire #}
         {{ include('gestapp/prescription/include/_beneficiaryForm.html.twig') }}
 

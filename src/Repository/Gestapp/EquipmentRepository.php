@@ -2,6 +2,7 @@
 
 namespace App\Repository\Gestapp;
 
+use App\Entity\Admin\Member;
 use App\Entity\Gestapp\Equipment;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -16,13 +17,20 @@ class EquipmentRepository extends ServiceEntityRepository
         parent::__construct($registry, Equipment::class);
     }
 
-    public function findByDispos(): array
+    public function findByDispos(?Member $member = null): array
     {
-        return $this->createQueryBuilder('e')
+        $qb = $this->createQueryBuilder('e')
             ->andWhere('e.isDispo = 1')
-            ->getQuery()
-            ->getResult()
             ;
+
+        if($member !== null) {
+            $qb
+                ->andWhere('e.structure = :structure')
+                ->setParameter('structure', $member)
+            ;
+        }
+
+        return $qb->getQuery()->getResult();
     }
 
     //    /**

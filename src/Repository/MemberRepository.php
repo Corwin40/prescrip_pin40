@@ -22,7 +22,7 @@ class MemberRepository extends ServiceEntityRepository implements PasswordUpgrad
     public function findByRole(string $role): array
     {
         return $this->createQueryBuilder('u')
-            ->select('u.nameStructure')
+            ->select('u.id, u.nameStructure')
             ->andWhere('u.roles LIKE :role')
             ->setParameter('role', '%"'.$role.'"%')
             ->getQuery()

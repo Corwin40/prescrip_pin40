@@ -36,8 +36,10 @@ final class BeneficiaryController extends AbstractController
 
         $prescriptorChoices = [];
         foreach ($prescriptors as $p) {
-            $prescriptorChoices[$p['nameStructure']] = $p['nameStructure'];
+            $prescriptorChoices[$p['nameStructure']] = $p['id'];
         }
+
+        //dd($prescriptorChoices);
 
         $form = $this->createForm(BeneficiarySearchType::class, null, [
             'prescriptors' => $prescriptorChoices
@@ -50,6 +52,8 @@ final class BeneficiaryController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
 
+            //dd($data);
+
             if (!empty($data['query'])) {
                 $multiMatch = new MultiMatch();
                 $multiMatch->setFields(['firstName', 'lastName']);
@@ -58,13 +62,10 @@ final class BeneficiaryController extends AbstractController
             }
 
             if (!empty($data['prescriptor'])) {
-                $nestedQuery = new Nested();
-                $nestedQuery->setPath('prescriptor');
 
                 $termQuery = new Term();
-                $termQuery->setTerm('prescriptor.nameStructure', $data['prescriptor']);
-                $nestedQuery->setQuery($termQuery);
-                $boolQuery->addFilter($nestedQuery);
+                $termQuery->setTerm('prescriptor.id', $data['prescriptor']);
+                $boolQuery->addMust($termQuery);
             }
 
         }

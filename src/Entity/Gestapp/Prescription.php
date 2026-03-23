@@ -75,6 +75,9 @@ class Prescription
     #[ORM\Column(type: Types::DATE_MUTABLE)]
     private ?\DateTime $createdAt = null;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $objectName = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -307,6 +310,18 @@ class Prescription
     public function setPath(?string $path): static
     {
         $this->path = $path;
+
+        return $this;
+    }
+
+    public function getObjectName(): ?string
+    {
+        return $this->objectName;
+    }
+
+    public function setObjectName(?string $objectName): static
+    {
+        $this->objectName = $objectName;
 
         return $this;
     }
