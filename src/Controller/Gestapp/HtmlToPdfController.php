@@ -51,6 +51,13 @@ final class HtmlToPdfController extends AbstractController
             $prescription->setStep(StepPrescription::GeneratePDF);
             $em->flush();
 
+            dd(
+                $this->renderView('gestapp/htmltopdf/prescriptionpdf.html.twig', [
+                    'prescription' => $prescription,
+                    'pdf' => $this->viewPdf,
+                ])
+            );
+
             return $this->redirectToRoute('app_gestapp_prescription_index');
 
         }else{
