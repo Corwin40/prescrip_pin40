@@ -5,11 +5,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pdf prescription</title>
-    <script src="https://kit.fontawesome.com/1fb9149f4c.js" crossorigin="anonymous"></script>
     {% if pdf == 1%}
+        <link href="{{ gotenberg_asset('fontawesome/css/all.css')}}" rel="stylesheet">
         <link href="{{ gotenberg_asset('build/pdf.css')}}" rel="stylesheet">
     {% else %}
         {% block stylesheets %}
+            <link href="{{ asset('fontawesome/css/all.css')}}" rel="stylesheet">
             {{ encore_entry_link_tags('pdf') }}
         {% endblock %}
     {% endif %}
