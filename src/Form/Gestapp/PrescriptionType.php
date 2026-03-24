@@ -64,83 +64,6 @@ class PrescriptionType extends AbstractType
             ])
         ;
 
-        if(in_array($prescription->getStep()->name, ['Open', 'OneParts', 'TwoParts'])){
-            if ( $user && (
-                    in_array('ROLE_SUPER_ADMIN', $user->getRoles()) ||
-                    in_array('ROLE_ADMIN', $user->getRoles()) ||
-                    in_array('ROLE_MEDIATEUR', $user->getRoles())
-                ))
-            {
-                $builder
-                    ->add('membre', EntityType::class, [
-                        'class' => Member::class,
-                        'choice_label' => 'nameStructure',
-                        'query_builder' => function (EntityRepository $er) {
-                            return $er->createQueryBuilder('d')
-                                ->where('d.roles LIKE :roles')
-                                ->setParameter('roles', '%ROLE_PRESCRIPTEUR%')
-                                ->orderBy('d.id', 'ASC');
-                        },
-                    ])
-                    ->add('competence', CompetenceType::class, [
-                        'label' => 'COMPETENCE',
-                        'empty_data' => new Competence(),
-                    ])
-                    ->add('equipement', HiddenType::class)
-                ;
-            }
-            elseif ($user && in_array('ROLE_PRESCRIPTEUR', $user->getRoles()))
-            {
-                $builder
-                    ->add('competence', CompetenceType::class, [
-                        'label' => 'COMPETENCE',
-                        'empty_data' => new Competence(),
-                    ])
-                    ->add('equipement', HiddenType::class)
-                ;
-            }
-        }
-        elseif(in_array($prescription->getStep()->name, ['ChoiceEquipment', 'ValidCase', 'GeneratePDF'])){
-            if ( $user && (
-                    in_array('ROLE_SUPER_ADMIN', $user->getRoles()) ||
-                    in_array('ROLE_ADMIN', $user->getRoles()) ||
-                    in_array('ROLE_MEDIATEUR', $user->getRoles())
-                ))
-            {
-                $builder
-                    ->add('membre', EntityType::class, [
-                        'class' => Member::class,
-                        'choice_label' => 'nameStructure',
-                        'query_builder' => function (EntityRepository $er) {
-                            return $er->createQueryBuilder('d')
-                                ->where('d.roles LIKE :roles')
-                                ->setParameter('roles', '%ROLE_PRESCRIPTEUR%')
-                                ->orderBy('d.id', 'ASC');
-                        },
-                    ])
-                    ->add('competence', CompetenceType::class, [
-                        'label' => 'COMPETENCE',
-                        'empty_data' => new Competence(),
-                    ])
-                    ->add('equipement', EntityType::class, [
-                        'label' => 'Choix de l\'équipement',
-                        'class' => Equipment::class,
-                        'placeholder' => '-- Choisir un équipement --',
-                    ])
-                ;
-            }
-            elseif ($user && in_array('ROLE_PRESCRIPTEUR', $user->getRoles()))
-            {
-                $builder
-                    ->add('competence', CompetenceType::class, [
-                        'label' => 'COMPETENCE',
-                        'empty_data' => new Competence(),
-                    ])
-                    ->add('equipement', HiddenType::class)
-                ;
-            }
-        }
-
         if ($route === 'app_gestapp_prescription_new') {
             // on filtre les bénéficiaires selon le prescripteur
             if($user && in_array('ROLE_PRESCRIPTEUR', $user->getRoles())) {
@@ -201,11 +124,164 @@ class PrescriptionType extends AbstractType
                 ;
             }
 
+            if(in_array($prescription->getStep()->name, ['Open', 'OneParts', 'TwoParts'])){
+                if ( $user && (
+                        in_array('ROLE_SUPER_ADMIN', $user->getRoles()) ||
+                        in_array('ROLE_ADMIN', $user->getRoles()) ||
+                        in_array('ROLE_MEDIATEUR', $user->getRoles())
+                    ))
+                {
+                    $builder
+                        ->add('membre', EntityType::class, [
+                            'class' => Member::class,
+                            'choice_label' => 'nameStructure',
+                            'query_builder' => function (EntityRepository $er) {
+                                return $er->createQueryBuilder('d')
+                                    ->where('d.roles LIKE :roles')
+                                    ->setParameter('roles', '%ROLE_PRESCRIPTEUR%')
+                                    ->orderBy('d.id', 'ASC');
+                            },
+                        ])
+                        ->add('competence', CompetenceType::class, [
+                            'label' => 'COMPETENCE',
+                            'empty_data' => new Competence(),
+                        ])
+                        ->add('equipement', HiddenType::class)
+                    ;
+                }
+                elseif ($user && in_array('ROLE_PRESCRIPTEUR', $user->getRoles()))
+                {
+                    $builder
+                        ->add('competence', CompetenceType::class, [
+                            'label' => 'COMPETENCE',
+                            'empty_data' => new Competence(),
+                        ])
+                        ->add('equipement', HiddenType::class)
+                    ;
+                }
+            }
+            elseif(in_array($prescription->getStep()->name, ['ChoiceEquipment', 'ValidCase', 'GeneratePDF'])){
+                if ( $user && (
+                        in_array('ROLE_SUPER_ADMIN', $user->getRoles()) ||
+                        in_array('ROLE_ADMIN', $user->getRoles()) ||
+                        in_array('ROLE_MEDIATEUR', $user->getRoles())
+                    ))
+                {
+                    $builder
+                        ->add('membre', EntityType::class, [
+                            'class' => Member::class,
+                            'choice_label' => 'nameStructure',
+                            'query_builder' => function (EntityRepository $er) {
+                                return $er->createQueryBuilder('d')
+                                    ->where('d.roles LIKE :roles')
+                                    ->setParameter('roles', '%ROLE_PRESCRIPTEUR%')
+                                    ->orderBy('d.id', 'ASC');
+                            },
+                        ])
+                        ->add('competence', CompetenceType::class, [
+                            'label' => 'COMPETENCE',
+                            'empty_data' => new Competence(),
+                        ])
+                        ->add('equipement', EntityType::class, [
+                            'label' => 'Choix de l\'équipement',
+                            'class' => Equipment::class,
+                            'placeholder' => '-- Choisir un équipement --',
+                        ])
+                    ;
+                }
+                elseif ($user && in_array('ROLE_PRESCRIPTEUR', $user->getRoles()))
+                {
+                    $builder
+                        ->add('competence', CompetenceType::class, [
+                            'label' => 'COMPETENCE',
+                            'empty_data' => new Competence(),
+                        ])
+                        ->add('equipement', HiddenType::class)
+                    ;
+                }
+            }
+
         }
         if($route === 'app_gestapp_prescription_edit') {
             $builder
                 ->add('beneficiaire')
             ;
+
+            if(in_array($prescription->getStep()->name, ['Open', 'OneParts', 'TwoParts'])){
+                if ( $user && (
+                        in_array('ROLE_SUPER_ADMIN', $user->getRoles()) ||
+                        in_array('ROLE_ADMIN', $user->getRoles()) ||
+                        in_array('ROLE_MEDIATEUR', $user->getRoles())
+                    ))
+                {
+                    $builder
+                        ->add('membre', EntityType::class, [
+                            'class' => Member::class,
+                            'choice_label' => 'nameStructure',
+                            'query_builder' => function (EntityRepository $er) {
+                                return $er->createQueryBuilder('d')
+                                    ->where('d.roles LIKE :roles')
+                                    ->setParameter('roles', '%ROLE_PRESCRIPTEUR%')
+                                    ->orderBy('d.id', 'ASC');
+                            },
+                        ])
+                        ->add('competence', CompetenceType::class, [
+                            'label' => 'COMPETENCE',
+                        ])
+                        ->add('equipement', HiddenType::class)
+                    ;
+                }
+                elseif ($user && in_array('ROLE_PRESCRIPTEUR', $user->getRoles()))
+                {
+                    $builder
+                        ->add('competence', CompetenceType::class, [
+                            'label' => 'COMPETENCE',
+                            'empty_data' => new Competence(),
+                        ])
+                        ->add('equipement', HiddenType::class)
+                    ;
+                }
+            }
+            elseif(in_array($prescription->getStep()->name, ['ChoiceEquipment', 'ValidCase', 'GeneratePDF'])){
+                if ( $user && (
+                        in_array('ROLE_SUPER_ADMIN', $user->getRoles()) ||
+                        in_array('ROLE_ADMIN', $user->getRoles()) ||
+                        in_array('ROLE_MEDIATEUR', $user->getRoles())
+                    ))
+                {
+                    $builder
+                        ->add('membre', EntityType::class, [
+                            'class' => Member::class,
+                            'choice_label' => 'nameStructure',
+                            'query_builder' => function (EntityRepository $er) {
+                                return $er->createQueryBuilder('d')
+                                    ->where('d.roles LIKE :roles')
+                                    ->setParameter('roles', '%ROLE_PRESCRIPTEUR%')
+                                    ->orderBy('d.id', 'ASC');
+                            },
+                        ])
+                        ->add('competence', CompetenceType::class, [
+                            'label' => 'COMPETENCE',
+                        ])
+                        ->add('equipement', EntityType::class, [
+                            'label' => 'Choix de l\'équipement',
+                            'class' => Equipment::class,
+                            'placeholder' => '-- Choisir un équipement --',
+                        ])
+                    ;
+                }
+                elseif ($user && in_array('ROLE_PRESCRIPTEUR', $user->getRoles()))
+                {
+                    $builder
+                        ->add('competence', CompetenceType::class, [
+                            'label' => 'COMPETENCE',
+                            'empty_data' => new Competence(),
+                        ])
+                        ->add('equipement', HiddenType::class)
+                    ;
+                }
+            }
+
         }
 
     }
