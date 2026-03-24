@@ -8,8 +8,15 @@ use App\Entity\Gestapp\Competence;
 use App\Entity\Gestapp\Prescription;
 use App\Form\Gestapp\closedCaseType;
 use App\Form\Gestapp\PrescriptionType;
+use App\Form\Search\dashboardPrescriptionSearchType;
 use App\Repository\Gestapp\PrescriptionRepository;
+use App\Repository\MemberRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use FOS\ElasticaBundle\Finder\PaginatedFinderInterface;
+use Elastica\Query;
+use Elastica\Query\BoolQuery;
+use Elastica\Query\MultiMatch;
+use Elastica\Query\Term;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -18,6 +25,64 @@ use Symfony\Component\Routing\Attribute\Route;
 #[Route('/gestapp/prescription')]
 final class PrescriptionController extends AbstractController
 {
+    private $finder;
+
+    public function __construct(PaginatedFinderInterface $finder)
+    {
+        $this->finder = $finder;
+    }
+
+    #[Route('/searchdashboard', name: 'app_gestapp_prescription_searchdashboard', methods: ['GET'])]
+    public function searchDashboard(Request $request, PrescriptionRepository $prescriptionRepository, MemberRepository $memberRepository): Response
+    {
+        // récupérer tous les prescripteurs existants (exemple Doctrine)
+        $prescriptors = $memberRepository->findByRole('ROLE_PRESCRIPTEUR');
+
+        $prescriptorChoices = [];
+        foreach ($prescriptors as $p) {
+            $prescriptorChoices[$p['nameStructure']] = $p['id'];
+        }
+
+        $form = $this->createForm(dashboardPrescriptionSearchType::class, null, [
+            'prescriptors' => $prescriptorChoices
+        ]);
+        $form->handleRequest($request);
+
+        // construire la query Elastice
+        $boolQuery = new BoolQuery();
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $data = $form->getData();
+
+            if (!empty($data['query'])) {
+                $multiMatch = new MultiMatch();
+                $multiMatch->setFields(['firstName', 'lastName']);
+                $multiMatch->setQuery($data['query']);
+                $boolQuery->addMust($multiMatch);
+            }
+
+            if (!empty($data['prescriptor'])) {
+
+                $termQuery = new Term();
+                $termQuery->setTerm('prescriptor.id', $data['prescriptor']);
+                $boolQuery->addMust($termQuery);
+            }
+
+        }
+
+        $query = new Query($boolQuery);
+        $query->setSize(50); // max 50 résultats, ajustable
+
+        $results = $this->finder->find($query);
+
+        $view = $this->renderView('gestapp/prescription/searchDashboard.html.twig', [
+            'form' => $form->createView(),
+            'results' => $results,
+        ]);
+
+        return $this->json([], 200);
+    }
+
     #[Route(name: 'app_gestapp_prescription_index', methods: ['GET'])]
     public function index(PrescriptionRepository $prescriptionRepository): Response
     {

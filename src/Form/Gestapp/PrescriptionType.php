@@ -62,7 +62,6 @@ class PrescriptionType extends AbstractType
                         ->orderBy('d.id', 'ASC');
                 },
             ])
-
         ;
 
         if(in_array($prescription->getStep()->name, ['Open', 'OneParts', 'TwoParts'])){

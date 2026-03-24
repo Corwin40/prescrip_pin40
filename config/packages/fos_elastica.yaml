@@ -37,7 +37,7 @@ fos_elastica:
         prescription:
             persistence:
                 driver: orm
-                model: App\Entity\Gestapp\Beneficiary
+                model: App\Entity\Gestapp\Prescription
                 provider: ~
                 finder: ~
                 listener:

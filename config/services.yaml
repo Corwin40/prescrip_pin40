@@ -28,3 +28,11 @@ services:
         public: true
         arguments:
             - '@fos_elastica.finder.beneficiary'
+
+    FOS\ElasticaBundle\Finder\FinderInterface $prescriptionFinder:
+        alias: fos_elastica.finder.prescription
+    App\Controller\Gestapp\PrescriptionController:
+        tags: [ 'controller.service_arguments' ]
+        public: true
+        arguments:
+            - '@fos_elastica.finder.prescription'
