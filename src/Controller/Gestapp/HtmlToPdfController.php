@@ -24,39 +24,34 @@ final class HtmlToPdfController extends AbstractController
     public function generatePrescriptionPdf(Prescription $prescription, GotenbergPdfInterface $gotenberg, EntityManagerInterface $em): Response
     {
         if($this->viewPdf == 1){
-            ob_start();
-            $pdf = $gotenberg
+            $pdfContent = $gotenberg
                 ->html()
                 ->content('gestapp/htmltopdf/prescriptionpdf.html.twig', [
                     'prescription' => $prescription,
                     'pdf' => $this->viewPdf,
                 ])
-                ->generate()
-                //->stream() // will return directly a stream response
-            ;
-            $pdf->sendContent(); // envoie le PDF dans le buffer
-
-            $pdfContent = ob_get_clean(); // récupère le binaire
+                ->generate(); // ⛔ PAS de stream()
 
             // stockage sur disque
             $filename = $prescription->getRef().'.pdf';
             $path = $this->getParameter('prescription_directory_url').$filename;
 
-            if(!is_dir($this->getParameter('prescription_directory_url'))){
+            if (!is_dir($this->getParameter('prescription_directory_url'))) {
                 mkdir($this->getParameter('prescription_directory_url'), 0777, true);
             }
 
-            if(file_exists($path)){
+            if (file_exists($path)) {
                 unlink($path);
             }
+
             file_put_contents($path, $pdfContent);
 
-            // enregistrement en bdd du nom du fichier
+            // BDD
             $prescription->setPath($this->getParameter('prescription_directory').$filename);
             $prescription->setStep(StepPrescription::GeneratePDF);
             $em->flush();
 
-            return $this->redirectToRoute('app_gestapp_prescription_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_gestapp_prescription_index');
 
         }else{
             return $this->render('gestapp/htmltopdf/prescriptionpdf.html.twig', [
