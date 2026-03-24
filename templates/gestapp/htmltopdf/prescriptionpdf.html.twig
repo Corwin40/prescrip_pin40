@@ -96,11 +96,11 @@
             </div>
             <div class="col-4">
                 {% if gender == 'Homme' %}
-                    <p class="my-1 py-1"><i class="fa-regular fa-square-check"></i> Homme&nbsp;&nbsp;&nbsp;<i class="fa-regular fa-square"></i> Femme&nbsp;&nbsp;&nbsp;<i class="fa-regular fa-square"></i> Autres</p>
+                    <p class="my-1 py-1">{{ include('composants/fontawesome/square-check.html.twig') }} Homme&nbsp;&nbsp;&nbsp;{{ include('composants/fontawesome/square.html.twig') }} Femme&nbsp;&nbsp;&nbsp;{{ include('composants/fontawesome/square.html.twig') }} Autres</p>
                 {% elseif gender == 'Femme' %}
-                    <p class="my-1 py-1"><i class="fa-regular fa-square"></i> Homme&nbsp;&nbsp;&nbsp;<i class="fa-regular fa-square-check"></i> Femme&nbsp;&nbsp;&nbsp;<i class="fa-regular fa-square"></i> Autres</p>
+                    <p class="my-1 py-1">{{ include('composants/fontawesome/square.html.twig') }} Homme&nbsp;&nbsp;&nbsp;{{ include('composants/fontawesome/square-check.html.twig') }} Femme&nbsp;&nbsp;&nbsp;{{ include('composants/fontawesome/square.html.twig') }} Autres</p>
                 {% elseif gender == 'Autres' %}
-                    <p class="my-1 py-1"><i class="fa-regular fa-square"></i> Homme&nbsp;&nbsp;&nbsp;<i class="fa-regular fa-square"></i> Femme&nbsp;&nbsp;&nbsp;<i class="fa-regular fa-square-check"></i> Autres</p>
+                    <p class="my-1 py-1">{{ include('composants/fontawesome/square.html.twig') }} Homme&nbsp;&nbsp;&nbsp;{{ include('composants/fontawesome/square.html.twig') }} Femme&nbsp;&nbsp;&nbsp;{{ include('composants/fontawesome/square-check.html.twig') }} Autres</p>
                 {% endif %}
             </div>
         </div>
@@ -110,13 +110,13 @@
             </div>
             <div class="col-10">
                 {% if prescription.beneficiaire.AgeGroup == '0-15' %}
-                    <p class="my-1 py-1"><i class="fa-regular fa-square-check"></i> 15 ans et moins&nbsp;&nbsp;&nbsp;<i class="fa-regular fa-square"></i> 16 à 25 ans&nbsp;&nbsp;&nbsp;<i class="fa-regular fa-square"></i> 26 à 59 ans&nbsp;&nbsp;&nbsp;<i class="fa-regular fa-square"></i> 60 ans et plus</p>
+                    <p class="my-1 py-1">{{ include('composants/fontawesome/square-check.html.twig') }} 15 ans et moins&nbsp;&nbsp;&nbsp;{{ include('composants/fontawesome/square.html.twig') }} 16 à 25 ans&nbsp;&nbsp;&nbsp;{{ include('composants/fontawesome/square.html.twig') }} 26 à 59 ans&nbsp;&nbsp;&nbsp;{{ include('composants/fontawesome/square.html.twig') }} 60 ans et plus</p>
                 {% elseif prescription.beneficiaire.AgeGroup == '16-25' %}
-                    <p class="my-1 py-1"><i class="fa-regular fa-square"></i> 15 ans et moins&nbsp;&nbsp;&nbsp;<i class="fa-regular fa-square-check"></i> 16 à 25 ans&nbsp;&nbsp;&nbsp;<i class="fa-regular fa-square"></i> 26 à 59 ans&nbsp;&nbsp;&nbsp;<i class="fa-regular fa-square"></i> 60 ans et plus</p>
+                    <p class="my-1 py-1">{{ include('composants/fontawesome/square.html.twig') }} 15 ans et moins&nbsp;&nbsp;&nbsp;{{ include('composants/fontawesome/square-check.html.twig') }} 16 à 25 ans&nbsp;&nbsp;&nbsp;{{ include('composants/fontawesome/square.html.twig') }} 26 à 59 ans&nbsp;&nbsp;&nbsp;{{ include('composants/fontawesome/square.html.twig') }} 60 ans et plus</p>
                 {% elseif prescription.beneficiaire.AgeGroup == '26-59' %}
-                    <p class="my-1 py-1"><i class="fa-regular fa-square"></i> 15 ans et moins&nbsp;&nbsp;&nbsp;<i class="fa-regular fa-square"></i> 16 à 25 ans&nbsp;&nbsp;&nbsp;<i class="fa-regular fa-square-check"></i> 26 à 59 ans&nbsp;&nbsp;&nbsp;<i class="fa-regular fa-square"></i> 60 ans et plus</p>
+                    <p class="my-1 py-1">{{ include('composants/fontawesome/square.html.twig') }} 15 ans et moins&nbsp;&nbsp;&nbsp;{{ include('composants/fontawesome/square.html.twig') }} 16 à 25 ans&nbsp;&nbsp;&nbsp;{{ include('composants/fontawesome/square-check.html.twig') }} 26 à 59 ans&nbsp;&nbsp;&nbsp;{{ include('composants/fontawesome/square.html.twig') }} 60 ans et plus</p>
                 {% elseif prescription.beneficiaire.AgeGroup == '60+' %}
-                    <p class="my-1 py-1"><i class="fa-regular fa-square"></i> 15 ans et moins&nbsp;&nbsp;&nbsp;<i class="fa-regular fa-square"></i> 16 à 25 ans&nbsp;&nbsp;&nbsp;<i class="fa-regular fa-square"></i> 26 à 59 ans&nbsp;&nbsp;&nbsp;<i class="fa-regular fa-square-check"></i> 60 ans et plus</p>
+                    <p class="my-1 py-1">{{ include('composants/fontawesome/square.html.twig') }} 15 ans et moins&nbsp;&nbsp;&nbsp;{{ include('composants/fontawesome/square.html.twig') }} 16 à 25 ans&nbsp;&nbsp;&nbsp;{{ include('composants/fontawesome/square.html.twig') }} 26 à 59 ans&nbsp;&nbsp;&nbsp;{{ include('composants/fontawesome/square-check.html.twig') }} 60 ans et plus</p>
                 {% endif %}
             </div>
         </div>
@@ -127,43 +127,43 @@
             <div class="col-10">
                 {% if prescription.beneficiaire.professionnalStatus == 'Scolaire / Étudiant' %}
                     <p class="my-1 py-1">
-                        <i class="fa-regular fa-square-check"></i> Scolaire / Étudiants&nbsp;&nbsp;&nbsp;
-                        <i class="fa-regular fa-square"></i> Employé / En Formation&nbsp;&nbsp;&nbsp;
-                        <i class="fa-regular fa-square"></i> Sans emploi&nbsp;&nbsp;&nbsp;
-                        <i class="fa-regular fa-square"></i> Retraité&nbsp;&nbsp;&nbsp;
-                        <i class="fa-regular fa-square"></i> Autre situation
+                        {{ include('composants/fontawesome/square-check.html.twig') }} Scolaire / Étudiants&nbsp;&nbsp;&nbsp;
+                        {{ include('composants/fontawesome/square.html.twig') }} Employé / En Formation&nbsp;&nbsp;&nbsp;
+                        {{ include('composants/fontawesome/square.html.twig') }} Sans emploi&nbsp;&nbsp;&nbsp;
+                        {{ include('composants/fontawesome/square.html.twig') }} Retraité&nbsp;&nbsp;&nbsp;
+                        {{ include('composants/fontawesome/square.html.twig') }} Autre situation
                     </p>
                 {% elseif prescription.beneficiaire.professionnalStatus == 'Employé / En Formation' %}
                     <p class="my-1 py-1">
-                        <i class="fa-regular fa-square"></i> Scolaire / Étudiants&nbsp;&nbsp;&nbsp;
-                        <i class="fa-regular fa-square-check"></i> Employé / En Formation&nbsp;&nbsp;&nbsp;
-                        <i class="fa-regular fa-square"></i> Sans emploi&nbsp;&nbsp;&nbsp;
-                        <i class="fa-regular fa-square"></i> Retraité&nbsp;&nbsp;&nbsp;
-                        <i class="fa-regular fa-square"></i> Autre situation
+                        {{ include('composants/fontawesome/square.html.twig') }} Scolaire / Étudiants&nbsp;&nbsp;&nbsp;
+                        {{ include('composants/fontawesome/square-check.html.twig') }} Employé / En Formation&nbsp;&nbsp;&nbsp;
+                        {{ include('composants/fontawesome/square.html.twig') }} Sans emploi&nbsp;&nbsp;&nbsp;
+                        {{ include('composants/fontawesome/square.html.twig') }} Retraité&nbsp;&nbsp;&nbsp;
+                        {{ include('composants/fontawesome/square.html.twig') }} Autre situation
                     </p>
                 {% elseif prescription.beneficiaire.professionnalStatus == 'Sans emploi' %}
                     <p class="my-1 py-1">
-                        <i class="fa-regular fa-square"></i> Scolaire / Étudiants&nbsp;&nbsp;&nbsp;
-                        <i class="fa-regular fa-square"></i> Employé / En Formation&nbsp;&nbsp;&nbsp;
-                        <i class="fa-regular fa-square-check"></i> Sans emploi&nbsp;&nbsp;&nbsp;
-                        <i class="fa-regular fa-square"></i> Retraité&nbsp;&nbsp;&nbsp;
-                        <i class="fa-regular fa-square"></i> Autre situation
+                        {{ include('composants/fontawesome/square.html.twig') }} Scolaire / Étudiants&nbsp;&nbsp;&nbsp;
+                        {{ include('composants/fontawesome/square.html.twig') }} Employé / En Formation&nbsp;&nbsp;&nbsp;
+                        {{ include('composants/fontawesome/square-check.html.twig') }} Sans emploi&nbsp;&nbsp;&nbsp;
+                        {{ include('composants/fontawesome/square.html.twig') }} Retraité&nbsp;&nbsp;&nbsp;
+                        {{ include('composants/fontawesome/square.html.twig') }} Autre situation
                     </p>
                 {% elseif prescription.beneficiaire.professionnalStatus == 'Retraite' %}
                     <p class="my-1 py-1">
-                        <i class="fa-regular fa-square"></i> Scolaire / Étudiants&nbsp;&nbsp;&nbsp;
-                        <i class="fa-regular fa-square"></i> Employé / En Formation&nbsp;&nbsp;&nbsp;
-                        <i class="fa-regular fa-square"></i> Sans emploi&nbsp;&nbsp;&nbsp;
-                        <i class="fa-regular fa-square-check"></i> Retraité&nbsp;&nbsp;&nbsp;
-                        <i class="fa-regular fa-square"></i> Autre situation
+                        {{ include('composants/fontawesome/square.html.twig') }} Scolaire / Étudiants&nbsp;&nbsp;&nbsp;
+                        {{ include('composants/fontawesome/square.html.twig') }} Employé / En Formation&nbsp;&nbsp;&nbsp;
+                        {{ include('composants/fontawesome/square.html.twig') }} Sans emploi&nbsp;&nbsp;&nbsp;
+                        {{ include('composants/fontawesome/square-check.html.twig') }} Retraité&nbsp;&nbsp;&nbsp;
+                        {{ include('composants/fontawesome/square.html.twig') }} Autre situation
                     </p>
                 {% elseif prescription.beneficiaire.professionnalStatus == 'Autre situation' %}
                     <p class="my-1 py-1">
-                        <i class="fa-regular fa-square"></i> Scolaire / Étudiants&nbsp;&nbsp;&nbsp;
-                        <i class="fa-regular fa-square"></i> Employé / En Formation&nbsp;&nbsp;&nbsp;
-                        <i class="fa-regular fa-square"></i> Sans emploi&nbsp;&nbsp;&nbsp;
-                        <i class="fa-regular fa-square"></i> Retraité&nbsp;&nbsp;&nbsp;
-                        <i class="fa-regular fa-square-check"></i> Autre situation
+                        {{ include('composants/fontawesome/square.html.twig') }} Scolaire / Étudiants&nbsp;&nbsp;&nbsp;
+                        {{ include('composants/fontawesome/square.html.twig') }} Employé / En Formation&nbsp;&nbsp;&nbsp;
+                        {{ include('composants/fontawesome/square.html.twig') }} Sans emploi&nbsp;&nbsp;&nbsp;
+                        {{ include('composants/fontawesome/square.html.twig') }} Retraité&nbsp;&nbsp;&nbsp;
+                        {{ include('composants/fontawesome/square-check.html.twig') }} Autre situation
                     </p>
                 {% endif %}
             </div>
@@ -230,9 +230,9 @@
                         <th>Acquise</th>
                         <td>
                             {% if prescription.baseCompetence == 'Acquises' %}
-                                <i class="fa-regular fa-square-check"></i>
+                                {{ include('composants/fontawesome/square-check.html.twig') }}
                             {% else %}
-                                <i class="fa-regular fa-square"></i>
+                                {{ include('composants/fontawesome/square.html.twig') }}
                             {% endif %}
                         </td>
                     </tr>
@@ -240,9 +240,9 @@
                         <th>A vérifier</th>
                         <td>
                             {% if prescription.baseCompetence == 'A verifier' %}
-                                <i class="fa-regular fa-square-check"></i>
+                                {{ include('composants/fontawesome/square-check.html.twig') }}
                             {% else %}
-                                <i class="fa-regular fa-square"></i>
+                                {{ include('composants/fontawesome/square.html.twig') }}
                             {% endif %}
                         </td>
                     </tr>
@@ -250,9 +250,9 @@
                         <th>Non acquise</th>
                         <td>
                             {% if prescription.baseCompetence == 'Non acquises' %}
-                                <i class="fa-regular fa-square-check"></i>
+                                {{ include('composants/fontawesome/square-check.html.twig') }}
                             {% else %}
-                                <i class="fa-regular fa-square"></i>
+                                {{ include('composants/fontawesome/square.html.twig') }}
                             {% endif %}
                         </td>
                     </tr>
@@ -307,25 +307,25 @@
 
                         <td class="text-center">
                             {% if comp.compBase == 'acquis' %}
-                                <i class="fa-regular fa-square-check"></i>
+                                {{ include('composants/fontawesome/square-check.html.twig') }}
                             {% else %}
-                                <i class="fa-regular fa-square"></i>
+                                {{ include('composants/fontawesome/square.html.twig') }}
                             {% endif %}
                         </td>
 
                         <td class="text-center">
                             {% if comp.compBase == 'encours' %}
-                                <i class="fa-regular fa-square-check"></i>
+                                {{ include('composants/fontawesome/square-check.html.twig') }}
                             {% else %}
-                                <i class="fa-regular fa-square"></i>
+                                {{ include('composants/fontawesome/square.html.twig') }}
                             {% endif %}
                         </td>
 
                         <td class="text-center">
                             {% if comp.compBase == 'Nonacquis' %}
-                                <i class="fa-regular fa-square-check"></i>
+                                {{ include('composants/fontawesome/square-check.html.twig') }}
                             {% else %}
-                                <i class="fa-regular fa-square"></i>
+                                {{ include('composants/fontawesome/square.html.twig') }}
                             {% endif %}
                         </td>
                     </tr>
@@ -336,25 +336,25 @@
 
                         <td class="text-center">
                             {% if comp.compDesk == 'acquis' %}
-                                <i class="fa-regular fa-square-check"></i>
+                                {{ include('composants/fontawesome/square-check.html.twig') }}
                             {% else %}
-                                <i class="fa-regular fa-square"></i>
+                                {{ include('composants/fontawesome/square.html.twig') }}
                             {% endif %}
                         </td>
 
                         <td class="text-center">
                             {% if comp.compDesk == 'encours' %}
-                                <i class="fa-regular fa-square-check"></i>
+                                {{ include('composants/fontawesome/square-check.html.twig') }}
                             {% else %}
-                                <i class="fa-regular fa-square"></i>
+                                {{ include('composants/fontawesome/square.html.twig') }}
                             {% endif %}
                         </td>
 
                         <td class="text-center">
                             {% if comp.compDesk == 'Nonacquis' %}
-                                <i class="fa-regular fa-square-check"></i>
+                                {{ include('composants/fontawesome/square-check.html.twig') }}
                             {% else %}
-                                <i class="fa-regular fa-square"></i>
+                                {{ include('composants/fontawesome/square.html.twig') }}
                             {% endif %}
                         </td>
                     </tr>
@@ -367,23 +367,23 @@
                             {% if comp.compInternet == 'acquis' %}
                                 <i class="fa-regular fa-square-checks"></i>
                             {% else %}
-                                <i class="fa-regular fa-square"></i>
+                                {{ include('composants/fontawesome/square.html.twig') }}
                             {% endif %}
                         </td>
 
                         <td class="text-center">
                             {% if comp.compInternet == 'encours' %}
-                                <i class="fa-regular fa-square-check"></i>
+                                {{ include('composants/fontawesome/square-check.html.twig') }}
                             {% else %}
-                                <i class="fa-regular fa-square"></i>
+                                {{ include('composants/fontawesome/square.html.twig') }}
                             {% endif %}
                         </td>
 
                         <td class="text-center">
                             {% if comp.compInternet == 'Nonacquis' %}
-                                <i class="fa-regular fa-square-check"></i>
+                                {{ include('composants/fontawesome/square-check.html.twig') }}
                             {% else %}
-                                <i class="fa-regular fa-square"></i>
+                                {{ include('composants/fontawesome/square.html.twig') }}
                             {% endif %}
                         </td>
                     </tr>
@@ -394,25 +394,25 @@
 
                         <td class="text-center">
                             {% if comp.compEmail == 'acquis' %}
-                                <i class="fa-regular fa-square-check"></i>
+                                {{ include('composants/fontawesome/square-check.html.twig') }}
                             {% else %}
-                                <i class="fa-regular fa-square"></i>
+                                {{ include('composants/fontawesome/square.html.twig') }}
                             {% endif %}
                         </td>
 
                         <td class="text-center">
                             {% if comp.compEmail == 'encours' %}
-                                <i class="fa-regular fa-square-check"></i>
+                                {{ include('composants/fontawesome/square-check.html.twig') }}
                             {% else %}
-                                <i class="fa-regular fa-square"></i>
+                                {{ include('composants/fontawesome/square.html.twig') }}
                             {% endif %}
                         </td>
 
                         <td class="text-center">
                             {% if comp.compEmail == 'Nonacquis' %}
-                                <i class="fa-regular fa-square-check"></i>
+                                {{ include('composants/fontawesome/square-check.html.twig') }}
                             {% else %}
-                                <i class="fa-regular fa-square"></i>
+                                {{ include('composants/fontawesome/square.html.twig') }}
                             {% endif %}
                         </td>
                     </tr>
@@ -421,9 +421,9 @@
                 </table>
                 <p>
                     {% if prescription.competence.autoEva == 1 %}
-                        <i class="fa-regular fa-square-check"></i>
+                        {{ include('composants/fontawesome/square-check.html.twig') }}
                     {% else %}
-                        <i class="fa-regular fa-square"></i>
+                        {{ include('composants/fontawesome/square.html.twig') }}
                     {% endif %}
                     L'auto-évaluation du bénéficiaire a été réalisée avant l'action.
                 </p>
@@ -454,9 +454,9 @@
                         <td>0 - Compétences matérielles</td>
                         <td class="text-center">
                             {% if comp.isDigComp0 == 1 %}
-                                <i class="fa-regular fa-square-check"></i>
+                                {{ include('composants/fontawesome/square-check.html.twig') }}
                             {% else %}
-                                <i class="fa-regular fa-square"></i>
+                                {{ include('composants/fontawesome/square.html.twig') }}
                             {% endif %}
                         </td>
                     </tr>
@@ -466,9 +466,9 @@
                         <td>1 - Information et données</td>
                         <td class="text-center">
                             {% if comp.isDigComp1 == 1 %}
-                                <i class="fa-regular fa-square-check"></i>
+                                {{ include('composants/fontawesome/square-check.html.twig') }}
                             {% else %}
-                                <i class="fa-regular fa-square"></i>
+                                {{ include('composants/fontawesome/square.html.twig') }}
                             {% endif %}
                         </td>
                     </tr>
@@ -478,9 +478,9 @@
                         <td>2 - Communication et collaboration</td>
                         <td class="text-center">
                             {% if comp.isDigComp2 == 1 %}
-                                <i class="fa-regular fa-square-check"></i>
+                                {{ include('composants/fontawesome/square-check.html.twig') }}
                             {% else %}
-                                <i class="fa-regular fa-square"></i>
+                                {{ include('composants/fontawesome/square.html.twig') }}
                             {% endif %}
                         </td>
                     </tr>
@@ -490,9 +490,9 @@
                         <td>3 - Création de contenus</td>
                         <td class="text-center">
                             {% if comp.isDigComp3 == 1 %}
-                                <i class="fa-regular fa-square-check"></i>
+                                {{ include('composants/fontawesome/square-check.html.twig') }}
                             {% else %}
-                                <i class="fa-regular fa-square"></i>
+                                {{ include('composants/fontawesome/square.html.twig') }}
                             {% endif %}
                         </td>
                     </tr>
@@ -500,9 +500,9 @@
                         <td>4 - Protection et sécurité</td>
                         <td class="text-center">
                             {% if comp.isDigComp4 == 1 %}
-                                <i class="fa-regular fa-square-check"></i>
+                                {{ include('composants/fontawesome/square-check.html.twig') }}
                             {% else %}
-                                <i class="fa-regular fa-square"></i>
+                                {{ include('composants/fontawesome/square.html.twig') }}
                             {% endif %}
                         </td>
                     </tr>
@@ -510,9 +510,9 @@
                         <td>5 - Environnement numérique</td>
                         <td class="text-center">
                             {% if comp.isDigComp5 == 1 %}
-                                <i class="fa-regular fa-square-check"></i>
+                                {{ include('composants/fontawesome/square-check.html.twig') }}
                             {% else %}
-                                <i class="fa-regular fa-square"></i>
+                                {{ include('composants/fontawesome/square.html.twig') }}
                             {% endif %}
                         </td>
                     </tr>
@@ -534,9 +534,9 @@
             <div class="col-12 px-0">
                 <p>
                     {% if prescription.competence.autoEva == 1 %}
-                        <i class="fa-regular fa-square-check"></i>
+                        {{ include('composants/fontawesome/square-check.html.twig') }}
                     {% else %}
-                        <i class="fa-regular fa-square"></i>
+                        {{ include('composants/fontawesome/square.html.twig') }}
                     {% endif %}
                     L'auto-évaluation du bénéficiaire a été réalisée après l'action.
                 </p>
