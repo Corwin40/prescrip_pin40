@@ -32,7 +32,7 @@ final class HtmlToPdfController extends AbstractController
                     'pdf' => $this->viewPdf,
                 ])
                 ->generate()
-                ->stream() // will return directly a stream response
+                //->stream() // will return directly a stream response
             ;
             $pdf->sendContent(); // envoie le PDF dans le buffer
 
