@@ -5,9 +5,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pdf prescription</title>
-    <link href="{{ asset('/fontawesome/css/fontawesome.css') }}" rel="stylesheet" />
-    <link href="{{ asset('/fontawesome/css/brands.css') }}" rel="stylesheet" />
-    <link href="{{ asset('/fontawesome/css/solid.css') }}" rel="stylesheet" />
     <script src="https://kit.fontawesome.com/1fb9149f4c.js" crossorigin="anonymous"></script>
     {% if pdf == 1%}
         <link href="{{ gotenberg_asset('build/pdf.css')}}" rel="stylesheet">
@@ -481,7 +478,7 @@
                         <td>2 - Communication et collaboration</td>
                         <td class="text-center">
                             {% if comp.isDigComp2 == 1 %}
-                                <i class="fa-regular fa-square-checks"></i>
+                                <i class="fa-regular fa-square-check"></i>
                             {% else %}
                                 <i class="fa-regular fa-square"></i>
                             {% endif %}
