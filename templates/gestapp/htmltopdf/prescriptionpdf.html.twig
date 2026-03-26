@@ -94,13 +94,18 @@
                 <p class="my-1 py-1">Genre :</p>
             </div>
             <div class="col-4">
-                {% if gender == 'Homme' %}
-                    <p class="my-1 py-1">{{ include('composants/fontawesome/square-check.html.twig') }} Homme&nbsp;&nbsp;&nbsp; {{ include('composants/fontawesome/square.html.twig') }} Femme&nbsp;&nbsp;&nbsp;{{ include('composants/fontawesome/square.html.twig') }} Autres</p>
-                {% elseif gender == 'Femme' %}
-                    <p class="my-1 py-1">{{ include('composants/fontawesome/square.html.twig') }} Homme&nbsp;&nbsp;&nbsp;{{ include('composants/fontawesome/square-check.html.twig') }} Femme&nbsp;&nbsp;&nbsp;{{ include('composants/fontawesome/square.html.twig') }} Autres</p>
-                {% elseif gender == 'Autres' %}
-                    <p class="my-1 py-1">{{ include('composants/fontawesome/square.html.twig') }} Homme&nbsp;&nbsp;&nbsp;{{ include('composants/fontawesome/square.html.twig') }} Femme&nbsp;&nbsp;&nbsp;{{ include('composants/fontawesome/square-check.html.twig') }} Autres</p>
-                {% endif %}
+                {% set Options = [
+                    {'value': 'Homme', 'label': 'Homme'},
+                    {'value': 'Femme', 'label': 'Femme'},
+                    {'value': 'Autres', 'label': 'Autres'},
+                ] %}
+
+                {% include 'composants/pages/page_checkboxs_inline.html.twig' with
+                    {
+                        'value': prescription.beneficiaire.AgeGroup ?? null,
+                        'checkboxs': Options
+                    }
+                %}
             </div>
         </div>
         <div class="row g-0">
@@ -108,15 +113,19 @@
                 <p class="my-1 py-1">Tranche d'âge :</p>
             </div>
             <div class="col-10">
-                {% if prescription.beneficiaire.AgeGroup == '0-15' %}
-                    <p class="my-1 py-1">{{ include('composants/fontawesome/square-check.html.twig') }} 15 ans et moins&nbsp;&nbsp;&nbsp;{{ include('composants/fontawesome/square.html.twig') }} 16 à 25 ans&nbsp;&nbsp;&nbsp;{{ include('composants/fontawesome/square.html.twig') }} 26 à 59 ans&nbsp;&nbsp;&nbsp;{{ include('composants/fontawesome/square.html.twig') }} 60 ans et plus</p>
-                {% elseif prescription.beneficiaire.AgeGroup == '16-25' %}
-                    <p class="my-1 py-1">{{ include('composants/fontawesome/square.html.twig') }} 15 ans et moins&nbsp;&nbsp;&nbsp;{{ include('composants/fontawesome/square-check.html.twig') }} 16 à 25 ans&nbsp;&nbsp;&nbsp;{{ include('composants/fontawesome/square.html.twig') }} 26 à 59 ans&nbsp;&nbsp;&nbsp;{{ include('composants/fontawesome/square.html.twig') }} 60 ans et plus</p>
-                {% elseif prescription.beneficiaire.AgeGroup == '26-59' %}
-                    <p class="my-1 py-1">{{ include('composants/fontawesome/square.html.twig') }} 15 ans et moins&nbsp;&nbsp;&nbsp;{{ include('composants/fontawesome/square.html.twig') }} 16 à 25 ans&nbsp;&nbsp;&nbsp;{{ include('composants/fontawesome/square-check.html.twig') }} 26 à 59 ans&nbsp;&nbsp;&nbsp;{{ include('composants/fontawesome/square.html.twig') }} 60 ans et plus</p>
-                {% elseif prescription.beneficiaire.AgeGroup == '60+' %}
-                    <p class="my-1 py-1">{{ include('composants/fontawesome/square.html.twig') }} 15 ans et moins&nbsp;&nbsp;&nbsp;{{ include('composants/fontawesome/square.html.twig') }} 16 à 25 ans&nbsp;&nbsp;&nbsp;{{ include('composants/fontawesome/square.html.twig') }} 26 à 59 ans&nbsp;&nbsp;&nbsp;{{ include('composants/fontawesome/square-check.html.twig') }} 60 ans et plus</p>
-                {% endif %}
+                {% set Options = [
+                    {'value': '0-15', 'label': '15 ans et moins'},
+                    {'value': '16-25', 'label': '16 à 25 ans'},
+                    {'value': '26-59', 'label': '26 à 59 ans'},
+                    {'value': '60+', 'label': '60 ans et plus'},
+                ] %}
+
+                {% include 'composants/pages/page_checkboxs_inline.html.twig' with
+                    {
+                        'value': prescription.beneficiaire.AgeGroup ?? null,
+                        'checkboxs': Options
+                    }
+                %}
             </div>
         </div>
         <div class="row g-0">
@@ -124,47 +133,20 @@
                 <p class="my-1 py-1">Situation :</p>
             </div>
             <div class="col-10">
-                {% if prescription.beneficiaire.professionnalStatus == 'Scolaire / Étudiant' %}
-                    <p class="my-1 py-1">
-                        {{ include('composants/fontawesome/square-check.html.twig') }} Scolaire / Étudiants&nbsp;&nbsp;&nbsp;
-                        {{ include('composants/fontawesome/square.html.twig') }} Employé / En Formation&nbsp;&nbsp;&nbsp;
-                        {{ include('composants/fontawesome/square.html.twig') }} Sans emploi&nbsp;&nbsp;&nbsp;
-                        {{ include('composants/fontawesome/square.html.twig') }} Retraité&nbsp;&nbsp;&nbsp;
-                        {{ include('composants/fontawesome/square.html.twig') }} Autre situation
-                    </p>
-                {% elseif prescription.beneficiaire.professionnalStatus == 'Employé / En Formation' %}
-                    <p class="my-1 py-1">
-                        {{ include('composants/fontawesome/square.html.twig') }} Scolaire / Étudiants&nbsp;&nbsp;&nbsp;
-                        {{ include('composants/fontawesome/square-check.html.twig') }} Employé / En Formation&nbsp;&nbsp;&nbsp;
-                        {{ include('composants/fontawesome/square.html.twig') }} Sans emploi&nbsp;&nbsp;&nbsp;
-                        {{ include('composants/fontawesome/square.html.twig') }} Retraité&nbsp;&nbsp;&nbsp;
-                        {{ include('composants/fontawesome/square.html.twig') }} Autre situation
-                    </p>
-                {% elseif prescription.beneficiaire.professionnalStatus == 'Sans emploi' %}
-                    <p class="my-1 py-1">
-                        {{ include('composants/fontawesome/square.html.twig') }} Scolaire / Étudiants&nbsp;&nbsp;&nbsp;
-                        {{ include('composants/fontawesome/square.html.twig') }} Employé / En Formation&nbsp;&nbsp;&nbsp;
-                        {{ include('composants/fontawesome/square-check.html.twig') }} Sans emploi&nbsp;&nbsp;&nbsp;
-                        {{ include('composants/fontawesome/square.html.twig') }} Retraité&nbsp;&nbsp;&nbsp;
-                        {{ include('composants/fontawesome/square.html.twig') }} Autre situation
-                    </p>
-                {% elseif prescription.beneficiaire.professionnalStatus == 'Retraite' %}
-                    <p class="my-1 py-1">
-                        {{ include('composants/fontawesome/square.html.twig') }} Scolaire / Étudiants&nbsp;&nbsp;&nbsp;
-                        {{ include('composants/fontawesome/square.html.twig') }} Employé / En Formation&nbsp;&nbsp;&nbsp;
-                        {{ include('composants/fontawesome/square.html.twig') }} Sans emploi&nbsp;&nbsp;&nbsp;
-                        {{ include('composants/fontawesome/square-check.html.twig') }} Retraité&nbsp;&nbsp;&nbsp;
-                        {{ include('composants/fontawesome/square.html.twig') }} Autre situation
-                    </p>
-                {% elseif prescription.beneficiaire.professionnalStatus == 'Autre situation' %}
-                    <p class="my-1 py-1">
-                        {{ include('composants/fontawesome/square.html.twig') }} Scolaire / Étudiants&nbsp;&nbsp;&nbsp;
-                        {{ include('composants/fontawesome/square.html.twig') }} Employé / En Formation&nbsp;&nbsp;&nbsp;
-                        {{ include('composants/fontawesome/square.html.twig') }} Sans emploi&nbsp;&nbsp;&nbsp;
-                        {{ include('composants/fontawesome/square.html.twig') }} Retraité&nbsp;&nbsp;&nbsp;
-                        {{ include('composants/fontawesome/square-check.html.twig') }} Autre situation
-                    </p>
-                {% endif %}
+                {% set Options = [
+                    {'value': 'Scolaire / Étudiant', 'label': 'Scolaire / Étudiants'},
+                    {'value': 'Employé / En Formation', 'label': 'Employé / En Formation'},
+                    {'value': 'Sans emploi', 'label': 'Sans emploi'},
+                    {'value': 'Retraite', 'label': 'Retraité'},
+                    {'value': 'Autre situation', 'label': 'Autre situation'},
+                ] %}
+
+                {% include 'composants/pages/page_checkboxs_inline.html.twig' with
+                    {
+                        'value': prescription.beneficiaire.professionnalStatus ?? null,
+                        'checkboxs': Options
+                    }
+                %}
             </div>
         </div>
     </section>

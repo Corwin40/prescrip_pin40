@@ -1,0 +1,11 @@
+<p class="d-flex align-items-center gap-3 my-1 py-1">
+    {% for checkbox in checkboxs %}
+    <span class="d-flex align-items-center gap-1">
+        {{ checkbox.value == value
+        ? include('composants/fontawesome/square-check.html.twig')
+        : include('composants/fontawesome/square.html.twig')
+        }}
+        {{ checkbox.label }}
+    </span>
+    {% endfor %}
+</p>
