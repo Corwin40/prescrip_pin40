@@ -41,33 +41,6 @@ class Member implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private ?string $password = null;
 
-    #[ORM\Column(length: 150)]
-    private ?string $nameStructure = null;
-
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $address = null;
-
-    #[ORM\Column(length: 5, nullable: true)]
-    private ?string $zipcode = null;
-
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $city = null;
-
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $contactEmail = null;
-
-    #[ORM\Column(length: 14, nullable: true)]
-    private ?string $contactPhone = null;
-
-    #[ORM\Column(length: 100, nullable: true)]
-    private ?string $contactResponsableFirstname = null;
-
-    #[ORM\Column(length: 100, nullable: true)]
-    private ?string $contactResponsableLastname = null;
-
-    #[ORM\Column(length: 4, nullable: true)]
-    private ?string $contactResponsableCivility = null;
-
     #[ORM\Column]
     private bool $isVerified = false;
 
@@ -82,21 +55,6 @@ class Member implements UserInterface, PasswordAuthenticatedUserInterface
      */
     #[ORM\OneToMany(targetEntity: Prescription::class, mappedBy: 'membre')]
     private Collection $prescriptions;
-
-    /**
-     * @var Collection<int, Prescription>
-     */
-    #[ORM\OneToMany(targetEntity: Prescription::class, mappedBy: 'lieuMediation')]
-    private Collection $lieuxmediation;
-
-    /**
-     * @var Collection<int, Beneficiary>
-     */
-    #[ORM\OneToMany(targetEntity: Beneficiary::class, mappedBy: 'prescriptor')]
-    private Collection $beneficiaries;
-
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $slug = null;
 
     /**
      * @var Collection<int, Equipment>
@@ -119,14 +77,30 @@ class Member implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(targetEntity: Equipment::class, mappedBy: 'structure')]
     private Collection $equipments;
 
+    #[ORM\ManyToOne(inversedBy: 'members')]
+    private ?Structure $structure = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $firstname = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $lastname = null;
+
+    /**
+     * @var Collection<int, Beneficiary>
+     */
+    #[ORM\OneToMany(targetEntity: Beneficiary::class, mappedBy: 'referent')]
+    private Collection $beneficiaries;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $slug = null;
+
     public function __construct()
     {
-        $this->prescriptions = new ArrayCollection();
-        $this->lieuxmediation = new ArrayCollection();
-        $this->beneficiaries = new ArrayCollection();
         $this->equipment = new ArrayCollection();
         $this->members = new ArrayCollection();
         $this->equipments = new ArrayCollection();
+        $this->beneficiaries = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -190,105 +164,6 @@ class Member implements UserInterface, PasswordAuthenticatedUserInterface
         // @deprecated, to be removed when upgrading to Symfony 8
     }
 
-    public function getNameStructure(): ?string
-    {
-        return $this->nameStructure;
-    }
-
-    public function setNameStructure(string $nameStructure): static
-    {
-        $this->nameStructure = $nameStructure;
-        return $this;
-    }
-
-    public function getAddress(): ?string
-    {
-        return $this->address;
-    }
-
-    public function setAddress(?string $address): static
-    {
-        $this->address = $address;
-        return $this;
-    }
-
-    public function getZipcode(): ?string
-    {
-        return $this->zipcode;
-    }
-
-    public function setZipcode(?string $zipcode): static
-    {
-        $this->zipcode = $zipcode;
-        return $this;
-    }
-
-    public function getCity(): ?string
-    {
-        return $this->city;
-    }
-
-    public function setCity(?string $city): static
-    {
-        $this->city = $city;
-        return $this;
-    }
-
-    public function getContactEmail(): ?string
-    {
-        return $this->contactEmail;
-    }
-
-    public function setContactEmail(?string $contactEmail): static
-    {
-        $this->contactEmail = $contactEmail;
-        return $this;
-    }
-
-    public function getContactPhone(): ?string
-    {
-        return $this->contactPhone;
-    }
-
-    public function setContactPhone(?string $contactPhone): static
-    {
-        $this->contactPhone = $contactPhone;
-        return $this;
-    }
-
-    public function getContactResponsableFirstname(): ?string
-    {
-        return $this->contactResponsableFirstname;
-    }
-
-    public function setContactResponsableFirstname(?string $contactResponsableFirstname): static
-    {
-        $this->contactResponsableFirstname = $contactResponsableFirstname;
-        return $this;
-    }
-
-    public function getContactResponsableLastname(): ?string
-    {
-        return $this->contactResponsableLastname;
-    }
-
-    public function setContactResponsableLastname(?string $contactResponsableLastname): static
-    {
-        $this->contactResponsableLastname = $contactResponsableLastname;
-        return $this;
-    }
-
-    public function getContactResponsableCivility(): ?string
-    {
-        return $this->contactResponsableCivility;
-    }
-
-    public function setContactResponsableCivility(?string $contactResponsableCivility): static
-    {
-        $this->contactResponsableCivility = $contactResponsableCivility;
-        return $this;
-    }
-
     public function isVerified(): bool
     {
         return $this->isVerified;
@@ -325,109 +200,8 @@ class Member implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    /**
-     * @return Collection<int, Prescription>
-     */
-    public function getPrescriptions(): Collection
-    {
-        return $this->prescriptions;
-    }
-
-    public function addPrescription(Prescription $prescription): static
-    {
-        if (!$this->prescriptions->contains($prescription)) {
-            $this->prescriptions->add($prescription);
-            $prescription->setMembre($this);
-        }
-
-        return $this;
-    }
-
-    public function removePrescription(Prescription $prescription): static
-    {
-        if ($this->prescriptions->removeElement($prescription)) {
-            if ($prescription->getMembre() === $this) {
-                $prescription->setMembre(null);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Prescription>
-     */
-    public function getLieuxmediation(): Collection
-    {
-        return $this->lieuxmediation;
-    }
-
-    public function addLieuxmediation(Prescription $lieuxmediation): static
-    {
-        if (!$this->lieuxmediation->contains($lieuxmediation)) {
-            $this->lieuxmediation->add($lieuxmediation);
-            $lieuxmediation->setLieuMediation($this);
-        }
-
-        return $this;
-    }
-
-    public function removeLieuxmediation(Prescription $lieuxmediation): static
-    {
-        if ($this->lieuxmediation->removeElement($lieuxmediation)) {
-            // set the owning side to null (unless already changed)
-            if ($lieuxmediation->getLieuMediation() === $this) {
-                $lieuxmediation->setLieuMediation(null);
-            }
-        }
-
-        return $this;
-    }
-
     public function __toString(){
-        return $this->nameStructure;
-    }
-
-    /**
-     * @return Collection<int, Beneficiary>
-     */
-    public function getBeneficiaries(): Collection
-    {
-        return $this->beneficiaries;
-    }
-
-    public function addBeneficiary(Beneficiary $beneficiary): static
-    {
-        if (!$this->beneficiaries->contains($beneficiary)) {
-            $this->beneficiaries->add($beneficiary);
-            $beneficiary->setPrescriptor($this);
-        }
-
-        return $this;
-    }
-
-    public function removeBeneficiary(Beneficiary $beneficiary): static
-    {
-        if ($this->beneficiaries->removeElement($beneficiary)) {
-            // set the owning side to null (unless already changed)
-            if ($beneficiary->getPrescriptor() === $this) {
-                $beneficiary->setPrescriptor(null);
-            }
-        }
-
-        return $this;
-    }
-
-    public function getSlug(): ?string
-    {
-        return $this->slug;
-    }
-
-    public function setSlug(?string $slug): static
-    {
-        $this->slug = $slug;
-
-        return $this;
+        return $this->firstname.' '.$this->lastname;
     }
 
     /**
@@ -508,5 +282,83 @@ class Member implements UserInterface, PasswordAuthenticatedUserInterface
     public function getEquipments(): Collection
     {
         return $this->equipments;
+    }
+
+    public function getStructure(): ?Structure
+    {
+        return $this->structure;
+    }
+
+    public function setStructure(?Structure $structure): static
+    {
+        $this->structure = $structure;
+
+        return $this;
+    }
+
+    public function getFirstname(): ?string
+    {
+        return $this->firstname;
+    }
+
+    public function setFirstname(?string $firstname): static
+    {
+        $this->firstname = $firstname;
+
+        return $this;
+    }
+
+    public function getLastname(): ?string
+    {
+        return $this->lastname;
+    }
+
+    public function setLastname(string $lastname): static
+    {
+        $this->lastname = $lastname;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Beneficiary>
+     */
+    public function getBeneficiaries(): Collection
+    {
+        return $this->beneficiaries;
+    }
+
+    public function addBeneficiary(Beneficiary $beneficiary): static
+    {
+        if (!$this->beneficiaries->contains($beneficiary)) {
+            $this->beneficiaries->add($beneficiary);
+            $beneficiary->setReferent($this);
+        }
+
+        return $this;
+    }
+
+    public function removeBeneficiary(Beneficiary $beneficiary): static
+    {
+        if ($this->beneficiaries->removeElement($beneficiary)) {
+            // set the owning side to null (unless already changed)
+            if ($beneficiary->getReferent() === $this) {
+                $beneficiary->setReferent(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getSlug(): ?string
+    {
+        return $this->slug;
+    }
+
+    public function setSlug(?string $slug): static
+    {
+        $this->slug = $slug;
+
+        return $this;
     }
 }

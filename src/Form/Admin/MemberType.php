@@ -31,24 +31,8 @@ class MemberType extends AbstractType
         $builder
             ->add('email')
 
-            ->add('nameStructure')
-            ->add('address')
-            ->add('zipcode')
-            ->add('city')
-            ->add('contactEmail')
-            ->add('contactPhone')
-            ->add('contactResponsableFirstname')
-            ->add('contactResponsableLastname')
-            ->add('contactResponsableCivility', ChoiceType::class, [
-                'choices' => [
-                    'Mme' => 'Mme',
-                    'Mlle' => 'Mlle',
-                    'Monsieur' => 'Mr',
-                ],
-                'label' => 'Civilité',
-                'placeholder' => 'Sélectionnez une civilité',
-                'required' => true,
-            ])
+            ->add('firstname')
+            ->add('lastname')
         ;
 
         if ($route == 'app_admin_member_new') {

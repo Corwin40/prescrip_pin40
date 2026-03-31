@@ -3,6 +3,7 @@
 namespace App\Form\Gestapp;
 
 use App\Entity\Admin\Member;
+use App\Entity\Admin\Structure;
 use App\Entity\Gestapp\Beneficiary;
 use App\Entity\Gestapp\Prescription;
 use Doctrine\ORM\EntityRepository;
@@ -10,13 +11,25 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 
 class BeneficiaryType extends AbstractType
 {
+    private $requestStack;
+
+    public function __construct(RequestStack $requestStack)
+    {
+        $this->requestStack = $requestStack;
+    }
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
+        $request = $this->requestStack->getCurrentRequest();
+        $route = $request?->attributes->get('_route');
+
+        $user = $options['user'];
+
         $builder
             ->add('firstname', TextType::class, [
                 'label' => 'Prénom',
@@ -52,19 +65,7 @@ class BeneficiaryType extends AbstractType
                 'placeholder' => 'Veuillez choisir',
                 'required' => true,
             ])
-            ->add('prescriptor', EntityType::class, [
-                'class' => Member::class,
-                'choice_label' => function ($prescriptor) {
-                    return $prescriptor->getNameStructure();
-                },
-                'query_builder' => function (EntityRepository $er) {
-                    return $er
-                        ->createQueryBuilder('p')
-                        ->where('p.roles LIKE :roles')
-                        ->setParameter('roles', '%ROLE_PRESCRIPTEUR%')
-                        ->orderBy('p.id', 'ASC');
-                },
-            ])
+
             ->add('professionnalStatus', ChoiceType::class, [
                 'label' => 'Statut professionnel',
                 'choices' => [
@@ -79,12 +80,60 @@ class BeneficiaryType extends AbstractType
                 'placeholder' => 'veuillez choisir',
                 'required' => true,
             ]);
+
+        if($user && in_array('ROLE_PRESCRIPTEUR', $user->getRoles())) {
+            $builder->add('structure', EntityType::class, [
+                'class' => Structure::class,
+                'choices' => [$user->getStructure()],
+                'choice_label' => 'name',
+            ]);
+        }
+        elseif ($user && in_array('ROLE_MEDIATEUR', $user->getRoles())) {
+            $builder
+                ->add('structure', EntityType::class, [
+                    'class' => Structure::class,
+                    'choice_label' => function ($structure) {
+                        return $structure->getName();
+                    },
+                    'query_builder' => function (EntityRepository $er) use ($user) {
+                        return $er
+                            ->createQueryBuilder('s')
+                            ->leftJoin('s.members', 'p')
+                            ->where('p.referent = :user')
+                            ->setParameter('user', $user)
+                            ->orderBy('s.name', 'ASC');
+                    },
+                ]);
+        }
+        elseif ( $user && (
+                in_array('ROLE_SUPER_ADMIN', $user->getRoles()) ||
+                in_array('ROLE_ADMIN', $user->getRoles())
+            ))
+        {
+            $builder
+                ->add('structure', EntityType::class, [
+                    'class' => Structure::class,
+                    'choice_label' => function ($structure) {
+                        return $structure->getName();
+                    },
+                    'query_builder' => function (EntityRepository $er) use ($user) {
+                        return $er
+                            ->createQueryBuilder('s')
+                            ->innerJoin('s.members', 'p')
+                            ->where('p.roles LIKE :roles')
+                            ->setParameter('roles', '%ROLE_PRESCRIPTEUR%')
+                            ->orderBy('p.id', 'ASC');
+                    },
+                ]);
+        }
     }
 
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'data_class' => Beneficiary::class,
+            'user' => null,
+            'beneficiary' => null,
         ]);
     }
 }

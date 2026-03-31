@@ -3,6 +3,7 @@
 namespace App\Entity\Gestapp;
 
 use App\Entity\Admin\Member;
+use App\Entity\Admin\Structure;
 use App\Repository\Gestapp\BeneficiaryRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
@@ -45,7 +46,10 @@ class Beneficiary
 
     #[ORM\ManyToOne(inversedBy: 'beneficiaries')]
     #[ORM\JoinColumn(nullable: true, onDelete: 'SET NULL')]
-    private ?Member $prescriptor = null;
+    private ?Structure $structure = null;
+
+    #[ORM\ManyToOne(inversedBy: 'beneficiaries')]
+    private ?Member $referent = null;
 
     public function getId(): ?int
     {
@@ -167,14 +171,14 @@ class Beneficiary
         return $this;
     }
 
-    public function getPrescriptor(): ?Member
+    public function getStructure(): ?Structure
     {
-        return $this->prescriptor;
+        return $this->structure;
     }
 
-    public function setPrescriptor(?Member $prescriptor): static
+    public function setStructure(?Structure $structure): static
     {
-        $this->prescriptor = $prescriptor;
+        $this->structure = $structure;
 
         return $this;
     }
@@ -183,4 +187,18 @@ class Beneficiary
     {
         return $this->firstname.' '.$this->lastname;
     }
+
+    public function getReferent(): ?Member
+    {
+        return $this->referent;
+    }
+
+    public function setReferent(?Member $referent): static
+    {
+        $this->referent = $referent;
+
+        return $this;
+    }
+
+
 }

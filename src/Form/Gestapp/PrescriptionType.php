@@ -3,6 +3,7 @@
 namespace App\Form\Gestapp;
 
 use App\Entity\Admin\Member;
+use App\Entity\Admin\Structure;
 use App\Entity\Gestapp\Beneficiary;
 use App\Entity\Gestapp\Competence;
 use App\Entity\Gestapp\Equipment;
@@ -53,13 +54,14 @@ class PrescriptionType extends AbstractType
                 'multiple' => false,
             ])
             ->add('lieuMediation', EntityType::class, [
-                'class' => Member::class,
-                'choice_label' => 'nameStructure',
+                'class' => Structure::class,
                 'query_builder' => function (EntityRepository $er) {
-                    return $er->createQueryBuilder('d')
-                        ->where('d.roles LIKE :roles')
+                    return $er
+                        ->createQueryBuilder('l')
+                        ->innerJoin('l.members', 'm')
+                        ->where('m.roles LIKE :roles')
                         ->setParameter('roles', '%ROLE_MEDIATEUR%')
-                        ->orderBy('d.id', 'ASC');
+                        ->orderBy('m.id', 'ASC');
                 },
             ])
         ;
@@ -132,14 +134,14 @@ class PrescriptionType extends AbstractType
                     ))
                 {
                     $builder
-                        ->add('membre', EntityType::class, [
-                            'class' => Member::class,
-                            'choice_label' => 'nameStructure',
+                        ->add('prescriptor', EntityType::class, [
+                            'class' => Structure::class,
                             'query_builder' => function (EntityRepository $er) {
                                 return $er->createQueryBuilder('d')
-                                    ->where('d.roles LIKE :roles')
+                                    ->innerJoin('d.members', 'm')
+                                    ->where('m.roles LIKE :roles')
                                     ->setParameter('roles', '%ROLE_PRESCRIPTEUR%')
-                                    ->orderBy('d.id', 'ASC');
+                                    ->orderBy('m.id', 'ASC');
                             },
                         ])
                         ->add('competence', CompetenceType::class, [
@@ -168,14 +170,14 @@ class PrescriptionType extends AbstractType
                     ))
                 {
                     $builder
-                        ->add('membre', EntityType::class, [
-                            'class' => Member::class,
-                            'choice_label' => 'nameStructure',
+                        ->add('Prescriptor', EntityType::class, [
+                            'class' => Structure::class,
                             'query_builder' => function (EntityRepository $er) {
                                 return $er->createQueryBuilder('d')
-                                    ->where('d.roles LIKE :roles')
+                                    ->innerJoin('d.members', 'm')
+                                    ->where('m.roles LIKE :roles')
                                     ->setParameter('roles', '%ROLE_PRESCRIPTEUR%')
-                                    ->orderBy('d.id', 'ASC');
+                                    ->orderBy('m.id', 'ASC');
                             },
                         ])
                         ->add('competence', CompetenceType::class, [
@@ -215,14 +217,14 @@ class PrescriptionType extends AbstractType
                     ))
                 {
                     $builder
-                        ->add('membre', EntityType::class, [
-                            'class' => Member::class,
-                            'choice_label' => 'nameStructure',
+                        ->add('prescriptor', EntityType::class, [
+                            'class' => Structure::class,
                             'query_builder' => function (EntityRepository $er) {
                                 return $er->createQueryBuilder('d')
-                                    ->where('d.roles LIKE :roles')
+                                    ->innerJoin('d.members', 'm')
+                                    ->where('m.roles LIKE :roles')
                                     ->setParameter('roles', '%ROLE_PRESCRIPTEUR%')
-                                    ->orderBy('d.id', 'ASC');
+                                    ->orderBy('m.id', 'ASC');
                             },
                         ])
                         ->add('competence', CompetenceType::class, [
@@ -250,14 +252,14 @@ class PrescriptionType extends AbstractType
                     ))
                 {
                     $builder
-                        ->add('membre', EntityType::class, [
-                            'class' => Member::class,
-                            'choice_label' => 'nameStructure',
+                        ->add('prescriptor', EntityType::class, [
+                            'class' => Structure::class,
                             'query_builder' => function (EntityRepository $er) {
                                 return $er->createQueryBuilder('d')
-                                    ->where('d.roles LIKE :roles')
+                                    ->innerJoin('d.members', 'm')
+                                    ->where('m.roles LIKE :roles')
                                     ->setParameter('roles', '%ROLE_PRESCRIPTEUR%')
-                                    ->orderBy('d.id', 'ASC');
+                                    ->orderBy('m.id', 'ASC');
                             },
                         ])
                         ->add('competence', CompetenceType::class, [

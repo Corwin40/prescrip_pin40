@@ -106,11 +106,12 @@ final class PrescriptionController extends AbstractController
     public function new(Request $request, EntityManagerInterface $entityManager, PrescriptionRepository $prescriptionRepository): Response
     {
         $user = $this->getUser();
+        $structure = $user->getStructure();
 
         // Construction de la variable Ref
         $date = new \DateTime('now');
 
-        $lastPrescription = $prescriptionRepository->findOneBy(['membre' => $this->getUser()],[ 'id' => 'DESC']);
+        $lastPrescription = $prescriptionRepository->findOneBy(['prescriptor' => $structure],[ 'id' => 'DESC']);
         if(!$lastPrescription){
             $compteur = 1;
         }else{
@@ -165,7 +166,7 @@ final class PrescriptionController extends AbstractController
                     $prescription->setRef($ref);
                 }
                 $prescription->setStatus(StatusPrescription::OpenByAdministrator);
-                $prescription->setMembre($beneficiary->getPrescriptor());
+                $prescription->setPrescriptor($beneficiary->geStructure());
                 $prescription->setStep(StepPrescription::Open);
             }
             if($user && in_array('ROLE_MEDIATEUR', $user->getRoles())){
@@ -174,7 +175,7 @@ final class PrescriptionController extends AbstractController
                 $idStructure = $beneficiary->getPrescriptor()->getId();
                 if($structure)
                 {
-                    $lastPrescription = $prescriptionRepository->findOneBy(['membre' => $idStructure],[ 'id' => 'DESC']);
+                    $lastPrescription = $prescriptionRepository->findOneBy(['prescriptor' => $idStructure],[ 'id' => 'DESC']);
                     if(!$lastPrescription){
                         $compteur = 1;
                     }else{
@@ -184,7 +185,7 @@ final class PrescriptionController extends AbstractController
                     $prescription->setRef($ref);
                 }
                 $prescription->setIsOpenByMediator(1);
-                $prescription->setMembre($beneficiary->getPrescriptor());
+                $prescription->setPrescriptor($beneficiary->getStructure());
                 if($prescription->getStatus()->name == StatusPrescription::OpenByPrescriptor){
                     $prescription->setStep(StepPrescription::TwoParts);
                 }else{
@@ -192,12 +193,12 @@ final class PrescriptionController extends AbstractController
                 }
             }
             if($user && in_array('ROLE_PRESCRIPTEUR', $user->getRoles())){
-                $structure = $this->getUser()->getSlug();
+                $structure = $this->getUser()->getStructure();
                 $ref = $date->format('Ym')."-".$structure."-".$compteur;// mois-année-structure-compteur
                 $prescription->setRef($ref);
                 $prescription->setStatus(StatusPrescription::OpenByPrescriptor);
                 $prescription->setIsOpenByPrescriptor(1);
-                $prescription->setMembre($this->getUser());
+                $prescription->setPrescriptor($structure);
                 $prescription->setStep(StepPrescription::TwoParts);
             }
 
@@ -245,8 +246,8 @@ final class PrescriptionController extends AbstractController
             if($step == StepPrescription::Open){
                 if($user && (in_array('ROLE_SUPER_ADMIN', $user->getRoles()) || in_array('ROLE_ADMIN', $user->getRoles()) ) ){
                     $beneficiaire = $form->get('beneficiaire')->getData();
-                    $prescripteur = $beneficiaire->getPrescriptor();
-                    $prescription->setMembre($prescripteur);
+                    $prescripteur = $beneficiaire->getStructure();
+                    $prescription->setPrescriptor($prescripteur);
                     $prescription->setStep(StepPrescription::ChoiceEquipment);
                 }
             }
@@ -254,7 +255,7 @@ final class PrescriptionController extends AbstractController
                 if($user && (in_array('ROLE_SUPER_ADMIN', $user->getRoles()) || in_array('ROLE_ADMIN', $user->getRoles()) ) ){
                     $beneficiaire = $form->get('beneficiaire')->getData();
                     $prescripteur = $beneficiaire->getPrescriptor();
-                    $prescription->setMembre($prescripteur);
+                    $prescription->setPrescriptor($prescripteur);
                     $prescription->setStep(StepPrescription::ChoiceEquipment);
                 }
                 if($user && in_array('ROLE_MEDIATEUR', $user->getRoles())){
@@ -271,7 +272,7 @@ final class PrescriptionController extends AbstractController
                 if($user && (in_array('ROLE_SUPER_ADMIN', $user->getRoles()) || in_array('ROLE_ADMIN', $user->getRoles()) || in_array('ROLE_MEDIATEUR', $user->getRoles()) ) ){
                     $beneficiaire = $form->get('beneficiaire')->getData();
                     $prescripteur = $beneficiaire->getPrescriptor();
-                    $prescription->setMembre($prescripteur);
+                    $prescription->setPrescriptor($prescripteur);
                     $prescription->setStep(StepPrescription::ChoiceEquipment);
                 }
                 if($user && in_array('ROLE_MEDIATEUR', $user->getRoles())){
@@ -283,14 +284,14 @@ final class PrescriptionController extends AbstractController
                 if($user && (in_array('ROLE_SUPER_ADMIN', $user->getRoles()) || in_array('ROLE_ADMIN', $user->getRoles()) || in_array('ROLE_MEDIATEUR', $user->getRoles()) ) ){
                     $beneficiaire = $form->get('beneficiaire')->getData();
                     $prescripteur = $beneficiaire->getPrescriptor();
-                    $prescription->setMembre($prescripteur);
+                    $prescription->setPrescriptor($prescripteur);
                     $prescription->setValidcase(1);
                     $prescription->setStep(StepPrescription::ValidCase);
                 }
                 if($user && in_array('ROLE_MEDIATEUR', $user->getRoles())){
                     $beneficiaire = $form->get('beneficiaire')->getData();
                     $prescripteur = $beneficiaire->getPrescriptor();
-                    $prescription->setMembre($prescripteur);
+                    $prescription->setPrescriptor($prescripteur);
                     $prescription->setValidcase(1);
                     $prescription->setStep(StepPrescription::ValidCase);
                 }

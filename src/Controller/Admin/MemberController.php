@@ -50,8 +50,10 @@ final class MemberController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $password = $form->get('password')->getData();
 
-            $name = $form->get('nameStructure')->getData();
-            if($name){
+            $firstname = $form->get('firstname')->getData();
+            $lastname = $form->get('lastname')->getData();
+            if($firstname || $lastname){
+                $name = $firstname . ' ' . $lastname;
                 $member->setSlug($slugger->slug($name, '')->lower());
             }
 
@@ -107,8 +109,10 @@ final class MemberController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
 
-            $name = $form->get('nameStructure')->getData();
-            if($name){
+            $firstname = $form->get('firstname')->getData();
+            $lastname = $form->get('lastname')->getData();
+            if($firstname || $lastname){
+                $name = $firstname . ' ' . $lastname;
                 $member->setSlug($slugger->slug($name, '')->lower());
             }
 

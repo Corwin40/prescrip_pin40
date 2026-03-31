@@ -103,7 +103,7 @@
 
                         <td class="position-relative">
                             <a href="{{ path('app_gestapp_prescription_edit', {'id': prescription.id}) }}" class="stretched-link"></a>
-                            {{ prescription.membre }}</td>
+                            {{ prescription.prescriptor.name }}</td>
                         <td>{{ prescription.lieuMediation }}</td>
                         <td>
                             {% if prescription.equipement is not null %}

@@ -5,6 +5,7 @@ namespace App\Entity\Gestapp;
 use App\Config\StatusPrescription;
 use App\Config\StepPrescription;
 use App\Entity\Admin\Member;
+use App\Entity\Admin\Structure;
 use App\Repository\Gestapp\PrescriptionRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
@@ -22,7 +23,7 @@ class Prescription
     private ?\DateTime $updatedAt = null;
 
     #[ORM\ManyToOne(inversedBy: 'prescriptions')]
-    private ?Member $membre = null;
+    private ?Structure $prescriptor = null;
 
     #[ORM\OneToOne(cascade: ['persist', 'remove'])]
     private ?Equipment $equipement = null;
@@ -37,7 +38,7 @@ class Prescription
     private ?int $compteur = null;
 
     #[ORM\ManyToOne(inversedBy: 'lieuxmediation')]
-    private ?Member $lieuMediation = null;
+    private ?Structure $lieuMediation = null;
 
     #[ORM\OneToOne(inversedBy: 'prescription', cascade: ['persist'])]
     private ?Beneficiary $beneficiaire = null;
@@ -122,14 +123,14 @@ class Prescription
         return $this;
     }
 
-    public function getMembre(): ?Member
+    public function getPrescriptor(): ?Structure
     {
-        return $this->membre;
+        return $this->prescriptor;
     }
 
-    public function setMembre(?Member $membre): static
+    public function setPrescriptor(?Structure $prescriptor): static
     {
-        $this->membre = $membre;
+        $this->prescriptor = $prescriptor;
 
         return $this;
     }
@@ -182,12 +183,12 @@ class Prescription
         return $this;
     }
 
-    public function getLieuMediation(): ?Member
+    public function getLieuMediation(): ?Structure
     {
         return $this->lieuMediation;
     }
 
-    public function setLieuMediation(?Member $lieuMediation): static
+    public function setLieuMediation(?Structure $lieuMediation): static
     {
         $this->lieuMediation = $lieuMediation;
 

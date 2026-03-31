@@ -21,12 +21,12 @@ final class DashboardController extends AbstractController
         $member = $memberRepository->find($user->getId());
 
         if($user && in_array('ROLE_PRESCRIPTEUR', $user->getRoles())){
-            $beneficiaries = $beneficiaryRepository->findBy(['prescriptor' => $user]);
+            $beneficiaries = $beneficiaryRepository->findBy(['structure' => $user->getStructure()]);
             $prescriptions = $prescriptionRepository->findBy(['membre' => $user]);
             $equipments = $equipmentRepository->findByDispos($member);
         }
         if($user && in_array('ROLE_MEDIATEUR', $user->getRoles())){
-            $beneficiaries = $beneficiaryRepository->findByMediation($user);
+            $beneficiaries = $beneficiaryRepository->findByMediation($user->getStructure());
             $prescriptions = $prescriptionRepository->findBy(['lieuMediation' => $user]);
             $equipments = $equipmentRepository->findByDispos($member);
         }
@@ -35,6 +35,8 @@ final class DashboardController extends AbstractController
             $prescriptions = $prescriptionRepository->findAll();
             $equipments = $equipmentRepository->findByDispos();
         }
+
+        //dd($member,$equipments, $prescriptions, $beneficiaries);
 
         return $this->render('admin/dashboard/index.html.twig', [
             'equipments' => $equipments,

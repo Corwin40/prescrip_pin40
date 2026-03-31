@@ -88,7 +88,7 @@ final class BeneficiaryController extends AbstractController
     {
         $member = $this->getUser();
         if($member && in_array('ROLE_PRESCRIPTEUR', $member->getRoles())){
-            $beneficiaries = $beneficiaryRepository->findBy(['prescriptor' => $member]);
+            $beneficiaries = $beneficiaryRepository->findBy(['structure' => $member->getStructure()]);
         }
         if($member && in_array('ROLE_MEDIATEUR', $member->getRoles())){
             $beneficiaries = $beneficiaryRepository->findByMediation(['lieuMediation' => $member]);
@@ -107,15 +107,26 @@ final class BeneficiaryController extends AbstractController
     {
         $user = $this->getUser();
         $beneficiary = new Beneficiary();
-        $form = $this->createForm(BeneficiaryType::class, $beneficiary);
+        $form = $this->createForm(BeneficiaryType::class, $beneficiary, [
+            'action' => $this->generateUrl('app_gestapp_beneficiary_new'),
+            'method' => 'POST',
+            'attr' => [
+                'id' => 'formBeneficiary',
+            ],
+            'user' => $user,
+            'beneficiary' => $beneficiary
+        ]);
         $form->handleRequest($request);
-        $beneficiary->setPrescriptor($user);
+        $beneficiary->setReferent($user);
+        $beneficiary->setStructure($user->getStructure());
 
         if ($form->isSubmitted() && $form->isValid()) {
 
             $civility = $form->get('civility')->getData();
+            $structure = $form->get('structure')->getData();
 
             $beneficiary->setGender($civility);
+            $beneficiary->setStructure($structure);
 
             $entityManager->persist($beneficiary);
             $entityManager->flush();
@@ -126,6 +137,7 @@ final class BeneficiaryController extends AbstractController
         return $this->render('gestapp/beneficiary/new.html.twig', [
             'beneficiary' => $beneficiary,
             'form' => $form,
+            'user' => $user,
         ]);
     }
 

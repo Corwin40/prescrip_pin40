@@ -3,6 +3,7 @@
 namespace App\Form\Gestapp;
 
 use App\Entity\Admin\Member;
+use App\Entity\Admin\Structure;
 use App\Entity\Gestapp\Equipment;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -55,13 +56,14 @@ class EquipmentType extends AbstractType
             ->add('recoveryAt')
             ->add('isDispo')
             ->add('reconditioner', EntityType::class, [
-                'class' => Member::class,
+                'class' => Structure::class,
                 'choice_label' => function ($prescriptor) {
-                    return $prescriptor->getNameStructure();
+                    return $prescriptor->getName();
                 },
                 'query_builder' => function (EntityRepository $er) {
                     return $er
-                        ->createQueryBuilder('p')
+                        ->createQueryBuilder('s')
+                        ->innerJoin('s.members', 'p')
                         ->where('p.roles LIKE :roles')
                         ->setParameter('roles', '%ROLE_RECONDITIONNEUR%')
                         ->orderBy('p.id', 'ASC');

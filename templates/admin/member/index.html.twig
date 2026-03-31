@@ -49,26 +49,26 @@
                         <tr>
                             <td>
                                 <div class="d-flex align-items-center justify-content-between">
-                                    <div>{{ member.contactResponsableCivility }} {{ member.contactResponsableFirstname }} {{ member.contactResponsableLastname }}</div>
+                                    <div>{{ member.structure.contactResponsableCivility }} {{ member.structure.contactResponsableFirstname }} {{ member.structure.contactResponsableLastname }}</div>
                                     <div>
                                         {% if role == "Administrateur" %}
-                                            <span class="badge text-bg-secondary py-2">{{ role }}</span>
+                                            <span class="badge text-bg-danger py-2">{{ role }}</span>
                                         {% elseif role == "Médiateur" %}
-                                            <span class="badge text-bg-secondary py-2">{{ role }}</span>
+                                            <span class="badge text-bg-success py-2">{{ role }}</span>
                                         {% elseif role == "Prescripteur" %}
-                                            <span class="badge text-bg-secondary py-2">{{ role }}</span>
+                                            <span class="badge text-bg-primary py-2">{{ role }}</span>
                                         {% elseif role == "Reconditionneur" %}
-                                            <span class="badge text-bg-secondary py-2">{{ role }}</span>
+                                            <span class="badge text-bg-warning py-2">{{ role }}</span>
                                         {% endif %}
                                     </div>
                                 </div>
                             </td>
                             <td>
-                                <span class="fw-semibold">{{ member.nameStructure }}</span><br>
+                                <span class="fw-semibold">{{ member.structure.name }}</span><br>
                                 {{ member.email }}
                             </td>
-                            <td>{{ member.address }}<br>{{ member.zipcode }} {{ member.city }}</td>
-                            <td>{{ member.contactEmail }}<br>{{ member.contactPhone }}</td>
+                            <td>{{ member.structure.address }}<br>{{ member.structure.zipcode }} {{ member.structure.city }}</td>
+                            <td>{{ member.structure.contactEmail }}<br>{{ member.structure.contactPhone }}</td>
                             <td class="text-center">
                                 <a href="{{ path('app_admin_member_edit', {'id': member.id}) }}" class="text-dark text-decoration-none"><i class="fa-duotone fa-solid fa-user-pen"></i></a>&nbsp;&nbsp;&nbsp;
                                 <a href="{{ path('app_admin_member_delete', {'id': member.id}) }}" class="text-dark text-decoration-none openModal" ><i class="fa-duotone fa-solid fa-user-circle-minus"></i></a>&nbsp;&nbsp;&nbsp;

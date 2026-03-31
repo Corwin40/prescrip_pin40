@@ -39,7 +39,7 @@
                             {% for prescription in prescriptions %}
                                 <tr>
                                     <td>{{ prescription.ref }}</td>
-                                    <td>{{ prescription.membre }}</td>
+                                    <td>{{ prescription.prescriptor.name }}</td>
                                     <td>
                                         <div class="d-flex justify-content-between align-items-center">
                                             <div>
