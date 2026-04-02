@@ -88,7 +88,7 @@ final class PrescriptionController extends AbstractController
     {
         $member = $this->getUser();
         if($member && in_array('ROLE_PRESCRIPTEUR', $member->getRoles())){
-            $prescriptions = $prescriptionRepository->findBy(['membre' => $member]);
+            $prescriptions = $prescriptionRepository->findBy(['prescriptor' => $member->getStructure()]);
         }
         if($member && in_array('ROLE_MEDIATEUR', $member->getRoles())){
             $prescriptions = $prescriptionRepository->findBy(['lieuMediation' => $member]);

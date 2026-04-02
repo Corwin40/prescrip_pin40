@@ -22,7 +22,7 @@ final class DashboardController extends AbstractController
 
         if($user && in_array('ROLE_PRESCRIPTEUR', $user->getRoles())){
             $beneficiaries = $beneficiaryRepository->findBy(['structure' => $user->getStructure()]);
-            $prescriptions = $prescriptionRepository->findBy(['membre' => $user]);
+            $prescriptions = $prescriptionRepository->findBy(['prescriptor' => $user->getStructure()]);
             $equipments = $equipmentRepository->findByDispos($member);
         }
         if($user && in_array('ROLE_MEDIATEUR', $user->getRoles())){

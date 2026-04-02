@@ -78,8 +78,10 @@ class PrescriptionType extends AbstractType
                         'query_builder' => function (EntityRepository $er) use ($user) {
                             return $er->createQueryBuilder('b')
                                 ->leftJoin('b.prescription', 'p')
-                                ->where('b.prescriptor = :prescriptor')
-                                ->setParameter('prescriptor', $user)
+                                ->leftJoin('b.structure', 's')
+                                //->join('s.members', 'm')
+                                ->where('s.id = :idStructure')
+                                ->setParameter('idStructure', $user->getStructure())
                                 ->andWhere('p.id IS NULL')
                                 ->orderBy('b.id', 'ASC');
                         },
@@ -97,10 +99,11 @@ class PrescriptionType extends AbstractType
                         'query_builder' => function (EntityRepository $er) use ($user) {
                             return $er->createQueryBuilder('b')
                                 ->leftJoin('b.prescription', 'p')
-                                ->leftJoin('b.prescriptor', 'm')
+                                ->leftJoin('b.structure', 's')
+                                ->join('s.members', 'm')
                                 ->join('m.referent', 'r')
-                                ->where('r.id = :member')
-                                ->setParameter('member', $user)
+                                ->where('r.id = :idreferent')
+                                ->setParameter('idreferent', $user)
                                 ->andWhere('p.id IS NULL')
                                 ->orderBy('b.id', 'ASC')
                                 ;
@@ -205,9 +208,70 @@ class PrescriptionType extends AbstractType
 
         }
         if($route === 'app_gestapp_prescription_edit') {
-            $builder
-                ->add('beneficiaire')
-            ;
+            // on filtre les bénéficiaires selon le prescripteur
+            if($user && in_array('ROLE_PRESCRIPTEUR', $user->getRoles())) {
+                $builder
+                    ->add('beneficiaire', EntityType::class, [
+                        'class' => Beneficiary::class,
+                        'choice_label' => function ($beneficiary) {
+                            return $beneficiary->getFirstname() . ' ' . $beneficiary->getLastname();
+                        },
+                        'query_builder' => function (EntityRepository $er) use ($user) {
+                            return $er->createQueryBuilder('b')
+                                ->leftJoin('b.prescription', 'p')
+                                ->leftJoin('b.structure', 's')
+                                //->join('s.members', 'm')
+                                ->where('s.id = :idStructure')
+                                ->setParameter('idStructure', $user->getStructure())
+                                ->andWhere('p.id IS NULL')
+                                ->orderBy('b.id', 'ASC');
+                        },
+                        'disabled' => true,
+                    ])
+                ;
+            }
+            elseif ($user && in_array('ROLE_MEDIATEUR', $user->getRoles())) {
+                // On, filtre les bénficiaire selon le mediateur
+                $builder
+                    ->add('beneficiaire', EntityType::class, [
+                        'class' => Beneficiary::class,
+                        'choice_label' => function ($beneficiary) {
+                            return $beneficiary->getFirstname() . ' ' . $beneficiary->getLastname();
+                        },
+                        'query_builder' => function (EntityRepository $er) use ($user) {
+                            return $er->createQueryBuilder('b')
+                                ->leftJoin('b.prescription', 'p')
+                                ->leftJoin('b.structure', 's')
+                                ->join('s.members', 'm')
+                                ->join('m.referent', 'r')
+                                ->where('r.id = :idreferent')
+                                ->setParameter('idreferent', $user)
+                                ->andWhere('p.id IS NULL')
+                                ->orderBy('b.id', 'ASC')
+                                ;
+                        },
+                        'disabled' => true,
+                    ])
+                ;
+            }
+            // on prends tous les bénéficiaires
+            else{
+                $builder
+                    ->add('beneficiaire', EntityType::class, [
+                        'class' => Beneficiary::class,
+                        'choice_label' => function ($beneficiary) {
+                            return $beneficiary->getFirstname() . ' ' . $beneficiary->getLastname();
+                        },
+                        'query_builder' => function (EntityRepository $er) use ($user) {
+                            return $er->createQueryBuilder('b')
+                                ->leftJoin('b.prescription', 'p')
+                                ->andWhere('p.id IS NULL')
+                                ->orderBy('b.id', 'ASC');
+                        },
+                        'disabled' => true,
+                    ])
+                ;
+            }
 
             if(in_array($prescription->getStep()->name, ['Open', 'OneParts', 'TwoParts'])){
                 if ( $user && (
