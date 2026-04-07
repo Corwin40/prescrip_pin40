@@ -13,6 +13,7 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -40,7 +41,9 @@ class PrescriptionType extends AbstractType
                 'label' => 'Objet de la prescription',
                 'required' => false
             ])
-            ->add('details')
+            ->add('details', TextareaType::class, [
+                'label' => 'A completer par le prescripteur',
+            ])
             ->add('baseCompetence', ChoiceType::class, [
                 'label' => 'Compétences de base',
                 'choices' => [

@@ -291,6 +291,9 @@
             "./templates/base.html.twig"
         ]
     },
+    "symfony/ux-dropzone": {
+        "version": "v2.34.0"
+    },
     "symfony/ux-turbo": {
         "version": "2.30",
         "recipe": {

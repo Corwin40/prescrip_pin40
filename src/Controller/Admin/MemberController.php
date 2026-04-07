@@ -24,15 +24,25 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 
 #[Route('/admin/member')]
-#[IsGranted('ROLE_ADMIN')]
 final class MemberController extends AbstractController
 {
     #[Route('/', name: 'app_admin_member_index', methods: ['GET'])]
     public function index(MemberRepository $memberRepository): Response
     {
-        return $this->render('admin/member/index.html.twig', [
-            'members' => $memberRepository->findAll(),
-        ]);
+        $user = $this->getUser();
+
+        if($user && in_array('ROLE_SUPER_ADMIN', $user->getRoles())){
+            return $this->render('admin/member/index.html.twig', [
+                'members' => $memberRepository->findAll(),
+            ]);
+        }
+
+        if($user && in_array('ROLE_MEDIATEUR', $user->getRoles())){
+            return $this->render('admin/member/index.html.twig', [
+                'members' => $memberRepository->findBy(['referent' => $user]),
+            ]);
+        }
+        return $this->redirectToRoute('app_admin_dashboard_index');
     }
 
     #[Route('/new/{role}', name: 'app_admin_member_new', methods: ['GET', 'POST'])]

@@ -23,7 +23,10 @@
 {% elseif prescription.step.name == 'GeneratePDF' %}
     {% if prescription.path is null %}
     {% else %}
-        <a href="{{ asset(prescription.path) }}" class="openModal" data-bs-data="VIEW_PRESCRIPTION-Voir la prescription-{{ prescription.id }}">Voir le PDF</a>
+        <div class="d-flex flex-row gap-2">
+            <a href="{{ asset(prescription.path) }}" class="openModal circle text-decoration-none" data-bs-data="VIEW_PRESCRIPTION-Voir la prescription-{{ prescription.id }}"><i class="fa-sharp fa-light fa-file-pdf"></i></a>
+            <a href="{{ path('app_gestapp_document_prescriptionsigned_manually', {'idprescription': prescription.id}) }}" class="openModal circle" data-bs-data="UPLOAD_PRESCRIPTIONSIGNED-Charger la prescription signée manuellement-"><i class="fa-sharp fa-light fa-arrow-down-to-bracket"></i></a>
+        </div>
     {% endif %}
 {% elseif prescription.step.name == 'Signed' %}
     <span class="badge text-bg-info p-2">pdf signé par le bénéficiaire</span>

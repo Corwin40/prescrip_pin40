@@ -1,13 +1,12 @@
 {% set disabled = disabled|default(false) %}
 {% set rows = rows|default(5) %}
 <div class="mb-3">
-    <label class="form-label">{{ label }}</label>
-
-    {{ form_widget(field, {
+    {% if show_label is true %}<label class="form-label">{{ form_label(form) }}</label>{% else %}{% endif %}
+    {{ form_widget(form, {
         attr: {
             class: 'form-control border border-1 border-secondary shadow-sm',
             rows: rows
         } | merge(disabled ? { disabled: 'disabled' } : {})
     }) }}
-    {{ form_errors(field) }}
+    {{ form_errors(form) }}
 </div>

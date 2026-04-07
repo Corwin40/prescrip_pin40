@@ -1,4 +1,5 @@
 import * as bootstrap from 'bootstrap';
+import {toasterMessage} from "../../../components/bootstrap/toaster";
 import axios from 'axios';
 
 export function initIndex_Dashboard() {
@@ -12,16 +13,6 @@ export function initIndex_Dashboard() {
 
     /** reset modal automatique après fermeture */
     modalEl.addEventListener('hidden.bs.modal', () => {
-        const deleteUrl = modal.dataset.deleteUrl;
-        if (deleteUrl) {
-            axios.post(deleteUrl)
-                .then(() => console.log('Entité temporaire supprimée'))
-                .catch(err => console.error('Erreur lors de la suppression', err));
-
-            // Nettoyage de la valeur
-            delete modal.dataset.deleteUrl;
-        }
-
         modalEl.querySelector('.modal-dialog').classList.remove('modal-lg', 'modal-xl');
         modalEl.querySelector('.modal-body').innerHTML = `
               <div class="d-flex justify-content-center">
@@ -40,9 +31,9 @@ export function initIndex_Dashboard() {
         let a = e.currentTarget;
         let url = a.href;
         const [crud, contentTitle, option] = a.dataset.bsData.split('-');
-        modalEl.querySelector('.modal-title').classList.add('d-none');
-        if(crud === "VIEW_PRESCRIPTION")
-        {
+
+        if(crud === "VIEW_PRESCRIPTION") {
+            modalEl.querySelector('.modal-title').classList.add('d-none');
             modalEl.querySelector('.modal-dialog').classList.add('modal-xl');
             modalEl.querySelector('.modal-body').classList.add(('p-0'));
             modalEl.querySelector('.modal-body').innerHTML = '<iframe src="" width="100%" height="600px"></iframe>';
@@ -52,15 +43,49 @@ export function initIndex_Dashboard() {
             confirmBtn.classList.add('d-none');
             modal.show();
         }
+        else if(crud === "UPLOAD_PRESCRIPTIONSIGNED"){
+            modalEl.querySelector('.modal-title').innerText = contentTitle;
+            modalEl.querySelector('.modal-body').classList.add(('p-1'));
+            const footer = modalEl.querySelector('.modal-footer');
+            const confirmBtn = footer.querySelector('a');
+            confirmBtn.href = url;
+            axios
+                .get(url)
+                .then(({data}) => {
+                    modalEl.querySelector('.modal-body').innerHTML = data.formView;
+                })
+                .catch(error => {console.log(error)})
+            ;
+            modal.show();
+        }
+    }
+
+    function submitModal(e){
+        e.preventDefault()
+        let modalContent = e.currentTarget.parentNode.parentElement;
+        let form = modalContent.querySelector('form');
+        let action = form.action
+        let data = new FormData(form)
+        axios
+            .post(action, data)
+            .then(({data}) => {
+                modal.hide()
+                toasterMessage(data.message);
+                reloadEvent();
+            })
+            .catch(error => {
+                console.log(error)
+            })
     }
 
     function reloadEvent(){
-        let btnSubmitModal = document.getElementById('btnModalSubmit');
+        let btnSubmitModal = document.getElementById('btnSubmitModal');
         let btnsOpenModal = document.querySelectorAll('.openModal');
 
         btnsOpenModal.forEach(function(link){
             link.addEventListener('click', openModal);
         });
+        btnSubmitModal.addEventListener('click', submitModal);
     }
 
     reloadEvent();

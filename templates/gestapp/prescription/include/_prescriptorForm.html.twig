@@ -11,16 +11,16 @@
             <div class="col-md-6">
                 {% if role == 'Médiateur' %}
                     {% include 'composants/inputs/input_select.html.twig' with {
-                        label: 'Sélectionner la structure de prescription',
-                        field: form.prescriptor,
-                        disabled: ''
+                        form: form.prescriptor,
+                        disabled: '',
+                        show_label: true
                     } %}
                 {% else %}
                     <p class="mb-0 alert alert-warning">Le bénéficiaire étant enregistré par ou avec un organisme de prescription, le prescripteur choisi sera ce dernier.</p>
                     {% include 'composants/inputs/input_select.html.twig' with {
-                        label: 'Sélectionner la structure de prescription',
-                        field: form.prescriptor,
-                        disabled: true
+                        form: form.prescriptor,
+                        disabled: true,
+                        show_label: true
                     } %}
                 {% endif %}
             </div>

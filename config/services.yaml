@@ -5,7 +5,9 @@
 # https://symfony.com/doc/current/best_practices.html#use-parameters-for-application-configuration
 parameters:
     prescription_directory_url: '%kernel.project_dir%/public/documents/originals/'
+    prescription_signed_directory_url: '%kernel.project_dir%/public/documents/signeds/'
     prescription_directory: '/documents/originals/'
+    prescription_signed_directory: '/documents/signeds/'
 services:
     # default configuration for services in *this* file
     _defaults:

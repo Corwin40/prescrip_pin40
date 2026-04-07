@@ -3,7 +3,32 @@ body{
     display: grid;
     grid-template-rows: auto 1fr auto;
     overflow: hidden;
+
+    main{
+        #cards_infos{
+            .card:hover{
+                background: #f7f7f7;
+            }
+        }
+    }
 }
+
+.circle {
+    width: 30px;
+    height: 30px;
+    background-color: #f2f2f2;
+    border-radius: 50%;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    color: black; /* couleur de l’icône */
+    font-size: 14px;
+}
+
+.circle:hover{
+    background: rgba(0,0,0,0.2);}
 
 #page_content {
     height: calc(90vh - 150px);

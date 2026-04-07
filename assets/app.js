@@ -9,6 +9,7 @@
 // this "modifies" the jquery module: adding behavior to it
 // the bootstrap module doesn't export/return anything
 import 'bootstrap';
+import './bootstrap.js';
 import * as bootstrap from 'bootstrap';
 window.bootstrap = bootstrap;
 

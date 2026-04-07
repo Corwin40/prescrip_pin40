@@ -3,43 +3,32 @@
 {% block title %}Modifier l’équipement{% endblock %}
 
 {% block body %}
-
     {# Bloc entête de page #}
-    {%
-        include 'composants/pages/pages_headers.html.twig' with {
-        'page_title' : 'Liste des équipements disponibles à la dotation',
-        'li_items': [
-            { path: 'app_admin_dashboard_index', fa_class: 'fa-sharp-duotone fa-solid fa-house-blank', a_title: 'Dashboard' },
-            { path: 'app_gestapp_equipment_index', fa_class: 'fa-sharp fa-light fa-laptop', a_title: 'équipements' },
-            { path: null, fa_class: 'fa-sharp fa-light fa-laptop', a_title: 'Ajouter un nouvel équipement' },
-        ],
-        'btns' : [
-            {'path': path('app_gestapp_equipment_new'), 'id':'btnAddEquipment', 'class' : 'btn btn-outline-dark btn-sm', 'fa_class' : 'fa-duotone fa-solid fa-circle-user-circle-plus', 'textcontent' : 'Ajouter un équipement'},
-        ]
-    }
-    %}
+    <section id="page_header">
+        {# Bloc entête de page #}
+        {%
+            include 'composants/pages/pages_headers.html.twig' with {
+            'page_title' : 'Liste des équipements disponibles à la dotation',
+            'li_items': [
+                { path: 'app_admin_dashboard_index', fa_class: 'fa-sharp-duotone fa-solid fa-house-blank', a_title: 'Dashboard' },
+                { path: 'app_gestapp_equipment_index', fa_class: 'fa-sharp fa-light fa-laptop', a_title: 'équipements' },
+                { path: null, fa_class: 'fa-sharp fa-light fa-laptop', a_title: 'Ajouter un nouvel équipement' },
+            ],
+            'btns' : [
+                {'path': path('app_gestapp_equipment_new'), 'id':'btnAddEquipment', 'class' : 'btn btn-outline-dark btn-sm', 'fa_class' : 'fa-duotone fa-solid fa-circle-user-circle-plus', 'textcontent' : 'Ajouter un équipement'},
+            ]
+        }
+        %}
+    </section>
 
-    <div class="container mt-5">
+    <section id="page_content">
+        <h1 class="h3 mb-4">Modifier l’équipement</h1>
+        {{ include('gestapp/equipment/_form.html.twig', {'button_label': 'Mettre à jour'}) }}
+    </section>
+    <section id="page_footer">
 
-        <h1 class="mb-4">Modifier l’équipement</h1>
+    </section>
 
-        <div class="card p-4 shadow-sm">
-            {% include 'gestapp/equipment/_form.html.twig' with {
-                form: form,
-                button_label: 'Mettre à jour'
-            } %}
-        </div>
 
-        <div class="mt-3 d-flex gap-2">
-            {% include 'composants/showsTable/button_return_list.html.twig' with {
-                href: path('app_admin_dashboard_index'),
-                label: 'Retour'
-            } %}
 
-            {% include 'composants/showsTable/buttons_delete.html.twig' with {
-                id: equipment.id,
-                route: 'app_gestapp_equipment_delete'
-            } %}
-        </div>
-    </div>
 {% endblock %}

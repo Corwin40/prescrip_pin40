@@ -73,14 +73,32 @@ class CompetenceType extends AbstractType
                 'label' => 'L\'auto évaluation du bénéficiaire a été réalisée après l\'action.',
                 'required' => false,
             ])
-            ->add('isDigComp0')
-            ->add('isDigComp1')
-            ->add('isDigComp2')
-            ->add('isDigComp3')
-            ->add('isDigComp4')
-            ->add('isDigComp5')
+            ->add('isDigComp0',CheckboxType::class,[
+                'label' => '0 - Compétences matérielles',
+                'required' => false,
+            ])
+            ->add('isDigComp1',CheckboxType::class, [
+                'label' => '1 - Information et données',
+                'required' => false,
+            ])
+            ->add('isDigComp2',CheckboxType::class, [
+                'label' => '2 - Communication et collaboration',
+                'required' => false,
+                ])
+            ->add('isDigComp3',CheckboxType::class, [
+                'label' => '3 - Création de contenu',
+                'required' => false,
+            ])
+            ->add('isDigComp4',CheckboxType::class, [
+                'label' => '4 - Protection et securité',
+                'required' => false,
+            ])
+            ->add('isDigComp5',CheckboxType::class, [
+                'label' => '5 - Environnement numérique',
+                'required' => false,
+            ])
             ->add('detailParcour',TextareaType::class,[
-                'label' => 'detail parcour',
+                'label' => 'A completer par le médiateur',
                 'required' => false,
             ])
         ;

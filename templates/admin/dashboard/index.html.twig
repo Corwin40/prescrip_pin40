@@ -21,7 +21,7 @@
     </div>
 
     {# --- Section chiffres : ordis dispo & prescriptions --- #}
-    <div class="row g-2 mb-2">
+    <div id="cards_infos" class="row g-2 mb-2">
         {% if role == 'Médiateur' or role == 'Administrateur'%}
             <div class="col-md-3 mb-3">
                 <div class="card">
@@ -69,7 +69,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-12">
+        <div class="col-12 mb-2">
             <!-- Tableau prescriptions -->
             <div class="table-container">
                 <table class="table table-hover">
@@ -103,14 +103,19 @@
 
                         <td class="position-relative">
                             <a href="{{ path('app_gestapp_prescription_edit', {'id': prescription.id}) }}" class="stretched-link"></a>
-                            {{ prescription.prescriptor.name }}</td>
-                        <td>{{ prescription.lieuMediation }}</td>
-                        <td>
+                            {{ prescription.prescriptor.name }}
+                        </td>
+                        <td class="position-relative">
+                            <a href="{{ path('app_gestapp_prescription_edit', {'id': prescription.id}) }}" class="stretched-link"></a>
+                            {{ prescription.lieuMediation }}
+                        </td>
+                        <td class="position-relative">
+                            <a href="{{ path('app_gestapp_prescription_edit', {'id': prescription.id}) }}" class="stretched-link"></a>
                             {% if prescription.equipement is not null %}
                                 {{ prescription.equipement }}
                             {% endif %}
                         </td>
-                        <td>
+                        <td class="position-relative">
                             {{ include('composants/pages/badge.html.twig') }}
                         </td>
 

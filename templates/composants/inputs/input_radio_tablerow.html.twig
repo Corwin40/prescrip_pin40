@@ -1,10 +1,10 @@
 <tr>
     {% set disabled = disabled|default(false) %}
 
-    {% if form_label is defined %}
-        <td><b>{{ form_label }}</b></td>
+    {% if show_label is true %}
+        <td><b>{{ label }}</b></td>
     {% endif %}
-    {% for choice in form_field %}
+    {% for choice in form %}
         <td class="text-center">
             <label class="form-check-label mx-2">
                 {{ form_widget(choice, {

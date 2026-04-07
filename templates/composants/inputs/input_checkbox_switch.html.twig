@@ -1,6 +1,7 @@
+
 {% set disabled = disabled|default(false) %}
 <div class="form-check form-switch">
-    {{ form_widget(form_field, {
+    {{ form_widget(form, {
         attr: {
             class: 'form-check-input',
             role: 'switch',
@@ -8,6 +9,6 @@
         } | merge(disabled ? { disabled: 'disabled' } : {})
     }) }}
     {% if form_label is defined %}
-        {{ form_label(form_field) }}
+        {{ form_label(form) }}
     {% endif %}
 </div>

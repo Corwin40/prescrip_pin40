@@ -3,78 +3,82 @@
 
     <div class="row g-2">
         <h2 class="h4 mb-0">Le matériel</h2>
-        <div class="col-md-2">
-            {% include 'composants/inputs/input_text.html.twig' with {
-                label: 'Id',
-                field: form.equipmentId,
-                disabled: false
-            } %}
-        </div>
-        <div class="col-md-2">
-            {% include 'composants/inputs/input_text.html.twig' with {
-                label: 'Matricule',
-                field: form.matriculEquipment,
-                disabled: false
-            } %}
-        </div>
-        <div class="col-md-2">
-            {% include 'composants/inputs/input_select.html.twig' with {
-                label: 'Type d’équipement',
-                field: form.typeEquipment
-            } %}
-        </div>
-        <div class="col-md-2">
-            {% include 'composants/inputs/input_text.html.twig' with {
-                label: 'Marque',
-                field: form.brandEquipment,
-                disabled: false
-            } %}
-        </div>
+        <div class="col-12">
+            <div class="row g-2">
+                <div class="col-md-2">
+                    {% include 'composants/inputs/input_text.html.twig' with {
+                        form: form.equipmentId,
+                        disabled: false,
+                        show_label: false
+                    } %}
+                </div>
+                <div class="col-md-2">
+                    {% include 'composants/inputs/input_text.html.twig' with {
+                        form: form.matriculEquipment,
+                        disabled: false,
+                        show_label: false
+                    } %}
+                </div>
+                <div class="col-md-2">
+                    {% include 'composants/inputs/input_select.html.twig' with {
+                        form: form.typeEquipment,
+                        show_label: false
+                    } %}
+                </div>
+                <div class="col-md-2">
+                    {% include 'composants/inputs/input_text.html.twig' with {
+                        form: form.brandEquipment,
+                        disabled: false,
+                        show_label: false
+                    } %}
+                </div>
+                <div class="col-md-2">
+                    {% include 'composants/inputs/input_select.html.twig' with {
+                        form: form.osInstalled,
+                        show_label: false
+                    } %}
+                </div>
+                <div class="col-md-2">
+                    {% include 'composants/inputs/input_select.html.twig' with {
+                        form: form.statusEquipment,
+                        show_label: false
+                    } %}
+                </div>
+            </div>
+            <div class="row g-2">
+                <h2 class="h4 mb-0">Informations complémentaires</h2>
+                <div class="col-md-8">
+                    {% include 'composants/inputs/input_textarea.html.twig' with {
+                        form: form.note,
+                        show_label: false
+                    } %}
+                </div>
+            </div>
+            <div class="row align-items-center g-2">
+                <div class="col-md-3">
+                    {% include 'composants/inputs/input_text.html.twig' with {
+                        form: form.recoveryAt,
+                        disabled: false,
+                        show_label: false
+                    } %}
+                </div>
+                <div class="col-md-3">
+                    {% include 'composants/inputs/input_text.html.twig' with {
+                        form: form.reconditioner,
+                        disabled: false,
+                        show_label: false
+                    } %}
+                </div>
 
-        <div class="col-md-2">
-            {% include 'composants/inputs/input_select.html.twig' with {
-                label: 'OS installé',
-                field: form.osInstalled
-            } %}
-        </div>
-        <div class="col-md-2">
-            {% include 'composants/inputs/input_select.html.twig' with {
-                label: 'Statut',
-                field: form.statusEquipment
-            } %}
-        </div>
-    </div>
-    <div class="row g-2">
-        <h2 class="h4 mb-0">Informations complémentaires</h2>
-        <div class="col-md-8">
-            {% include 'composants/inputs/input_textarea.html.twig' with {
-                label: 'Notes',
-                field: form.note
-            } %}
-        </div>
-        <div class="clear"></div>
-        <div class="col-md-3">
-            {% include 'composants/inputs/input_text.html.twig' with {
-                label: 'Réceptionné par le lieu de médiation',
-                field: form.recoveryAt,
-                disabled: false
-            } %}
-        </div>
-        <div class="col-md-3">
-            {% include 'composants/inputs/input_text.html.twig' with {
-                label: 'Réceptionné par le lieu de médiation',
-                field: form.reconditioner,
-                disabled: false
-            } %}
-        </div>
+                <div class="col-md-3">
+                    {% include 'composants/forms/check_verif.html.twig' with {
+                        form: form.isDispo,
+                        show_label: false
+                    } %}
+                </div>
 
-        <div class="col-4 pt-4 mt-4 ps-4">
-            {% include 'composants/forms/check_verif.html.twig' with {
-                label: 'Disponible',
-                field: form.isDispo
-            } %}
+            </div>
         </div>
-
     </div>
 
     <div class="row">

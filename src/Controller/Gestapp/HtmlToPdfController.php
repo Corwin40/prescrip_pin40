@@ -39,7 +39,7 @@ final class HtmlToPdfController extends AbstractController
             $pdfContent = ob_get_clean(); // récupère le binaire
 
             // stockage sur disque
-            $filename = $prescription->getRef().'.pdf';
+            $filename = $prescription->getRef().'_original.pdf';
             $path = $this->getParameter('prescription_directory_url').$filename;
 
             if(!is_dir($this->getParameter('prescription_directory_url'))){

@@ -1,9 +1,10 @@
 <div class="mb-3">
-    <label class="form-label">{{ label }}</label>
-    {{ form_widget(field, {
+    {% if show_label is true %}<label class="form-label">{{ form_label(form) }}</label>{% else %}{% endif %}
+    {{ form_widget(form, {
         attr: {
             class: 'form-control form-control-sm border border-1 border-dark shadow-sm'
         } | merge(disabled ? {disabled:'disabled'} : {})
     }) }}
-    {{ form_errors(field) }}
+    <span class="text-secondary">{{ form_help(form) }}</span>
+    <span class="text-danger">{{ form_errors(form) }}</span>
 </div>

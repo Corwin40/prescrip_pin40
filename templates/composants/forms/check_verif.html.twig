@@ -1,7 +1,7 @@
-<div class="form-check mb-3">
-    {{ form_widget(field, {'attr': {'class': 'form-check-input'}}) }}
-    <label class="form-check-label" for="{{ field.vars.id }}">
-        {{ label|default(form_label(field)) }}
-    </label>
-    {{ form_errors(field) }}
+<div class="mb-3">
+    <div class="form-check">
+        {{ form_widget(form, {'attr': {'class': 'form-check-input'}}) }}
+        {{ form_label(form) }}
+    </div>
+    {{ form_errors(form) }}
 </div>
