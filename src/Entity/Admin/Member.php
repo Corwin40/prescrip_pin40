@@ -305,7 +305,7 @@ class Member implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->civility;
     }
 
-    public function setStep(Civility $civility): static
+    public function setCivility(Civility $civility): static
     {
         $this->civility = $civility;
 
