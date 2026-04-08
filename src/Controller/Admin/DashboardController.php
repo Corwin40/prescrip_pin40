@@ -35,6 +35,11 @@ final class DashboardController extends AbstractController
             $prescriptions = $prescriptionRepository->findAll();
             $equipments = $equipmentRepository->findByDispos();
         }
+        if($user && in_array('ROLE_SUPER_ADMIN', $user->getRoles())){
+            $beneficiaries = $beneficiaryRepository->findAll();
+            $prescriptions = $prescriptionRepository->findAll();
+            $equipments = $equipmentRepository->findByDispos();
+        }
 
         //dd($member,$equipments, $prescriptions, $beneficiaries);
 
