@@ -26,7 +26,10 @@
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end">
                             <li><a class="dropdown-item" href="{{ path('app_admin_member_edit', {'id': app.user.id}) }}"><i class="fa-sharp-duotone fa-solid fa-circle-info"></i> Mes informations</a></li>
-                            {% if is_granted('ROLE_SUPER_ADMIN') or is_granted('ROLE_MEDIATEUR') %}
+                            {% if is_granted('ROLE_ADMIN') %}
+                                <li><a class="dropdown-item" href="{{ path('app_admin_structure_index') }}"><i class="fa-duotone fa-solid fa-building-magnifying-glass"></i> Structures</a></li>
+                            {% endif %}
+                            {% if is_granted('ROLE_MEDIATEUR') %}
                                 <li><a class="dropdown-item" href="{{ path('app_admin_member_index') }}"><i class="fa-duotone fa-solid fa-users"></i> Utilisateurs</a></li>
                             {% endif %}
                             <li><hr class="dropdown-divider"></li>

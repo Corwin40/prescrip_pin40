@@ -1,0 +1,152 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Liste des membres{% endblock %}
+
+{% block body %}
+
+    {# Bloc entête de page #}
+    <section id="page_header">
+        {% if is_granted('ROLE_SUPER_ADMIN') %}
+            {%
+                include 'composants/pages/pages_headers.html.twig' with {
+                'page_title' : 'Liste des Membres',
+                'li_items': [
+                    { path: 'app_admin_dashboard_index', fa_class: 'fa-sharp-duotone fa-solid fa-house-blank', a_title: 'Dashboard' },
+                    { path: null, fa_class: 'fa-sharp fa-light fa-laptop', a_title: 'Membres' },
+                ],
+                'btns' : [
+                    {'path': path('app_admin_member_new', {'role': 'prescripteur'}), 'id':'btnAddMembre', 'class' : 'btn btn-outline-dark btn-sm', 'fa_class' : 'fa-duotone fa-solid fa-circle-user-circle-plus', 'textcontent' : 'Ajouter un.e prescripteur'},
+                    {'path': path('app_admin_member_new', {'role': 'mediateur'}), 'id':'btnAddMembre', 'class' : 'btn btn-outline-dark btn-sm', 'fa_class' : 'fa-duotone fa-solid fa-circle-user-circle-plus', 'textcontent' : 'Ajouter un.e mediateur'},
+                    {'path': path('app_admin_member_new', {'role': 'admin'}), 'id':'btnAddMembre', 'class' : 'btn btn-outline-dark btn-sm', 'fa_class' : 'fa-duotone fa-solid fa-circle-user-circle-plus', 'textcontent' : 'Ajouter un.e admin'},
+
+                ]
+            }
+            %}
+        {% else %}
+            {%
+                include 'composants/pages/pages_headers.html.twig' with {
+                'page_title' : 'Liste des Membres',
+                'li_items': [
+                    { path: 'app_admin_dashboard_index', fa_class: 'fa-sharp-duotone fa-solid fa-house-blank', a_title: 'Dashboard' },
+                    { path: null, fa_class: 'fa-sharp fa-light fa-laptop', a_title: 'Membres' },
+                ],
+                'btns' : [
+                    {'path': path('app_admin_member_new', {'role': 'mediateur'}), 'id':'btnAddMembre', 'class' : 'btn btn-outline-dark btn-sm', 'fa_class' : 'fa-duotone fa-solid fa-circle-user-circle-plus', 'textcontent' : 'Ajouter un.e mediateur'},
+                ]
+            }
+            %}
+        {% endif %}
+
+    </section>
+
+    <section id="page_content">
+        <div class="row mb-2">
+            <div class="col-md-12">
+                {{ ux_map(map, {style: 'height: 400px;'}) }}
+            </div>
+        </div>
+        <div class="row g-1">
+            {% for structure in structures %}
+                <div class="col-12">
+                    <div class="card shadow-sm border-1 border-dark">
+                        <div class="card-body">
+                            <div class="row g-4">
+
+                                {# =======================
+                                    COLONNE BÉNÉFICIAIRE
+                                ======================== #}
+                                <div class="col-lg-8">
+                                    <div class="d-flex align-items-center">
+                                        <div class="bg-primary bg-opacity-10 text-primary rounded-circle d-flex align-items-center justify-content-center me-3" style="width:40px;height:40px;">
+                                            <i class="fa-duotone fa-solid fa-building-flag"></i>
+                                        </div>
+                                        <div>
+                                            <h5 class="mb-0">
+                                                {{ structure.name }}
+                                            </h5>
+                                        </div>
+                                    </div>
+
+                                    <hr class="my-3">
+
+                                    <div class="row">
+                                        <div class="col-md-2">
+                                            <p class="mb-0 fw-semibold">Contacts :</p>
+                                        </div>
+                                        {% for m in structure.members %}
+                                            {% if loop.first %}
+                                            <div class="col-md-6">
+                                                <div class="d-flex justify-content-around">
+                                                    <div>
+                                                        <p class="text-start text-muted mb-0">{{ m.civility.value }} {{ m.firstName }} {{ m.lastName }}</p>
+                                                    </div>
+                                                    <div>
+                                                        <p class="text-end text-muted mb-0">{{ m.email}}</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="clear"></div>
+                                            {% else %}
+
+                                                <div class="col-md-6 offset-md-2">
+                                                    <div class="d-flex justify-content-around">
+                                                        <div>
+                                                            <p class="text-start text-muted mb-0">{{ m.civility.value }} {{ m.firstName }} {{ m.lastName }}</p>
+                                                        </div>
+                                                        <div>
+                                                            <p class="text-end text-muted mb-0">{{ m.email}}</p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="clear"></div>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </div>
+
+                                    <div class="row small text-muted mt-4">
+                                        <div class="col-sm-6">
+                                            <i class="bi bi-calendar-plus me-1"></i>
+                                            Créé le : {{ structure.createdAt ? structure.createdAt|date('d/m/Y') : '' }}
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <i class="bi bi-pencil-square me-1"></i>
+                                            Modifié le : {{ structure.updatedAt ? structure.updatedAt|date('d/m/Y') : '' }}
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                                {# =======================
+                            COLONNE PRESCRIPTEUR
+                        ======================== #}
+                                <div class="col-lg-4">
+                                    <div class="card bg-light border-0 h-100">
+                                        <div class="card-body">
+                                            <h6 class="text-uppercase text-muted mb-3">
+                                                Coordonnées
+                                            </h6>
+                                            <div class="d-flex align-items-center">
+                                                <div>
+                                                    <div class="fw-semibold">
+                                                        {{ structure.name }}
+                                                    </div>
+                                                    <small class="text-muted">{{ structure.address }}<br>{{ structure.zipcode }} {{ structure.city }}</small>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </section>
+
+
+
+
+{% endblock %}
+
