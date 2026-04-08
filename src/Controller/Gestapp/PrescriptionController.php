@@ -271,7 +271,7 @@ final class PrescriptionController extends AbstractController
             elseif($step == StepPrescription::TwoParts){
                 if($user && (in_array('ROLE_SUPER_ADMIN', $user->getRoles()) || in_array('ROLE_ADMIN', $user->getRoles()) || in_array('ROLE_MEDIATEUR', $user->getRoles()) ) ){
                     $beneficiaire = $form->get('beneficiaire')->getData();
-                    $prescripteur = $beneficiaire->getPrescriptor();
+                    $prescripteur = $beneficiaire->getStructure();
                     $prescription->setPrescriptor($prescripteur);
                     $prescription->setStep(StepPrescription::ChoiceEquipment);
                 }
@@ -283,14 +283,14 @@ final class PrescriptionController extends AbstractController
             elseif($step == StepPrescription::ChoiceEquipment){
                 if($user && (in_array('ROLE_SUPER_ADMIN', $user->getRoles()) || in_array('ROLE_ADMIN', $user->getRoles()) || in_array('ROLE_MEDIATEUR', $user->getRoles()) ) ){
                     $beneficiaire = $form->get('beneficiaire')->getData();
-                    $prescripteur = $beneficiaire->getPrescriptor();
+                    $prescripteur = $beneficiaire->getStructure();
                     $prescription->setPrescriptor($prescripteur);
                     $prescription->setValidcase(1);
                     $prescription->setStep(StepPrescription::ValidCase);
                 }
                 if($user && in_array('ROLE_MEDIATEUR', $user->getRoles())){
                     $beneficiaire = $form->get('beneficiaire')->getData();
-                    $prescripteur = $beneficiaire->getPrescriptor();
+                    $prescripteur = $beneficiaire->getStructure();
                     $prescription->setPrescriptor($prescripteur);
                     $prescription->setValidcase(1);
                     $prescription->setStep(StepPrescription::ValidCase);

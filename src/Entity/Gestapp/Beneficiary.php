@@ -35,12 +35,6 @@ class Beneficiary
     #[ORM\Column(length: 40)]
     private ?string $professionnalStatus = null;
 
-    #[ORM\Column(type: Types::DATE_MUTABLE)]
-    private ?\DateTimeInterface $createdAt = null;
-
-    #[ORM\Column(type: Types::DATE_MUTABLE)]
-    private ?\DateTimeInterface $updatedAt = null;
-
     #[ORM\OneToOne(mappedBy: 'beneficiaire', cascade: ['persist'])]
     private ?Prescription $prescription = null;
 
@@ -50,6 +44,12 @@ class Beneficiary
 
     #[ORM\ManyToOne(inversedBy: 'beneficiaries')]
     private ?Member $referent = null;
+
+    #[ORM\Column(type: Types::DATE_MUTABLE)]
+    private ?\DateTimeInterface $createdAt = null;
+
+    #[ORM\Column(type: Types::DATE_MUTABLE)]
+    private ?\DateTimeInterface $updatedAt = null;
 
     public function getId(): ?int
     {

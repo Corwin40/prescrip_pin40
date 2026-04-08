@@ -189,12 +189,14 @@ final class BeneficiaryController extends AbstractController
     #[Route('/{id}/edit', name: 'app_gestapp_beneficiary_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Beneficiary $beneficiary, EntityManagerInterface $entityManager): Response
     {
+        $user = $this->getUser();
         $form = $this->createForm(BeneficiaryType::class, $beneficiary, [
             'action' => $this->generateUrl('app_gestapp_beneficiary_edit', ['id' => $beneficiary->getId()]),
             'method' => 'POST',
             'attr' => [
-                'id' => 'formBenficiary',
-            ]
+                'id' => 'formBeneficiary',
+            ],
+            'user' => $user,
         ]);
         $form->handleRequest($request);
 
@@ -204,20 +206,24 @@ final class BeneficiaryController extends AbstractController
             return $this->redirectToRoute('app_gestapp_beneficiary_index', [], Response::HTTP_SEE_OTHER);
         }
 
+        //dd($beneficiary,$form, $user);
+
         return $this->render('gestapp/beneficiary/edit.html.twig', [
             'beneficiary' => $beneficiary,
             'form' => $form,
+            'user' => $user,
         ]);
     }
 
     #[Route('/{id}/edit2', name: 'app_gestapp_beneficiary_edit2', methods: ['GET', 'POST'])]
     public function edit2(Request $request, Beneficiary $beneficiary, EntityManagerInterface $entityManager): Response
     {
+        $user = $this->getUser();
         $form = $this->createForm(BeneficiaryType::class, $beneficiary, [
             'action' => $this->generateUrl('app_gestapp_beneficiary_edit', ['id' => $beneficiary->getId()]),
             'method' => 'POST',
             'attr' => [
-                'id' => 'formBenficiary',
+                'id' => 'formBeneficiary',
             ]
         ]);
         $form->handleRequest($request);
@@ -231,6 +237,7 @@ final class BeneficiaryController extends AbstractController
         return $this->render('gestapp/beneficiary/_form.html.twig', [
             'beneficiary' => $beneficiary,
             'form' => $form,
+            'user' => $user,
         ]);
     }
 
