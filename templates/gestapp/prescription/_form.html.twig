@@ -519,7 +519,7 @@
                 {% if role == 'Administrateur' or role =='Médiateur' %}
                 <div class="col-4">
                     {% include 'composants/inputs/input_select.html.twig' with {
-                        field: form.equipement,
+                        form: form.equipement,
                         disabled: '',
                         show_label: true
                     } %}
