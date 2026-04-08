@@ -73,6 +73,8 @@ final class MemberController extends AbstractController
                 $member->setRoles(['ROLE_PRESCRIPTEUR']);
             }else if($role === 'mediateur'){
                 $member->setRoles(['ROLE_MEDIATEUR']);
+            }else if($role === 'admin'){
+                $member->setRoles(['ROLE_ADMIN']);
             }
             if ($password) {
                 $hashedPassword = $passwordHasher->hashPassword($member, $password);

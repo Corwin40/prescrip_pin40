@@ -2,8 +2,12 @@
 
 namespace App\Form\Admin;
 
+use App\Config\Civility;
 use App\Entity\Admin\Member;
+use App\Entity\Admin\Structure;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\EnumType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -30,9 +34,22 @@ class MemberType extends AbstractType
 
         $builder
             ->add('email')
-
+            ->add('civility',EnumType::class, [
+                'label' => 'Civilité',
+                'class' => Civility::class,
+                'choice_label' => static function (\UnitEnum $choice): string {
+                    return $choice->value;
+                },
+            ])
             ->add('firstname')
             ->add('lastname')
+            ->add('structure', EntityType::class, [
+                'label' => 'Structure',
+                'class' => Structure::class,
+                'choice_label' => 'name',
+                'placeholder' => 'Sélectionnez une structure',
+                'required' => true,
+            ])
         ;
 
         if ($route == 'app_admin_member_new') {

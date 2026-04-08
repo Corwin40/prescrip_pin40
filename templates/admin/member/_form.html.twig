@@ -4,6 +4,13 @@
     <div class="col-12 bg-light border-bottom border-dark mb-2">
         <h3 class="mt-1 mb-1 h4">Le membre</h3>
     </div>
+    <div class="col-md-1">
+        {% include 'composants/inputs/input_select.html.twig' with {
+            form: form.civility,
+            show_label: true,
+            disabled: false
+        } %}
+    </div>
     <div class="col-md-2">
         {{ form_label(form.firstname, 'Prénom', {'label_attr': {'class': 'form-label fw-semibold'}}) }}
         {{ form_widget(form.firstname, {'attr': {'class': 'form-control form-control-sm'}}) }}
@@ -14,8 +21,15 @@
         {{ form_widget(form.lastname, {'attr': {'class': 'form-control form-control-sm'}}) }}
     </div>
     <div class="col-3">
-        {{ form_label(form.email, 'Nom', {'label_attr': {'class': 'form-label fw-semibold'}}) }}
+        {{ form_label(form.email, 'Email', {'label_attr': {'class': 'form-label fw-semibold'}}) }}
         {{ form_widget(form.email, {'attr': {'class': 'form-control form-control-sm'}}) }}
+    </div>
+    <div class="col-md-2">
+        {% include 'composants/inputs/input_select.html.twig' with {
+            form: form.structure,
+            show_label: true,
+            disabled: false
+        } %}
     </div>
 
 </div>

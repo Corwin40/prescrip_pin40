@@ -31,16 +31,16 @@
         <div class="row">
             <div class="col-md-12">
                 {% include 'composants/inputs/input_radio_horizontal.html.twig' with {
-                    form_label: 'Age',
-                    form_field: form.ageGroup
+                    form: form.ageGroup,
+                    show_label: true
                 } %}
             </div>
         </div>
         <div class="row">
             <div class="col-md-12">
                 {% include 'composants/inputs/input_radio_horizontal.html.twig' with {
-                    form_label: 'Situation',
-                    form_field: form.professionnalStatus
+                    form: form.professionnalStatus,
+                    show_label: true
                 } %}
             </div>
         </div>

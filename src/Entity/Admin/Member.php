@@ -2,6 +2,7 @@
 
 namespace App\Entity\Admin;
 
+use App\Config\Civility;
 use App\Entity\Gestapp\Beneficiary;
 use App\Entity\Gestapp\Equipment;
 use App\Entity\Gestapp\Prescription;
@@ -79,6 +80,9 @@ class Member implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\ManyToOne(inversedBy: 'members')]
     private ?Structure $structure = null;
+
+    #[ORM\Column(enumType: Civility::class)]
+    private ?Civility $civility = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $firstname = null;
@@ -292,6 +296,18 @@ class Member implements UserInterface, PasswordAuthenticatedUserInterface
     public function setStructure(?Structure $structure): static
     {
         $this->structure = $structure;
+
+        return $this;
+    }
+
+    public function getCivility(): ?Civility
+    {
+        return $this->civility;
+    }
+
+    public function setStep(Civility $civility): static
+    {
+        $this->civility = $civility;
 
         return $this;
     }

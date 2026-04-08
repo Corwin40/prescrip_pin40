@@ -8,7 +8,9 @@ use App\Entity\Gestapp\Equipment;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -17,8 +19,14 @@ class EquipmentType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('equipmentId')
-            ->add('matriculEquipment')
+            ->add('equipmentId', TextType::class, [
+                'label' => 'Identifiant',
+                'attr' => ['placeholder' => 'Identifiant']
+            ])
+            ->add('matriculEquipment', TextType::class, [
+                'label' => 'Matricule',
+                'attr' => ['placeholder' => 'Matricule']
+            ])
             ->add('typeEquipment',ChoiceType::class, [
                 'label'=>'Type Equipment',
                 'choices'=>[
@@ -30,7 +38,10 @@ class EquipmentType extends AbstractType
                 'placeholder'=>'Veuillez choisir un type',
                 'required'=>true,
             ])
-            ->add('brandEquipment')
+            ->add('brandEquipment', TextType::class, [
+                'label' => 'Marque',
+                'attr' => ['placeholder' => 'Marque']
+            ])
             ->add('osInstalled',ChoiceType::class, [
                 'label'=>'OS Installé',
                 'choices'=>[
@@ -54,7 +65,9 @@ class EquipmentType extends AbstractType
             ])
             ->add('note')
             ->add('recoveryAt')
-            ->add('isDispo')
+            ->add('isDispo', CheckboxType::class, [
+                'label'=>'Disponibilité de l\'équipement',
+            ])
             ->add('reconditioner', EntityType::class, [
                 'class' => Structure::class,
                 'choice_label' => function ($prescriptor) {

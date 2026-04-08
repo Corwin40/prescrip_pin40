@@ -17,6 +17,8 @@
                 'btns' : [
                     {'path': path('app_admin_member_new', {'role': 'prescripteur'}), 'id':'btnAddMembre', 'class' : 'btn btn-outline-dark btn-sm', 'fa_class' : 'fa-duotone fa-solid fa-circle-user-circle-plus', 'textcontent' : 'Ajouter un.e prescripteur'},
                     {'path': path('app_admin_member_new', {'role': 'mediateur'}), 'id':'btnAddMembre', 'class' : 'btn btn-outline-dark btn-sm', 'fa_class' : 'fa-duotone fa-solid fa-circle-user-circle-plus', 'textcontent' : 'Ajouter un.e mediateur'},
+                    {'path': path('app_admin_member_new', {'role': 'admin'}), 'id':'btnAddMembre', 'class' : 'btn btn-outline-dark btn-sm', 'fa_class' : 'fa-duotone fa-solid fa-circle-user-circle-plus', 'textcontent' : 'Ajouter un.e admin'},
+
                 ]
             }
             %}
@@ -47,7 +49,7 @@
                         <th>Structure</th>
                         <th>Adresse</th>
                         <th>Contacts</th>
-                        <th>Actions</th>
+                        <th class="col-1">Actions</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -65,7 +67,11 @@
                         <tr>
                             <td>
                                 <div class="d-flex align-items-center justify-content-between">
-                                    <div>{{ member.structure.contactResponsableCivility }} {{ member.structure.contactResponsableFirstname }} {{ member.structure.contactResponsableLastname }}</div>
+                                    <div>
+                                        <span class="fw-semibold">{{ member.civility.value }} {{ member.Firstname }} {{ member.Lastname }}</span>
+                                        <br>
+                                        {{ member.email }}
+                                    </div>
                                     <div>
                                         {% if role == "Administrateur" %}
                                             <span class="badge text-bg-danger py-2">{{ role }}</span>
@@ -80,10 +86,9 @@
                                 </div>
                             </td>
                             <td>
-                                <span class="fw-semibold">{{ member.structure.name }}</span><br>
-                                {{ member.email }}
+                                <span class="fw-semibold">{{ member.structure.name }}</span>
                             </td>
-                            <td>{{ member.structure.address }}<br>{{ member.structure.zipcode }} {{ member.structure.city }}</td>
+                            <td>{{ member.structure.address }} - {{ member.structure.zipcode }} {{ member.structure.city }}</td>
                             <td>{{ member.structure.contactEmail }}<br>{{ member.structure.contactPhone }}</td>
                             <td class="text-center">
                                 <a href="{{ path('app_admin_member_edit', {'id': member.id}) }}" class="text-dark text-decoration-none"><i class="fa-duotone fa-solid fa-user-pen"></i></a>&nbsp;&nbsp;&nbsp;
