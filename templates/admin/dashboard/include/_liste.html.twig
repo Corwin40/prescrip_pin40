@@ -1,0 +1,70 @@
+<!-- Tableau prescriptions -->
+<div class="table-container">
+    <table class="table table-hover">
+        <thead class="table-light">
+        <tr>
+            <th class="col-3">Ref</th>
+            <th class="col-2">Bénéficiaire</th>
+            <th class="col-2">Prescripteur</th>
+            <th class="col-2">Espace de médiation</th>
+            <th class="col-1">Equipement</th>
+            <th class="col-2">Etat</th>
+            <th></th>
+        </tr>
+        </thead>
+
+        <tbody id="tbody_index_prescription">
+        {% for prescription in prescriptions %}
+            <tr class="align-middle">
+                <td class="position-relative">
+                    <a href="{{ path('app_gestapp_prescription_edit', {'id': prescription.id}) }}" class="stretched-link"></a>
+                    {{ prescription.ref }}
+                </td>
+                <td class="position-relative">
+                    <a href="{{ path('app_gestapp_prescription_edit', {'id': prescription.id}) }}" class="stretched-link"></a>
+                    {% if prescription.beneficiaire is not empty %}
+                        {{ prescription.beneficiaire.firstname }} {{ prescription.beneficiaire.lastname }}
+                    {% else %}
+                        non disponible
+                    {% endif %}
+                </td>
+
+                <td class="position-relative">
+                    <a href="{{ path('app_gestapp_prescription_edit', {'id': prescription.id}) }}" class="stretched-link"></a>
+                    {{ prescription.prescriptor.name }}
+                </td>
+                <td class="position-relative">
+                    <a href="{{ path('app_gestapp_prescription_edit', {'id': prescription.id}) }}" class="stretched-link"></a>
+                    {{ prescription.lieuMediation }}
+                </td>
+                <td class="position-relative">
+                    <a href="{{ path('app_gestapp_prescription_edit', {'id': prescription.id}) }}" class="stretched-link"></a>
+                    {% if prescription.equipement is not null %}
+                        {{ prescription.equipement }}
+                    {% endif %}
+                </td>
+                <td class="position-relative">
+                    {{ include('composants/pages/badge.html.twig') }}
+                </td>
+
+                <td>
+                    <a
+                        href="{{ path('app_gestapp_prescription_edit', {'id': prescription.id}) }}"
+                        class="text-dark"
+                        type="button"
+                        data-bs-toggle="tooltip"
+                        data-bs-placement="top"
+                        data-bs-custom-class="custom-tooltip"
+                        data-bs-title="Décrire en 5 ou 6 lignes les motivations du bénéficiaire">
+                        <i class="fa-solid fa-pen-to-square"></i>
+                    </a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="7" class="text-start text-muted">Aucune prescription disponible</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>

@@ -69,13 +69,14 @@ export function initIndex_Dashboard() {
         axios
             .post(action, data)
             .then(({data}) => {
+                document.getElementById('liste').innerHTML = data.liste;
                 modal.hide()
                 toasterMessage(data.message);
-                reloadEvent();
             })
             .catch(error => {
                 console.log(error)
             })
+        reloadEvent();
     }
 
     function reloadEvent(){

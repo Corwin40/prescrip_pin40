@@ -31,6 +31,7 @@ final class DocumentController extends AbstractController
         EntityManagerInterface $em
     )
     {
+        $user = $this->getUser();
         $document = new Document();
 
         $prescription = $prescriptionRepository->find($idprescription);
@@ -82,9 +83,27 @@ final class DocumentController extends AbstractController
                 $em->persist($document);
                 $em->flush();
 
+                if($user && in_array('ROLE_PRESCRIPTEUR', $user->getRoles())){
+                    $prescriptions = $prescriptionRepository->findBy(['prescriptor' => $user->getStructure()]);
+                }
+                if($user && in_array('ROLE_MEDIATEUR', $user->getRoles())){
+                    $prescriptions = $prescriptionRepository->findBy(['lieuMediation' => $user]);
+                }
+                if($user && in_array('ROLE_ADMIN', $user->getRoles())){
+                    $prescriptions = $prescriptionRepository->findAll();
+                }
+                if($user && in_array('ROLE_SUPER_ADMIN', $user->getRoles())){
+                    $prescriptions = $prescriptionRepository->findAll();
+                }
+
+                $liste = $this->renderView('admin/dashboard/include/_liste.html.twig', [
+                    'prescriptions' => $prescriptions,
+                ]);
+
                 return $this->json([
                     'code' => 200,
-                    'message' => 'Le document est déposé sur la plateforme'
+                    'message' => 'Le document est déposé sur la plateforme',
+                    'liste' => $liste,
                 ], 200);
 
             }

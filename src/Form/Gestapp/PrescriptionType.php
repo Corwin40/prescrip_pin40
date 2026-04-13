@@ -69,7 +69,8 @@ class PrescriptionType extends AbstractType
             ])
         ;
 
-        if ($route === 'app_gestapp_prescription_new') {
+        // En mode Création de la prescription
+        if ($route === 'app_gestapp_prescription_edit') {
             // on filtre les bénéficiaires selon le prescripteur
             if($user && in_array('ROLE_PRESCRIPTEUR', $user->getRoles())) {
                 $builder
@@ -210,6 +211,8 @@ class PrescriptionType extends AbstractType
             }
 
         }
+
+        // En mode Edition de la prescription
         if($route === 'app_gestapp_prescription_edit') {
             // on filtre les bénéficiaires selon le prescripteur
             if($user && in_array('ROLE_PRESCRIPTEUR', $user->getRoles())) {
@@ -311,7 +314,8 @@ class PrescriptionType extends AbstractType
                     ;
                 }
             }
-            elseif(in_array($prescription->getStep()->name, ['ChoiceEquipment', 'ValidCase', 'GeneratePDF'])){
+
+            elseif(in_array($prescription->getStep()->name, ['ChoiceEquipment', 'ValidCase'])){
                 if ( $user && (
                         in_array('ROLE_SUPER_ADMIN', $user->getRoles()) ||
                         in_array('ROLE_ADMIN', $user->getRoles()) ||
@@ -351,6 +355,34 @@ class PrescriptionType extends AbstractType
                 }
             }
 
+            // Boucle sur les étapes ou il n'est palus nécéssaire de modifier les champs
+            elseif(in_array($prescription->getStep()->name, ['GeneratePDF', 'Signed'])){
+                if ( $user && (
+                        in_array('ROLE_SUPER_ADMIN', $user->getRoles()) ||
+                        in_array('ROLE_MEDIATEUR', $user->getRoles())
+                    ))
+                {
+                    $builder
+                        ->add('prescriptor', HiddenType::class)
+                        ->add('competence', HiddenType::class)
+                        ->add('equipement', HiddenType::class)
+                    ;
+                }
+                elseif ($user && in_array('ROLE_ADMIN', $user->getRoles())){
+                    $builder
+                        ->add('prescriptor', HiddenType::class)
+                        ->add('competence', HiddenType::class)
+                        ->add('equipement', HiddenType::class)
+                    ;
+                }
+                elseif ($user && in_array('ROLE_PRESCRIPTEUR', $user->getRoles()))
+                {
+                    $builder
+                        ->add('competence', HiddenType::class)
+                        ->add('equipement', HiddenType::class)
+                    ;
+                }
+            }
         }
 
     }

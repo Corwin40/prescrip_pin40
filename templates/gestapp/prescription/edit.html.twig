@@ -31,7 +31,11 @@
     </section>
 
     <section id="page_content">
-        {{ include('gestapp/prescription/_form.html.twig', {'button_label': 'Mettre à jour'}) }}
+        {% if prescription.step.value === 'GeneratePDF' or  prescription.step.value == 'Signed' %}
+            {{ include('gestapp/prescription/include/_readonly.html.twig') }}
+        {% else %}
+            {{ include('gestapp/prescription/_form.html.twig', {'button_label': 'Mettre à jour'}) }}
+        {% endif %}
     </section>
     <section id="page_footer">
 

@@ -1,0 +1,484 @@
+{% set gender = '' %}
+{% set comp = prescription.competence %}
+
+{% if prescription.beneficiaire.gender == 'Mr' %}
+    {% set gender = 'Homme' %}
+{% elseif prescription.beneficiaire.gender == 'Mme' or prescription.beneficiaire.gender == 'Mlle' %}
+    {% set gender = 'Femme' %}
+{% elseif prescription.beneficiaire.gender == 'autres' %}
+    {% set gender = 'Autre' %}
+{% endif %}
+
+<div class="row mb-3">
+    <div class="row">
+        <div class="col-12">
+            <h2>Le bénéficiaire</h2>
+            <p>A compléter par le prescripteur</p>
+        </div>
+        <div class="clear"></div>
+        <div class="col-2">
+            <p class="my-1 py-1">Prénom & Nom:</p>
+        </div>
+        <div class="col-4">
+            <p class="bg-light rounded-1 my-1 py-1">{{ prescription.beneficiaire.civility }} {{ prescription.beneficiaire.firstname }} {{ prescription.beneficiaire.lastname }}</p>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-2">
+            <p class="my-1 py-1">Genre :</p>
+        </div>
+        <div class="col-4">
+            {% set Options = [
+                {'value': 'Homme', 'label': 'Homme'},
+                {'value': 'Femme', 'label': 'Femme'},
+                {'value': 'Autres', 'label': 'Autres'},
+            ] %}
+
+            {% include 'composants/pages/page_checkboxs_inline.html.twig' with
+                {
+                    'value': prescription.beneficiaire.AgeGroup ?? null,
+                    'checkboxs': Options
+                }
+            %}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-2">
+            <p class="my-1 py-1">Tranche d'âge :</p>
+        </div>
+        <div class="col-10">
+            {% set Options = [
+                {'value': '0-15', 'label': '15 ans et moins'},
+                {'value': '16-25', 'label': '16 à 25 ans'},
+                {'value': '26-59', 'label': '26 à 59 ans'},
+                {'value': '60+', 'label': '60 ans et plus'},
+            ] %}
+
+            {% include 'composants/pages/page_checkboxs_inline.html.twig' with
+                {
+                    'value': prescription.beneficiaire.AgeGroup ?? null,
+                    'checkboxs': Options
+                }
+            %}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-2">
+            <p class="my-1 py-1">Situation :</p>
+        </div>
+        <div class="col-10">
+            {% set Options = [
+                {'value': 'Scolaire / Étudiant', 'label': 'Scolaire / Étudiants'},
+                {'value': 'Employé / En Formation', 'label': 'Employé / En Formation'},
+                {'value': 'Sans emploi', 'label': 'Sans emploi'},
+                {'value': 'Retraite', 'label': 'Retraité'},
+                {'value': 'Autre situation', 'label': 'Autre situation'},
+            ] %}
+
+            {% include 'composants/pages/page_checkboxs_inline.html.twig' with
+                {
+                    'value': prescription.beneficiaire.professionnalStatus ?? null,
+                    'checkboxs': Options
+                }
+            %}
+        </div>
+    </div>
+</div>
+
+<div class="row mt-0 mb-3">
+    <div class="row">
+        <div class="col-12">
+            <h3>Le prescripteur</h3>
+        </div>
+        <div class="col-2">
+            <p class="my-1 py-1">Structure :</p>
+        </div>
+        <div class="col-4">
+            <p class="bg-light rounded-1 my-1 py-1">{{ prescription.prescriptor.name }}</p>
+        </div>
+        <div class="clear"></div>
+        <div class="col-2">
+            <p class="my-1 py-1">Nom & Prénom :</p>
+        </div>
+        <div class="col-4">
+            <p class="bg-light rounded-1 my-1 py-1">{{ prescription.prescriptor.contactResponsableCivility }} {{ prescription.prescriptor.contactResponsableLastname }} {{ prescription.prescriptor.contactResponsableFirstname }}</p>
+        </div>
+        <div class="clear"></div>
+        <div class="col-4">
+            <p class="my-1 py-1">Télephone du prescripteur :</p>
+        </div>
+        <div class="col-4">
+            <p class="bg-light rounded-1 my-1 py-1">{{ prescription.prescriptor.contactPhone }}</p>
+        </div>
+        <div class="clear"></div>
+        <div class="col-4">
+            <p class="my-1 py-1">Email du prescripteur :</p>
+        </div>
+        <div class="col-4">
+            <p class="bg-light rounded-1 my-1 py-1">{{ prescription.prescriptor.contactEmail }}</p>
+        </div>
+    </div>
+</div>
+
+<div class="row mb-3">
+    <div class="row">
+        <div class="col-12">
+            <h3>Motivation de la prescription</h3>
+            <p>A compléter par le prescripteur :</p>
+        </div>
+        <div class="col-12 bg-light rounded-1">
+            <p class="textarea-like">{{ prescription.details }}</p>
+        </div>
+        <div class="col-12 px-0 mt-2">
+            <p>Évaluation des compétences de base :</p>
+            <table class="table table-striped">
+                <tbody>
+                <tr>
+                    <th>Acquise</th>
+                    <td>
+                        {% if prescription.baseCompetence == 'Acquises' %}
+                            {{ include('composants/fontawesome/square-check.html.twig') }}
+                        {% else %}
+                            {{ include('composants/fontawesome/square.html.twig') }}
+                        {% endif %}
+                    </td>
+                </tr>
+                <tr>
+                    <th>A vérifier</th>
+                    <td>
+                        {% if prescription.baseCompetence == 'A verifier' %}
+                            {{ include('composants/fontawesome/square-check.html.twig') }}
+                        {% else %}
+                            {{ include('composants/fontawesome/square.html.twig') }}
+                        {% endif %}
+                    </td>
+                </tr>
+                <tr>
+                    <th>Non acquise</th>
+                    <td>
+                        {% if prescription.baseCompetence == 'Non acquises' %}
+                            {{ include('composants/fontawesome/square-check.html.twig') }}
+                        {% else %}
+                            {{ include('composants/fontawesome/square.html.twig') }}
+                        {% endif %}
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="row mb-3">
+    <div class="row">
+        <div class="col-12">
+            <h3>Lieu de médiation numérique</h3>
+            <p>A compléter par le prescripteur en concertation avec le bénéficiaire.</p>
+        </div>
+        <div class="col-12 bg-light rounded-1">
+            <p class="textarea-like text-center">{{ prescription.lieuMediation }}</p>
+        </div>
+    </div>
+</div>
+
+<div class="row mb-3">
+    <div class="row">
+        <div class="col-12">
+            <h3>Diagnostic des compétences numériques</h3>
+            <p class="fst-italic">Diagnostic des "compétences numériques de base" réalisé par le médiateur lors de la rencontre initial en appui au référentiel du CLEA Numérique (https://www.certificat-clea.fr/clea-numerique/referentiel-clea-numérique/)</p>
+        </div>
+        <div class="col-12">
+            <p class="fw-semibold">A completer par le médiateur</p>
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th>Compétences</th>
+                    <th class="text-center">Acquis</th>
+                    <th class="text-center">En cours</th>
+                    <th class="text-center">Non acquis</th>
+                </tr>
+                </thead>
+                <tbody>
+
+                <!-- LES BASES -->
+                <tr>
+                    <td>Les bases</td>
+
+                    <td class="text-center">
+                        {% if comp.compBase == 'acquis' %}
+                            {{ include('composants/fontawesome/square-check.html.twig') }}
+                        {% else %}
+                            {{ include('composants/fontawesome/square.html.twig') }}
+                        {% endif %}
+                    </td>
+
+                    <td class="text-center">
+                        {% if comp.compBase == 'encours' %}
+                            {{ include('composants/fontawesome/square-check.html.twig') }}
+                        {% else %}
+                            {{ include('composants/fontawesome/square.html.twig') }}
+                        {% endif %}
+                    </td>
+
+                    <td class="text-center">
+                        {% if comp.compBase == 'Nonacquis' %}
+                            {{ include('composants/fontawesome/square-check.html.twig') }}
+                        {% else %}
+                            {{ include('composants/fontawesome/square.html.twig') }}
+                        {% endif %}
+                    </td>
+                </tr>
+
+                <!-- TEXTE & DOCUMENTS -->
+                <tr>
+                    <td>Texte et documents</td>
+
+                    <td class="text-center">
+                        {% if comp.compDesk == 'acquis' %}
+                            {{ include('composants/fontawesome/square-check.html.twig') }}
+                        {% else %}
+                            {{ include('composants/fontawesome/square.html.twig') }}
+                        {% endif %}
+                    </td>
+
+                    <td class="text-center">
+                        {% if comp.compDesk == 'encours' %}
+                            {{ include('composants/fontawesome/square-check.html.twig') }}
+                        {% else %}
+                            {{ include('composants/fontawesome/square.html.twig') }}
+                        {% endif %}
+                    </td>
+
+                    <td class="text-center">
+                        {% if comp.compDesk == 'Nonacquis' %}
+                            {{ include('composants/fontawesome/square-check.html.twig') }}
+                        {% else %}
+                            {{ include('composants/fontawesome/square.html.twig') }}
+                        {% endif %}
+                    </td>
+                </tr>
+
+                <!-- INTERNET -->
+                <tr>
+                    <td>Internet</td>
+
+                    <td class="text-center">
+                        {% if comp.compInternet == 'acquis' %}
+                            <i class="fa-regular fa-square-checks"></i>
+                        {% else %}
+                            {{ include('composants/fontawesome/square.html.twig') }}
+                        {% endif %}
+                    </td>
+
+                    <td class="text-center">
+                        {% if comp.compInternet == 'encours' %}
+                            {{ include('composants/fontawesome/square-check.html.twig') }}
+                        {% else %}
+                            {{ include('composants/fontawesome/square.html.twig') }}
+                        {% endif %}
+                    </td>
+
+                    <td class="text-center">
+                        {% if comp.compInternet == 'Nonacquis' %}
+                            {{ include('composants/fontawesome/square-check.html.twig') }}
+                        {% else %}
+                            {{ include('composants/fontawesome/square.html.twig') }}
+                        {% endif %}
+                    </td>
+                </tr>
+
+                <!-- EMAIL -->
+                <tr>
+                    <td>Messagerie électronique</td>
+
+                    <td class="text-center">
+                        {% if comp.compEmail == 'acquis' %}
+                            {{ include('composants/fontawesome/square-check.html.twig') }}
+                        {% else %}
+                            {{ include('composants/fontawesome/square.html.twig') }}
+                        {% endif %}
+                    </td>
+
+                    <td class="text-center">
+                        {% if comp.compEmail == 'encours' %}
+                            {{ include('composants/fontawesome/square-check.html.twig') }}
+                        {% else %}
+                            {{ include('composants/fontawesome/square.html.twig') }}
+                        {% endif %}
+                    </td>
+
+                    <td class="text-center">
+                        {% if comp.compEmail == 'Nonacquis' %}
+                            {{ include('composants/fontawesome/square-check.html.twig') }}
+                        {% else %}
+                            {{ include('composants/fontawesome/square.html.twig') }}
+                        {% endif %}
+                    </td>
+                </tr>
+
+                </tbody>
+            </table>
+            <p>
+                {% if prescription.competence.autoEva == 1 %}
+                    {{ include('composants/fontawesome/square-check.html.twig') }}
+                {% else %}
+                    {{ include('composants/fontawesome/square.html.twig') }}
+                {% endif %}
+                L'auto-évaluation du bénéficiaire a été réalisée avant l'action.
+            </p>
+        </div>
+
+    </div>
+</div>
+
+<div class="row mb-3">
+    <div class="row">
+        <div class="col-12">
+            <h3>Les objectifs de la médiation</h3>
+            <p class="fst-italic">
+                Compétences à travailler (référentiel DIGCOMP) : https://eduscol.education.fr/document/20392/download
+            </p>
+            <p><b>A compléter par le médiateur</b></p>
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th>Compétences</th>
+                    <th class="text-center">Objectifs</th>
+                </tr>
+                </thead>
+                <tbody>
+
+                <!-- LES BASES -->
+                <tr>
+                    <td>0 - Compétences matérielles</td>
+                    <td class="text-center">
+                        {% if comp.isDigComp0 == 1 %}
+                            {{ include('composants/fontawesome/square-check.html.twig') }}
+                        {% else %}
+                            {{ include('composants/fontawesome/square.html.twig') }}
+                        {% endif %}
+                    </td>
+                </tr>
+
+                <!-- TEXTE & DOCUMENTS -->
+                <tr>
+                    <td>1 - Information et données</td>
+                    <td class="text-center">
+                        {% if comp.isDigComp1 == 1 %}
+                            {{ include('composants/fontawesome/square-check.html.twig') }}
+                        {% else %}
+                            {{ include('composants/fontawesome/square.html.twig') }}
+                        {% endif %}
+                    </td>
+                </tr>
+
+                <!-- INTERNET -->
+                <tr>
+                    <td>2 - Communication et collaboration</td>
+                    <td class="text-center">
+                        {% if comp.isDigComp2 == 1 %}
+                            {{ include('composants/fontawesome/square-check.html.twig') }}
+                        {% else %}
+                            {{ include('composants/fontawesome/square.html.twig') }}
+                        {% endif %}
+                    </td>
+                </tr>
+
+                <!-- EMAIL -->
+                <tr>
+                    <td>3 - Création de contenus</td>
+                    <td class="text-center">
+                        {% if comp.isDigComp3 == 1 %}
+                            {{ include('composants/fontawesome/square-check.html.twig') }}
+                        {% else %}
+                            {{ include('composants/fontawesome/square.html.twig') }}
+                        {% endif %}
+                    </td>
+                </tr>
+                <tr>
+                    <td>4 - Protection et sécurité</td>
+                    <td class="text-center">
+                        {% if comp.isDigComp4 == 1 %}
+                            {{ include('composants/fontawesome/square-check.html.twig') }}
+                        {% else %}
+                            {{ include('composants/fontawesome/square.html.twig') }}
+                        {% endif %}
+                    </td>
+                </tr>
+                <tr>
+                    <td>5 - Environnement numérique</td>
+                    <td class="text-center">
+                        {% if comp.isDigComp5 == 1 %}
+                            {{ include('composants/fontawesome/square-check.html.twig') }}
+                        {% else %}
+                            {{ include('composants/fontawesome/square.html.twig') }}
+                        {% endif %}
+                    </td>
+                </tr>
+
+                </tbody>
+            </table>
+
+            <p>Precisez ci-dessous le parcours de médiation acté entre le bénéficiaire et le médiateur.</p>
+        </div>
+        <div class="col-12 bg-light rounded-1">
+            <p class="textarea-like">
+                {% if prescription.competence.detailParcour is null %}
+                    Aucun détails du parcours de formation n'a été fournis par le médiateur.
+                {% else %}
+                    {{ prescription.competence.detailParcour }}
+                {% endif %}
+            </p>
+        </div>
+        <div class="col-12">
+            <p>
+                {% if prescription.competence.autoEva == 1 %}
+                    {{ include('composants/fontawesome/square-check.html.twig') }}
+                {% else %}
+                    {{ include('composants/fontawesome/square.html.twig') }}
+                {% endif %}
+                L'auto-évaluation du bénéficiaire a été réalisée après l'action.
+            </p>
+        </div>
+    </div>
+</div>
+
+<div class="row mb-5">
+    <div class="col-12">
+        <h2>Remise de l'ordinateur</h2>
+    </div>
+    <div class="col-4">
+        <p class="my-1 py-1">Id de l'ordinateur :</p>
+    </div>
+    <div class="col-4">
+        <p class="bg-light rounded-1 my-1 py-1">{{ prescription.equipement.equipmentId }}</p>
+    </div>
+</div>
+{#
+<div class="row mb-5">
+    <div class="col-6">
+        <div class="row">
+            <div class="col-4">
+                <p class="my-1 py-1">Fait à :</p>
+            </div>
+            <div class="col-8">
+                <p class="bg-light rounded-1 my-1 py-1">{{ prescription.lieuMediation.city }}</p>
+            </div>
+            <div class="clear"></div>
+            <div class="col-4">
+                <p class="my-1 py-1">Le :</p>
+            </div>
+            <div class="col-8">
+                <p class="bg-light rounded-1 my-1 py-1">{{ prescription.createdAt|date('d-m-Y') }}</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-6">
+        <p>Signature du bénéficiaire :</p>
+        <div style="background-color: #f2f2f2;height:120px;width:300px;padding:10px;border-radius: 0.25rem;">
+
+        </div>
+    </div>
+</div>
+#}
