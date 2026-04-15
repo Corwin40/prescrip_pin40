@@ -19,6 +19,7 @@ final class DashboardController extends AbstractController
     public function index(MemberRepository $memberRepository, EquipmentRepository $equipmentRepository, PrescriptionRepository $prescriptionRepository, BeneficiaryRepository $beneficiaryRepository): Response
     {
         $user = $this->getUser();
+        $structure = $user->getStructure();
         $roles = $user->getRoles();
         $member = $memberRepository->find($user->getId());
 
@@ -29,7 +30,7 @@ final class DashboardController extends AbstractController
         }
         if($user && in_array('ROLE_MEDIATEUR', $user->getRoles())){
             $beneficiaries = $beneficiaryRepository->findByMediation($user->getStructure());
-            $prescriptions = $prescriptionRepository->findBy(['lieuMediation' => $user]);
+            $prescriptions = $prescriptionRepository->findBy(['lieuMediation' => $user->getStructure()]);
             $equipments = $equipmentRepository->findByDispos($member);
         }
         if($user && in_array('ROLE_ADMIN', $user->getRoles())){

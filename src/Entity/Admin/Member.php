@@ -52,12 +52,6 @@ class Member implements UserInterface, PasswordAuthenticatedUserInterface
     private ?\DateTimeInterface $updatedAt = null;
 
     /**
-     * @var Collection<int, Prescription>
-     */
-    #[ORM\OneToMany(targetEntity: Prescription::class, mappedBy: 'membre')]
-    private Collection $prescriptions;
-
-    /**
      * @var Collection<int, Equipment>
      */
     #[ORM\OneToMany(targetEntity: Equipment::class, mappedBy: 'reconditioner')]

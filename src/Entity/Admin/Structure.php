@@ -76,7 +76,7 @@ class Structure
     /**
      * @var Collection<int, Prescription>
      */
-    #[ORM\OneToMany(targetEntity: Prescription::class, mappedBy: 'membre')]
+    #[ORM\OneToMany(targetEntity: Prescription::class, mappedBy: 'prescriptor')]
     private Collection $prescriptions;
 
     public function __construct()

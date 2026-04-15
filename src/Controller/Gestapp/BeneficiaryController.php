@@ -91,7 +91,7 @@ final class BeneficiaryController extends AbstractController
             $beneficiaries = $beneficiaryRepository->findBy(['structure' => $member->getStructure()]);
         }
         if($member && in_array('ROLE_MEDIATEUR', $member->getRoles())){
-            $beneficiaries = $beneficiaryRepository->findByMediation(['lieuMediation' => $member]);
+            $beneficiaries = $beneficiaryRepository->findByMediation($member->getStructure());
         }
         if($member && in_array('ROLE_SUPER_ADMIN', $member->getRoles())){
             $beneficiaries = $beneficiaryRepository->findAll();

@@ -16,17 +16,18 @@ class BeneficiaryRepository extends ServiceEntityRepository
         parent::__construct($registry, Beneficiary::class);
     }
 
-    public function findByMediation($member): array
+    public function findByMediation($structure): array
     {
         return $this->createQueryBuilder('b')
+            //->select('DISTINCT b')
             ->join('b.structure', 's')
             ->join('s.members', 'm')
-            ->where('m.referent = :member')
-            ->setParameter('member', $member)
+            ->join('m.referent', 'r')
+            ->join('r.structure', 'rs')
+            ->where('rs.id = :idstructure')
+            ->setParameter('idstructure', $structure->getId())
             ->getQuery()
-            ->getResult()
-            ;
-
+            ->getResult();
     }
 
     //    /**
