@@ -30,7 +30,7 @@ fos_elastica:
                     fields:
                         keyword:
                             type: keyword
-                prescriptor:
+                structure:
                     type: object
                     properties:
                         id: ~

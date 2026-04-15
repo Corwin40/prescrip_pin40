@@ -5,8 +5,8 @@ namespace App\Controller\Gestapp;
 use App\Entity\Gestapp\Beneficiary;
 use App\Form\Search\BeneficiarySearchType;
 use App\Form\Gestapp\BeneficiaryType;
+use App\Repository\Admin\StructureRepository;
 use App\Repository\Gestapp\BeneficiaryRepository;
-use App\Repository\MemberRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -17,6 +17,7 @@ use Elastica\Query;
 use Elastica\Query\BoolQuery;
 use Elastica\Query\MultiMatch;
 use Elastica\Query\Term;
+use Elastica\Query\Terms;
 use Elastica\Query\Nested;
 
 #[Route('/gestapp/beneficiary')]
@@ -29,31 +30,60 @@ final class BeneficiaryController extends AbstractController
         $this->finder = $finder;
     }
 
-    #[Route('/search/', name: 'app_gestapp_beneficiary_search', methods: ['GET','POST'])]
-    public function search(Request $request, MemberRepository $repository): Response {
-        // récupérer tous les prescripteurs existants (exemple Doctrine)
-        $prescriptors = $repository->findByRole('ROLE_PRESCRIPTEUR');
+    #[Route('/', name: 'app_gestapp_beneficiary_index', methods: ['GET','POST'])]
+    public function search(Request $request, StructureRepository $structureRepository): Response
+    {
+        $member = $this->getUser();
+        $structureId = $member->getStructure()?->getId();
 
-        $prescriptorChoices = [];
-        foreach ($prescriptors as $p) {
-            $prescriptorChoices[$p['nameStructure']] = $p['id'];
+        // Récupération des prescripteurs selon le rôle
+        if($member && in_array('ROLE_PRESCRIPTEUR', $member->getRoles())) {
+            $prescriptors = $structureRepository->findPrescriptorsByPrescriptor($structureId);
+        } elseif($member && in_array('ROLE_MEDIATEUR', $member->getRoles())) {
+            $prescriptors = $structureRepository->findPrescriptorsByMediator($structureId);
+        } elseif($member && in_array('ROLE_SUPER_ADMIN', $member->getRoles())) {
+            $prescriptors = $structureRepository->findPrescriptorsByAdmin();
+        } else {
+            $prescriptors = [];
         }
 
-        //dd($prescriptorChoices);
+        // 🧩 Construction des choix pour le formulaire
+        $prescriptorChoices = [];
+        $structureIds = [];
+        foreach ($prescriptors as $p) {
+            $prescriptorChoices[$p->getName()] = $p->getId();
+            $structureIds[] = $p->getId();
+        }
 
+        // Formulaire
         $form = $this->createForm(BeneficiarySearchType::class, null, [
-            'prescriptors' => $prescriptorChoices
+            'prescripteurs' => $prescriptorChoices
         ]);
         $form->handleRequest($request);
 
-        // construire la query Elastice
+        // Construction de la requête Elasticsearch
         $boolQuery = new BoolQuery();
 
+        // Filtre automatique selon le rôle
+        if ($member && in_array('ROLE_PRESCRIPTEUR', $member->getRoles()) && $structureId) {
+            $termQuery = new Term();
+            $termQuery->setTerm('structure.id', $structureId);
+            $boolQuery->addFilter($termQuery);
+        }
+        if ($member && in_array('ROLE_MEDIATEUR', $member->getRoles())) {
+            $termsQuery = new Terms('structure.id', $structureIds);
+            $boolQuery->addFilter($termsQuery);
+        }
+        if ($member && in_array('ROLE_SUPER_ADMIN', $member->getRoles())) {
+            $termsQuery = new Terms('structure.id', $structureIds);
+            $boolQuery->addFilter($termsQuery);
+        }
+
+        // Filtres issus du formulaire
         if ($form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
 
-            //dd($data);
-
+            // Recherche texte
             if (!empty($data['query'])) {
                 $multiMatch = new MultiMatch();
                 $multiMatch->setFields(['firstName', 'lastName']);
@@ -61,20 +91,21 @@ final class BeneficiaryController extends AbstractController
                 $boolQuery->addMust($multiMatch);
             }
 
-            if (!empty($data['prescriptor'])) {
-
+            // Filtre structure sélectionnée
+            if (!empty($data['structure'])) {
                 $termQuery = new Term();
-                $termQuery->setTerm('prescriptor.id', $data['prescriptor']);
-                $boolQuery->addMust($termQuery);
+                $termQuery->setTerm('structure.id', $data['structure']);
+                $boolQuery->addFilter($termQuery);
             }
-
         }
 
+        // Exécution de la requête
         $query = new Query($boolQuery);
-        $query->setSize(50); // max 50 résultats, ajustable
+        $query->setSize(50);
 
         $results = $this->finder->find($query);
 
+        // 🎨 Rendu
         return $this->render('gestapp/beneficiary/search.html.twig', [
             'form' => $form->createView(),
             'results' => $results,
@@ -83,7 +114,7 @@ final class BeneficiaryController extends AbstractController
 
 
 
-    #[Route(name: 'app_gestapp_beneficiary_index', methods: ['GET'])]
+    #[Route('/await', name: 'app_gestapp_beneficiary_await', methods: ['GET'])]
     public function index(BeneficiaryRepository $beneficiaryRepository): Response
     {
         $member = $this->getUser();

@@ -91,7 +91,7 @@ final class PrescriptionController extends AbstractController
             $prescriptions = $prescriptionRepository->findBy(['prescriptor' => $member->getStructure()]);
         }
         if($member && in_array('ROLE_MEDIATEUR', $member->getRoles())){
-            $prescriptions = $prescriptionRepository->findBy(['lieuMediation' => $member]);
+            $prescriptions = $prescriptionRepository->findBy(['lieuMediation' => $member->getStructure() ]);
         }
         if($member && in_array('ROLE_ADMIN', $member->getRoles())){
             $prescriptions = $prescriptionRepository->findBy(['step' => StepPrescription::Signed]);

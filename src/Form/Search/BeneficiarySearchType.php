@@ -14,16 +14,14 @@ class BeneficiarySearchType extends AbstractType
     {
         $builder
             ->add('query', TextType::class, [
-                'label' => 'Nom ou prénom',
                 'required' => false,
-                'attr' => ['class' => 'form-control']
+                'attr' => ['class' => 'form-control form-control-sm', 'placeholder' => 'Rechercher un bénéficiaire',]
             ])
-            ->add('prescriptor', ChoiceType::class, [
-                'label' => 'Prescripteur',
+            ->add('structure', ChoiceType::class, [
                 'required' => false,
-                'choices' => $options['prescriptors'],
+                'choices' => $options['prescripteurs'],
                 'placeholder' => 'Tous',
-                'attr' => ['class' => 'form-select']
+                'attr' => ['class' => 'form-select form-select-sm']
             ])
         ;
     }
@@ -31,7 +29,7 @@ class BeneficiarySearchType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'prescriptors' => [],
+            'prescripteurs' => [],
         ]);
     }
 }

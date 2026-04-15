@@ -1,10 +1,16 @@
 {% set disabled = disabled|default(false) %}
-<div class="mb-3">
-    {% if show_label is true %}<label class="form-label">{{ form_label(form) }}</label>{% else %}{% endif %}
+{% set wrapper_class = wrapper_class|default('mb-3') %}
+
+<div class="{{ wrapper_class }}">
+    {% if show_label is true %}
+        <label class="form-label">{{ form_label(form) }}</label>
+    {% endif %}
+
     {{ form_widget(form, {
         attr: {
             class: 'form-select form-select-sm border border-1 border-dark shadow-sm'
         } | merge(disabled ? { disabled: 'disabled' } : {})
     }) }}
+
     {{ form_errors(form) }}
 </div>

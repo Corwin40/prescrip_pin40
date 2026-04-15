@@ -16,6 +16,44 @@ class StructureRepository extends ServiceEntityRepository
         parent::__construct($registry, Structure::class);
     }
 
+    public function findPrescriptorsByPrescriptor($structure): array
+    {
+        return $this->createQueryBuilder('s')
+            ->where('s = :idstructure')
+            ->setParameter('idstructure', $structure)
+            //->where('s.roles LIKE :role')
+            //->setParameter('role', '%ROLE_PRESCRIPTEUR%')
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function findPrescriptorsByMediator($structure): array
+    {
+        return $this->createQueryBuilder('s')
+            ->select('DISTINCT s')
+            ->join('s.members', 'm')
+            ->join('m.referent', 'r')
+            ->join('r.structure', 'st')
+            ->where('st = :idstructure')
+            ->setParameter('idstructure', $structure)
+            //->where('s.roles LIKE :role')
+            //->setParameter('role', '%ROLE_PRESCRIPTEUR%')
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function findPrescriptorsByAdmin(): array
+    {
+        return $this->createQueryBuilder('s')
+            ->join('s.members', 'm')
+            ->join('m.referent', 'r')
+            //->andWhere('r.roles LIKE :admin OR r.roles LIKE :superAdmin')
+            //->setParameter('admin', '%ROLE_ADMIN%')
+            //->setParameter('superAdmin', '%ROLE_SUPER_ADMIN%')
+            ->getQuery()
+            ->getResult();
+    }
+
     //    /**
     //     * @return Structure[] Returns an array of Structure objects
     //     */
