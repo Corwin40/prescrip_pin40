@@ -17,7 +17,7 @@ final class HtmlToPdfController extends AbstractController
 {
     private bool $viewPdf;
     public function __construct(){
-        $this->viewPdf = false;
+        $this->viewPdf = true;
     }
 
     #[Route('/prescription/{id}', name: 'app_generate_prescription_pdf')]

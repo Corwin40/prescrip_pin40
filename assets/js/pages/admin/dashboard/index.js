@@ -21,7 +21,7 @@ export function initIndex_Dashboard() {
                 </div>
               </div>`;
         modalEl.querySelector('.modal-footer').innerHTML = '\n' +
-            '<a href="#" type="button" class="btn btn-sm btn-primary btnModalSubmit">Ajouter</a>\n' +
+            '<a href="#" type="button" class="btn btn-sm btn-primary" id="btnSubmitModal">Ajouter</a>\n' +
             '<button type="button" class="btn btn btn-sm btn-secondary" data-bs-dismiss="modal">Annuler</button>';
     });
 
@@ -58,6 +58,7 @@ export function initIndex_Dashboard() {
             ;
             modal.show();
         }
+        reloadEvent();
     }
 
     function submitModal(e){
@@ -69,9 +70,21 @@ export function initIndex_Dashboard() {
         axios
             .post(action, data)
             .then(({data}) => {
-                document.getElementById('liste').innerHTML = data.liste;
-                modal.hide()
-                toasterMessage(data.message);
+                if(data.code === 200){
+                    document.getElementById('liste').innerHTML = data.liste;
+                    modal.hide()
+                    toasterMessage(data.message);
+                    reloadEvent();
+                }
+                else if(data.code === 400){
+                    document.querySelector('.modal-body').innerHTML = data.formView;
+                    toasterMessage(data.message);
+                    reloadEvent();
+                }
+                else{
+                    toasterMessage('une erreur est survenue');
+                }
+
             })
             .catch(error => {
                 console.log(error)

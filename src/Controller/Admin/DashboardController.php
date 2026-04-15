@@ -2,6 +2,8 @@
 
 namespace App\Controller\Admin;
 
+use App\Config\StepPrescription;
+use App\Entity\Gestapp\Prescription;
 use App\Repository\Gestapp\BeneficiaryRepository;
 use App\Repository\Gestapp\EquipmentRepository;
 use App\Repository\Gestapp\PrescriptionRepository;
@@ -32,7 +34,7 @@ final class DashboardController extends AbstractController
         }
         if($user && in_array('ROLE_ADMIN', $user->getRoles())){
             $beneficiaries = $beneficiaryRepository->findAll();
-            $prescriptions = $prescriptionRepository->findAll();
+            $prescriptions = $prescriptionRepository->findBy(['step' => StepPrescription::Signed]);
             $equipments = $equipmentRepository->findByDispos();
         }
         if($user && in_array('ROLE_SUPER_ADMIN', $user->getRoles())){

@@ -47,7 +47,7 @@ final class DocumentController extends AbstractController
         ]);
         $form->handleRequest($request);
 
-        if($form->isSubmitted() && $form->isValid()){
+        if($form->isSubmitted()){
 
             if($form->isValid()) {
                 $documentFile = $form->get('documentFile')->getData();
@@ -107,6 +107,8 @@ final class DocumentController extends AbstractController
                 ], 200);
 
             }
+
+            dd($form->getErrors(true, true));
 
             $view = $this->renderView('gestapp/document/prescript_signed_manually.html.twig', [
                 'form' => $form,

@@ -93,6 +93,9 @@ final class PrescriptionController extends AbstractController
         if($member && in_array('ROLE_MEDIATEUR', $member->getRoles())){
             $prescriptions = $prescriptionRepository->findBy(['lieuMediation' => $member]);
         }
+        if($member && in_array('ROLE_ADMIN', $member->getRoles())){
+            $prescriptions = $prescriptionRepository->findBy(['step' => StepPrescription::Signed]);
+        }
         if($member && in_array('ROLE_SUPER_ADMIN', $member->getRoles())){
             $prescriptions = $prescriptionRepository->findAll();
         }
@@ -331,7 +334,13 @@ final class PrescriptionController extends AbstractController
 
         if($form->isSubmitted() && $form->isValid())
         {
+            $structure = $prescription->getLieuMediation();
+            $city = $structure->getCity();
+            $cp = $structure->getZipcode();
+
             $prescription->setValidcase(1);
+            $prescription->setCommune($city);
+            $prescription->setCp($cp);
             $prescription->setStep(StepPrescription::ValidCase);
             $entityManager->flush();
 

@@ -25,4 +25,5 @@ enum StepPrescription: string
     case ValidCase = 'ValidCase';
     case GeneratePDF = 'GeneratePDF';
     case Signed = 'Signed';
+    case Closed = 'Closed';
 }
