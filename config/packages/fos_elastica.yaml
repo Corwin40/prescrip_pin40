@@ -49,4 +49,13 @@ fos_elastica:
             properties:
                 id:
                     type: integer
+                ref:
+                    type: text
+                    fields:
+                        keyword:
+                            type: keyword
+                prescriptor:
+                    type: object
+                    properties:
+                        id: ~
 

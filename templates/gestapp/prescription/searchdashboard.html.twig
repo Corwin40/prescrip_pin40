@@ -1,0 +1,59 @@
+
+{% extends 'base.html.twig' %}
+
+{% block title %}Liste des prescriptions{% endblock %}
+
+{% block body %}
+    {# Bloc entête de page #}
+    <section id="page_header">
+        {%
+            include 'composants/pages/pages_headers.html.twig' with {
+            'page_title' : 'Liste des prescriptions',
+            'li_items': [
+                { path: 'app_admin_dashboard_index', fa_class: 'fa-sharp-duotone fa-solid fa-house-blank', a_title: 'Dashboard' },
+                { path: null, fa_class: 'fa-sharp fa-light fa-laptop', a_title: 'prescription' },
+            ],
+            'btns' : [
+                {'path': path('app_gestapp_prescription_new'), 'id':'btnAddprescription', 'class' : 'btn btn-outline-dark btn-sm', 'fa_class' : 'fa-duotone fa-solid fa-circle-user-circle-plus', 'textcontent' : 'Ajouter une prescription'},
+            ]
+        }
+        %}
+    </section>
+
+    <section id="page_search">
+        {{ form_start(form) }}
+        <div class="row g-2">
+            <div class="col-md-3">
+                {% include 'composants/inputs/input_text.html.twig' with {
+                    form: form.ref,
+                    disabled: false,
+                    show_label: false,
+                    wrapper_class: 'mb-1'
+                } %}
+            </div>
+            <div class="col-md-2">
+                {% include 'composants/inputs/input_select.html.twig' with {
+                    form: form.prescriptor,
+                    disabled: false,
+                    show_label: false,
+                    wrapper_class: 'mb-1'
+                } %}
+            </div>
+            <div class="col-md-2">
+                <button class="btn btn-sm btn-primary">Rechercher</button>
+            </div>
+        </div>
+        {{ form_end(form) }}
+    </section>
+
+    {# Bloc contenu de la page #}
+    <section id="page_content">
+        <div class="row">
+
+            <div class="col-12 mb-2" id="liste">
+                {{ include('gestapp/prescription/include/_liste.html.twig') }}
+            </div>
+
+        </div>
+    </section>
+{% endblock %}

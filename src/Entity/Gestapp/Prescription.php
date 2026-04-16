@@ -21,14 +21,17 @@ class Prescription
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(type: Types::DATE_MUTABLE)]
-    private ?\DateTime $updatedAt = null;
-
     #[ORM\ManyToOne(inversedBy: 'prescriptions')]
     private ?Structure $prescriptor = null;
 
     #[ORM\OneToOne(cascade: ['persist', 'remove'])]
     private ?Equipment $equipement = null;
+
+    #[ORM\Column(length: 100)]
+    private ?string $ref = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $objectName = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $details = null;
@@ -72,14 +75,15 @@ class Prescription
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $path = null;
 
-    #[ORM\Column(length: 100)]
-    private ?string $ref = null;
+
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
     private ?\DateTime $createdAt = null;
 
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $objectName = null;
+    #[ORM\Column(type: Types::DATE_MUTABLE)]
+    private ?\DateTime $updatedAt = null;
+
+
 
     /**
      * @var Collection<int, Document>

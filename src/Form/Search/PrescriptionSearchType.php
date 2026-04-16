@@ -8,21 +8,21 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class dashboardPrescriptionSearchType extends AbstractType
+class PrescriptionSearchType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('query', TextType::class, [
-                'label' => 'Nom ou prénom',
+            ->add('ref', TextType::class, [
+                'label' => 'Référence',
                 'required' => false,
-                'attr' => ['class' => 'form-control form-control-sm']
+                'attr' => ['class' => 'form-control form-control-sm', 'placeholder' => 'Référence',]
             ])
             ->add('prescriptor', ChoiceType::class, [
                 'label' => 'Prescripteur',
                 'required' => false,
                 'choices' => $options['prescriptors'],
-                'placeholder' => 'Tous',
+                'placeholder' => 'Prescripteur',
                 'attr' => ['class' => 'form-select form-select-sm']
             ])
         ;

@@ -19,31 +19,35 @@
         }
         %}
     </section>
+
+    <section id="page_search">
+        {{ form_start(form) }}
+        <div class="row g-2">
+            <div class="col-md-3">
+                {% include 'composants/inputs/input_text.html.twig' with {
+                    form: form.query,
+                    disabled: false,
+                    show_label: false,
+                    wrapper_class: 'mb-1'
+                } %}
+            </div>
+            <div class="col-md-2">
+                {% include 'composants/inputs/input_select.html.twig' with {
+                    form: form.structure,
+                    disabled: false,
+                    show_label: false,
+                    wrapper_class: 'mb-1'
+                } %}
+            </div>
+            <div class="col-md-2">
+                <button class="btn btn-sm btn-primary">Rechercher</button>
+            </div>
+        </div>
+        {{ form_end(form) }}
+    </section>
+
     {# Bloc contenu de la page #}
     <section id="page_content">
-        {{ form_start(form) }}
-            <div class="row g-2">
-                <div class="col-md-3">
-                    {% include 'composants/inputs/input_text.html.twig' with {
-                        form: form.query,
-                        disabled: false,
-                        show_label: false,
-                        wrapper_class: 'mb-1'
-                    } %}
-                </div>
-                <div class="col-md-2">
-                    {% include 'composants/inputs/input_select.html.twig' with {
-                        form: form.structure,
-                        disabled: false,
-                        show_label: false,
-                        wrapper_class: 'mb-1'
-                    } %}
-                </div>
-                <div class="col-md-2">
-                    <button class="btn btn-sm btn-primary">Rechercher</button>
-                </div>
-            </div>
-        {{ form_end(form) }}
         <div class="row">
             <div class="col-12">
                 {% if results is not empty %}

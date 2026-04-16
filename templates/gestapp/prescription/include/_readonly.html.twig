@@ -11,8 +11,10 @@
 
 <div class="row mb-3">
     <div class="row">
+        <div class="col-12 bg-light border-bottom border-dark mb-2">
+            <h3 class="h4 mt-1 mb-1 px-2 pt-1">Le bénéficiaire</h3>
+        </div>
         <div class="col-12">
-            <h2>Le bénéficiaire</h2>
             <p>A compléter par le prescripteur</p>
         </div>
         <div class="clear"></div>
@@ -20,7 +22,7 @@
             <p class="my-1 py-1">Prénom & Nom:</p>
         </div>
         <div class="col-4">
-            <p class="bg-light rounded-1 my-1 py-1">{{ prescription.beneficiaire.civility }} {{ prescription.beneficiaire.firstname }} {{ prescription.beneficiaire.lastname }}</p>
+            <p class="bg-light rounded-1 my-1 py-1 px-2">{{ prescription.beneficiaire.civility }} {{ prescription.beneficiaire.firstname }} {{ prescription.beneficiaire.lastname }}</p>
         </div>
     </div>
 
@@ -88,49 +90,51 @@
 
 <div class="row mt-0 mb-3">
     <div class="row">
-        <div class="col-12">
-            <h3>Le prescripteur</h3>
+        <div class="col-12 bg-light border-bottom border-dark mb-2">
+            <h3 class="h4 mt-1 mb-1 px-2 pt-1">Le prescripteur</h3>
         </div>
         <div class="col-2">
             <p class="my-1 py-1">Structure :</p>
         </div>
         <div class="col-4">
-            <p class="bg-light rounded-1 my-1 py-1">{{ prescription.prescriptor.name }}</p>
+            <p class="bg-light rounded-1 my-1 py-1 px-2">{{ prescription.prescriptor.name }}</p>
         </div>
         <div class="clear"></div>
         <div class="col-2">
             <p class="my-1 py-1">Nom & Prénom :</p>
         </div>
         <div class="col-4">
-            <p class="bg-light rounded-1 my-1 py-1">{{ prescription.prescriptor.contactResponsableCivility }} {{ prescription.prescriptor.contactResponsableLastname }} {{ prescription.prescriptor.contactResponsableFirstname }}</p>
+            <p class="bg-light rounded-1 my-1 py-1 px-2">{{ prescription.prescriptor.contactResponsableCivility }} {{ prescription.prescriptor.contactResponsableLastname }} {{ prescription.prescriptor.contactResponsableFirstname }}</p>
         </div>
         <div class="clear"></div>
         <div class="col-4">
             <p class="my-1 py-1">Télephone du prescripteur :</p>
         </div>
         <div class="col-4">
-            <p class="bg-light rounded-1 my-1 py-1">{{ prescription.prescriptor.contactPhone }}</p>
+            <p class="bg-light rounded-1 my-1 py-1 px-2">{{ prescription.prescriptor.contactPhone }}</p>
         </div>
         <div class="clear"></div>
         <div class="col-4">
             <p class="my-1 py-1">Email du prescripteur :</p>
         </div>
         <div class="col-4">
-            <p class="bg-light rounded-1 my-1 py-1">{{ prescription.prescriptor.contactEmail }}</p>
+            <p class="bg-light rounded-1 my-1 py-1 px-2">{{ prescription.prescriptor.contactEmail }}</p>
         </div>
     </div>
 </div>
 
 <div class="row mb-3">
     <div class="row">
+        <div class="col-12 bg-light border-bottom border-dark mb-2">
+            <h3 class="h4 mt-1 mb-1 px-2 pt-1" >Motivation de la prescription</h3>
+        </div>
         <div class="col-12">
-            <h3>Motivation de la prescription</h3>
             <p>A compléter par le prescripteur :</p>
         </div>
         <div class="col-12 bg-light rounded-1">
             <p class="textarea-like">{{ prescription.details }}</p>
         </div>
-        <div class="col-12 px-0 mt-2">
+        <div class="col-12 mt-2">
             <p>Évaluation des compétences de base :</p>
             <table class="table table-striped">
                 <tbody>
@@ -172,8 +176,10 @@
 
 <div class="row mb-3">
     <div class="row">
+        <div class="col-12 bg-light border-bottom border-dark mb-2">
+            <h3 class="h4 mt-1 mb-1 px-2 pt-1">Lieu de médiation numérique</h3>
+        </div>
         <div class="col-12">
-            <h3>Lieu de médiation numérique</h3>
             <p>A compléter par le prescripteur en concertation avec le bénéficiaire.</p>
         </div>
         <div class="col-12 bg-light rounded-1">
@@ -184,8 +190,10 @@
 
 <div class="row mb-3">
     <div class="row">
+        <div class="col-12 bg-light border-bottom border-dark mb-2">
+            <h3 class="h4 mt-1 mb-1 px-2 pt-1">Diagnostic des compétences numériques</h3>
+        </div>
         <div class="col-12">
-            <h3>Diagnostic des compétences numériques</h3>
             <p class="fst-italic">Diagnostic des "compétences numériques de base" réalisé par le médiateur lors de la rencontre initial en appui au référentiel du CLEA Numérique (https://www.certificat-clea.fr/clea-numerique/referentiel-clea-numérique/)</p>
         </div>
         <div class="col-12">
@@ -334,8 +342,10 @@
 
 <div class="row mb-3">
     <div class="row">
+        <div class="col-12 bg-light border-bottom border-dark mb-2">
+            <h3 class="h4 mt-1 mb-1 px-2 pt-1">Les objectifs de la médiation</h3>
+        </div>
         <div class="col-12">
-            <h3>Les objectifs de la médiation</h3>
             <p class="fst-italic">
                 Compétences à travailler (référentiel DIGCOMP) : https://eduscol.education.fr/document/20392/download
             </p>
@@ -445,14 +455,14 @@
 </div>
 
 <div class="row mb-5">
-    <div class="col-12">
+    <div class="col-12 bg-light border-bottom border-dark mb-2">
         <h2>Remise de l'ordinateur</h2>
     </div>
     <div class="col-4">
         <p class="my-1 py-1">Id de l'ordinateur :</p>
     </div>
     <div class="col-4">
-        <p class="bg-light rounded-1 my-1 py-1">{{ prescription.equipement.equipmentId }}</p>
+        <p class="bg-light rounded-1 my-1 py-1 px-2">{{ prescription.equipement.equipmentId }}</p>
     </div>
 </div>
 {#
@@ -463,14 +473,14 @@
                 <p class="my-1 py-1">Fait à :</p>
             </div>
             <div class="col-8">
-                <p class="bg-light rounded-1 my-1 py-1">{{ prescription.lieuMediation.city }}</p>
+                <p class="bg-light rounded-1 my-1 py-1 px-2">{{ prescription.lieuMediation.city }}</p>
             </div>
             <div class="clear"></div>
             <div class="col-4">
                 <p class="my-1 py-1">Le :</p>
             </div>
             <div class="col-8">
-                <p class="bg-light rounded-1 my-1 py-1">{{ prescription.createdAt|date('d-m-Y') }}</p>
+                <p class="bg-light rounded-1 my-1 py-1 px-2">{{ prescription.createdAt|date('d-m-Y') }}</p>
             </div>
         </div>
     </div>

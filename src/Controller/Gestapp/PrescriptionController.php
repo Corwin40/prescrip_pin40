@@ -8,14 +8,16 @@ use App\Entity\Gestapp\Competence;
 use App\Entity\Gestapp\Prescription;
 use App\Form\Gestapp\closedCaseType;
 use App\Form\Gestapp\PrescriptionType;
-use App\Form\Search\dashboardPrescriptionSearchType;
+use App\Form\Search\PrescriptionSearchType;
+use App\Repository\Admin\StructureRepository;
 use App\Repository\Gestapp\PrescriptionRepository;
 use App\Repository\MemberRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Elastica\Query\Terms;
 use FOS\ElasticaBundle\Finder\PaginatedFinderInterface;
 use Elastica\Query;
 use Elastica\Query\BoolQuery;
-use Elastica\Query\MultiMatch;
+use Elastica\Query\MatchQuery;
 use Elastica\Query\Term;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -32,42 +34,87 @@ final class PrescriptionController extends AbstractController
         $this->finder = $finder;
     }
 
-    #[Route('/searchdashboard', name: 'app_gestapp_prescription_searchdashboard', methods: ['GET'])]
-    public function searchDashboard(Request $request, PrescriptionRepository $prescriptionRepository, MemberRepository $memberRepository): Response
+    public function createRef($structure, PrescriptionRepository $prescriptionRepository)
     {
-        // récupérer tous les prescripteurs existants (exemple Doctrine)
-        $prescriptors = $memberRepository->findByRole('ROLE_PRESCRIPTEUR');
+        // Construction de la variable Ref
+        $date = new \DateTime('now');
 
-        $prescriptorChoices = [];
-        foreach ($prescriptors as $p) {
-            $prescriptorChoices[$p['nameStructure']] = $p['id'];
+        $lastPrescription = $prescriptionRepository->findOneBy(['prescriptor' => $structure],[ 'id' => 'DESC']);
+        if(!$lastPrescription){
+            $compteur = 1;
+        }else{
+            $compteur = $lastPrescription->getCompteur() + 1;
         }
 
-        $form = $this->createForm(dashboardPrescriptionSearchType::class, null, [
+        $ref = $date->format('Ymd')."-xxxxx-".$compteur;// mois-année-structure-compteur
+
+        return [$ref, $compteur];
+    }
+
+    #[Route('/', name: 'app_gestapp_prescription_index', methods: ['GET', 'POST'])]
+    public function index(Request $request, StructureRepository $structureRepository): Response
+    {
+        $member = $this->getUser();
+        $structureId = $member->getStructure()?->getId();
+
+        // Récupération des prescripteurs selon le rôle
+        if($member && in_array('ROLE_PRESCRIPTEUR', $member->getRoles())) {
+            $prescriptors = $structureRepository->findPrescriptorsByPrescriptor($structureId);
+        } elseif($member && in_array('ROLE_MEDIATEUR', $member->getRoles())) {
+            $prescriptors = $structureRepository->findPrescriptorsByMediator($structureId);
+        } elseif($member && in_array('ROLE_SUPER_ADMIN', $member->getRoles())) {
+            $prescriptors = $structureRepository->findPrescriptorsByAdmin();
+        } else {
+            $prescriptors = [];
+        }
+
+        // Construction des choix pour le formulaire
+        $prescriptorChoices = [];
+        $prescriptorIds = [];
+
+        foreach ($prescriptors as $p) {
+            $prescriptorChoices[$p->getName()] = $p->getId();
+            $prescriptorIds[] = $p->getId();
+        }
+
+        $form = $this->createForm(PrescriptionSearchType::class, null, [
             'prescriptors' => $prescriptorChoices
         ]);
         $form->handleRequest($request);
 
-        // construire la query Elastice
+        // Construction de la requête Elasticsearch
         $boolQuery = new BoolQuery();
+
+        // Filtre automatique selon le rôle
+        if ($member && in_array('ROLE_PRESCRIPTEUR', $member->getRoles()) && $structureId) {
+            $termQuery = new Term();
+            $termQuery->setTerm('prescriptor.id', $structureId);
+            $boolQuery->addFilter($termQuery);
+        }
+        if ($member && in_array('ROLE_MEDIATEUR', $member->getRoles())) {
+            $termsQuery = new Terms('prescriptor.id', $prescriptorIds);
+            $boolQuery->addFilter($termsQuery);
+            //dd($boolQuery);
+        }
+        if ($member && in_array('ROLE_SUPER_ADMIN', $member->getRoles())) {
+            $termsQuery = new Terms('prescriptor.id', $prescriptorIds);
+            $boolQuery->addFilter($termsQuery);
+        }
 
         if ($form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
 
-            if (!empty($data['query'])) {
-                $multiMatch = new MultiMatch();
-                $multiMatch->setFields(['firstName', 'lastName']);
-                $multiMatch->setQuery($data['query']);
-                $boolQuery->addMust($multiMatch);
+            if (!empty($data['ref'])) {
+                $matchQuery = new MatchQuery();
+                $matchQuery->setField('ref', $data['ref']);
+                $boolQuery->addMust($matchQuery);
             }
 
             if (!empty($data['prescriptor'])) {
-
                 $termQuery = new Term();
                 $termQuery->setTerm('prescriptor.id', $data['prescriptor']);
-                $boolQuery->addMust($termQuery);
+                $boolQuery->addFilter($termQuery);
             }
-
         }
 
         $query = new Query($boolQuery);
@@ -75,16 +122,16 @@ final class PrescriptionController extends AbstractController
 
         $results = $this->finder->find($query);
 
-        $view = $this->renderView('gestapp/prescription/searchDashboard.html.twig', [
+        return $this->render('gestapp/prescription/searchdashboard.html.twig', [
+            'prescriptions' => $results,
             'form' => $form->createView(),
-            'results' => $results,
         ]);
 
-        return $this->json([], 200);
+
     }
 
-    #[Route(name: 'app_gestapp_prescription_index', methods: ['GET'])]
-    public function index(PrescriptionRepository $prescriptionRepository): Response
+    #[Route(name: 'app_gestapp_prescription_await', methods: ['GET'])]
+    public function await(PrescriptionRepository $prescriptionRepository): Response
     {
         $member = $this->getUser();
         if($member && in_array('ROLE_PRESCRIPTEUR', $member->getRoles())){
@@ -111,21 +158,11 @@ final class PrescriptionController extends AbstractController
         $user = $this->getUser();
         $structure = $user->getStructure();
 
-        // Construction de la variable Ref
-        $date = new \DateTime('now');
-
-        $lastPrescription = $prescriptionRepository->findOneBy(['prescriptor' => $structure],[ 'id' => 'DESC']);
-        if(!$lastPrescription){
-            $compteur = 1;
-        }else{
-            $compteur = $lastPrescription->getCompteur() + 1;
-        }
-
-        $ref = $date->format('Ym')."-xxxxx-".$compteur;// mois-année-structure-compteur
+        $createRef = $this->createRef($structure, $prescriptionRepository);
 
         $prescription = new Prescription();
-        $prescription->setRef($ref);
-        $prescription->setCompteur($compteur);
+        $prescription->setRef($createRef[0]);
+        $prescription->setCompteur($createRef[1]);
         $prescription->setBaseCompetence('Non acquises');
         $prescription->setCompetence(new Competence());
         if ($user && (in_array('ROLE_SUPER_ADMIN', $user->getRoles()) || in_array('ROLE_ADMIN', $user->getRoles()))) {
