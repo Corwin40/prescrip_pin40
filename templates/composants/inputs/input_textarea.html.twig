@@ -1,6 +1,6 @@
 {% set disabled = disabled|default(false) %}
 {% set rows = rows|default(5) %}
-<div class="mb-3">
+<div class="mb-0">
     {% if show_label is true %}<label class="form-label">{{ form_label(form) }}</label>{% else %}{% endif %}
     {{ form_widget(form, {
         attr: {

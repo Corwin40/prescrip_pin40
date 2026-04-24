@@ -19,7 +19,7 @@
 {% elseif prescription.step.name == 'ChoiceEquipment' %}
     <span class="badge text-bg-info p-2">Choisir l'équipement</span>
 {% elseif prescription.step.name == 'ValidCase' %}
-    <a href="{{ path('app_generate_prescription_pdf', {'id': prescription.id}) }}">Générer le PDF</a>
+    <a href="{{ path('app_generate_prescription_pdf', {'id': prescription.id}) }}" >Générer le PDF</a>
 {% elseif prescription.step.name == 'GeneratePDF' %}
     {% if prescription.path is null %}
     {% else %}

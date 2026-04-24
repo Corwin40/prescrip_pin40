@@ -70,7 +70,7 @@ class PrescriptionType extends AbstractType
         ;
 
         // En mode Création de la prescription
-        if ($route === 'app_gestapp_prescription_edit') {
+        if ($route === 'app_gestapp_prescription_new') {
             // on filtre les bénéficiaires selon le prescripteur
             if($user && in_array('ROLE_PRESCRIPTEUR', $user->getRoles())) {
                 $builder

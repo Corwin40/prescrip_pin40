@@ -24,7 +24,6 @@ services:
 
     FOS\ElasticaBundle\Finder\FinderInterface $beneficiaryFinder:
         alias: fos_elastica.finder.beneficiary
-
     App\Controller\Gestapp\BeneficiaryController:
         tags: [ 'controller.service_arguments' ]
         public: true

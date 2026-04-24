@@ -175,6 +175,8 @@ final class BeneficiaryController extends AbstractController
     #[Route('/new2', name: 'app_gestapp_beneficiary_new2', methods: ['GET', 'POST'])]
     public function new2(Request $request, EntityManagerInterface $entityManager): Response
     {
+        $user = $this->getUser();
+        $structure = $user->getStructure();
         $beneficiary = new Beneficiary();
         $form = $this->createForm(BeneficiaryType::class, $beneficiary, [
             'action' => $this->generateUrl('app_gestapp_beneficiary_new2'),
@@ -188,8 +190,8 @@ final class BeneficiaryController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
 
             $civility = $form->get('civility')->getData();
-
             $beneficiary->setGender($civility);
+            $beneficiary->setStructure($structure);
             $entityManager->persist($beneficiary);
             $entityManager->flush();
 

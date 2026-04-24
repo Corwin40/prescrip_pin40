@@ -20,17 +20,19 @@
             </div>
 
             {% include 'composants/inputs/block_civility.html.twig' with {
-                class_block: 'col-8 mb-3',
+                wrapper_class: 'col-8 mb-3',
                 label: 'Prénom & Nom',
                 civility: form.civility,
                 firstname: form.firstname,
-                lastname: form.lastname
+                lastname: form.lastname,
+                show_label: true
             } %}
             </div>
         </div>
         <div class="row">
             <div class="col-md-12">
                 {% include 'composants/inputs/input_radio_horizontal.html.twig' with {
+                    label: 'Age',
                     form: form.ageGroup,
                     show_label: true
                 } %}
@@ -39,6 +41,7 @@
         <div class="row">
             <div class="col-md-12">
                 {% include 'composants/inputs/input_radio_horizontal.html.twig' with {
+                    label: 'Situation',
                     form: form.professionnalStatus,
                     show_label: true
                 } %}

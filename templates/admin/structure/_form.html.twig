@@ -1,0 +1,78 @@
+{{ form_start(form) }}
+    <div class="row g-2">
+        <div class="col-12 bg-light border-bottom border-dark mb-2">
+            <h3 class="h4 mt-2 mb-2 ps-2">La structure</h3>
+        </div>
+        <div class="col-md-3">
+            {% include 'composants/inputs/input_text.html.twig' with {
+                form: form.name,
+                disabled: false,
+                show_label: true,
+                wrapper_class: 'mb-1'
+            } %}
+        </div>
+        <div class="clear"></div>
+        <div class="col-md-3">
+            {% include 'composants/inputs/input_text.html.twig' with {
+                form: form.address,
+                disabled: false,
+                show_label: true,
+                wrapper_class: 'mb-1'
+            } %}
+        </div>
+        <div class="col-md-3">
+            <div class="row g-0">
+                <div class="col-md-3">
+                    {% include 'composants/inputs/input_text.html.twig' with {
+                        form: form.zipcode,
+                        disabled: false,
+                        show_label: true,
+                        wrapper_class: 'mb-1'
+                    } %}
+                </div>
+                <div class="col-md-9">
+                    {% include 'composants/inputs/input_text.html.twig' with {
+                        form: form.city,
+                        disabled: false,
+                        show_label: true,
+                        wrapper_class: 'mb-1'
+                    } %}
+                </div>
+            </div>
+        </div>
+        <div class="clear"></div>
+
+        <div class="col-12 bg-light border-bottom border-dark mb-2">
+            <h3 class="h4 mt-2 mb-2 ps-2">Les contacts de la structure</h3>
+        </div>
+
+        {% include 'composants/inputs/block_civility.html.twig' with {
+            wrapper_class : 'col-6 mb-3',
+            label: 'Le ou la responsable',
+            civility: form.contactResponsableCivility,
+            firstname: form.contactResponsableFirstname,
+            lastname: form.contactResponsableLastname,
+            show_label: true
+        } %}
+        <div class="col-md-2">
+            {% include 'composants/inputs/input_text.html.twig' with {
+                form: form.contactPhone,
+                disabled: false,
+                show_label: true,
+            } %}
+        </div>
+        <div class="col-md-2">
+            {% include 'composants/inputs/input_text.html.twig' with {
+                form: form.contactEmail,
+                disabled: false,
+                show_label: true,
+            } %}
+        </div>
+        <div class="clear"></div>
+        {{ form_rest(form) }}
+        <div class="col-12">
+            <button type="submit" class="btn btn-primary">Ajouter la structure</button>
+        </div>
+
+    </div>
+{{ form_end(form) }}

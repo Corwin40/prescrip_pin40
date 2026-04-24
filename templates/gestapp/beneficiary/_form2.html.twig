@@ -2,43 +2,36 @@
 
 <div class="row">
     <div class="col-12">
-        <div class="row">
-            <div class="col-12 bg-light border-bottom border-dark mb-2">
-                <h3 class="mt-2 mb-2">Administratif</h3>
-            </div>
-            <div class="col-3">
-                {% include 'composants/inputs/input_select.html.twig' with {
-                    form: form.prescriptor,
-                    show_label: false
-                } %}
-            </div>
-        </div>
+
         <div class="row">
             <div class="col-12 bg-light border-bottom border-dark mb-2">
                 <h3 class="mt-2 mb-2">Le bénéficiaire</h3>
             </div>
 
             {% include 'composants/inputs/block_civility.html.twig' with {
-                class_block : 'col-8 mb-3',
+                wrapper_class : 'col-8 mb-3',
                 label: 'Prénom & Nom',
                 civility: form.civility,
                 firstname: form.firstname,
-                lastname: form.lastname
+                lastname: form.lastname,
+                show_label: true
             } %}
         </div>
         <div class="row">
             <div class="col-md-12">
                 {% include 'composants/inputs/input_radio_horizontal.html.twig' with {
-                    form_label: 'Age',
-                    form_field: form.ageGroup
+                    label: 'Age',
+                    form: form.ageGroup,
+                    show_label: true
                 } %}
             </div>
         </div>
         <div class="row">
             <div class="col-md-12">
                 {% include 'composants/inputs/input_radio_horizontal.html.twig' with {
-                    form_label: 'Situation',
-                    form_field: form.professionnalStatus
+                    label: 'Situation',
+                    form: form.professionnalStatus,
+                    show_label: true
                 } %}
             </div>
         </div>

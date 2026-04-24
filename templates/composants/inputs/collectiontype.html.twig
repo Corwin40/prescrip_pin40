@@ -1,0 +1,9 @@
+<div id="collectiontype"
+     data-prototype="{{ form_row(form.vars.prototype)|e('html_attr') }}"
+>
+    {% for itemForm in form %}
+        <div class="item">
+            {{ form_widget(itemForm) }}
+        </div>
+    {% endfor %}
+</div>

@@ -29,6 +29,9 @@ document.addEventListener('DOMContentLoaded', () => {
             initIndex_Member();
             break;
         case 'app_gestapp_prescription_new':
+        case 'app_gestapp_prescription_index':
+            initIndex_Prescription();
+            break;
         case 'app_gestapp_prescription_edit':
             initNewEdit_Prescription();
             break;

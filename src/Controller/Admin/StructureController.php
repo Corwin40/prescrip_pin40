@@ -2,8 +2,13 @@
 
 namespace App\Controller\Admin;
 
+use App\Entity\Admin\Member;
+use App\Entity\Admin\Structure;
+use App\Form\Admin\StructureType;
 use App\Repository\Admin\StructureRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
@@ -39,6 +44,40 @@ final class StructureController extends AbstractController
         return $this->render('admin/structure/index.html.twig', [
             'structures' => $structureRepository->findAll(),
             'map' => $map,
+        ]);
+    }
+
+    #[Route('/new', name: 'app_admin_structure_new', methods: 'GET|POST')]
+    public function new(Request $request, EntityManagerInterface $entityManager): Response
+    {
+        $user = $this->getUser();
+
+        $structure = new Structure();
+
+        $form = $this->createForm(StructureType::class, $structure, [
+            'action' => $this->generateUrl('app_admin_structure_new'),
+            'method' => 'POST',
+            'attr' => [
+                'id' => 'formStructure',
+            ],
+            //'user' => $user,
+            //'structure' => $structure
+        ]);
+
+        if($form->isSubmitted() && $form->isValid())
+        {
+            $entityManager->persist($structure);
+            $entityManager->flush();
+
+            $this->addFlash('success', 'Le membre a bien été créé.');
+            return $this->redirectToRoute('app_admin_structure_index');
+        }
+
+        // dans la poursuite de la crétaion d'une structure, il faut créer obligatoirement le dossier de stockage des pdfs générés et déposés.
+
+        return $this->render('admin/structure/new.html.twig', [
+            'form' => $form,
+            'structure' => $structure,
         ]);
     }
 }

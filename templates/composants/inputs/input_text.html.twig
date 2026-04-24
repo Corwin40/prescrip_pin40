@@ -1,8 +1,8 @@
 {% set disabled = disabled|default(false) %}
-{% set wrapper_class = wrapper_class|default('mb-3') %}
+{% set wrapper_class = wrapper_class|default('mb-0') %}
 
 <div class="{{ wrapper_class }}">
-    {% if show_label is true %}<label class="form-label">{{ form_label(form) }}</label>{% else %}{% endif %}
+    {% if show_label is true %}<label class="form-label mb-1">{{ form_label(form) }}</label>{% else %}{% endif %}
     {{ form_widget(form, {
         attr: {
             class: 'form-control form-control-sm border border-1 border-dark shadow-sm'

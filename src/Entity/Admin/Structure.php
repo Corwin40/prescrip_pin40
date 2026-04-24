@@ -64,7 +64,7 @@ class Structure
     /**
      * @var Collection<int, Beneficiary>
      */
-    #[ORM\OneToMany(targetEntity: Beneficiary::class, mappedBy: 'structure')]
+    #[ORM\OneToMany(targetEntity: Beneficiary::class, mappedBy: 'structure', cascade: ['persist'])]
     private Collection $beneficiaries;
 
     /**

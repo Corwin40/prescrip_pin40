@@ -165,6 +165,7 @@ final class PrescriptionController extends AbstractController
         $prescription->setCompteur($createRef[1]);
         $prescription->setBaseCompetence('Non acquises');
         $prescription->setCompetence(new Competence());
+
         if ($user && (in_array('ROLE_SUPER_ADMIN', $user->getRoles()) || in_array('ROLE_ADMIN', $user->getRoles()))) {
             $prescription->setStatus(StatusPrescription::OpenByAdministrator);
             $prescription->setStep(StepPrescription::Open);
@@ -202,7 +203,7 @@ final class PrescriptionController extends AbstractController
                     }else{
                         $compteur = $lastPrescription->getCompteur() + 1;
                     }
-                    $ref = $date->format('Ym')."-".$structure."-".$compteur;// mois-année-structure-compteur
+                    $ref = $date->format('Ymd')."-".$structure."-".$compteur;// mois-année-structure-compteur
                     $prescription->setRef($ref);
                 }
                 $prescription->setStatus(StatusPrescription::OpenByAdministrator);

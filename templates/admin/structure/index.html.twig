@@ -9,15 +9,13 @@
         {% if is_granted('ROLE_SUPER_ADMIN') %}
             {%
                 include 'composants/pages/pages_headers.html.twig' with {
-                'page_title' : 'Liste des Membres',
+                'page_title' : 'Liste des Structures engagées dans le dispositif',
                 'li_items': [
                     { path: 'app_admin_dashboard_index', fa_class: 'fa-sharp-duotone fa-solid fa-house-blank', a_title: 'Dashboard' },
-                    { path: null, fa_class: 'fa-sharp fa-light fa-laptop', a_title: 'Membres' },
+                    { path: null, fa_class: 'fa-duotone fa-solid fa-building-flag', a_title: 'Structures' },
                 ],
                 'btns' : [
-                    {'path': path('app_admin_member_new', {'role': 'prescripteur'}), 'id':'btnAddMembre', 'class' : 'btn btn-outline-dark btn-sm', 'fa_class' : 'fa-duotone fa-solid fa-circle-user-circle-plus', 'textcontent' : 'Ajouter un.e prescripteur'},
-                    {'path': path('app_admin_member_new', {'role': 'mediateur'}), 'id':'btnAddMembre', 'class' : 'btn btn-outline-dark btn-sm', 'fa_class' : 'fa-duotone fa-solid fa-circle-user-circle-plus', 'textcontent' : 'Ajouter un.e mediateur'},
-                    {'path': path('app_admin_member_new', {'role': 'admin'}), 'id':'btnAddMembre', 'class' : 'btn btn-outline-dark btn-sm', 'fa_class' : 'fa-duotone fa-solid fa-circle-user-circle-plus', 'textcontent' : 'Ajouter un.e admin'},
+                    {'path': path('app_admin_structure_new'), 'id':'btnAddMembre', 'class' : 'btn btn-outline-dark btn-sm', 'fa_class' : 'fa-duotone fa-solid fa-circle-user-circle-plus', 'textcontent' : 'Ajouter une structure'},
 
                 ]
             }
@@ -40,11 +38,13 @@
     </section>
 
     <section id="page_content">
+        {#
         <div class="row mb-2">
             <div class="col-md-12">
                 {{ ux_map(map, {style: 'height: 400px;'}) }}
             </div>
         </div>
+        #}
         <div class="row g-1">
             {% for structure in structures %}
                 <div class="col-12">

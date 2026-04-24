@@ -1,6 +1,5 @@
+{% set disabled = disabled|default(false) %}
 <tr>
-    {% set disabled = disabled|default(false) %}
-
     {% if show_label is true %}
         <td><b>{{ label }}</b></td>
     {% endif %}

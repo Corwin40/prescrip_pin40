@@ -80,52 +80,54 @@ class BeneficiaryType extends AbstractType
                 'placeholder' => 'veuillez choisir',
                 'required' => true,
             ]);
+        if ($route === 'app_gestapp_beneficiary_new') {
+            if($user && in_array('ROLE_PRESCRIPTEUR', $user->getRoles())) {
+                $builder->add('structure', EntityType::class, [
+                    'class' => Structure::class,
+                    'choices' => [$user->getStructure()],
+                    'choice_label' => 'name',
+                ]);
+            }
+            elseif ($user && in_array('ROLE_MEDIATEUR', $user->getRoles())) {
+                $builder
+                    ->add('structure', EntityType::class, [
+                        'class' => Structure::class,
+                        'choice_label' => function ($structure) {
+                            return $structure->getName();
+                        },
+                        'query_builder' => function (EntityRepository $er) use ($user) {
+                            return $er
+                                ->createQueryBuilder('s')
+                                ->leftJoin('s.members', 'p')
+                                ->where('p.referent = :user')
+                                ->setParameter('user', $user)
+                                ->orderBy('s.name', 'ASC');
+                        },
+                    ]);
+            }
+            elseif ( $user && (
+                    in_array('ROLE_SUPER_ADMIN', $user->getRoles()) ||
+                    in_array('ROLE_ADMIN', $user->getRoles())
+                ))
+            {
+                $builder
+                    ->add('structure', EntityType::class, [
+                        'class' => Structure::class,
+                        'choice_label' => function ($structure) {
+                            return $structure->getName();
+                        },
+                        'query_builder' => function (EntityRepository $er) use ($user) {
+                            return $er
+                                ->createQueryBuilder('s')
+                                ->innerJoin('s.members', 'p')
+                                ->where('p.roles LIKE :roles')
+                                ->setParameter('roles', '%ROLE_PRESCRIPTEUR%')
+                                ->orderBy('p.id', 'ASC');
+                        },
+                    ]);
+            }
+        }
 
-        if($user && in_array('ROLE_PRESCRIPTEUR', $user->getRoles())) {
-            $builder->add('structure', EntityType::class, [
-                'class' => Structure::class,
-                'choices' => [$user->getStructure()],
-                'choice_label' => 'name',
-            ]);
-        }
-        elseif ($user && in_array('ROLE_MEDIATEUR', $user->getRoles())) {
-            $builder
-                ->add('structure', EntityType::class, [
-                    'class' => Structure::class,
-                    'choice_label' => function ($structure) {
-                        return $structure->getName();
-                    },
-                    'query_builder' => function (EntityRepository $er) use ($user) {
-                        return $er
-                            ->createQueryBuilder('s')
-                            ->leftJoin('s.members', 'p')
-                            ->where('p.referent = :user')
-                            ->setParameter('user', $user)
-                            ->orderBy('s.name', 'ASC');
-                    },
-                ]);
-        }
-        elseif ( $user && (
-                in_array('ROLE_SUPER_ADMIN', $user->getRoles()) ||
-                in_array('ROLE_ADMIN', $user->getRoles())
-            ))
-        {
-            $builder
-                ->add('structure', EntityType::class, [
-                    'class' => Structure::class,
-                    'choice_label' => function ($structure) {
-                        return $structure->getName();
-                    },
-                    'query_builder' => function (EntityRepository $er) use ($user) {
-                        return $er
-                            ->createQueryBuilder('s')
-                            ->innerJoin('s.members', 'p')
-                            ->where('p.roles LIKE :roles')
-                            ->setParameter('roles', '%ROLE_PRESCRIPTEUR%')
-                            ->orderBy('p.id', 'ASC');
-                    },
-                ]);
-        }
     }
 
     public function configureOptions(OptionsResolver $resolver): void

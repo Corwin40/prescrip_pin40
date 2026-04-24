@@ -1,0 +1,48 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Liste des membres{% endblock %}
+
+{% block body %}
+
+    {# Bloc entête de page #}
+    <section id="page_header">
+        {% if is_granted('ROLE_SUPER_ADMIN') %}
+            {%
+                include 'composants/pages/pages_headers.html.twig' with {
+                'page_title' : 'Liste des Structures engagées dans le dispositif',
+                'li_items': [
+                    { path: 'app_admin_dashboard_index', fa_class: 'fa-sharp-duotone fa-solid fa-house-blank', a_title: 'Dashboard' },
+                    { path: null, fa_class: 'fa-duotone fa-solid fa-building-flag', a_title: 'Structures' },
+                ],
+                'btns' : [
+                    {'path': path('app_admin_structure_new'), 'id':'btnAddMembre', 'class' : 'btn btn-outline-dark btn-sm', 'fa_class' : 'fa-duotone fa-solid fa-circle-user-circle-plus', 'textcontent' : 'Ajouter une structure'},
+
+                ]
+            }
+            %}
+        {% else %}
+            {%
+                include 'composants/pages/pages_headers.html.twig' with {
+                'page_title' : 'Liste des Membres',
+                'li_items': [
+                    { path: 'app_admin_dashboard_index', fa_class: 'fa-sharp-duotone fa-solid fa-house-blank', a_title: 'Dashboard' },
+                    { path: null, fa_class: 'fa-sharp fa-light fa-laptop', a_title: 'Membres' },
+                ],
+                'btns' : [
+                    {'path': path('app_admin_member_new', {'role': 'mediateur'}), 'id':'btnAddMembre', 'class' : 'btn btn-outline-dark btn-sm', 'fa_class' : 'fa-duotone fa-solid fa-circle-user-circle-plus', 'textcontent' : 'Ajouter un.e mediateur'},
+                ]
+            }
+            %}
+        {% endif %}
+
+    </section>
+
+    <section id="page_content">
+        {{ include('admin/structure/_form.html.twig') }}
+    </section>
+
+
+
+
+{% endblock %}
+
