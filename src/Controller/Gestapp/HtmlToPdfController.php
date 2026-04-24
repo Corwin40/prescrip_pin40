@@ -32,27 +32,28 @@ final class HtmlToPdfController extends AbstractController
                     'pdf' => $this->viewPdf,
                 ])
                 ->generate()
-                ->stream() // will return directly a stream response
+                ->stream()                                                                                          // will return directly a stream response
             ;
-            $pdf->sendContent(); // envoie le PDF dans le buffer
-
-            $pdfContent = ob_get_clean(); // récupère le binaire
+            $pdf->sendContent();                                                                                    // envoie le PDF dans le buffer
+            $pdfContent = ob_get_clean();                                                                           // récupère le binaire
 
             // stockage sur disque
             $filename = $prescription->getRef().'_original.pdf';
-            $path = $this->getParameter('prescription_directory_url').$filename;
+            $slugStructure = $prescription->getLieuMediation()->getSlug();
+            $dir = $this->getParameter('prescription_directory_url').'/'.$slugStructure.'/';
+            $path = $this->getParameter('prescription_directory_url').'/'.$slugStructure.'/'.$filename;
 
-            if(!is_dir($this->getParameter('prescription_directory_url'))){
-                mkdir($this->getParameter('prescription_directory_url'), 0777, true);
+            if(!is_dir($dir)){                                                                                      // On créé le répertoire si pas présent
+                mkdir($dir, 0777, true);
             }
 
-            if(file_exists($path)){
+            if(file_exists($path)){                                                                                 // Suppression du fichier si présent
                 unlink($path);
             }
-            file_put_contents($path, $pdfContent);
+            file_put_contents($path, $pdfContent);                                                                  // On ajoute le binaire
 
             // enregistrement en bdd du nom du fichier
-            $prescription->setPath($this->getParameter('prescription_directory').$filename);
+            $prescription->setPath($path);
             $prescription->setStep(StepPrescription::GeneratePDF);
             $em->flush();
 

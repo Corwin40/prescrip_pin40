@@ -346,7 +346,7 @@
 
                         <td class="text-center">
                             {% if comp.compInternet == 'acquis' %}
-                                <i class="fa-regular fa-square-checks"></i>
+                                {{ include('composants/fontawesome/square-check.html.twig') }}
                             {% else %}
                                 {{ include('composants/fontawesome/square.html.twig') }}
                             {% endif %}
