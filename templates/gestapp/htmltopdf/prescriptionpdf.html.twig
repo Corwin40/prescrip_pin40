@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pdf prescription</title>
-    {% if pdf %}
+    {% if pdf == 1 %}
         <link rel="stylesheet" href="{{ gotenberg_asset('build/pdf.css') }}">
     {% else %}
         {% block stylesheets %}
@@ -85,7 +85,11 @@
                 <p class="my-1 py-1">Prénom & Nom:</p>
             </div>
             <div class="col-4">
-                <p class="bg-light rounded-1 my-1 py-1">{{ prescription.beneficiaire.civility }} {{ prescription.beneficiaire.firstname }} {{ prescription.beneficiaire.lastname }}</p>
+                {% if prescription.beneficiaire.civility is defined and prescription.beneficiaire.firstname is defined and prescription.beneficiaire.lastname is defined %}
+                    <p class="bg-light rounded-1 my-1 py-1">{{ prescription.beneficiaire.civility }} {{ prescription.beneficiaire.firstname }} {{ prescription.beneficiaire.lastname }}</p>
+                {% else %}
+                    <p class="bg-light rounded-1 my-1 py-1">&nbsp;</p>
+                {% endif %}
             </div>
         </div>
 
@@ -134,7 +138,7 @@
             </div>
             <div class="col-10">
                 {% set Options = [
-                    {'value': 'Scolaire / Étudiant', 'label': 'Scolaire / Étudiants'},
+                    {'value': 'Scolaire / Étudiant', 'label': 'Scolaire / Étudiant'},
                     {'value': 'Employé / En Formation', 'label': 'Employé / En Formation'},
                     {'value': 'Sans emploi', 'label': 'Sans emploi'},
                     {'value': 'Retraite', 'label': 'Retraité'},
@@ -477,6 +481,8 @@
                             {% endif %}
                         </td>
                     </tr>
+
+                    <!-- PROTECTION -->
                     <tr>
                         <td>4 - Protection et sécurité</td>
                         <td class="text-center">
@@ -487,6 +493,8 @@
                             {% endif %}
                         </td>
                     </tr>
+
+                    <!-- ENVIRONNEMENT NUMERIQUE -->
                     <tr>
                         <td>5 - Environnement numérique</td>
                         <td class="text-center">
@@ -508,7 +516,7 @@
                     {% if prescription.competence.detailParcour is null %}
                         Aucun détails du parcours de formation n'a été fournis par le médiateur.
                     {% else %}
-                        {{ prescription.competence.detailParcour }}
+                        {{ prescription.competence.detailParcour|nl2br }}
                     {% endif %}
                 </p>
             </div>

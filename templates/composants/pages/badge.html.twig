@@ -24,8 +24,27 @@
     {% if prescription.path is null %}
     {% else %}
         <div class="d-flex flex-row gap-2">
-            <a href="{{ asset(prescription.path) }}" class="openModal circle text-decoration-none" data-bs-data="VIEW_PRESCRIPTION-Voir la prescription-{{ prescription.id }}"><i class="fa-sharp fa-light fa-file-pdf"></i></a>
-            <a href="{{ path('app_gestapp_document_prescriptionsigned_manually', {'idprescription': prescription.id}) }}" class="openModal circle" data-bs-data="UPLOAD_PRESCRIPTIONSIGNED-Charger la prescription signée manuellement-"><i class="fa-sharp fa-light fa-arrow-down-to-bracket"></i></a>
+            <a href="{{ asset(prescription.path) }}"
+               class="openModal circle text-decoration-none"
+               data-bs-data="VIEW_PRESCRIPTION-Voir la prescription-{{ prescription.id }}"
+               data-bs-toggle="tooltip" data-bs-placement="top"
+               {# data-bs-custom-class="custom-tooltip" #}
+               data-bs-title="Signature de la fiche à la main en imprinat cette dernière"
+            >
+                <i class="fa-sharp fa-light fa-file-pdf"></i>
+            </a>
+            <a href="{{ path('app_admin_docuseal_prescription', {'id': prescription.id}) }}"
+               class="openModal circle"
+               data-bs-data="SUBMISSION_PRESCRIPTION_DOCUSEAL-Signature de la fiche-"
+            >
+                <i class="fa-sharp fa-light fa-duotone fa-light fa-signature"></i>
+            </a>
+            <a href="{{ path('app_gestapp_document_prescriptionsigned_manually', {'idprescription': prescription.id}) }}"
+               class="openModal circle"
+               data-bs-data="UPLOAD_PRESCRIPTIONSIGNED-Charger la prescription signée manuellement-"
+            >
+                <i class="fa-sharp fa-light fa-arrow-down-to-bracket"></i>
+            </a>
         </div>
     {% endif %}
 {% elseif prescription.step.name == 'Signed' %}

@@ -4,10 +4,13 @@
 # Put parameters here that don't need to change on each machine where the app is deployed
 # https://symfony.com/doc/current/best_practices.html#use-parameters-for-application-configuration
 parameters:
-    prescription_directory_url: '%kernel.project_dir%/public/documents/originals/'
-    prescription_signed_directory_url: '%kernel.project_dir%/public/documents/signeds/'
-    prescription_directory: '/documents/originals/'
-    prescription_signed_directory: '/documents/signeds/'
+    prescription_original_directory: '%kernel.project_dir%/public/documents/originals/'
+    prescription_signed_directory: '%kernel.project_dir%/public/documents/signeds/'
+    prescription_original_directory_url: '/documents/originals/'
+    prescription_signed_directory_url: '/documents/signeds/'
+    DOCUSEAL_KEY: '%env(DSEAL_API_TOKEN)%'
+    DOCUSEAL_URL: '%env(DSEAL_API_URL)%'
+
 services:
     # default configuration for services in *this* file
     _defaults:
@@ -21,6 +24,11 @@ services:
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
+
+    App\Controller\Admin\DocusealController:
+        arguments:
+            $docuseal_Url: '%DOCUSEAL_URL%'
+            $docuseal_Key: '%DOCUSEAL_KEY%'
 
     FOS\ElasticaBundle\Finder\FinderInterface $beneficiaryFinder:
         alias: fos_elastica.finder.beneficiary

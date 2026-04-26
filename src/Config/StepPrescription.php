@@ -24,6 +24,7 @@ enum StepPrescription: string
     case ChoiceEquipment = 'ChoiceEquipment';
     case ValidCase = 'ValidCase';
     case GeneratePDF = 'GeneratePDF';
+    case SignedSubmission = 'MisEnSignature';
     case Signed = 'Signed';
     case Closed = 'Closed';
 }

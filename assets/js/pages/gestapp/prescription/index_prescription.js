@@ -17,20 +17,14 @@ export function initIndex_Prescription() {
         const [crud, contentTitle, option] = a.dataset.bsData.split('-');
         if(crud === "VIEW_PRESCRIPTION")
         {
-            modalEl.querySelector('.modal-title').innerText = contentTitle;
-            axios
-                .get(url)
-                .then(({data}) => {
-                    modalEl.querySelector('.modal-dialog').classList.add('modal-xl');
-                    modalEl.querySelector('.modal-body').innerHTML = data.formView;
-                    const confirmBtn = modalEl.querySelector('.modal-footer a');
-                    confirmBtn.textContent = 'Ajouter le bénéficiaire';
-                    confirmBtn.href = url;
-                    reloadEvent()
-                })
-                .catch(error => {
-                    console.log(error)
-                })
+            modalEl.querySelector('.modal-title').classList.add('d-none');
+            modalEl.querySelector('.modal-dialog').classList.add('modal-xl');
+            modalEl.querySelector('.modal-body').classList.add(('p-0'));
+            modalEl.querySelector('.modal-body').innerHTML = '<iframe src="" width="100%" height="600px"></iframe>';
+            modalEl.querySelector('.modal-body iframe').src = url;
+            const footer = modalEl.querySelector('.modal-footer');
+            const confirmBtn = footer.querySelector('a');
+            confirmBtn.classList.add('d-none');
             modal.show();
         }
         else{

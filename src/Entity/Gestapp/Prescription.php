@@ -6,6 +6,7 @@ use App\Config\StatusPrescription;
 use App\Config\StepPrescription;
 use App\Entity\Admin\Member;
 use App\Entity\Admin\Structure;
+use App\Entity\Serv\Docuseal;
 use App\Repository\Gestapp\PrescriptionRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -90,6 +91,9 @@ class Prescription
      */
     #[ORM\OneToMany(targetEntity: Document::class, mappedBy: 'prescription')]
     private Collection $documents;
+
+    #[ORM\OneToOne(mappedBy: 'prescription', cascade: ['persist', 'remove'])]
+    private ?Docuseal $docuseal = null;
 
     public function __construct()
     {
@@ -370,6 +374,28 @@ class Prescription
                 $document->setPrescription(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getDocuseal(): ?Docuseal
+    {
+        return $this->docuseal;
+    }
+
+    public function setDocuseal(?Docuseal $docuseal): static
+    {
+        // unset the owning side of the relation if necessary
+        if ($docuseal === null && $this->docuseal !== null) {
+            $this->docuseal->setPrescription(null);
+        }
+
+        // set the owning side of the relation if necessary
+        if ($docuseal !== null && $docuseal->getPrescription() !== $this) {
+            $docuseal->setPrescription($this);
+        }
+
+        $this->docuseal = $docuseal;
 
         return $this;
     }
