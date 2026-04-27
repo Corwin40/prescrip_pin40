@@ -10,6 +10,8 @@
       <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/ux-dropzone" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/ux-leaflet-map" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/ux-map" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/chillerlan/php-qrcode" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/chillerlan/php-settings-container" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

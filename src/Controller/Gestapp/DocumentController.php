@@ -53,7 +53,7 @@ final class DocumentController extends AbstractController
                 $documentFile = $form->get('documentFile')->getData();
                 if($documentFile){
                     $slugStructure = $prescription->getPrescriptor()->getSlug();
-                    $filename = $prescription->getRef().'_signed.pdf';
+                    $filename = $prescription->getRef().'_signedByManually.pdf';
                     $pathdir = $this->getParameter('prescription_signed_directory_url').'/'.$slugStructure;
                     try {
                         if (is_dir($pathdir)){
