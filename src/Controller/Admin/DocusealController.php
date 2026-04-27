@@ -195,14 +195,25 @@ final class DocusealController extends AbstractController
     {
         $docuseal = $docusealRepository->findOneBy(['prescription' => $prescription]);
 
+        // -------------------------------------
+        // PARTIE API - Information sur la soumission
+        // -------------------------------------
+        $api = new \Docuseal\Api($this->docuseal_Key, 'https://dseal.openpixl.fr/api');
+        $submission = $api->getSubmission($docuseal->getIdSeal());
+
+        $status = $submission['status'];
+
         $qrcodeImage = $this->qrcodeGenerator->generate($docuseal?->getEmbedSrcSeal());
 
-        //dd($qrcodeImage);
-
-        $view = $this->renderView('gestapp/prescription/include/_linkDocuseal.html.twig', [
-            'embedSrc' => $docuseal->getEmbedSrcSeal(),
-            'qrcodeImage' => $qrcodeImage
-        ]);
+        if($status == 'completed')
+        {
+            $view = $this->renderView('gestapp/prescription/include/_linkwithoutdocuseal.html.twig');
+        }else{
+            $view = $this->renderView('gestapp/prescription/include/_linkDocuseal.html.twig', [
+                'embedSrc' => $docuseal->getEmbedSrcSeal(),
+                'qrcodeImage' => $qrcodeImage
+            ]);
+        }
 
         return $this->json([
             'code' => 200,
@@ -235,16 +246,19 @@ final class DocusealController extends AbstractController
         foreach ($documents as $index => $document) {
             $pdfUrl = $document['url'];                                                 // Récupération du chemin PDF
             $responsePdf = $client->request('GET', $pdfUrl);                            // Téléchargement via HttpClient
+            $slugStructure = $prescription->getPrescriptor()->getSlug();
 
             // DOCUMENT
             if ($responsePdf->getStatusCode() === 200) {                                // dans le cas d'une réussite
-                $slugStructure = $prescription->getPrescriptor()->getSlug();
                 $filename = sprintf($prescription->getRef().'_signedByDocuseal.pdf');
                 $path = $this->getParameter('prescription_signed_directory').$slugStructure.'/'.$filename;
                 $pathurl = $this->getParameter('prescription_signed_directory_url').$slugStructure.'/'.$filename;
+
+                //dd($path, dirname($path));
+
                 try{
-                    if (!is_dir(dirname($pathurl))) {
-                        mkdir(dirname($pathurl), 0775, true);
+                    if (!is_dir(dirname($path))) {
+                        mkdir(dirname($path), 0775, true);
                         file_put_contents($path, $responsePdf->getContent());
                     }else{
                         file_put_contents($path, $responsePdf->getContent());
@@ -264,8 +278,8 @@ final class DocusealController extends AbstractController
         $certifpath = $this->getParameter('prescription_signed_directory').$slugStructure.'/'.$certifname;
         $certifpathurl = $this->getParameter('prescription_signed_directory_url').$slugStructure.'/'.$certifname;
         try{
-            if (!is_dir(dirname($certifpathurl))) {
-                mkdir(dirname($certifpathurl), 0775, true);
+            if (!is_dir(dirname($certifpath))) {
+                mkdir(dirname($certifpath), 0775, true);
                 file_put_contents($certifpath, $responseCertif->getContent());
             }else{
                 file_put_contents($certifpath, $responseCertif->getContent());
@@ -284,3 +298,15 @@ final class DocusealController extends AbstractController
         ], 200);
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
