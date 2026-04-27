@@ -1,0 +1,17 @@
+{% if embedSrc is not null %}
+    {% set imgSrc = qrcodeImage %}
+{% endif %}
+<div class="row">
+    <div class="col-md-6">
+        <p class="text-center">Scanner le QR code suivant pour accéder à la signature.</p>
+        <div class="d-flex justify-content-center align-items-center">
+            <img class="img-fluid" src="{{ imgSrc }}" alt="QrCode du lien de signature" height="200" width="200">
+        </div>
+    </div>
+    <div class="col-md-6">
+        <p class="text-center">Si vous n'avez pas d'appareil équipé d'un scanner de QrCode, vous pouvez faire signer le document en suivant ce lien.</p>
+        <div class="d-flex justify-content-center align-items-center">
+            <a href="{{ embedSrc }}" class="">{{ embedSrc }}</a>
+        </div>
+    </div>
+</div>

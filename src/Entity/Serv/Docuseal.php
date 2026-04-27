@@ -63,6 +63,12 @@ class Docuseal
     #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
     private ?\DateTime $openedAtSeal = null;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $pathDocSeal = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $pathCertifSeal = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -256,6 +262,30 @@ class Docuseal
     public function setOpenedAtSeal(?\DateTime $openedAtSeal): static
     {
         $this->openedAtSeal = $openedAtSeal;
+
+        return $this;
+    }
+
+    public function getPathDocSeal(): ?string
+    {
+        return $this->pathDocSeal;
+    }
+
+    public function setPathDocSeal(?string $pathDocSeal): static
+    {
+        $this->pathDocSeal = $pathDocSeal;
+
+        return $this;
+    }
+
+    public function getPathCertifSeal(): ?string
+    {
+        return $this->pathCertifSeal;
+    }
+
+    public function setPathCertifSeal(?string $pathCertifSeal): static
+    {
+        $this->pathCertifSeal = $pathCertifSeal;
 
         return $this;
     }

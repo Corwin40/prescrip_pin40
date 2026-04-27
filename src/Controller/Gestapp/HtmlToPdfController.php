@@ -123,33 +123,4 @@ final class HtmlToPdfController extends AbstractController
             'prescription' => $prescription,
         ]);
     }
-
-    #[Route('/prescription/signed/{id}', name: 'app_prescription_pdf_at_signed')]
-    public function signed(Prescription $prescription): Response
-    {
-        $filename = $prescription->getRef().'.pdf';
-        $filePath = $this->getParameter('prescription_directory').$filename;
-
-        $fileData = base64_encode(file_get_contents($filePath));
-
-        $docuseal = new \Docuseal\Api('5eA2y44DMe7EYs1Q872cjd79NHwE2raWmbSoYxrXY5h', 'https://dseal.openpixl.fr');
-
-        $submission = $docuseal->createSubmissionFromPdf([
-            'name' => 'Rental Agreement',
-            'documents' => [
-                [
-                    'name' => 'rental-agreement',
-                    'file' => $fileData
-                ]
-            ],
-            'submitters' => [
-                [
-                    'role' => 'First Party',
-                    'email' => 'xavier.burke@gmail.com'
-                ]
-            ]
-        ]);
-
-        return $this->redirectToRoute('app_gestapp_prescription_index', [], Response::HTTP_SEE_OTHER);
-    }
 }

@@ -5,8 +5,11 @@ namespace App\Controller\Admin;
 use App\Config\StepPrescription;
 use App\Entity\Gestapp\Prescription;
 use App\Entity\Serv\Docuseal;
+use App\Repository\Serv\DocusealRepository;
+use App\Service\QrcodeGenerator;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
@@ -18,6 +21,7 @@ final class DocusealController extends AbstractController
         private string $docuseal_Url,
         private string $docuseal_Key,
         public EntityManagerInterface $em,
+        private readonly QrcodeGenerator $qrcodeGenerator,
     ) {
     }
 
@@ -115,7 +119,6 @@ final class DocusealController extends AbstractController
     {
         $element = $this->getElement($prescription);
         //dd($element);
-        //dd($this->docuseal_Url, $this->docuseal_Key);
 
         $response = $client->request('POST', 'https://dseal.openpixl.fr/api/submissions', [
             'headers' => [
@@ -165,16 +168,119 @@ final class DocusealController extends AbstractController
 
         $data = $response->toArray();
 
-
         if($data){
             $docuseal = $this->getDocuseal($data, $prescription);
-            $prescription->setStep(StepPrescription::SignedSubmission);
+            $prescription->setStep(StepPrescription::SubmissionForSigned);
             $this->em->flush();
         }
 
+        $qrcodeImage = $this->qrcodeGenerator->generate($docuseal?->getEmbedSrcSeal());
+
+        //dd($qrcodeImage);
+
+        $view = $this->renderView('gestapp/prescription/include/_linkDocuseal.html.twig', [
+            'embedSrc' => $docuseal->getEmbedSrcSeal(),
+            'qrcodeImage' => $qrcodeImage
+        ]);
+
         return $this->json([
             'code' => 200,
+            'view' => $view,
             'embed_src' => $docuseal->getEmbedSrcSeal()
+        ], 200);
+    }
+
+    #[Route('prescription/showqrcode/{id}', name: 'app_admin_docuseal_prescription_showqrcode')]
+    public function prescriptionShowQrcode(Prescription $prescription, DocusealRepository $docusealRepository): Response
+    {
+        $docuseal = $docusealRepository->findOneBy(['prescription' => $prescription]);
+
+        $qrcodeImage = $this->qrcodeGenerator->generate($docuseal?->getEmbedSrcSeal());
+
+        //dd($qrcodeImage);
+
+        $view = $this->renderView('gestapp/prescription/include/_linkDocuseal.html.twig', [
+            'embedSrc' => $docuseal->getEmbedSrcSeal(),
+            'qrcodeImage' => $qrcodeImage
+        ]);
+
+        return $this->json([
+            'code' => 200,
+            'view' => $view,
+            'url' => $this->generateUrl('app_admin_docuseal_prescription_getdocuments', ['id' => $prescription->getId()])
+        ], 200);
+    }
+
+    #[Route('prescription/getdocuments/{id}', name: 'app_admin_docuseal_prescription_getdocuments')]
+    public function prescriptionGetDocs(Prescription $prescription, DocusealRepository $docusealRepository,  HttpClientInterface $client)
+    {
+        $docuseal =  $docusealRepository->findOneBy(['prescription' => $prescription]);
+
+        // -------------------------------------
+        // PARTIE API - Information sur la soumission
+        // -------------------------------------
+        $api = new \Docuseal\Api($this->docuseal_Key, 'https://dseal.openpixl.fr/api');
+        $submission = $api->getSubmission($docuseal->getIdSeal());
+
+        $docuseal->setSlugSeal($submission['slug']);
+        $docuseal->setUpdatedAtSeal(new \DateTime($submission['updated_at']));
+        $docuseal->setStatusSeal($submission['status']);
+        $docuseal->setCompletedAtSeal(new \DateTime($submission['completed_at']));
+        $this->em->flush();
+
+        // -------------------------------------
+        // PARTIE DOCUMENTS - cHARGEMENT DES FICHIERS DANS SERVEUR
+        // -------------------------------------
+        $documents = $submission['documents'] ?? [];
+        foreach ($documents as $index => $document) {
+            $pdfUrl = $document['url'];                                                 // Récupération du chemin PDF
+            $responsePdf = $client->request('GET', $pdfUrl);                            // Téléchargement via HttpClient
+
+            // DOCUMENT
+            if ($responsePdf->getStatusCode() === 200) {                                // dans le cas d'une réussite
+                $slugStructure = $prescription->getPrescriptor()->getSlug();
+                $filename = sprintf($prescription->getRef().'_signedByDocuseal.pdf');
+                $path = $this->getParameter('prescription_signed_directory').$slugStructure.'/'.$filename;
+                $pathurl = $this->getParameter('prescription_signed_directory_url').$slugStructure.'/'.$filename;
+                try{
+                    if (!is_dir(dirname($pathurl))) {
+                        mkdir(dirname($pathurl), 0775, true);
+                        file_put_contents($path, $responsePdf->getContent());
+                    }else{
+                        file_put_contents($path, $responsePdf->getContent());
+                    }
+                }catch (FileException $e) {
+                    // ... handle exception if something happens during file upload
+                }
+                $docuseal->setPathDocSeal($pathurl);
+            }
+        }
+
+        // AUDIT
+        $certifUrl = $submission['audit_log_url'];                                    // Récupération du chemin Certif
+        $responseCertif = $client->request('GET', $certifUrl);                      // Téléchargement via HttpClient
+
+        $certifname = sprintf($prescription->getRef().'_certifByDocuseal.pdf');
+        $certifpath = $this->getParameter('prescription_signed_directory').$slugStructure.'/'.$certifname;
+        $certifpathurl = $this->getParameter('prescription_signed_directory_url').$slugStructure.'/'.$certifname;
+        try{
+            if (!is_dir(dirname($certifpathurl))) {
+                mkdir(dirname($certifpathurl), 0775, true);
+                file_put_contents($certifpath, $responseCertif->getContent());
+            }else{
+                file_put_contents($certifpath, $responseCertif->getContent());
+            }
+        }catch (FileException $e) {
+            // ... handle exception if something happens during file upload
+        }
+        $docuseal->setPathCertifSeal($certifpathurl);
+
+        $prescription->setStep(StepPrescription::Signed);
+        $this->em->flush();
+
+        return $this->json([
+            'code' => 200,
+            'message' => 'Fichiers chargés sur le serveur'
         ], 200);
     }
 }

@@ -20,7 +20,7 @@ export function initIndex_Dashboard() {
               </div>`;
         modalEl.querySelector('.modal-footer').innerHTML = '\n' +
             '<a href="#" type="button" class="btn btn-sm btn-primary" id="btnSubmitModal">Ajouter</a>\n' +
-            '<button type="button" class="btn btn btn-sm btn-secondary" data-bs-dismiss="modal">Annuler</button>';
+            '<button type="button" class="btn btn btn-sm btn-outline-dark" data-bs-dismiss="modal">Annuler</button>';
     });
 
     function openModal(e){
@@ -42,14 +42,13 @@ export function initIndex_Dashboard() {
             modal.show();
         }
         else if(crud === "SUBMISSION_PRESCRIPTION_DOCUSEAL"){
-            modalEl.querySelector('.modal-title').classList.add('d-none');
-            modalEl.querySelector('.modal-dialog').classList.add('modal-xl');
-            modalEl.querySelector('.modal-body').classList.add(('p-0'));
-            modalEl.querySelector('.modal-body').innerHTML = '<iframe src="" width="100%" height="800px"></iframe>';
+            modalEl.querySelector('.modal-title').innerText = contentTitle;
+            modalEl.querySelector('.modal-dialog').classList.add('modal-lg');
             axios
                 .get(url)
                 .then(({data}) => {
-                    modalEl.querySelector('.modal-body').src = data.embed_src;
+                    modalEl.querySelector('.modal-body').innerHTML = data.view;
+                    modalEl.querySelector('.modal-footer a').textContent = "Le document vient d'être signé par le bénéficiaire"
                 })
                 .catch()
             modal.show();
@@ -69,6 +68,20 @@ export function initIndex_Dashboard() {
             ;
             modal.show();
         }
+        else if(crud === "SHOW_PRESCRIPTIONQRCODE"){
+            modalEl.querySelector('.modal-title').innerText = contentTitle;
+            modalEl.querySelector('.modal-dialog').classList.add('modal-lg');
+            axios
+                .get(url)
+                .then(({data}) => {
+                    modalEl.querySelector('.modal-body').innerHTML = data.view;
+                    modalEl.querySelector('.modal-footer a').href = data.url
+                    modalEl.querySelector('.modal-footer a').textContent = "Le document vient d'être signé par le bénéficiaire"
+                })
+                .catch(error => {console.log(error)})
+            ;
+            modal.show();
+        }
         reloadEvent();
     }
 
@@ -76,31 +89,54 @@ export function initIndex_Dashboard() {
         e.preventDefault()
         let modalContent = e.currentTarget.parentNode.parentElement;
         let form = modalContent.querySelector('form');
-        let action = form.action
-        let data = new FormData(form)
-        axios
-            .post(action, data)
-            .then(({data}) => {
-                if(data.code === 200){
-                    document.getElementById('liste').innerHTML = data.liste;
-                    modal.hide()
-                    toasterMessage(data.message);
-                    reloadEvent();
-                }
-                else if(data.code === 400){
-                    document.querySelector('.modal-body').innerHTML = data.formView;
-                    toasterMessage(data.message);
-                    reloadEvent();
-                }
-                else{
-                    toasterMessage('une erreur est survenue');
-                }
+        if(form){
+            let action = form.action
+            let data = new FormData(form)
+            axios
+                .post(action, data)
+                .then(({data}) => {
+                    if(data.code === 200){
+                        document.getElementById('liste').innerHTML = data.liste;
+                        modal.hide()
+                        toasterMessage(data.message);
+                        reloadEvent();
+                    }
+                    else if(data.code === 400){
+                        document.querySelector('.modal-body').innerHTML = data.formView;
+                        toasterMessage(data.message);
+                        reloadEvent();
+                    }
+                    else{
+                        toasterMessage('une erreur est survenue');
+                    }
 
+                })
+                .catch(error => {
+                    console.log(error)
+                })
+            reloadEvent();
+        }else{
+            e.preventDefault()
+            let url = e.currentTarget.href
+            axios
+                .post(url)
+                .then(({data}) => {
+                    toasterMessage(data.message);
+                })
+                .catch()
+            reloadEvent()
+        }
+    }
+
+    function getDocs(e){
+        e.preventDefault()
+        axios
+            .post()
+            .then(({data}) => {
+                toasterMessage(data.message);
             })
-            .catch(error => {
-                console.log(error)
-            })
-        reloadEvent();
+            .catch()
+
     }
 
     function reloadEvent(){

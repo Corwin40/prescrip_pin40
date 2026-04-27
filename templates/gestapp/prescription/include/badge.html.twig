@@ -41,12 +41,21 @@
             </a>
             <a href="{{ path('app_gestapp_document_prescriptionsigned_manually', {'idprescription': prescription.id}) }}"
                class="openModal circle"
-               data-bs-data="UPLOAD_PRESCRIPTIONSIGNED-Charger la prescription signée manuellement-"
+               data-bs-data="UPLOAD_PRESCRIPTIONSIGNED-Signer la fiche de prescription-"
             >
                 <i class="fa-sharp fa-light fa-arrow-down-to-bracket"></i>
             </a>
         </div>
     {% endif %}
+{% elseif prescription.step.name == 'SubmissionForSigned'%}
+    <div class="d-flex flex-row gap-2">
+        <a href="{{ path('app_admin_docuseal_prescription_showqrcode', {'id': prescription.id}) }}"
+           class="openModal circle"
+           data-bs-data="SHOW_PRESCRIPTIONQRCODE-Signer la fiche de prescription-"
+        >
+            <i class="fa-sharp fa-light fa-qrcode"></i>
+        </a>
+    </div>
 {% elseif prescription.step.name == 'Signed' %}
     <span class="badge text-bg-info p-2">pdf signé par le bénéficiaire</span>
 {% endif %}

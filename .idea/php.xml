@@ -165,6 +165,8 @@
       <path value="$PROJECT_DIR$/vendor/symfony/ux-dropzone" />
       <path value="$PROJECT_DIR$/vendor/symfony/ux-map" />
       <path value="$PROJECT_DIR$/vendor/symfony/ux-leaflet-map" />
+      <path value="$PROJECT_DIR$/vendor/chillerlan/php-settings-container" />
+      <path value="$PROJECT_DIR$/vendor/chillerlan/php-qrcode" />
     </include_path>
   </component>
   <component name="PhpProjectSharedConfiguration" php_language_level="8.2" />
