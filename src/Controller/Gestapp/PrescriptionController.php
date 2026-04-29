@@ -207,7 +207,7 @@ final class PrescriptionController extends AbstractController
             if($user && (in_array('ROLE_SUPER_ADMIN', $user->getRoles()) || in_array('ROLE_ADMIN', $user->getRoles()) ) ){
                 $beneficiary = $form->get('beneficiaire')->getData();
                 $structure = $beneficiary->getStructure()->getSlug();
-                $idStructure = $beneficiary->getPrescriptor()->getId();
+                $idStructure = $beneficiary->getStructure()->getId();
                 if($structure)
                 {
                     $lastPrescription = $prescriptionRepository->findOneBy(['membre' => $idStructure],[ 'id' => 'DESC']);
@@ -227,7 +227,7 @@ final class PrescriptionController extends AbstractController
             if($user && in_array('ROLE_MEDIATEUR', $user->getRoles())){
                 $beneficiary = $form->get('beneficiaire')->getData();
                 $structure = $beneficiary->getStructure()->getSlug();
-                $idStructure = $beneficiary->getPrescriptor()->getId();
+                $idStructure = $beneficiary->getStructure()->getId();
                 if($structure)
                 {
                     $lastPrescription = $prescriptionRepository->findOneBy(['prescriptor' => $idStructure],[ 'id' => 'DESC']);
