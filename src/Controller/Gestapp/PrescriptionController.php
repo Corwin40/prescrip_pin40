@@ -130,6 +130,18 @@ final class PrescriptionController extends AbstractController
 
     }
 
+    #[Route('/admin', name: 'app_gestapp_prescription_foradmin', methods: ['GET', 'POST'])]
+    public function listPrescriptionForAdmin(PrescriptionRepository $prescriptionRepository)
+    {
+        $prescriptions = $prescriptionRepository->findBy(['step' => StepPrescription::Signed->name]);
+
+        //dd($prescriptions);
+
+        return $this->render('gestapp/prescription/adminPrescriptions.html.twig',[
+            'prescriptions' => $prescriptions
+        ]);
+    }
+
     #[Route(name: 'app_gestapp_prescription_await', methods: ['GET'])]
     public function await(PrescriptionRepository $prescriptionRepository): Response
     {
@@ -190,9 +202,11 @@ final class PrescriptionController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
 
+            $date = new \DateTime('now');
+
             if($user && (in_array('ROLE_SUPER_ADMIN', $user->getRoles()) || in_array('ROLE_ADMIN', $user->getRoles()) ) ){
                 $beneficiary = $form->get('beneficiaire')->getData();
-                $structure = $beneficiary->getPrescriptor()->getSlug();
+                $structure = $beneficiary->getStructure()->getSlug();
                 $idStructure = $beneficiary->getPrescriptor()->getId();
                 if($structure)
                 {
@@ -212,7 +226,7 @@ final class PrescriptionController extends AbstractController
             }
             if($user && in_array('ROLE_MEDIATEUR', $user->getRoles())){
                 $beneficiary = $form->get('beneficiaire')->getData();
-                $structure = $beneficiary->getPrescriptor()->getSlug();
+                $structure = $beneficiary->getStructure()->getSlug();
                 $idStructure = $beneficiary->getPrescriptor()->getId();
                 if($structure)
                 {
@@ -377,6 +391,7 @@ final class PrescriptionController extends AbstractController
             $cp = $structure->getZipcode();
 
             $prescription->setValidcase(1);
+            $prescription->setClosedAt((new \DateTime('now')));
             $prescription->setCommune($city);
             $prescription->setCp($cp);
             $prescription->setStep(StepPrescription::ValidCase);

@@ -40,7 +40,8 @@ final class DashboardController extends AbstractController
         }
         if($user && in_array('ROLE_SUPER_ADMIN', $user->getRoles())){
             $beneficiaries = $beneficiaryRepository->findAll();
-            $prescriptions = $prescriptionRepository->findAll();
+            $prescriptions = $prescriptionRepository->filteredByWithoutStep(StepPrescription::Signed->name);
+            $prescriptionsSigned = $prescriptionRepository->filteredByStep(StepPrescription::Signed->name);
             $equipments = $equipmentRepository->findByDispos();
         }
 
@@ -49,6 +50,7 @@ final class DashboardController extends AbstractController
         return $this->render('admin/dashboard/index.html.twig', [
             'equipments' => $equipments,
             'prescriptions' => $prescriptions,
+            'prescriptionsSigned' => $prescriptionsSigned,
             'beneficiaries' => $beneficiaries
         ]);
     }

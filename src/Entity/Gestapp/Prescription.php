@@ -61,6 +61,9 @@ class Prescription
     #[ORM\Column]
     private ?bool $validcase = false;
 
+    #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
+    private ?\DateTime $closedAt = null;
+
     #[ORM\Column]
     private ?bool $isOpenByPrescriptor = false;
 
@@ -76,16 +79,6 @@ class Prescription
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $path = null;
 
-
-
-    #[ORM\Column(type: Types::DATE_MUTABLE)]
-    private ?\DateTime $createdAt = null;
-
-    #[ORM\Column(type: Types::DATE_MUTABLE)]
-    private ?\DateTime $updatedAt = null;
-
-
-
     /**
      * @var Collection<int, Document>
      */
@@ -94,6 +87,12 @@ class Prescription
 
     #[ORM\OneToOne(mappedBy: 'prescription', cascade: ['persist', 'remove'])]
     private ?Docuseal $docuseal = null;
+
+    #[ORM\Column(type: Types::DATE_MUTABLE)]
+    private ?\DateTime $createdAt = null;
+
+    #[ORM\Column(type: Types::DATE_MUTABLE)]
+    private ?\DateTime $updatedAt = null;
 
     public function __construct()
     {
@@ -396,6 +395,18 @@ class Prescription
         }
 
         $this->docuseal = $docuseal;
+
+        return $this;
+    }
+
+    public function getClosedAt(): ?\DateTime
+    {
+        return $this->closedAt;
+    }
+
+    public function setClosedAt(?\DateTime $closedAt): static
+    {
+        $this->closedAt = $closedAt;
 
         return $this;
     }

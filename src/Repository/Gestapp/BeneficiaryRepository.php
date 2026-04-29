@@ -16,6 +16,16 @@ class BeneficiaryRepository extends ServiceEntityRepository
         parent::__construct($registry, Beneficiary::class);
     }
 
+    public function filterByAdmin($structure): array
+    {
+        return $this->createQueryBuilder('b')
+            ->join('b.structure', 's')
+            ->where('s.id = :idstructure')
+            ->setParameter('idstructure', $structure->getId())
+            ->getQuery()
+            ->getResult();
+    }
+
     public function findByMediation($structure): array
     {
         return $this->createQueryBuilder('b')

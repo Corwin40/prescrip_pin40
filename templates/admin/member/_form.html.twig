@@ -1,6 +1,16 @@
 {{ form_start(form, {'attr': {'id': 'member_form'}}) }}
 
 <div class="row g-2 mb-3">
+    {% for label, messages in app.flashes %}
+        {% for message in messages %}
+            <div class="col-12">
+                <div class="alert alert-{{ label }} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            </div>
+        {% endfor %}
+    {% endfor %}
     <div class="col-12 bg-light border-bottom border-dark mb-2">
         <h3 class="mt-1 mb-1 h4">Le membre</h3>
     </div>

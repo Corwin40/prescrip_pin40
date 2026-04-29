@@ -130,8 +130,8 @@ final class MemberController extends AbstractController
 
             $entityManager->flush();
 
-            $this->addFlash('success', 'Le membre a bien été mis à jour.');
-            return $this->redirectToRoute('app_admin_member_index');
+            $this->addFlash('success', 'La fiche a bien été mis à jour.');
+            return $this->redirectToRoute('app_admin_member_edit', [ 'id' => $member->getId()]);
         }
 
         return $this->render('admin/member/edit.html.twig', [

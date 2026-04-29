@@ -16,6 +16,42 @@ class PrescriptionRepository extends ServiceEntityRepository
         parent::__construct($registry, Prescription::class);
     }
 
+    public function filteredByStep($step)
+    {
+        $qb = $this->createQueryBuilder('p')
+            ->where('p.step = :step')
+            ->setParameter('step', $step);
+
+        return $qb->getQuery()->getResult();
+    }
+
+    public function filteredByMultiSteps(array $excludedSteps): array
+    {
+        return $this->createQueryBuilder('u')
+            ->where('u.step IN (:steps)')
+            ->setParameter('steps', $excludedSteps)
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function filteredByWithoutStep($step)
+    {
+        $qb = $this->createQueryBuilder('p')
+            ->where('p.step != :step')
+            ->setParameter('step', $step);
+
+        return $qb->getQuery()->getResult();
+    }
+
+    public function filteredByWithoutMultiSteps(array $excludedSteps): array
+    {
+        return $this->createQueryBuilder('u')
+            ->where('u.step NOT IN (:steps)')
+            ->setParameter('steps', $excludedSteps)
+            ->getQuery()
+            ->getResult();
+    }
+
     //    /**
     //     * @return Prescription[] Returns an array of Prescription objects
     //     */
