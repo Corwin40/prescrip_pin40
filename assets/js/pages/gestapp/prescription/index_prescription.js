@@ -1,4 +1,4 @@
-
+import {toasterMessage} from "../../../components/bootstrap/toaster";
 import * as bootstrap from 'bootstrap';
 import axios from 'axios';
 

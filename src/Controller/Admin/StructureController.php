@@ -64,9 +64,17 @@ final class StructureController extends AbstractController
             //'structure' => $structure
         ]);
 
+        $form->handleRequest($request);
+
         if($form->isSubmitted() && $form->isValid())
         {
             $entityManager->persist($structure);
+            $entityManager->flush();
+
+            $member = new Member();
+            $member->setStructure($structure);
+            $member->setRoles(['ROLE_PRESCRIPTEUR']);
+            $entityManager->persist($member);
             $entityManager->flush();
 
             $this->addFlash('success', 'Le membre a bien été créé.');

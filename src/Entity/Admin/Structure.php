@@ -2,6 +2,7 @@
 
 namespace App\Entity\Admin;
 
+use App\Config\Civility;
 use App\Entity\Gestapp\Beneficiary;
 use App\Entity\Gestapp\Prescription;
 use App\Repository\Admin\StructureRepository;
@@ -46,8 +47,8 @@ class Structure
     #[ORM\Column(length: 100, nullable: true)]
     private ?string $contactResponsableLastname = null;
 
-    #[ORM\Column(length: 4, nullable: true)]
-    private ?string $contactResponsableCivility = null;
+    #[ORM\Column(enumType: Civility::class)]
+    private ?Civility $contactResponsableCivility = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $createdAt = null;
@@ -193,12 +194,12 @@ class Structure
         return $this;
     }
 
-    public function getContactResponsableCivility(): ?string
+    public function getContactResponsableCivility(): ?Civility
     {
         return $this->contactResponsableCivility;
     }
 
-    public function setContactResponsableCivility(?string $contactResponsableCivility): static
+    public function setContactResponsableCivility(?Civility $contactResponsableCivility): static
     {
         $this->contactResponsableCivility = $contactResponsableCivility;
         return $this;
