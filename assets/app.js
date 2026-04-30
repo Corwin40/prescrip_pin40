@@ -14,10 +14,10 @@ window.bootstrap = bootstrap;
 
 import './styles/app.scss';
 
+import { initIndex_Prescription } from "./js/pages/gestapp/prescription/index_prescription";
 import { initNewEdit_Prescription } from "./js/pages/gestapp/prescription/newedit_prescription";
 import { initIndex_Member } from "./js/pages/admin/member";
 import { initIndex_Dashboard } from "./js/pages/admin/dashboard";
-import { initIndex_Prescription } from "./js/pages/gestapp/prescription/index_prescription";
 
 document.addEventListener('DOMContentLoaded', () => {
     const page = document.body.dataset.page;
@@ -29,10 +29,10 @@ document.addEventListener('DOMContentLoaded', () => {
         case 'app_admin_member_index':
             initIndex_Member();
             break;
-        case 'app_gestapp_prescription_new':
         case 'app_gestapp_prescription_index':
             initIndex_Prescription();
             break;
+        case 'app_gestapp_prescription_new':
         case 'app_gestapp_prescription_edit':
             initNewEdit_Prescription();
             break;

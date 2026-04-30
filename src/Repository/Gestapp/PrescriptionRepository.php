@@ -43,6 +43,54 @@ class PrescriptionRepository extends ServiceEntityRepository
         return $qb->getQuery()->getResult();
     }
 
+    public function filteredByWithoutStepForMediator($step, $lieuMediation)
+    {
+        $qb = $this->createQueryBuilder('p')
+            ->where('p.step != :step')
+            ->setParameter('step', $step)
+            ->andWhere('p.lieuMediation = :lieuMediation')
+            ->setParameter('lieuMediation', $lieuMediation)
+        ;
+
+        return $qb->getQuery()->getResult();
+    }
+
+    public function filteredByStepForMediator($step, $lieuMediation)
+    {
+        $qb = $this->createQueryBuilder('p')
+            ->where('p.step = :step')
+            ->setParameter('step', $step)
+            ->andWhere('p.lieuMediation = :lieuMediation')
+            ->setParameter('lieuMediation', $lieuMediation)
+        ;
+
+        return $qb->getQuery()->getResult();
+    }
+
+    public function filteredByWithoutStepForPrescriptor($step, $prescriptor)
+    {
+        $qb = $this->createQueryBuilder('p')
+            ->where('p.step != :step')
+            ->setParameter('step', $step)
+            ->andWhere('p.prescriptor = :prescriptor')
+            ->setParameter('prescriptor', $prescriptor)
+        ;
+
+        return $qb->getQuery()->getResult();
+    }
+
+    public function filteredByStepForPrescriptor($step, $prescriptor)
+    {
+        $qb = $this->createQueryBuilder('p')
+            ->where('p.step = :step')
+            ->setParameter('step', $step)
+            ->andWhere('p.prescriptor = :prescriptor')
+            ->setParameter('prescriptor', $prescriptor)
+        ;
+
+        return $qb->getQuery()->getResult();
+    }
+
     public function filteredByWithoutMultiSteps(array $excludedSteps): array
     {
         return $this->createQueryBuilder('u')
