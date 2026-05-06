@@ -18,7 +18,7 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
 final class DocusealController extends AbstractController
 {
     public function __construct(
-        //private string $docuseal_Url,
+        private string $docuseal_Url,
         private string $docuseal_Key,
         public EntityManagerInterface $em,
         private readonly QrcodeGenerator $qrcodeGenerator,
