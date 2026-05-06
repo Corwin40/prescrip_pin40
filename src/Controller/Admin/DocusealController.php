@@ -18,7 +18,7 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
 final class DocusealController extends AbstractController
 {
     public function __construct(
-        private string $docuseal_Url,
+        //private string $docuseal_Url,
         private string $docuseal_Key,
         public EntityManagerInterface $em,
         private readonly QrcodeGenerator $qrcodeGenerator,
@@ -29,13 +29,13 @@ final class DocusealController extends AbstractController
     {
         // Création des éléments de préremplissage
         $element = [];
-        $beneficiaire = $prescription->getBeneficiaire()->getCivility() ." ".$prescription->getBeneficiaire()->getFirstname()." ".$prescription->getBeneficiaire()->getLastname() ?? '';
+        $beneficiaire = $prescription->getBeneficiaire()->getCivility()->value ." ".$prescription->getBeneficiaire()->getFirstname()." ".$prescription->getBeneficiaire()->getLastname() ?? '';
         $age = $prescription->getBeneficiaire()->getAgeGroup() ?? '';
         $genre = $prescription->getBeneficiaire()->getGender() ?? '';
         $situation = $prescription->getBeneficiaire()->getProfessionnalStatus() ?? '';
         $structure = $prescription->getPrescriptor()->getName() ?? '';
         $lieuMediation = $prescription->getLieuMediation()->getName() ?? '';
-        $respStructure = $prescription->getPrescriptor()->getContactResponsableCivility()." ".$prescription->getPrescriptor()->getContactResponsableFirstname()." ".$prescription->getPrescriptor()->getContactResponsableLastname() ?? '';
+        $respStructure = $prescription->getPrescriptor()->getContactResponsableCivility()->value." ".$prescription->getPrescriptor()->getContactResponsableFirstname()." ".$prescription->getPrescriptor()->getContactResponsableLastname() ?? '';
         $telPrescripteur = $prescription->getPrescriptor()->getContactPhone() ?? '';
         $emailPrescripteur = $prescription->getPrescriptor()->getContactEmail() ?? '';
         $details = $prescription->getDetails() ?? '';
