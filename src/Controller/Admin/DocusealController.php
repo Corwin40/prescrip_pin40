@@ -14,7 +14,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
-#[Route('/admin/docuseal/')]
+#[Route('/gestapp/docuseal/')]
 final class DocusealController extends AbstractController
 {
     public function __construct(
