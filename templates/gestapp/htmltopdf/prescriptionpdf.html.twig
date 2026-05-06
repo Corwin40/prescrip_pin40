@@ -85,8 +85,8 @@
                 <p class="my-1 py-1">Prénom & Nom:</p>
             </div>
             <div class="col-4">
-                {% if prescription.beneficiaire.civility is defined and prescription.beneficiaire.firstname is defined and prescription.beneficiaire.lastname is defined %}
-                    <p class="bg-light rounded-1 my-1 py-1">{{ prescription.beneficiaire.civility }} {{ prescription.beneficiaire.firstname }} {{ prescription.beneficiaire.lastname }}</p>
+                {% if prescription.beneficiaire.civility.value is defined and prescription.beneficiaire.firstname is defined and prescription.beneficiaire.lastname is defined %}
+                    <p class="bg-light rounded-1 my-1 py-1">{{ prescription.beneficiaire.civility.value }} {{ prescription.beneficiaire.firstname }} {{ prescription.beneficiaire.lastname }}</p>
                 {% else %}
                     <p class="bg-light rounded-1 my-1 py-1">&nbsp;</p>
                 {% endif %}
@@ -179,7 +179,7 @@
                 <p class="my-1 py-1">Nom & Prénom :</p>
             </div>
             <div class="col-4">
-                <p class="bg-light rounded-1 my-1 py-1">{{ prescription.prescriptor.contactResponsableCivility }} {{ prescription.prescriptor.contactResponsableLastname }} {{ prescription.prescriptor.contactResponsableFirstname }}</p>
+                <p class="bg-light rounded-1 my-1 py-1">{{ prescription.prescriptor.contactResponsableCivility.value }} {{ prescription.prescriptor.contactResponsableLastname }} {{ prescription.prescriptor.contactResponsableFirstname }}</p>
             </div>
             <div class="clear"></div>
             <div class="col-4">

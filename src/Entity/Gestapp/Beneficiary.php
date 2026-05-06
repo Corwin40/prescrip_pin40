@@ -2,6 +2,7 @@
 
 namespace App\Entity\Gestapp;
 
+use App\Config\Civility;
 use App\Entity\Admin\Member;
 use App\Entity\Admin\Structure;
 use App\Repository\Gestapp\BeneficiaryRepository;
@@ -23,8 +24,8 @@ class Beneficiary
     #[ORM\Column(length: 100)]
     private ?string $lastname = null;
 
-    #[ORM\Column(length: 6)]
-    private ?string $civility = null;
+    #[ORM\Column(enumType: Civility::class)]
+    private ?Civility $civility = null;
 
     #[ORM\Column(length: 10)]
     private ?string $gender = null;
@@ -78,14 +79,15 @@ class Beneficiary
         return $this;
     }
 
-    public function getCivility(): ?string
+    public function getCivility(): ?Civility
     {
         return $this->civility;
     }
 
-    public function setCivility(string $civility): static
+    public function setCivility(Civility $civility): static
     {
         $this->civility = $civility;
+
         return $this;
     }
 

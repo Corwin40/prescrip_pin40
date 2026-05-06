@@ -27,7 +27,7 @@
             <p class="my-1 py-1">Prénom & Nom:</p>
         </div>
         <div class="col-4">
-            <p class="bg-light rounded-1 my-1 py-1 px-2">{{ prescription.beneficiaire.civility }} {{ prescription.beneficiaire.firstname }} {{ prescription.beneficiaire.lastname }}</p>
+            <p class="bg-light rounded-1 my-1 py-1 px-2">{{ prescription.beneficiaire.civility.value }} {{ prescription.beneficiaire.firstname }} {{ prescription.beneficiaire.lastname }}</p>
         </div>
     </div>
 
@@ -109,7 +109,7 @@
             <p class="my-1 py-1">Nom & Prénom :</p>
         </div>
         <div class="col-4">
-            <p class="bg-light rounded-1 my-1 py-1 px-2">{{ prescription.prescriptor.contactResponsableCivility }} {{ prescription.prescriptor.contactResponsableLastname }} {{ prescription.prescriptor.contactResponsableFirstname }}</p>
+            <p class="bg-light rounded-1 my-1 py-1 px-2">{{ prescription.prescriptor.contactResponsableCivility.value }} {{ prescription.prescriptor.contactResponsableLastname }} {{ prescription.prescriptor.contactResponsableFirstname }}</p>
         </div>
         <div class="clear"></div>
         <div class="col-4">

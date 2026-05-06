@@ -7,8 +7,8 @@
             <th class="col-2">Ref</th>
             <th class="col-2">Bénéficiaire</th>
             <th class="col-2">Espace de médiation</th>
-            <th class="col-3">Prescription</th>
-            <th class="col-3">Certificats</th>
+            <th class="col-3"></th>
+            <th class="col-3"></th>
         </tr>
         </thead>
 
@@ -29,7 +29,7 @@
                         <a href="{{ path('app_gestapp_prescription_edit', {'id': prescription.id}) }}" class="stretched-link"></a>
                         <p class="mb-0">
                         {% if prescription.beneficiaire is not empty %}
-                            {{ prescription.beneficiaire.firstname }} {{ prescription.beneficiaire.lastname }}
+                            {{ prescription.beneficiaire.civility.value }} {{ prescription.beneficiaire.firstname }} {{ prescription.beneficiaire.lastname }}
                             <br>
                             <span class="text-muted text-uppercase">{{ prescription.prescriptor.name }}</span>
                         {% else %}
@@ -45,17 +45,19 @@
                         {% if prescription.docuseal is not null %}
                             <div class="d-inline-flex align-items-center">
                                 <span class="circle"><i class="fa-sharp fa-light fa-duotone fa-light fa-signature"></i></span>
-                                &nbsp;{{prescription.docuseal.pathDocSeal}}
+                                &nbsp;signature éléctronique
                             </div>
                         {% else %}
-                            <p class="mb-0">Signature manuelle</p>
+                            <div class="d-inline-flex align-items-center">
+                                <span class="circle"><i class="fa-sharp fa-light fa-duotone fa-light fa-file-pdf"></i></span>&nbsp;Signature manuelle
+                            </div>
                         {% endif %}
                     </td>
                     <td class="position-relative">
                         {% if prescription.docuseal is not null %}
                             <div class="d-inline-flex align-items-center">
-                                <span class="circle"><i class="fa-sharp fa-light fa-duotone fa-light fa-signature"></i></span>
-                                &nbsp;Signature électronique
+                                <span class="circle"><i class="fa-sharp fa-light fa-duotone fa-light fa-file-certificate"></i></span>
+                                &nbsp;Certificats de signature
                             </div>
                         {% else %}
                             <p class="mb-0"></p>
