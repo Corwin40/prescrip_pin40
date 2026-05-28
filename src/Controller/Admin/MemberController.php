@@ -161,22 +161,34 @@ final class MemberController extends AbstractController
 
         //dd($form);
 
-        if ($form->isSubmitted() && $form->isValid()) {
+        if ($form->isSubmitted()) {
             //dd($form->get('password')->getData());
 
-            $password = $form->get('password')->getData();
+            if($form->isValid()){
+                $password = $form->get('password')->getData();
 
-            if ($password) {
-                $hashedPassword = $passwordHasher->hashPassword($member, $password);
-                $member->setPassword($hashedPassword);
+                if ($password) {
+                    $hashedPassword = $passwordHasher->hashPassword($member, $password);
+                    $member->setPassword($hashedPassword);
+                }
+
+                $entityManager->persist($member);
+                $entityManager->flush();
+
+                return $this->json([
+                    'code' => 200,
+                    'message' => 'Mot de passe actualisé'
+                ],200);
             }
 
-            $entityManager->persist($member);
-            $entityManager->flush();
+            $view = $this->render('admin/member/_formResetPassword.html.twig', [
+                'form' => $form,
+            ]);
 
             return $this->json([
                 'code' => 200,
-                'message' => 'Mot de passe actualisé'
+                'message' => 'Une erreur est survenue.',
+                'formView' => $view->getContent(),
             ],200);
         }
 

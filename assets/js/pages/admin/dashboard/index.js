@@ -23,6 +23,8 @@ export function initIndex_Dashboard() {
             '<button type="button" class="btn btn btn-sm btn-outline-dark" data-bs-dismiss="modal">Annuler</button>';
     });
 
+
+
     function openModal(e){
         e.preventDefault()
 
@@ -48,6 +50,7 @@ export function initIndex_Dashboard() {
                 .get(url)
                 .then(({data}) => {
                     modalEl.querySelector('.modal-body').innerHTML = data.view;
+                    modalEl.querySelector('.modal-footer a').href = data.url
                     modalEl.querySelector('.modal-footer a').textContent = "Le document vient d'être signé par le bénéficiaire"
                 })
                 .catch()
@@ -121,7 +124,15 @@ export function initIndex_Dashboard() {
             axios
                 .post(url)
                 .then(({data}) => {
-                    toasterMessage(data.message);
+                    if(data.code === 422){
+                        modal.hide()
+                        let toaster = document.getElementById('toaster');
+                        toaster.classList.add('bg-danger', 'text-white','border' ,'border-danger');
+                        toasterMessage(data.message);
+                    }
+                    else{
+                        toasterMessage(data.message);
+                    }
                 })
                 .catch()
             reloadEvent()

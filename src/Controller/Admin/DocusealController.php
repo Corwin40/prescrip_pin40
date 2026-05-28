@@ -5,6 +5,7 @@ namespace App\Controller\Admin;
 use App\Config\StepPrescription;
 use App\Entity\Gestapp\Prescription;
 use App\Entity\Serv\Docuseal;
+use App\Repository\Gestapp\PrescriptionRepository;
 use App\Repository\Serv\DocusealRepository;
 use App\Service\QrcodeGenerator;
 use Doctrine\ORM\EntityManagerInterface;
@@ -23,6 +24,23 @@ final class DocusealController extends AbstractController
         public EntityManagerInterface $em,
         private readonly QrcodeGenerator $qrcodeGenerator,
     ) {
+    }
+
+    public function getPrescriptions(PrescriptionRepository $prescriptionRepository)
+    {
+        $user = $this->getUser();
+        if($user && in_array('ROLE_PRESCRIPTEUR', $user->getRoles())){
+            $prescriptions = $prescriptionRepository->filteredByWithoutStepForPrescriptor(StepPrescription::Signed, $user->getStructure());
+        }
+        if($user && in_array('ROLE_MEDIATEUR', $user->getRoles())){
+            $prescriptions = $prescriptionRepository->filteredByWithoutStepForMediator(StepPrescription::Signed, $user->getStructure());
+        }
+        if($user && in_array('ROLE_ADMIN', $user->getRoles())){
+            $prescriptions = $prescriptionRepository->findBy(['step' => StepPrescription::Signed]);
+        }
+        if($user && in_array('ROLE_SUPER_ADMIN', $user->getRoles())){
+            $prescriptions = $prescriptionRepository->filteredByWithoutStep(StepPrescription::Signed->name);
+        }
     }
 
     public function getElement(Prescription $prescription)
@@ -186,7 +204,8 @@ final class DocusealController extends AbstractController
         return $this->json([
             'code' => 200,
             'view' => $view,
-            'embed_src' => $docuseal->getEmbedSrcSeal()
+            'embed_src' => $docuseal->getEmbedSrcSeal(),
+            'url' => $this->generateUrl('app_admin_docuseal_prescription_getdocuments', ['id' => $prescription->getId()])
         ], 200);
     }
 
@@ -233,6 +252,14 @@ final class DocusealController extends AbstractController
         $api = new \Docuseal\Api($this->docuseal_Key, 'https://dseal.openpixl.fr/api');
         $submission = $api->getSubmission($docuseal->getIdSeal());
 
+        $status = $submission['status'];
+        if ($status !== 'completed') {
+            return $this->json([
+                'code' => 422,
+                'message' => 'Attention... La prescrition n\'est pas signée par le bénéficiaire, recommencez l\'opération.'
+            ], 200);
+        }
+
         $docuseal->setSlugSeal($submission['slug']);
         $docuseal->setUpdatedAtSeal(new \DateTime($submission['updated_at']));
         $docuseal->setStatusSeal($submission['status']);
@@ -240,7 +267,7 @@ final class DocusealController extends AbstractController
         $this->em->flush();
 
         // -------------------------------------
-        // PARTIE DOCUMENTS - cHARGEMENT DES FICHIERS DANS SERVEUR
+        // PARTIE DOCUMENTS - CHARGEMENT DES FICHIERS DANS SERVEUR
         // -------------------------------------
         $documents = $submission['documents'] ?? [];
         foreach ($documents as $index => $document) {

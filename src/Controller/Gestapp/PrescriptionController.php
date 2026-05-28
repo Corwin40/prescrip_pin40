@@ -210,7 +210,7 @@ final class PrescriptionController extends AbstractController
                 $idStructure = $beneficiary->getStructure()->getId();
                 if($structure)
                 {
-                    $lastPrescription = $prescriptionRepository->findOneBy(['membre' => $idStructure],[ 'id' => 'DESC']);
+                    $lastPrescription = $prescriptionRepository->findOneBy(['prescriptor' => $idStructure],[ 'id' => 'DESC']);
 
                     if(!$lastPrescription){
                         $compteur = 1;
@@ -221,7 +221,7 @@ final class PrescriptionController extends AbstractController
                     $prescription->setRef($ref);
                 }
                 $prescription->setStatus(StatusPrescription::OpenByAdministrator);
-                $prescription->setPrescriptor($beneficiary->geStructure());
+                $prescription->setPrescriptor($beneficiary->getStructure());
                 $prescription->setStep(StepPrescription::Open);
             }
             if($user && in_array('ROLE_MEDIATEUR', $user->getRoles())){

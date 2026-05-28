@@ -27,7 +27,7 @@
                     <td class="position-relative">
                         <a href="{{ path('app_gestapp_prescription_edit', {'id': prescription.id}) }}" class="stretched-link"></a>
                         {% if prescription.beneficiaire is not empty %}
-                            {{ prescription.beneficiaire.firstname }} {{ prescription.beneficiaire.lastname }}
+                            {{ prescription.beneficiaire.civility.value }} {{ prescription.beneficiaire.firstname }} {{ prescription.beneficiaire.lastname }}
                         {% else %}
                             non disponible
                         {% endif %}

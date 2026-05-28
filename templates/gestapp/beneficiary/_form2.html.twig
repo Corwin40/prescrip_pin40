@@ -2,12 +2,22 @@
 
 <div class="row">
     <div class="col-12">
-
+        <div class="row">
+            <div class="col-12 bg-light border-bottom border-dark mb-2">
+                <h3 class="mt-2 mb-2">Administratif</h3>
+            </div>
+            <div class="col-3">
+                {% include 'composants/inputs/input_select.html.twig' with {
+                    label: 'Structure accompagnatrice',
+                    form: form.structure,
+                    show_label: false
+                } %}
+            </div>
+        </div>
         <div class="row">
             <div class="col-12 bg-light border-bottom border-dark mb-2">
                 <h3 class="mt-2 mb-2">Le bénéficiaire</h3>
             </div>
-
             {% include 'composants/inputs/block_civility.html.twig' with {
                 wrapper_class : 'col-8 mb-3',
                 label: 'Prénom & Nom',

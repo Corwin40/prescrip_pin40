@@ -5,7 +5,7 @@
     {% if show_label is true %}<label class="form-label mb-1">{{ form_label(form) }}</label>{% else %}{% endif %}
     {{ form_widget(form, {
         attr: {
-            class: 'form-control form-control-sm border border-1 border-dark shadow-sm'
+            class: 'form-control form-control-sm border border-1 border-dark shadow-sm' ~ (form.vars.errors|length > 0 ? ' is-invalid' : '')
         } | merge(disabled ? {disabled:'disabled'} : {})
     }) }}
     <span class="text-secondary">{{ form_help(form) }}</span>

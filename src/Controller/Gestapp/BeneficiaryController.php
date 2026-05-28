@@ -176,30 +176,48 @@ final class BeneficiaryController extends AbstractController
     public function new2(Request $request, EntityManagerInterface $entityManager): Response
     {
         $user = $this->getUser();
-        $structure = $user->getStructure();
         $beneficiary = new Beneficiary();
         $form = $this->createForm(BeneficiaryType::class, $beneficiary, [
             'action' => $this->generateUrl('app_gestapp_beneficiary_new2'),
             'method' => 'POST',
             'attr' => [
                 'id' => 'formBeneficiary',
-            ]
+            ],
+            'user' => $user,
+            'beneficiary' => $beneficiary
         ]);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
+        if ($form->isSubmitted() ) {
 
-            $civility = $form->get('civility')->getData();
-            $beneficiary->setGender($civility);
-            $beneficiary->setStructure($structure);
-            $entityManager->persist($beneficiary);
-            $entityManager->flush();
+            if($form->isValid())
+            {
+                $civility = $form->get('civility')->getData();
+                $beneficiary->setGender($civility->value);
+                $entityManager->persist($beneficiary);
+                $entityManager->flush();
 
+                //dd($beneficiary);
+
+                return $this->json([
+                    'message' => 'le béneficiaire est ajouté au formulaire de prescription.',
+                    'nameBeneficiaire' => $beneficiary->getFirstname() . ' ' . $beneficiary->getLastname(),
+                    'valueBeneficiaire' => $beneficiary->getId(),
+                    'namePrescripteur' => $beneficiary->getStructure()->getName(),
+                    'valuePrescripteur' => $beneficiary->getStructure()->getId(),
+                ],200);
+            }
+            // Retour en cas d'erreur de formulaire
             return $this->json([
-                'message' => 'le béneficiaire est ajouté au formulaire de prescription.',
-                'beneficiaire' => $beneficiary->getFirstname() . ' ' . $beneficiary->getLastname(),
-                'value' => $beneficiary->getId(),
+                'code' => 422,
+                'message' => 'Le formulaire présente une ou des erreurs.',
+                'formView' => $this->renderView('gestapp/beneficiary/_form2.html.twig', [
+                    'beneficiary' => $beneficiary,
+                    'form' => $form,
+                ])
             ],200);
+
+
         }
 
         return $this->json([
@@ -274,10 +292,17 @@ final class BeneficiaryController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'app_gestapp_beneficiary_delete', methods: ['POST'])]
+    #[Route('/{id}/delete', name: 'app_gestapp_beneficiary_delete', methods: ['POST'])]
     public function delete(Request $request, Beneficiary $beneficiary, EntityManagerInterface $entityManager): Response
     {
         if ($this->isCsrfTokenValid('delete'.$beneficiary->getId(), $request->getPayload()->getString('_token'))) {
+            // Suppression d'une prescription
+            if($beneficiary->getPrescription())
+            {
+                $prescription = $beneficiary->getPrescription();
+                dd($prescription);
+            }
+
             $entityManager->remove($beneficiary);
             $entityManager->flush();
         }

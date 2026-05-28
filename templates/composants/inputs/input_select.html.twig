@@ -8,7 +8,7 @@
 
     {{ form_widget(form, {
         attr: {
-            class: 'form-select form-select-sm border border-1 border-dark shadow-sm'
+            class: 'form-select form-select-sm border border-1 border-dark shadow-sm'~ (form.vars.errors|length > 0 ? ' is-invalid' : '')
         } | merge(disabled ? { disabled: 'disabled' } : {})
     }) }}
 

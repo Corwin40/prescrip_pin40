@@ -12,7 +12,6 @@ export function initNewEdit_Prescription() {
     function openModal(e){
         e.preventDefault()
         let a = e.currentTarget;
-        console.log(a)
         let url = a.href;
         const [crud, contentTitle, option] = a.dataset.bsData.split('-');
         if(crud === "ADD_BENEFICIARY")
@@ -48,17 +47,32 @@ export function initNewEdit_Prescription() {
         axios
             .post(action, data)
             .then(({data}) => {
-                let select = document.getElementById('prescription_beneficiaire')
-                removeOptions(select)
-                let label = data.beneficiaire ;
-                let value = data.value
-                const opt = new Option(label, value);
-                select.options.add(opt);
+                if(data.code === 422){
+                    modalEl.querySelector('.modal-body').innerHTML = data.formView;
+                    reloadEvent()
+                }
+                else{
+                    let selectBeneficiaire = document.getElementById('prescription_beneficiaire')
+                    removeOptions(selectBeneficiaire)
+                    let labelBeneficiaire = data.nameBeneficiaire
+                    let valueBeneficiaire = data.valueBeneficiaire
+                    const optBeneficiaire = new Option(labelBeneficiaire, valueBeneficiaire);
+                    selectBeneficiaire.options.add(optBeneficiaire);
+
+                    let selectPrescripteur = document.getElementById('prescription_prescriptor')
+                    removeOptions(selectPrescripteur)
+                    let labelPrescripteur = data.namePrescripteur
+                    let valuePrescripteur = data.valuePrescripteur
+                    const optPrescripteur = new Option(labelPrescripteur, valuePrescripteur);
+                    selectPrescripteur.options.add(optPrescripteur);
+
+                    modal.hide()
+                    reloadEvent()
+                }
             })
             .catch(error => {
                 console.log(error)
             })
-        modal.hide()
     }
 
     function removeOptions(selectElement) {
@@ -68,13 +82,13 @@ export function initNewEdit_Prescription() {
     }
 
     function reloadEvent(){
-        let btnSubmitModal = document.getElementById('btnModalSubmit');
+        let btnSubmitModal = document.getElementById('btnSubmitModal');
         let btnsOpenModal = document.querySelectorAll('.openModal');
 
         btnsOpenModal.forEach(function(link){
             link.addEventListener('click', openModal);
         });
-        //btnSubmitModal.addEventListener('click', submitModal);
+        btnSubmitModal.addEventListener('click', submitModal);
     }
 
     reloadEvent();

@@ -2,6 +2,7 @@
 
 namespace App\Form\Gestapp;
 
+use App\Config\Civility;
 use App\Entity\Admin\Member;
 use App\Entity\Admin\Structure;
 use App\Entity\Gestapp\Beneficiary;
@@ -9,6 +10,7 @@ use App\Entity\Gestapp\Prescription;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\EnumType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -28,7 +30,6 @@ class BeneficiaryType extends AbstractType
     {
         $request = $this->requestStack->getCurrentRequest();
         $route = $request?->attributes->get('_route');
-
         $user = $options['user'];
 
         $builder
@@ -42,16 +43,12 @@ class BeneficiaryType extends AbstractType
                 'required' => true,
                 'attr' => ['placeholder' => 'Nom']
             ])
-            ->add('civility', ChoiceType::class, [
+            ->add('civility',EnumType::class, [
                 'label' => 'Civilité',
-                'choices' => [
-                    'Mr' => 'Mr',
-                    'Mme' => 'Mme',
-                    'Mlle' => 'Mlle',
-                    'Autre' => 'Autre',
-                ],
-                'placeholder' => 'veuillez choisir',
-                'required' => true,
+                'class' => Civility::class,
+                'choice_label' => static function (\UnitEnum $choice): string {
+                    return $choice->value;
+                },
             ])
             ->add('ageGroup', ChoiceType::class, [
                 'label' => 'Tranche d’âge',
@@ -66,7 +63,6 @@ class BeneficiaryType extends AbstractType
                 'placeholder' => 'Veuillez choisir',
                 'required' => true,
             ])
-
             ->add('professionnalStatus', ChoiceType::class, [
                 'label' => 'Statut professionnel',
                 'choices' => [
@@ -80,8 +76,10 @@ class BeneficiaryType extends AbstractType
                 'multiple' => false,
                 'placeholder' => 'veuillez choisir',
                 'required' => true,
-            ]);
-        if ($route === 'app_gestapp_beneficiary_new') {
+            ])
+        ;
+
+        if ($route === 'app_gestapp_beneficiary_new' || $route === 'app_gestapp_beneficiary_new2') {
             if($user && in_array('ROLE_PRESCRIPTEUR', $user->getRoles())) {
                 $builder->add('structure', EntityType::class, [
                     'class' => Structure::class,
@@ -106,7 +104,7 @@ class BeneficiaryType extends AbstractType
                         },
                     ]);
             }
-            elseif ( $user && (
+            elseif ($user && (
                     in_array('ROLE_SUPER_ADMIN', $user->getRoles()) ||
                     in_array('ROLE_ADMIN', $user->getRoles())
                 ))
@@ -128,6 +126,8 @@ class BeneficiaryType extends AbstractType
                     ]);
             }
         }
+
+
 
     }
 
