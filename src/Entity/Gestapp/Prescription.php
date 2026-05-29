@@ -94,6 +94,12 @@ class Prescription
     #[ORM\Column(type: Types::DATE_MUTABLE)]
     private ?\DateTime $updatedAt = null;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $pathSigned = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $pathSignedCertif = null;
+
     public function __construct()
     {
         $this->documents = new ArrayCollection();
@@ -407,6 +413,30 @@ class Prescription
     public function setClosedAt(?\DateTime $closedAt): static
     {
         $this->closedAt = $closedAt;
+
+        return $this;
+    }
+
+    public function getPathSigned(): ?string
+    {
+        return $this->pathSigned;
+    }
+
+    public function setPathSigned(?string $pathSigned): static
+    {
+        $this->pathSigned = $pathSigned;
+
+        return $this;
+    }
+
+    public function getPathSignedCertif(): ?string
+    {
+        return $this->pathSignedCertif;
+    }
+
+    public function setPathSignedCertif(?string $pathSignedCertif): static
+    {
+        $this->pathSignedCertif = $pathSignedCertif;
 
         return $this;
     }

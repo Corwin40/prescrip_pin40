@@ -79,6 +79,7 @@ final class DocumentController extends AbstractController
                     $document->setPrescription($prescription);
                     $document->setPath($pathdir.$filename);
                     $prescription->setStep(stepPrescription::Signed);
+                    $prescription->setPathSigned($pathdir.$filename);
                 }
 
                 $em->persist($document);

@@ -43,22 +43,22 @@
                     </td>
                     <td class="position-relative">
                         {% if prescription.docuseal is not null %}
-                            <div class="d-inline-flex align-items-center">
+                            <a href="{{ asset(prescription.pathSigned) }}" class="d-inline-flex align-items-center text-decoration-none openModal" data-bs-data="UPLOADSIGNEDELEC-Affichage du PDF">
                                 <span class="circle"><i class="fa-sharp fa-light fa-duotone fa-light fa-signature"></i></span>
-                                &nbsp;signature éléctronique
-                            </div>
+                            &nbsp;  signature éléctronique
+                            </a>
                         {% else %}
-                            <div class="d-inline-flex align-items-center">
+                            <a href="{{ asset(prescription.pathSigned) }}"  class="d-inline-flex align-items-center text-decoration-none openModal" data-bs-data="UPLOADSIGNEDMANUALLY-Affichage du PDF">
                                 <span class="circle"><i class="fa-sharp fa-light fa-duotone fa-light fa-file-pdf"></i></span>&nbsp;Signature manuelle
-                            </div>
+                            </a>
                         {% endif %}
                     </td>
                     <td class="position-relative">
                         {% if prescription.docuseal is not null %}
-                            <div class="d-inline-flex align-items-center">
+                            <a href="{{ asset(prescription.pathSignedCertif) }}" class="d-inline-flex align-items-center text-decoration-none openModal" data-bs-data="UPLOADCERFSIGNEDELEC-Affichage du PDF">
                                 <span class="circle"><i class="fa-sharp fa-light fa-duotone fa-light fa-file-certificate"></i></span>
                                 &nbsp;Certificats de signature
-                            </div>
+                            </a>
                         {% else %}
                             <p class="mb-0"></p>
                         {% endif %}

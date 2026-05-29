@@ -27,4 +27,5 @@ enum StepPrescription: string
     case SubmissionForSigned = 'SubmissionForSigned';
     case Signed = 'Signed';
     case Closed = 'Closed';
+    case Upload = 'uploadByAlpi';
 }

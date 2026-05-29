@@ -294,6 +294,7 @@ final class DocusealController extends AbstractController
                     // ... handle exception if something happens during file upload
                 }
                 $docuseal->setPathDocSeal($pathurl);
+                $prescription->setPathSigned($pathurl);
             }
         }
 
@@ -315,8 +316,9 @@ final class DocusealController extends AbstractController
             // ... handle exception if something happens during file upload
         }
         $docuseal->setPathCertifSeal($certifpathurl);
-
+        $prescription->setPathSignedCertif($certifpathurl);
         $prescription->setStep(StepPrescription::Signed);
+        // Enregistrement en BDD
         $this->em->flush();
 
         return $this->json([

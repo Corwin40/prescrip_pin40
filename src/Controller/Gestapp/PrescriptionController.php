@@ -135,8 +135,6 @@ final class PrescriptionController extends AbstractController
     {
         $prescriptions = $prescriptionRepository->findBy(['step' => StepPrescription::Signed->name]);
 
-        //dd($prescriptions);
-
         return $this->render('gestapp/prescription/adminPrescriptions.html.twig',[
             'prescriptions' => $prescriptions
         ]);
