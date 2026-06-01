@@ -40,8 +40,16 @@ services:
 
     FOS\ElasticaBundle\Finder\FinderInterface $prescriptionFinder:
         alias: fos_elastica.finder.prescription
+
     App\Controller\Gestapp\PrescriptionController:
         tags: [ 'controller.service_arguments' ]
         public: true
         arguments:
-            - '@fos_elastica.finder.prescription'
+            $finder: '@fos_elastica.finder.prescription'
+            $docuseal_Key: '%DOCUSEAL_KEY%'
+
+    App\EventListener\PrescriptionElasticaListener:
+        arguments:
+            - '@fos_elastica.object_persister.beneficiary'
+        tags:
+            - { name: doctrine.event_listener, event: postRemove }
