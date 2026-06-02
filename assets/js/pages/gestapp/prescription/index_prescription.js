@@ -152,7 +152,7 @@ export function initIndex_Prescription() {
         btnsOpenModal.forEach(function(link){
             link.addEventListener('click', openModal);
         });
-        //btnSubmitModal.addEventListener('click', submitModal);
+        btnSubmitModal.addEventListener('click', submitModal);
     }
 
     reloadEvent();
