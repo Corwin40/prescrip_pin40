@@ -1,6 +1,7 @@
 
 import * as bootstrap from 'bootstrap';
 import axios from 'axios';
+import {toasterMessage} from "../../../components/bootstrap/toaster";
 
 export function initNewEdit_Prescription() {
     console.log('Bonjour, vous êtes sur la page dédiée à la gestion des prescriptions.')
@@ -60,19 +61,23 @@ export function initNewEdit_Prescription() {
                     selectBeneficiaire.options.add(optBeneficiaire);
 
                     let selectPrescripteur = document.getElementById('prescription_prescriptor')
-                    removeOptions(selectPrescripteur)
-                    let labelPrescripteur = data.namePrescripteur
-                    let valuePrescripteur = data.valuePrescripteur
-                    const optPrescripteur = new Option(labelPrescripteur, valuePrescripteur);
-                    selectPrescripteur.options.add(optPrescripteur);
-
-                    modal.hide()
-                    reloadEvent()
+                    if(selectPrescripteur !== null){
+                        removeOptions(selectPrescripteur)
+                        let labelPrescripteur = data.namePrescripteur
+                        let valuePrescripteur = data.valuePrescripteur
+                        const optPrescripteur = new Option(labelPrescripteur, valuePrescripteur);
+                        selectPrescripteur.options.add(optPrescripteur);
+                    }
                 }
+                toasterMessage()
+                modal.hide()
+                reloadEvent()
             })
             .catch(error => {
                 console.log(error)
             })
+
+
     }
 
     function removeOptions(selectElement) {

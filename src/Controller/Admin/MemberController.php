@@ -23,10 +23,9 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints as Assert;
 
 
-#[Route('/admin/member')]
 final class MemberController extends AbstractController
 {
-    #[Route('/', name: 'app_admin_member_index', methods: ['GET'])]
+    #[Route('/admin/member/', name: 'app_admin_member_index', methods: ['GET'])]
     public function index(MemberRepository $memberRepository): Response
     {
         $user = $this->getUser();
@@ -45,7 +44,7 @@ final class MemberController extends AbstractController
         return $this->redirectToRoute('app_admin_dashboard_index');
     }
 
-    #[Route('/new/{role}', name: 'app_admin_member_new', methods: ['GET', 'POST'])]
+    #[Route('/admin/member/new/{role}', name: 'app_admin_member_new', methods: ['GET', 'POST'])]
     public function new(
         Request $request,
         EntityManagerInterface $entityManager,
@@ -100,7 +99,7 @@ final class MemberController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'app_admin_member_show', methods: ['GET'])]
+    #[Route('/admin/member/{id}', name: 'app_admin_member_show', methods: ['GET'])]
     public function show(Member $member): Response
     {
         return $this->render('admin/member/show.html.twig', [
@@ -108,7 +107,7 @@ final class MemberController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}/edit', name: 'app_admin_member_edit', methods: ['GET', 'POST'])]
+    #[Route('/gestapp/member/{id}/edit', name: 'app_admin_member_edit', methods: ['GET', 'POST'])]
     public function edit(
         Request $request,
         Member $member,
@@ -140,7 +139,7 @@ final class MemberController extends AbstractController
         ]);
     }
 
-    #[Route("/renew-password/{id}", name: "app_admin_member_renew_password", methods: ["GET", "POST"])]
+    #[Route("/admin/member/renew-password/{id}", name: "app_admin_member_renew_password", methods: ["GET", "POST"])]
     #[IsGranted("ROLE_SUPER_ADMIN")]
     public function renewPassword(
         Request $request,
@@ -202,7 +201,7 @@ final class MemberController extends AbstractController
         ],200);
     }
 
-    #[Route('/{id}', name: 'app_admin_member_delete', methods: ['POST'])]
+    #[Route('/admin/member/{id}', name: 'app_admin_member_delete', methods: ['POST'])]
     public function delete(Request $request, Member $member, EntityManagerInterface $entityManager, Beneficiary $beneficiary, Prescription $prescription): Response
     {
         if ($this->isCsrfTokenValid('delete' . $member->getId(), $request->getPayload()->getString('_token'))) {

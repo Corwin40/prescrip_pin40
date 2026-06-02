@@ -4,6 +4,7 @@ namespace App\Entity\Admin;
 
 use App\Config\Civility;
 use App\Entity\Gestapp\Beneficiary;
+use App\Entity\Gestapp\Equipment;
 use App\Entity\Gestapp\Prescription;
 use App\Repository\Admin\StructureRepository;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -80,12 +81,32 @@ class Structure
     #[ORM\OneToMany(targetEntity: Prescription::class, mappedBy: 'prescriptor')]
     private Collection $prescriptions;
 
+    #[ORM\Column(nullable: true)]
+    private ?int $countBeneficiary = 0;
+
+    #[ORM\Column]
+    private ?int $countPrescription = 0;
+
+    /**
+     * @var Collection<int, Equipment>
+     */
+    #[ORM\OneToMany(targetEntity: Equipment::class, mappedBy: 'reconditionner')]
+    private Collection $equipment;
+
+    /**
+     * @var Collection<int, Equipment>
+     */
+    #[ORM\OneToMany(targetEntity: Equipment::class, mappedBy: 'structure')]
+    private Collection $equipmentDelivered;
+
     public function __construct()
     {
         $this->prescriptions = new ArrayCollection();
         $this->members = new ArrayCollection();
         $this->beneficiaries = new ArrayCollection();
         $this->lieuxmediation = new ArrayCollection();
+        $this->equipment = new ArrayCollection();
+        $this->equipmentDelivered = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -347,6 +368,90 @@ class Structure
         if ($this->prescriptions->removeElement($prescription)) {
             if ($prescription->getPrescriptor() === $this) {
                 $prescription->setPrescriptor(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getCountBeneficiary(): ?int
+    {
+        return $this->countBeneficiary;
+    }
+
+    public function setCountBeneficiary(?int $countBeneficiary): static
+    {
+        $this->countBeneficiary = $countBeneficiary;
+
+        return $this;
+    }
+
+    public function getCountPrescription(): ?int
+    {
+        return $this->countPrescription;
+    }
+
+    public function setCountPrescription(int $countPrescription): static
+    {
+        $this->countPrescription = $countPrescription;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Equipment>
+     */
+    public function getEquipment(): Collection
+    {
+        return $this->equipment;
+    }
+
+    public function addEquipment(Equipment $equipment): static
+    {
+        if (!$this->equipment->contains($equipment)) {
+            $this->equipment->add($equipment);
+            $equipment->setReconditionner($this);
+        }
+
+        return $this;
+    }
+
+    public function removeEquipment(Equipment $equipment): static
+    {
+        if ($this->equipment->removeElement($equipment)) {
+            // set the owning side to null (unless already changed)
+            if ($equipment->getReconditionner() === $this) {
+                $equipment->setReconditionner(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Equipment>
+     */
+    public function getEquipmentDelivered(): Collection
+    {
+        return $this->equipmentDelivered;
+    }
+
+    public function addEquipmentDelivered(Equipment $equipmentDelivered): static
+    {
+        if (!$this->equipmentDelivered->contains($equipmentDelivered)) {
+            $this->equipmentDelivered->add($equipmentDelivered);
+            $equipmentDelivered->setStructure($this);
+        }
+
+        return $this;
+    }
+
+    public function removeEquipmentDelivered(Equipment $equipmentDelivered): static
+    {
+        if ($this->equipmentDelivered->removeElement($equipmentDelivered)) {
+            // set the owning side to null (unless already changed)
+            if ($equipmentDelivered->getStructure() === $this) {
+                $equipmentDelivered->setStructure(null);
             }
         }
 

@@ -3,6 +3,7 @@
 namespace App\Entity\Gestapp;
 
 use App\Entity\Admin\Member;
+use App\Entity\Admin\Structure;
 use App\Repository\Gestapp\EquipmentRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
@@ -15,9 +16,6 @@ class Equipment
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
-
-    #[ORM\ManyToOne(inversedBy: 'equipment')]
-    private ?Member $reconditioner = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $equipmentId = null;
@@ -55,9 +53,11 @@ class Equipment
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $updatedAt = null;
 
-    #[ORM\ManyToOne(inversedBy: 'equipments')]
-    #[ORM\JoinColumn(nullable: true)]
-    private ?Member $structure = null;
+    #[ORM\ManyToOne(inversedBy: 'equipment')]
+    private ?Structure $reconditionner = null;
+
+    #[ORM\ManyToOne(inversedBy: 'equipmentDelivered')]
+    private ?Structure $structure = null;
 
     public function getId(): ?int
     {
@@ -196,18 +196,6 @@ class Equipment
         return $this->equipmentId;
     }
 
-    public function getReconditioner(): ?Member
-    {
-        return $this->reconditioner;
-    }
-
-    public function setReconditioner(?Member $reconditioner): static
-    {
-        $this->reconditioner = $reconditioner;
-
-        return $this;
-    }
-
     public function getIcon(): ?string
     {
         return $this->icon;
@@ -220,12 +208,24 @@ class Equipment
         return $this;
     }
 
-    public function getStructure(): ?Member
+    public function getReconditionner(): ?Structure
+    {
+        return $this->reconditionner;
+    }
+
+    public function setReconditionner(?Structure $reconditionner): static
+    {
+        $this->reconditionner = $reconditionner;
+
+        return $this;
+    }
+
+    public function getStructure(): ?Structure
     {
         return $this->structure;
     }
 
-    public function setStructure(?Member $structure): static
+    public function setStructure(?Structure $structure): static
     {
         $this->structure = $structure;
 

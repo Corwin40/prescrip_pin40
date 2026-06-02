@@ -11,10 +11,11 @@ export function initIndex_Prescription() {
 
     function openModal(e){
         e.preventDefault()
+
         let a = e.currentTarget;
-        console.log(a)
         let url = a.href;
         const [crud, contentTitle, option] = a.dataset.bsData.split('-');
+
         if(crud === "VIEW_PRESCRIPTION")
         {
             modalEl.querySelector('.modal-title').classList.add('d-none');
@@ -25,6 +26,48 @@ export function initIndex_Prescription() {
             const footer = modalEl.querySelector('.modal-footer');
             const confirmBtn = footer.querySelector('a');
             confirmBtn.classList.add('d-none');
+            modal.show();
+        }
+        else if(crud === "SUBMISSION_PRESCRIPTION_DOCUSEAL"){
+            modalEl.querySelector('.modal-title').innerText = contentTitle;
+            modalEl.querySelector('.modal-dialog').classList.add('modal-lg');
+            axios
+                .get(url)
+                .then(({data}) => {
+                    modalEl.querySelector('.modal-body').innerHTML = data.view;
+                    modalEl.querySelector('.modal-footer a').href = data.url
+                    modalEl.querySelector('.modal-footer a').textContent = "Le document vient d'être signé par le bénéficiaire"
+                })
+                .catch()
+            modal.show();
+        }
+        else if(crud === "UPLOAD_PRESCRIPTIONSIGNED"){
+            modalEl.querySelector('.modal-title').innerText = contentTitle;
+            modalEl.querySelector('.modal-body').classList.add(('p-1'));
+            const footer = modalEl.querySelector('.modal-footer');
+            const confirmBtn = footer.querySelector('a');
+            confirmBtn.href = url;
+            axios
+                .get(url)
+                .then(({data}) => {
+                    modalEl.querySelector('.modal-body').innerHTML = data.formView;
+                })
+                .catch(error => {console.log(error)})
+            ;
+            modal.show();
+        }
+        else if(crud === "SHOW_PRESCRIPTIONQRCODE"){
+            modalEl.querySelector('.modal-title').innerText = contentTitle;
+            modalEl.querySelector('.modal-dialog').classList.add('modal-lg');
+            axios
+                .get(url)
+                .then(({data}) => {
+                    modalEl.querySelector('.modal-body').innerHTML = data.view;
+                    modalEl.querySelector('.modal-footer a').href = data.url
+                    modalEl.querySelector('.modal-footer a').textContent = "Le document vient d'être signé par le bénéficiaire"
+                })
+                .catch(error => {console.log(error)})
+            ;
             modal.show();
         }
         else{

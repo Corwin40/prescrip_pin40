@@ -155,8 +155,18 @@ final class BeneficiaryController extends AbstractController
 
             $civility = $form->get('civility')->getData();
             $structure = $form->get('structure')->getData();
+            if($civility === "Mr")
+            {
+                $beneficiary->setGender('Homme');
+            }
+            elseif ($civility == "Mme" || $civility == "Mlle"){
+                $beneficiary->setGender('Femme');
+            }
+            else
+            {
+                $beneficiary->setGender('Autre');
+            }
 
-            $beneficiary->setGender($civility);
             $beneficiary->setStructure($structure);
 
             $entityManager->persist($beneficiary);

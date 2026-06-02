@@ -37,14 +37,14 @@
         </div>
         <div class="col-4">
             {% set Options = [
-                {'value': 'Homme', 'label': 'Homme'},
-                {'value': 'Femme', 'label': 'Femme'},
-                {'value': 'Autres', 'label': 'Autres'},
+                {'value': 'Mr', 'label': 'Homme'},
+                {'value': 'Mme', 'label': 'Femme'},
+                {'value': 'Autre', 'label': 'Autre'},
             ] %}
 
             {% include 'composants/pages/page_checkboxs_inline.html.twig' with
                 {
-                    'value': prescription.beneficiaire.AgeGroup ?? null,
+                    'value': prescription.beneficiaire.Gender ?? null,
                     'checkboxs': Options
                 }
             %}

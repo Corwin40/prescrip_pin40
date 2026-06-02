@@ -19,11 +19,9 @@ export function initIndex_Dashboard() {
                 </div>
               </div>`;
         modalEl.querySelector('.modal-footer').innerHTML = '\n' +
-            '<a href="#" type="button" class="btn btn-sm btn-primary" id="btnSubmitModal">Ajouter</a>\n' +
+            '<a href="#" type="button" class="btn btn-sm btn-outline-primary" id="btnSubmitModal">Ajouter</a>\n' +
             '<button type="button" class="btn btn btn-sm btn-outline-dark" data-bs-dismiss="modal">Annuler</button>';
     });
-
-
 
     function openModal(e){
         e.preventDefault()
@@ -85,7 +83,27 @@ export function initIndex_Dashboard() {
             ;
             modal.show();
         }
-        reloadEvent();
+        else if(crud === "DEL_PRESCRIPTION"){
+            modalEl.querySelector('.modal-title').innerText = contentTitle
+            modalEl.querySelector('.modal-title').classList.add('text-danger');
+            modalEl.querySelector('.modal-body').innerHTML = `
+                <p class="mb-0">
+                    <span class="text-danger">
+                        <i class="fa-light fa-circle-exclamation"></i>&nbsp;Attention,
+                    </span>
+                    <br>
+                    En cliquant sur le bouton ci-dessous, cette prescription sera supprimée définitivement.
+                </p>`
+            modalEl.querySelector('.modal-footer a').textContent = "Supprimer la prescription"
+            modalEl.querySelector('.modal-footer a').classList.remove('btn-outline-primary')
+            modalEl.querySelector('.modal-footer a').classList.add('btn-outline-danger')
+            modalEl.querySelector('.modal-footer a').href = url
+            modal.show();
+        }
+        else{
+            reloadEvent()
+            toasterMessage('une erreur est survenue');
+        }
     }
 
     function submitModal(e){
@@ -131,6 +149,7 @@ export function initIndex_Dashboard() {
                         toasterMessage(data.message);
                     }
                     else{
+                        modal.hide()
                         toasterMessage(data.message);
                     }
                 })

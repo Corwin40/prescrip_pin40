@@ -29,7 +29,7 @@ final class PrescriptionController extends AbstractController
 {
     private $finder;
 
-    public function __construct(PaginatedFinderInterface $finder)
+    public function __construct(PaginatedFinderInterface $finder, private string $docuseal_Key)
     {
         $this->finder = $finder;
     }
@@ -49,6 +49,24 @@ final class PrescriptionController extends AbstractController
         $ref = $date->format('Ymd')."-xxxxx-".$compteur;// mois-année-structure-compteur
 
         return [$ref, $compteur];
+    }
+
+    public function getPrescriptionsForPrescriptor(PrescriptionRepository $prescriptionRepository){
+        $user = $this->getUser();
+        $prescriptions = $prescriptionRepository->filteredByWithoutStepForPrescriptor(StepPrescription::Signed, $user->getStructure());
+        return $prescriptions;
+    }
+
+    public function getPrescriptionsForMediator(PrescriptionRepository $prescriptionRepository){
+        $user = $this->getUser();
+        $prescriptions = $prescriptionRepository->filteredByWithoutStepForMediator(StepPrescription::Signed, $user->getStructure());
+        return $prescriptions;
+    }
+
+    public function getPrescriptionsForAdmin(PrescriptionRepository $prescriptionRepository){
+        $user = $this->getUser();
+        $prescriptions = $prescriptionRepository->findBy(['step' => StepPrescription::Signed]);
+        return $prescriptions;
     }
 
     #[Route('/', name: 'app_gestapp_prescription_index', methods: ['GET', 'POST'])]
@@ -247,6 +265,14 @@ final class PrescriptionController extends AbstractController
             }
             if($user && in_array('ROLE_PRESCRIPTEUR', $user->getRoles())){
                 $structure = $this->getUser()->getStructure();
+                // A Améliorer
+                $lastPrescription = $prescriptionRepository->findOneBy(['prescriptor' => $structure->getId()],[ 'id' => 'DESC']);
+                if(!$lastPrescription){
+                    $compteur = 1;
+                }else{
+                    $compteur = $lastPrescription->getCompteur() + 1;
+                }
+
                 $ref = $date->format('Ym')."-".$structure."-".$compteur;// mois-année-structure-compteur
                 $prescription->setRef($ref);
                 $prescription->setStatus(StatusPrescription::OpenByPrescriptor);
@@ -419,5 +445,38 @@ final class PrescriptionController extends AbstractController
         }
 
         return $this->redirectToRoute('app_gestapp_prescription_index', [], Response::HTTP_SEE_OTHER);
+    }
+
+    #[Route('/{id}/del', name: 'app_gestapp_prescription_del', methods: ['POST'])]
+    public function del(Request $request, Prescription $prescription, EntityManagerInterface $entityManager, PrescriptionRepository $prescriptionRepository): Response
+    {
+        // Supprimer les fichiers stockés sur le serveur
+        $paths = array_filter([$prescription->getPath(), $prescription->getPathSigned(), $prescription->getPathSignedCertif()], fn($path) => $path !== null);        if ($paths) {
+            foreach ($paths as $p) {
+                if (!empty($p) && is_file($this->getParameter('kernel.project_dir')."/public".$p)) {
+                    unlink($this->getParameter('kernel.project_dir')."/public".$p);
+                } else {
+                    dd("Problème avec p = ", $p); // diagnostic
+                }
+            }
+        }
+
+        // Supprimer la trace sur le serveur de signature
+        if($prescription->getDocuseal()){
+            $docuseal = $prescription->getDocuseal();
+            $api = new \Docuseal\Api($this->docuseal_Key, 'https://dseal.openpixl.fr/api');
+            $api->archiveSubmission($docuseal->getIdSeal());
+            $entityManager->remove($docuseal);
+        }
+
+        $entityManager->remove($prescription);
+        $entityManager->flush();
+
+        //$prescriptions = $prescriptionRepository->findBy(['step' => StepPrescription::Signed->name]);
+
+        return $this->json([
+            'code' => 200,
+            'message' => 'Prescription supprimée avec succès',
+        ], 200);
     }
 }

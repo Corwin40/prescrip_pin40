@@ -10,6 +10,8 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use Symfony\Component\PasswordHasher\PasswordHasherInterface;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\UX\Map\Bridge\Leaflet\LeafletOptions;
@@ -48,7 +50,7 @@ final class StructureController extends AbstractController
     }
 
     #[Route('/new', name: 'app_admin_structure_new', methods: 'GET|POST')]
-    public function new(Request $request, EntityManagerInterface $entityManager): Response
+    public function new(Request $request, EntityManagerInterface $entityManager, UserPasswordHasherInterface $passwordHasher): Response
     {
         $user = $this->getUser();
 
@@ -74,6 +76,15 @@ final class StructureController extends AbstractController
             $member = new Member();
             $member->setStructure($structure);
             $member->setRoles(['ROLE_PRESCRIPTEUR']);
+            $member->setEmail($structure->getContactEmail());
+
+            $hashedPassword = $passwordHasher->hashPassword($member, 'Pr3scr!pteurs');
+            $member->setPassword($hashedPassword);
+            $member->setCivility($structure->getContactResponsableCivility());
+            $member->setFirstname($structure->getContactResponsableFirstname());
+            $member->setLastname($structure->getContactResponsableLastname());
+
+            $member->setIsRespStructure(true);
             $entityManager->persist($member);
             $entityManager->flush();
 

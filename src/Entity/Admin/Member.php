@@ -93,6 +93,9 @@ class Member implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $slug = null;
 
+    #[ORM\Column]
+    private ?bool $isRespStructure = false;
+
     public function __construct()
     {
         $this->equipment = new ArrayCollection();
@@ -368,6 +371,18 @@ class Member implements UserInterface, PasswordAuthenticatedUserInterface
     public function setSlug(?string $slug): static
     {
         $this->slug = $slug;
+
+        return $this;
+    }
+
+    public function isRespStructure(): ?bool
+    {
+        return $this->isRespStructure;
+    }
+
+    public function setIsRespStructure(bool $isRespStructure): static
+    {
+        $this->isRespStructure = $isRespStructure;
 
         return $this;
     }

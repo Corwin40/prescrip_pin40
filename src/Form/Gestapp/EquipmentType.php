@@ -68,7 +68,7 @@ class EquipmentType extends AbstractType
             ->add('isDispo', CheckboxType::class, [
                 'label'=>'Disponibilité de l\'équipement',
             ])
-            ->add('reconditioner', EntityType::class, [
+            ->add('reconditionner', EntityType::class, [
                 'class' => Structure::class,
                 'choice_label' => function ($prescriptor) {
                     return $prescriptor->getName();
