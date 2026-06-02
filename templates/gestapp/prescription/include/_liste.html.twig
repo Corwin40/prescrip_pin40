@@ -50,6 +50,17 @@
                     <td class="position-relative">
                         {{ include('gestapp/prescription/include/badge.html.twig') }}
                     </td>
+                    <td>
+                        <div class="d-inline-flex">
+                            <a
+                                href="{{ path('app_gestapp_prescription_del', {'id': prescription.id}) }}"
+                                class="text-danger openModal"
+                                type="button"
+                                data-bs-data="DEL_PRESCRIPTION-Suppression de la prescription">
+                                <i class="fa-duotone fa-solid fa-file-circle-minus"></i>
+                            </a>
+                        </div>
+                    </td>
                 </tr>
             {% endfor %}
             {% endif %}

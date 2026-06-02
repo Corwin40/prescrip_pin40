@@ -70,6 +70,23 @@ export function initIndex_Prescription() {
             ;
             modal.show();
         }
+        else if(crud === "DEL_PRESCRIPTION"){
+            modalEl.querySelector('.modal-title').innerText = contentTitle
+            modalEl.querySelector('.modal-title').classList.add('text-danger');
+            modalEl.querySelector('.modal-body').innerHTML = `
+                <p class="mb-0">
+                    <span class="text-danger">
+                        <i class="fa-light fa-circle-exclamation"></i>&nbsp;Attention,
+                    </span>
+                    <br>
+                    En cliquant sur le bouton ci-dessous, cette prescription sera supprimée définitivement.
+                </p>`
+            modalEl.querySelector('.modal-footer a').textContent = "Supprimer la prescription"
+            modalEl.querySelector('.modal-footer a').classList.remove('btn-outline-primary')
+            modalEl.querySelector('.modal-footer a').classList.add('btn-outline-danger')
+            modalEl.querySelector('.modal-footer a').href = url
+            modal.show();
+        }
         else{
             reloadEvent()
             toasterMessage('une erreur est survenue');
@@ -80,22 +97,46 @@ export function initIndex_Prescription() {
         e.preventDefault()
         let modalContent = e.currentTarget.parentNode.parentElement;
         let form = modalContent.querySelector('form');
-        let action = form.action
-        let data = new FormData(form)
-        axios
-            .post(action, data)
-            .then(({data}) => {
-                let select = document.getElementById('prescription_beneficiaire')
-                removeOptions(select)
-                let label = data.beneficiaire ;
-                let value = data.value
-                const opt = new Option(label, value);
-                select.options.add(opt);
-            })
-            .catch(error => {
-                console.log(error)
-            })
-        modal.hide()
+        if(form) {
+            let action = form.action
+            let data = new FormData(form)
+            axios
+                .post(action, data)
+                .then(({data}) => {
+                    let select = document.getElementById('prescription_beneficiaire')
+                    removeOptions(select)
+                    let label = data.beneficiaire ;
+                    let value = data.value
+                    const opt = new Option(label, value);
+                    select.options.add(opt);
+                })
+                .catch(error => {
+                    console.log(error)
+                })
+            modal.hide()
+            reloadEvent()
+        }
+        else{
+            e.preventDefault()
+            let url = e.currentTarget.href
+            axios
+                .post(url)
+                .then(({data}) => {
+                    if(data.code === 422){
+                        modal.hide()
+                        let toaster = document.getElementById('toaster');
+                        toaster.classList.add('bg-danger', 'text-white','border' ,'border-danger');
+                        toasterMessage(data.message);
+                    }
+                    else{
+                        modal.hide()
+                        toasterMessage(data.message);
+                    }
+                })
+                .catch()
+            reloadEvent()
+        }
+
     }
 
     function removeOptions(selectElement) {
