@@ -146,12 +146,13 @@ export function initIndex_Prescription() {
     }
 
     function reloadEvent(){
-        let btnSubmitModal = document.getElementById('btnModalSubmit');
+        let btnSubmitModal = document.getElementById('btnSubmitModal');
         let btnsOpenModal = document.querySelectorAll('.openModal');
 
         btnsOpenModal.forEach(function(link){
             link.addEventListener('click', openModal);
         });
+
         btnSubmitModal.addEventListener('click', submitModal);
     }
 
