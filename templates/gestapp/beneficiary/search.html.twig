@@ -103,7 +103,7 @@
                                     <td class="text-center">
                                         <a href="{{ path('app_gestapp_beneficiary_show', {'id': beneficiary.id}) }}" class="text-dark text-decoration-none"><i class="fa-duotone fa-solid fa-eye"></i>&nbsp;Voir</a>
                                         <a href="{{ path('app_gestapp_beneficiary_edit', {'id': beneficiary.id}) }}" class="text-dark text-decoration-none"><i class="fa-duotone fa-solid fa-user-pen"></i>&nbsp;Modifier</a>
-                                        <a href="{{ path('app_gestapp_beneficiary_delete', {'id': beneficiary.id}) }}" class="text-dark text-decoration-none"><i class="fa-duotone fa-solid fa-user-circle-minus"></i>&nbsp;Supprimer</a>
+                                        <a href="{{ path('app_gestapp_beneficiary_delete', {'id': beneficiary.id}) }}" class="text-dark text-decoration-none openModal"><i class="fa-duotone fa-solid fa-user-circle-minus"></i>&nbsp;Supprimer</a>
                                     </td>
                                 </tr>
                             {% endfor %}

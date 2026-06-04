@@ -1,22 +1,17 @@
-
-import * as bootstrap from 'bootstrap';
-import axios from 'axios';
 import {toasterMessage} from "../../../components/bootstrap/toaster";
+import {initModal, parseModalTrigger, bindModalEvents, removeOptions} from "../../../components/bootstrap/modal";
+import axios from 'axios';
 
 export function initNewEdit_Prescription() {
     console.log('Bonjour, vous êtes sur la page dédiée à la gestion des prescriptions.')
 
-    const modalEl = document.getElementById('modal');
-    if (!modalEl) return;
-    const modal = new bootstrap.Modal(modalEl);
+    const modalCtx = initModal();
+    if (!modalCtx) return;
+    const { modalEl, modal } = modalCtx;
 
     function openModal(e){
-        e.preventDefault()
-        let a = e.currentTarget;
-        let url = a.href;
-        const [crud, contentTitle, option] = a.dataset.bsData.split('-');
-        if(crud === "ADD_BENEFICIARY")
-        {
+        const { url, crud, contentTitle } = parseModalTrigger(e);
+        if(crud === "ADD_BENEFICIARY") {
             modalEl.querySelector('.modal-title').innerText = contentTitle;
             axios
                 .get(url)
@@ -26,15 +21,13 @@ export function initNewEdit_Prescription() {
                     const confirmBtn = modalEl.querySelector('.modal-footer a');
                     confirmBtn.textContent = 'Ajouter le bénéficiaire';
                     confirmBtn.href = url;
-                    reloadEvent()
+                    bindModalEvents(openModal, submitModal);
                 })
-                .catch(error => {
-                    console.log(error)
-                })
+                .catch(error => { console.log(error) })
             modal.show();
         }
         else{
-            reloadEvent()
+            bindModalEvents(openModal, submitModal);
             toasterMessage('une erreur est survenue');
         }
     }
@@ -43,59 +36,32 @@ export function initNewEdit_Prescription() {
         e.preventDefault()
         let modalContent = e.currentTarget.parentNode.parentElement;
         let form = modalContent.querySelector('form');
-        let action = form.action
-        let data = new FormData(form)
+        let action = form.action;
+        let data = new FormData(form);
         axios
             .post(action, data)
             .then(({data}) => {
                 if(data.code === 422){
                     modalEl.querySelector('.modal-body').innerHTML = data.formView;
-                    reloadEvent()
+                    bindModalEvents(openModal, submitModal);
                 }
                 else{
-                    let selectBeneficiaire = document.getElementById('prescription_beneficiaire')
-                    removeOptions(selectBeneficiaire)
-                    let labelBeneficiaire = data.nameBeneficiaire
-                    let valueBeneficiaire = data.valueBeneficiaire
-                    const optBeneficiaire = new Option(labelBeneficiaire, valueBeneficiaire);
-                    selectBeneficiaire.options.add(optBeneficiaire);
+                    let selectBeneficiaire = document.getElementById('prescription_beneficiaire');
+                    removeOptions(selectBeneficiaire);
+                    selectBeneficiaire.options.add(new Option(data.nameBeneficiaire, data.valueBeneficiaire));
 
-                    let selectPrescripteur = document.getElementById('prescription_prescriptor')
+                    let selectPrescripteur = document.getElementById('prescription_prescriptor');
                     if(selectPrescripteur !== null){
-                        removeOptions(selectPrescripteur)
-                        let labelPrescripteur = data.namePrescripteur
-                        let valuePrescripteur = data.valuePrescripteur
-                        const optPrescripteur = new Option(labelPrescripteur, valuePrescripteur);
-                        selectPrescripteur.options.add(optPrescripteur);
+                        removeOptions(selectPrescripteur);
+                        selectPrescripteur.options.add(new Option(data.namePrescripteur, data.valuePrescripteur));
                     }
                 }
-                toasterMessage()
-                modal.hide()
-                reloadEvent()
+                toasterMessage();
+                modal.hide();
+                bindModalEvents(openModal, submitModal);
             })
-            .catch(error => {
-                console.log(error)
-            })
-
-
+            .catch(error => { console.log(error) })
     }
 
-    function removeOptions(selectElement) {
-        for (let i = selectElement.options.length - 1; i >= 0; i -= 1) {
-            selectElement.remove(i);
-        }
-    }
-
-    function reloadEvent(){
-        let btnSubmitModal = document.getElementById('btnSubmitModal');
-        let btnsOpenModal = document.querySelectorAll('.openModal');
-
-        btnsOpenModal.forEach(function(link){
-            link.addEventListener('click', openModal);
-        });
-        btnSubmitModal.addEventListener('click', submitModal);
-    }
-
-    reloadEvent();
-
+    bindModalEvents(openModal, submitModal);
 }

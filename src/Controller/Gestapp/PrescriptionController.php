@@ -450,6 +450,7 @@ final class PrescriptionController extends AbstractController
     #[Route('/{id}/del', name: 'app_gestapp_prescription_del', methods: ['POST'])]
     public function del(Request $request, Prescription $prescription, EntityManagerInterface $entityManager, PrescriptionRepository $prescriptionRepository): Response
     {
+        $member = $this->getUser();
         // Supprimer les fichiers stockés sur le serveur
         $paths = array_filter([$prescription->getPath(), $prescription->getPathSigned(), $prescription->getPathSignedCertif()], fn($path) => $path !== null);        if ($paths) {
             foreach ($paths as $p) {
@@ -472,11 +473,25 @@ final class PrescriptionController extends AbstractController
         $entityManager->remove($prescription);
         $entityManager->flush();
 
-        //$prescriptions = $prescriptionRepository->findBy(['step' => StepPrescription::Signed->name]);
+        if($member && in_array('ROLE_PRESCRIPTEUR', $member->getRoles())){
+            $prescriptions = $prescriptionRepository->findBy(['prescriptor' => $member->getStructure()]);
+        }
+        if($member && in_array('ROLE_MEDIATEUR', $member->getRoles())){
+            $prescriptions = $prescriptionRepository->findBy(['lieuMediation' => $member->getStructure() ]);
+        }
+        if($member && in_array('ROLE_ADMIN', $member->getRoles())){
+            $prescriptions = $prescriptionRepository->findBy(['step' => StepPrescription::Signed]);
+        }
+        if($member && in_array('ROLE_SUPER_ADMIN', $member->getRoles())){
+            $prescriptions = $prescriptionRepository->findAll();
+        }
 
         return $this->json([
             'code' => 200,
             'message' => 'Prescription supprimée avec succès',
+            'liste' => $this->renderView('gestapp/prescription/include/_liste.html.twig', [
+                'prescriptions' => $prescriptions,
+            ])
         ], 200);
     }
 }

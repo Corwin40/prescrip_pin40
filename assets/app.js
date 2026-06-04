@@ -19,6 +19,7 @@ import { initNewEdit_Prescription } from "./js/pages/gestapp/prescription/newedi
 import { initIndex_Member } from "./js/pages/admin/member";
 import { initIndex_Dashboard } from "./js/pages/admin/dashboard";
 import { initAdmin_ListPrescription } from "./js/pages/gestapp/prescription/adminListPrescription";
+import { initIndex_Beneficiary } from "./js/pages/gestapp/beneficiary/indexBeneficiary";
 
 document.addEventListener('DOMContentLoaded', () => {
     const page = document.body.dataset.page;
@@ -39,6 +40,9 @@ document.addEventListener('DOMContentLoaded', () => {
             break;
         case 'app_gestapp_prescription_foradmin':
             initAdmin_ListPrescription();
+            break;
+        case 'app_gestapp_beneficiary_index':
+            initIndex_Beneficiary();
             break;
         default:
             console.log('Page non reconnue ou pas de JS spécifique');
