@@ -58,14 +58,27 @@ class PrescriptionType extends AbstractType
             ])
             ->add('lieuMediation', EntityType::class, [
                 'class' => Structure::class,
-                'query_builder' => function (EntityRepository $er) {
-                    return $er
+                'query_builder' => function (EntityRepository $er) use ($user) {
+                    $qb = $er
                         ->createQueryBuilder('l')
                         ->innerJoin('l.members', 'm')
                         ->where('m.roles LIKE :roles')
                         ->setParameter('roles', '%ROLE_MEDIATEUR%')
                         ->orderBy('m.id', 'ASC');
+
+                    // Un prescripteur n'a qu'un seul lieu de médiation partenaire : on restreint
+                    // le choix à celui-ci s'il est défini, pour éviter de proposer tout le réseau.
+                    if ($user && in_array('ROLE_PRESCRIPTEUR', $user->getRoles())) {
+                        $partner = $user->getStructure()?->getLieuMediationPartner();
+                        if ($partner) {
+                            $qb->andWhere('l = :partner')
+                                ->setParameter('partner', $partner);
+                        }
+                    }
+
+                    return $qb;
                 },
+                'disabled' => $route === 'app_gestapp_prescription_edit',
             ])
         ;
 
@@ -104,10 +117,8 @@ class PrescriptionType extends AbstractType
                             return $er->createQueryBuilder('b')
                                 ->leftJoin('b.prescription', 'p')
                                 ->leftJoin('b.structure', 's')
-                                ->join('s.members', 'm')
-                                ->join('m.referent', 'r')
-                                ->where('r.id = :idreferent')
-                                ->setParameter('idreferent', $user)
+                                ->where('s.lieuMediationPartner = :userStructure')
+                                ->setParameter('userStructure', $user->getStructure())
                                 ->andWhere('p.id IS NULL')
                                 ->orderBy('b.id', 'ASC')
                                 ;
@@ -195,6 +206,11 @@ class PrescriptionType extends AbstractType
                             'label' => 'Choix de l\'équipement',
                             'class' => Equipment::class,
                             'placeholder' => '-- Choisir un équipement --',
+                            'query_builder' => function (EntityRepository $er) {
+                                return $er->createQueryBuilder('e')
+                                    ->where('e.isDispo = 1')
+                                    ->orderBy('e.id', 'ASC');
+                            },
                         ])
                     ;
                 }
@@ -222,15 +238,24 @@ class PrescriptionType extends AbstractType
                         'choice_label' => function ($beneficiary) {
                             return $beneficiary->getFirstname() . ' ' . $beneficiary->getLastname();
                         },
-                        'query_builder' => function (EntityRepository $er) use ($user) {
-                            return $er->createQueryBuilder('b')
+                        'query_builder' => function (EntityRepository $er) use ($user, $prescription) {
+                            $qb = $er->createQueryBuilder('b')
                                 ->leftJoin('b.prescription', 'p')
                                 ->leftJoin('b.structure', 's')
-                                //->join('s.members', 'm')
                                 ->where('s.id = :idStructure')
                                 ->setParameter('idStructure', $user->getStructure())
-                                ->andWhere('p.id IS NULL')
                                 ->orderBy('b.id', 'ASC');
+
+                            // Le bénéficiaire déjà rattaché à cette prescription doit rester
+                            // proposé, même s'il a donc déjà une prescription (celle-ci).
+                            if ($prescription && $prescription->getBeneficiaire()) {
+                                $qb->andWhere('p.id IS NULL OR b = :currentBeneficiaire')
+                                    ->setParameter('currentBeneficiaire', $prescription->getBeneficiaire());
+                            } else {
+                                $qb->andWhere('p.id IS NULL');
+                            }
+
+                            return $qb;
                         },
                         'disabled' => true,
                     ])
@@ -244,17 +269,25 @@ class PrescriptionType extends AbstractType
                         'choice_label' => function ($beneficiary) {
                             return $beneficiary->getFirstname() . ' ' . $beneficiary->getLastname();
                         },
-                        'query_builder' => function (EntityRepository $er) use ($user) {
-                            return $er->createQueryBuilder('b')
+                        'query_builder' => function (EntityRepository $er) use ($user, $prescription) {
+                            $qb = $er->createQueryBuilder('b')
                                 ->leftJoin('b.prescription', 'p')
                                 ->leftJoin('b.structure', 's')
-                                ->join('s.members', 'm')
-                                ->join('m.referent', 'r')
-                                ->where('r.id = :idreferent')
-                                ->setParameter('idreferent', $user)
-                                ->andWhere('p.id IS NULL')
+                                ->where('s.lieuMediationPartner = :userStructure')
+                                ->setParameter('userStructure', $user->getStructure())
                                 ->orderBy('b.id', 'ASC')
                                 ;
+
+                            // Le bénéficiaire déjà rattaché à cette prescription doit rester
+                            // proposé, même s'il a donc déjà une prescription (celle-ci).
+                            if ($prescription && $prescription->getBeneficiaire()) {
+                                $qb->andWhere('p.id IS NULL OR b = :currentBeneficiaire')
+                                    ->setParameter('currentBeneficiaire', $prescription->getBeneficiaire());
+                            } else {
+                                $qb->andWhere('p.id IS NULL');
+                            }
+
+                            return $qb;
                         },
                         'disabled' => true,
                     ])
@@ -268,11 +301,21 @@ class PrescriptionType extends AbstractType
                         'choice_label' => function ($beneficiary) {
                             return $beneficiary->getFirstname() . ' ' . $beneficiary->getLastname();
                         },
-                        'query_builder' => function (EntityRepository $er) use ($user) {
-                            return $er->createQueryBuilder('b')
+                        'query_builder' => function (EntityRepository $er) use ($prescription) {
+                            $qb = $er->createQueryBuilder('b')
                                 ->leftJoin('b.prescription', 'p')
-                                ->andWhere('p.id IS NULL')
                                 ->orderBy('b.id', 'ASC');
+
+                            // Le bénéficiaire déjà rattaché à cette prescription doit rester
+                            // proposé, même s'il a donc déjà une prescription (celle-ci).
+                            if ($prescription && $prescription->getBeneficiaire()) {
+                                $qb->andWhere('p.id IS NULL OR b = :currentBeneficiaire')
+                                    ->setParameter('currentBeneficiaire', $prescription->getBeneficiaire());
+                            } else {
+                                $qb->andWhere('p.id IS NULL');
+                            }
+
+                            return $qb;
                         },
                         'disabled' => true,
                     ])
@@ -296,6 +339,7 @@ class PrescriptionType extends AbstractType
                                     ->setParameter('roles', '%ROLE_PRESCRIPTEUR%')
                                     ->orderBy('m.id', 'ASC');
                             },
+                            'disabled' => true,
                         ])
                         ->add('competence', CompetenceType::class, [
                             'label' => 'COMPETENCE',
@@ -332,6 +376,7 @@ class PrescriptionType extends AbstractType
                                     ->setParameter('roles', '%ROLE_PRESCRIPTEUR%')
                                     ->orderBy('m.id', 'ASC');
                             },
+                            'disabled' => true,
                         ])
                         ->add('competence', CompetenceType::class, [
                             'label' => 'COMPETENCE',
@@ -340,6 +385,21 @@ class PrescriptionType extends AbstractType
                             'label' => 'Choix de l\'équipement',
                             'class' => Equipment::class,
                             'placeholder' => '-- Choisir un équipement --',
+                            'query_builder' => function (EntityRepository $er) use ($prescription) {
+                                $qb = $er->createQueryBuilder('e')
+                                    ->orderBy('e.id', 'ASC');
+
+                                // L'équipement déjà assigné à cette prescription doit rester
+                                // sélectionnable, même s'il n'est donc plus disponible ailleurs.
+                                if ($prescription && $prescription->getEquipement()) {
+                                    $qb->where('e.isDispo = 1 OR e = :currentEquipement')
+                                        ->setParameter('currentEquipement', $prescription->getEquipement());
+                                } else {
+                                    $qb->where('e.isDispo = 1');
+                                }
+
+                                return $qb;
+                            },
                         ])
                     ;
                 }

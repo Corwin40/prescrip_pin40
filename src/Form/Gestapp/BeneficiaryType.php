@@ -97,9 +97,8 @@ class BeneficiaryType extends AbstractType
                         'query_builder' => function (EntityRepository $er) use ($user) {
                             return $er
                                 ->createQueryBuilder('s')
-                                ->leftJoin('s.members', 'p')
-                                ->where('p.referent = :user')
-                                ->setParameter('user', $user)
+                                ->where('s.lieuMediationPartner = :userStructure')
+                                ->setParameter('userStructure', $user->getStructure())
                                 ->orderBy('s.name', 'ASC');
                         },
                     ]);
@@ -145,9 +144,8 @@ class BeneficiaryType extends AbstractType
                         'query_builder' => function (EntityRepository $er) use ($user) {
                             return $er
                                 ->createQueryBuilder('s')
-                                ->leftJoin('s.members', 'p')
-                                ->where('p.referent = :user')
-                                ->setParameter('user', $user)
+                                ->where('s.lieuMediationPartner = :userStructure')
+                                ->setParameter('userStructure', $user->getStructure())
                                 ->orderBy('s.name', 'ASC');
                         },
                     ]);

@@ -73,7 +73,7 @@
                 <div class="col-md-6">
                     {% include 'composants/inputs/input_select.html.twig' with {
                         form: form.lieuMediation,
-                        disabled: '',
+                        disabled: form.lieuMediation.vars.disabled,
                         show_label: true
                     } %}
                 </div>
@@ -208,7 +208,7 @@
                     <div class="col-md-6">
                         {% include 'composants/inputs/input_checkbox_switch.html.twig' with {
                             form: form.competence.isAutoEva,
-                            form_label: 'L\'auto évaluation du bénéficiaire a été réalisée avant l\'action.',
+                            show_label: true,
                             disabled: true
                         } %}
                     </div>
@@ -216,7 +216,7 @@
                     <div class="col-md-6">
                         {% include 'composants/inputs/input_checkbox_switch.html.twig' with {
                             form: form.competence.isAutoEva,
-                            form_label: 'L\'auto évaluation du bénéficiaire a été réalisée avant l\'action.',
+                            show_label: true,
                             disabled: false
                         } %}
                     </div>
@@ -224,7 +224,7 @@
                     <div class="col-md-6">
                         {% include 'composants/inputs/input_checkbox_switch.html.twig' with {
                             form: form.competence.isAutoEva,
-                            form_label: 'L\'auto évaluation du bénéficiaire a été réalisée avant l\'action.',
+                            show_label: true,
                             disabled: false
                         } %}
                     </div>
@@ -392,19 +392,19 @@
                     {% if role == "Prescripteur" %}
                         {% include 'composants/inputs/input_checkbox_switch.html.twig' with {
                             form: form.competence.isAutoEvaEnd,
-                            form_label: 'L\'auto évaluation du bénéficiaire a été réalisée après l\'action.',
+                            show_label: true,
                             disabled: true
                         } %}
                     {% elseif role == "Mediateur" %}
                         {% include 'composants/inputs/input_checkbox_switch.html.twig' with {
                             form: form.competence.isAutoEvaEnd,
-                            form_label: 'L\'auto évaluation du bénéficiaire a été réalisée avant l\'action.',
+                            show_label: true,
                             disabled: false
                         } %}
                     {% else %}
                         {% include 'composants/inputs/input_checkbox_switch.html.twig' with {
                             form: form.competence.isAutoEvaEnd,
-                            form_label: 'L\'auto évaluation du bénéficiaire a été réalisée avant l\'action.',
+                            show_label: true,
                             disabled: false
                         } %}
                     {% endif %}
@@ -413,12 +413,28 @@
 
                 <div class="col-md-12 mb-2">
 
-                    {% include 'composants/inputs/input_textarea.html.twig' with {
-                        form: form.competence.detailParcour,
-                        rows: 5,
-                        disabled: false,
-                        show_label: true
-                    } %}
+                    {% if role == 'Prescripteur' %}
+                        {% include 'composants/inputs/input_textarea.html.twig' with {
+                            form: form.competence.detailParcour,
+                            rows: 5,
+                            disabled: true,
+                            show_label: true
+                        } %}
+                    {% elseif role == 'Mediateur' %}
+                        {% include 'composants/inputs/input_textarea.html.twig' with {
+                            form: form.competence.detailParcour,
+                            rows: 5,
+                            disabled: false,
+                            show_label: true
+                        } %}
+                    {% else %}
+                        {% include 'composants/inputs/input_textarea.html.twig' with {
+                            form: form.competence.detailParcour,
+                            rows: 5,
+                            disabled: false,
+                            show_label: true
+                        } %}
+                    {% endif %}
 
                 </div>
             </div>

@@ -39,7 +39,8 @@ final class DashboardController extends AbstractController
         }
         if($user && in_array('ROLE_ADMIN', $user->getRoles())){
             $beneficiaries = $beneficiaryRepository->findAll();
-            $prescriptions = $prescriptionRepository->findBy(['step' => StepPrescription::Signed]);
+            $prescriptions = $prescriptionRepository->filteredByWithoutStep(StepPrescription::Signed);
+            $prescriptionsSigned = $prescriptionRepository->filteredByStep(StepPrescription::Signed);
             $equipments = $equipmentRepository->findByDispos();
         }
         if($user && in_array('ROLE_SUPER_ADMIN', $user->getRoles())){

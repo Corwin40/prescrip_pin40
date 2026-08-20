@@ -14,12 +14,14 @@ use App\Repository\Gestapp\PrescriptionRepository;
 use App\Repository\MemberRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Elastica\Query\Terms;
+use FOS\ElasticaBundle\Elastica\Index;
 use FOS\ElasticaBundle\Finder\PaginatedFinderInterface;
 use Elastica\Query;
 use Elastica\Query\BoolQuery;
 use Elastica\Query\MatchQuery;
 use Elastica\Query\Term;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -181,7 +183,12 @@ final class PrescriptionController extends AbstractController
     }
 
     #[Route('/new', name: 'app_gestapp_prescription_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager, PrescriptionRepository $prescriptionRepository): Response
+    public function new(
+        Request $request,
+        EntityManagerInterface $entityManager,
+        PrescriptionRepository $prescriptionRepository,
+        #[Autowire(service: 'fos_elastica.index.prescription')] Index $prescriptionIndex
+    ): Response
     {
         $user = $this->getUser();
         $structure = $user->getStructure();
@@ -219,6 +226,9 @@ final class PrescriptionController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
 
             $date = new \DateTime('now');
+            // Le compteur repart à 1 à chaque changement de mois.
+            $monthStart = (clone $date)->modify('first day of this month')->setTime(0, 0, 0);
+            $monthEnd = (clone $date)->modify('last day of this month')->setTime(23, 59, 59);
 
             if($user && (in_array('ROLE_SUPER_ADMIN', $user->getRoles()) || in_array('ROLE_ADMIN', $user->getRoles()) ) ){
                 $beneficiary = $form->get('beneficiaire')->getData();
@@ -226,14 +236,14 @@ final class PrescriptionController extends AbstractController
                 $idStructure = $beneficiary->getStructure()->getId();
                 if($structure)
                 {
-                    $lastPrescription = $prescriptionRepository->findOneBy(['prescriptor' => $idStructure],[ 'id' => 'DESC']);
+                    $lastPrescription = $prescriptionRepository->findLastForPrescriptorInMonth($idStructure, $monthStart, $monthEnd);
 
                     if(!$lastPrescription){
                         $compteur = 1;
                     }else{
                         $compteur = $lastPrescription->getCompteur() + 1;
                     }
-                    $ref = $date->format('Ymd')."-".$structure."-".$compteur;// mois-année-structure-compteur
+                    $ref = $date->format('Ym')."-".$structure."-".$compteur;// mois-année-structure-compteur
                     $prescription->setRef($ref);
                 }
                 $prescription->setStatus(StatusPrescription::OpenByAdministrator);
@@ -246,7 +256,7 @@ final class PrescriptionController extends AbstractController
                 $idStructure = $beneficiary->getStructure()->getId();
                 if($structure)
                 {
-                    $lastPrescription = $prescriptionRepository->findOneBy(['prescriptor' => $idStructure],[ 'id' => 'DESC']);
+                    $lastPrescription = $prescriptionRepository->findLastForPrescriptorInMonth($idStructure, $monthStart, $monthEnd);
                     if(!$lastPrescription){
                         $compteur = 1;
                     }else{
@@ -265,15 +275,14 @@ final class PrescriptionController extends AbstractController
             }
             if($user && in_array('ROLE_PRESCRIPTEUR', $user->getRoles())){
                 $structure = $this->getUser()->getStructure();
-                // A Améliorer
-                $lastPrescription = $prescriptionRepository->findOneBy(['prescriptor' => $structure->getId()],[ 'id' => 'DESC']);
+                $lastPrescription = $prescriptionRepository->findLastForPrescriptorInMonth($structure->getId(), $monthStart, $monthEnd);
                 if(!$lastPrescription){
                     $compteur = 1;
                 }else{
                     $compteur = $lastPrescription->getCompteur() + 1;
                 }
 
-                $ref = $date->format('Ym')."-".$structure."-".$compteur;// mois-année-structure-compteur
+                $ref = $date->format('Ym')."-".$structure->getSlug()."-".$compteur;// mois-année-structure-compteur
                 $prescription->setRef($ref);
                 $prescription->setStatus(StatusPrescription::OpenByPrescriptor);
                 $prescription->setIsOpenByPrescriptor(1);
@@ -283,6 +292,10 @@ final class PrescriptionController extends AbstractController
 
             $entityManager->persist($prescription);
             $entityManager->flush();
+
+            // Force le rafraîchissement de l'index Elasticsearch pour que la prescription
+            // soit immédiatement visible dans la liste (sinon délai "near real-time" d'ES).
+            $prescriptionIndex->refresh();
 
             return $this->redirectToRoute('app_gestapp_prescription_index', [], Response::HTTP_SEE_OTHER);
         }
@@ -302,7 +315,12 @@ final class PrescriptionController extends AbstractController
     }
 
     #[Route('/{id}/edit', name: 'app_gestapp_prescription_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, Prescription $prescription, EntityManagerInterface $entityManager): Response
+    public function edit(
+        Request $request,
+        Prescription $prescription,
+        EntityManagerInterface $entityManager,
+        #[Autowire(service: 'fos_elastica.index.prescription')] Index $prescriptionIndex
+    ): Response
     {
         $user = $this->getUser();
 
@@ -333,7 +351,7 @@ final class PrescriptionController extends AbstractController
             if($step == StepPrescription::OneParts){
                 if($user && (in_array('ROLE_SUPER_ADMIN', $user->getRoles()) || in_array('ROLE_ADMIN', $user->getRoles()) ) ){
                     $beneficiaire = $form->get('beneficiaire')->getData();
-                    $prescripteur = $beneficiaire->getPrescriptor();
+                    $prescripteur = $beneficiaire->getStructure();
                     $prescription->setPrescriptor($prescripteur);
                     $prescription->setStep(StepPrescription::ChoiceEquipment);
                 }
@@ -383,6 +401,10 @@ final class PrescriptionController extends AbstractController
             }
 
             $entityManager->flush();
+
+            // Force le rafraîchissement de l'index Elasticsearch pour que la mise à jour
+            // soit immédiatement visible dans la liste (sinon délai "near real-time" d'ES).
+            $prescriptionIndex->refresh();
 
             return $this->redirectToRoute('app_gestapp_prescription_index', [], Response::HTTP_SEE_OTHER);
         }
@@ -437,11 +459,20 @@ final class PrescriptionController extends AbstractController
     }
 
     #[Route('/{id}', name: 'app_gestapp_prescription_delete', methods: ['POST'])]
-    public function delete(Request $request, Prescription $prescription, EntityManagerInterface $entityManager): Response
+    public function delete(
+        Request $request,
+        Prescription $prescription,
+        EntityManagerInterface $entityManager,
+        #[Autowire(service: 'fos_elastica.index.prescription')] Index $prescriptionIndex
+    ): Response
     {
         if ($this->isCsrfTokenValid('delete'.$prescription->getId(), $request->getPayload()->getString('_token'))) {
             $entityManager->remove($prescription);
             $entityManager->flush();
+
+            // Force le rafraîchissement de l'index Elasticsearch pour que la suppression
+            // soit immédiatement reflétée dans la liste (sinon délai "near real-time" d'ES).
+            $prescriptionIndex->refresh();
         }
 
         return $this->redirectToRoute('app_gestapp_prescription_index', [], Response::HTTP_SEE_OTHER);
@@ -452,12 +483,11 @@ final class PrescriptionController extends AbstractController
     {
         $member = $this->getUser();
         // Supprimer les fichiers stockés sur le serveur
-        $paths = array_filter([$prescription->getPath(), $prescription->getPathSigned(), $prescription->getPathSignedCertif()], fn($path) => $path !== null);        if ($paths) {
+        $paths = array_filter([$prescription->getPath(), $prescription->getPathSigned(), $prescription->getPathSignedCertif()], fn($path) => $path !== null);
+        if ($paths) {
             foreach ($paths as $p) {
                 if (!empty($p) && is_file($this->getParameter('kernel.project_dir')."/public".$p)) {
                     unlink($this->getParameter('kernel.project_dir')."/public".$p);
-                } else {
-                    dd("Problème avec p = ", $p); // diagnostic
                 }
             }
         }

@@ -91,6 +91,20 @@ class PrescriptionRepository extends ServiceEntityRepository
         return $qb->getQuery()->getResult();
     }
 
+    public function findLastForPrescriptorInMonth($prescriptor, \DateTimeInterface $monthStart, \DateTimeInterface $monthEnd): ?Prescription
+    {
+        return $this->createQueryBuilder('p')
+            ->where('p.prescriptor = :prescriptor')
+            ->andWhere('p.createdAt BETWEEN :monthStart AND :monthEnd')
+            ->setParameter('prescriptor', $prescriptor)
+            ->setParameter('monthStart', $monthStart)
+            ->setParameter('monthEnd', $monthEnd)
+            ->orderBy('p.id', 'DESC')
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+
     public function filteredByWithoutMultiSteps(array $excludedSteps): array
     {
         return $this->createQueryBuilder('u')

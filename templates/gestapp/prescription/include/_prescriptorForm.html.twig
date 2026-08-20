@@ -45,10 +45,11 @@
                     </div>
                 </td>
                 <td class="col-2">
-                    {% if app.user.structure.contactResponsableFirstname is empty and app.user.structure.contactResponsableLastname is empty %}
-                        -
+                    {% set respMember = app.user.structure.responsibleMember %}
+                    {% if respMember %}
+                        <p class="mb-0 fw-semibold">{{ respMember.firstname }} {{ respMember.lastname }}</p>
                     {% else %}
-                        <p class="mb-0 fw-semibold">{{ app.user.structure.contactResponsableFirstname }} {{ app.user.structure.contactResponsableLastname }}</p>
+                        -
                     {% endif %}
                 </td>
                 <td class="col-1">

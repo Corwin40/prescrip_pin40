@@ -1,0 +1,26 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Modifier la structure{% endblock %}
+
+{% block body %}
+
+    {# Bloc entête de page #}
+    <section id="page_header">
+        {%
+            include 'composants/pages/pages_headers.html.twig' with {
+            'page_title' : 'Modifier ' ~ structure.name,
+            'li_items': [
+                { path: 'app_admin_dashboard_index', fa_class: 'fa-sharp-duotone fa-solid fa-house-blank', a_title: 'Dashboard' },
+                { path: 'app_admin_structure_index', fa_class: 'fa-duotone fa-solid fa-building-flag', a_title: 'Structures' },
+                { path: null, fa_class: null, a_title: 'Modifier' },
+            ],
+            'btns' : []
+        }
+        %}
+    </section>
+
+    <section id="page_content">
+        {{ include('admin/structure/_form.html.twig', {'button_label': 'Enregistrer'}) }}
+    </section>
+
+{% endblock %}

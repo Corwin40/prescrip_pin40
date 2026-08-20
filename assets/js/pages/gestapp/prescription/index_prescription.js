@@ -1,5 +1,6 @@
 import {toasterMessage} from "../../../components/bootstrap/toaster";
-import {initModal, parseModalTrigger, setupIframeModal, bindModalEvents, removeOptions} from "../../../components/bootstrap/modal";
+import {initModal, parseModalTrigger, setupIframeModal, bindModalEvents, removeOptions, resetModal} from "../../../components/bootstrap/modal";
+import {generateCsrfToken} from "../../../../controllers/csrf_protection_controller";
 import axios from 'axios';
 
 export function initIndex_Prescription() {
@@ -11,6 +12,7 @@ export function initIndex_Prescription() {
 
     function openModal(e){
         const { url, crud, contentTitle } = parseModalTrigger(e);
+        resetModal(modalEl);
 
         if(crud === "VIEW_PRESCRIPTION") {
             setupIframeModal(modalEl, modal, url);
@@ -32,6 +34,7 @@ export function initIndex_Prescription() {
             modalEl.querySelector('.modal-title').innerText = contentTitle;
             modalEl.querySelector('.modal-body').classList.add('p-1');
             modalEl.querySelector('.modal-footer a').href = url;
+            modalEl.querySelector('.modal-footer a').textContent = 'Déposer le fichier';
             axios
                 .get(url)
                 .then(({data}) => {
@@ -81,6 +84,10 @@ export function initIndex_Prescription() {
         let modalContent = e.currentTarget.parentNode.parentElement;
         let form = modalContent.querySelector('form');
         if(form) {
+            // Le formulaire est injecté en AJAX, il ne passe jamais par un vrai
+            // événement "submit" du navigateur : sans cet appel explicite, le token
+            // CSRF reste sur sa valeur de substitution et le serveur le rejette.
+            generateCsrfToken(form);
             let action = form.action;
             let data = new FormData(form);
             axios

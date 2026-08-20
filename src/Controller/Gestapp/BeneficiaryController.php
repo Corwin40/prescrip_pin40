@@ -2,6 +2,7 @@
 
 namespace App\Controller\Gestapp;
 
+use App\Config\Civility;
 use App\Entity\Gestapp\Beneficiary;
 use App\Form\Search\BeneficiarySearchType;
 use App\Form\Gestapp\BeneficiaryType;
@@ -9,9 +10,11 @@ use App\Repository\Admin\StructureRepository;
 use App\Repository\Gestapp\BeneficiaryRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use FOS\ElasticaBundle\Elastica\Index;
 use FOS\ElasticaBundle\Finder\PaginatedFinderInterface;
 use Elastica\Query;
 use Elastica\Query\BoolQuery;
@@ -47,7 +50,7 @@ final class BeneficiaryController extends AbstractController
             $prescriptors = [];
         }
 
-        // 🧩 Construction des choix pour le formulaire
+        // Construction des choix pour le formulaire
         $prescriptorChoices = [];
         $structureIds = [];
         foreach ($prescriptors as $p) {
@@ -134,7 +137,11 @@ final class BeneficiaryController extends AbstractController
     }
 
     #[Route('/new', name: 'app_gestapp_beneficiary_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager): Response
+    public function new(
+        Request $request,
+        EntityManagerInterface $entityManager,
+        #[Autowire(service: 'fos_elastica.index.beneficiary')] Index $beneficiaryIndex
+    ): Response
     {
         $user = $this->getUser();
         $beneficiary = new Beneficiary();
@@ -148,18 +155,17 @@ final class BeneficiaryController extends AbstractController
             'beneficiary' => $beneficiary
         ]);
         $form->handleRequest($request);
-        $beneficiary->setReferent($user);
         $beneficiary->setStructure($user->getStructure());
 
         if ($form->isSubmitted() && $form->isValid()) {
 
             $civility = $form->get('civility')->getData();
             $structure = $form->get('structure')->getData();
-            if($civility === "Mr")
+            if($civility === Civility::Mr)
             {
                 $beneficiary->setGender('Homme');
             }
-            elseif ($civility == "Mme" || $civility == "Mlle"){
+            elseif ($civility === Civility::Mme || $civility === Civility::Mlle){
                 $beneficiary->setGender('Femme');
             }
             else
@@ -169,8 +175,18 @@ final class BeneficiaryController extends AbstractController
 
             $beneficiary->setStructure($structure);
 
+            if ($user && (in_array('ROLE_SUPER_ADMIN', $user->getRoles()) || in_array('ROLE_ADMIN', $user->getRoles()) || in_array('ROLE_PRESCRIPTEUR', $user->getRoles()))) {
+                $beneficiary->setReferent($structure?->getResponsibleMember() ?? $user);
+            } else {
+                $beneficiary->setReferent($user);
+            }
+
             $entityManager->persist($beneficiary);
             $entityManager->flush();
+
+            // Force le rafraîchissement de l'index Elasticsearch pour que le bénéficiaire
+            // soit immédiatement visible dans la liste (sinon délai "near real-time" d'ES).
+            $beneficiaryIndex->refresh();
 
             return $this->redirectToRoute('app_gestapp_beneficiary_index', [], Response::HTTP_SEE_OTHER);
         }
@@ -204,6 +220,13 @@ final class BeneficiaryController extends AbstractController
             {
                 $civility = $form->get('civility')->getData();
                 $beneficiary->setGender($civility->value);
+
+                if ($user && (in_array('ROLE_SUPER_ADMIN', $user->getRoles()) || in_array('ROLE_ADMIN', $user->getRoles()) || in_array('ROLE_PRESCRIPTEUR', $user->getRoles()))) {
+                    $beneficiary->setReferent($beneficiary->getStructure()?->getResponsibleMember() ?? $user);
+                } else {
+                    $beneficiary->setReferent($user);
+                }
+
                 $entityManager->persist($beneficiary);
                 $entityManager->flush();
 
@@ -276,41 +299,14 @@ final class BeneficiaryController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}/edit2', name: 'app_gestapp_beneficiary_edit2', methods: ['GET', 'POST'])]
-    public function edit2(Request $request, Beneficiary $beneficiary, EntityManagerInterface $entityManager): Response
-    {
-        $user = $this->getUser();
-        $form = $this->createForm(BeneficiaryType::class, $beneficiary, [
-            'action' => $this->generateUrl('app_gestapp_beneficiary_edit', ['id' => $beneficiary->getId()]),
-            'method' => 'POST',
-            'attr' => [
-                'id' => 'formBeneficiary',
-            ]
-        ]);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->flush();
-
-            return $this->redirectToRoute('app_gestapp_beneficiary_index', [], Response::HTTP_SEE_OTHER);
-        }
-
-        return $this->render('gestapp/beneficiary/_form.html.twig', [
-            'beneficiary' => $beneficiary,
-            'form' => $form,
-            'user' => $user,
-        ]);
-    }
-
     #[Route('/{id}/delete', name: 'app_gestapp_beneficiary_delete', methods: ['POST'])]
     public function delete(Request $request, Beneficiary $beneficiary, EntityManagerInterface $entityManager): Response
     {
         if ($this->isCsrfTokenValid('delete'.$beneficiary->getId(), $request->getPayload()->getString('_token'))) {
-            // Suppression d'une prescription
+            // Suppression de la prescription liée, si elle existe, avant celle du bénéficiaire
             if($beneficiary->getPrescription())
             {
-                $prescription = $beneficiary->getPrescription();
-                dd($prescription);
+                $entityManager->remove($beneficiary->getPrescription());
             }
 
             $entityManager->remove($beneficiary);

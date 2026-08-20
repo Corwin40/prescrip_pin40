@@ -72,7 +72,7 @@ class Member implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(targetEntity: Equipment::class, mappedBy: 'structure')]
     private Collection $equipments;
 
-    #[ORM\ManyToOne(inversedBy: 'members')]
+    #[ORM\ManyToOne(inversedBy: 'members', cascade: ['persist'])]
     private ?Structure $structure = null;
 
     #[ORM\Column(enumType: Civility::class)]

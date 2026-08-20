@@ -29,6 +29,15 @@ class MemberRepository extends ServiceEntityRepository implements PasswordUpgrad
             ->getResult();
     }
 
+    public function findAllExceptRole(string $role): array
+    {
+        return $this->createQueryBuilder('u')
+            ->andWhere('u.roles NOT LIKE :role')
+            ->setParameter('role', '%"'.$role.'"%')
+            ->getQuery()
+            ->getResult();
+    }
+
     /**
      * Used to upgrade (rehash) the user's password automatically over time.
      */

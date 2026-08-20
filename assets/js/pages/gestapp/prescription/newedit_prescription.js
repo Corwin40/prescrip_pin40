@@ -1,5 +1,6 @@
 import {toasterMessage} from "../../../components/bootstrap/toaster";
 import {initModal, parseModalTrigger, bindModalEvents, removeOptions} from "../../../components/bootstrap/modal";
+import {generateCsrfToken} from "../../../../controllers/csrf_protection_controller";
 import axios from 'axios';
 
 export function initNewEdit_Prescription() {
@@ -36,6 +37,10 @@ export function initNewEdit_Prescription() {
         e.preventDefault()
         let modalContent = e.currentTarget.parentNode.parentElement;
         let form = modalContent.querySelector('form');
+        // Le formulaire est injecté en AJAX, il ne passe jamais par un vrai
+        // événement "submit" du navigateur : sans cet appel explicite, le token
+        // CSRF reste sur sa valeur de substitution et le serveur le rejette.
+        generateCsrfToken(form);
         let action = form.action;
         let data = new FormData(form);
         axios

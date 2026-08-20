@@ -54,7 +54,8 @@ final class DocumentController extends AbstractController
                 if($documentFile){
                     $slugStructure = $prescription->getPrescriptor()->getSlug();
                     $filename = $prescription->getRef().'_signedByManually.pdf';
-                    $pathdir = $this->getParameter('prescription_signed_directory_url').'/'.$slugStructure;
+                    $pathdir = $this->getParameter('prescription_signed_directory').$slugStructure;
+                    $pathUrl = $this->getParameter('prescription_signed_directory_url').$slugStructure;
                     try {
                         if (is_dir($pathdir)){
                             $documentFile->move(
@@ -77,9 +78,9 @@ final class DocumentController extends AbstractController
 
                     $document->setDocumentFilename($filename);
                     $document->setPrescription($prescription);
-                    $document->setPath($pathdir.$filename);
-                    $prescription->setStep(stepPrescription::Signed);
-                    $prescription->setPathSigned($pathdir.$filename);
+                    $document->setPath($pathUrl.'/'.$filename);
+                    $prescription->setStep(StepPrescription::Signed);
+                    $prescription->setPathSigned($pathUrl.'/'.$filename);
                 }
 
                 $em->persist($document);
@@ -89,7 +90,7 @@ final class DocumentController extends AbstractController
                     $prescriptions = $prescriptionRepository->findBy(['prescriptor' => $user->getStructure()]);
                 }
                 if($user && in_array('ROLE_MEDIATEUR', $user->getRoles())){
-                    $prescriptions = $prescriptionRepository->findBy(['lieuMediation' => $user]);
+                    $prescriptions = $prescriptionRepository->findBy(['lieuMediation' => $user->getStructure()]);
                 }
                 if($user && in_array('ROLE_ADMIN', $user->getRoles())){
                     $prescriptions = $prescriptionRepository->findAll();

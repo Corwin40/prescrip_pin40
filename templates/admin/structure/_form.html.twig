@@ -3,75 +3,154 @@
         <div class="col-12 bg-light border-bottom border-dark mb-2">
             <h3 class="h4 mt-2 mb-2 ps-2">La structure</h3>
         </div>
-        <div class="col-md-3">
-            {% include 'composants/inputs/input_text.html.twig' with {
-                form: form.name,
-                disabled: false,
-                show_label: true,
-                wrapper_class: 'mb-1'
-            } %}
-        </div>
-        <div class="clear"></div>
-        <div class="col-md-3">
-            {% include 'composants/inputs/input_text.html.twig' with {
-                form: form.address,
-                disabled: false,
-                show_label: true,
-                wrapper_class: 'mb-1'
-            } %}
-        </div>
-        <div class="col-md-3">
-            <div class="row g-0">
+        <div class="col-12">
+            <div class="row">
                 <div class="col-md-3">
                     {% include 'composants/inputs/input_text.html.twig' with {
-                        form: form.zipcode,
+                        form: form.name,
                         disabled: false,
                         show_label: true,
                         wrapper_class: 'mb-1'
                     } %}
                 </div>
-                <div class="col-md-9">
+                <div class="clear"></div>
+                <div class="col-md-3">
                     {% include 'composants/inputs/input_text.html.twig' with {
-                        form: form.city,
+                        form: form.address,
                         disabled: false,
                         show_label: true,
                         wrapper_class: 'mb-1'
                     } %}
+                </div>
+                <div class="col-md-3">
+                    <div class="row g-1">
+                        <div class="col-md-3">
+                            {% include 'composants/inputs/input_text.html.twig' with {
+                                form: form.zipcode,
+                                disabled: false,
+                                show_label: true,
+                                wrapper_class: 'mb-1'
+                            } %}
+                        </div>
+                        <div class="col-md-9">
+                            {% include 'composants/inputs/input_text.html.twig' with {
+                                form: form.city,
+                                disabled: false,
+                                show_label: true,
+                                wrapper_class: 'mb-1'
+                            } %}
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="row g-1">
+                        <div class="col-md-6">
+                            {% include 'composants/inputs/input_text.html.twig' with {
+                                form: form.contactEmail,
+                                disabled: false,
+                                show_label: true,
+                                wrapper_class: 'mb-1'
+                            } %}
+                        </div>
+                        <div class="col-md-4">
+                            {% include 'composants/inputs/input_text.html.twig' with {
+                                form: form.contactPhone,
+                                disabled: false,
+                                show_label: true,
+                                wrapper_class: 'mb-1'
+                            } %}
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-        <div class="clear"></div>
+        {% if form.member is defined %}
+            <div class="col-12 bg-light border-bottom border-dark mb-2">
+                <h3 class="h4 mt-2 mb-2 ps-2">Le responsable de la structure</h3>
+            </div>
 
-        <div class="col-12 bg-light border-bottom border-dark mb-2">
-            <h3 class="h4 mt-2 mb-2 ps-2">Les contacts de la structure</h3>
-        </div>
+            <div class="col-md-8">
+                <div class="row mb-2">
+                    <div class="col-md-4">
+                        {% include 'composants/inputs/input_select.html.twig' with {
+                            form: form.member.role,
+                            disabled: false,
+                            show_label: true,
+                            wrapper_class: 'mb-1'
+                        } %}
+                    </div>
+                </div>
+                <div class="row mb-2 g-1">
+                    <div class="col-md-1">
+                        {% include 'composants/inputs/input_select.html.twig' with {
+                            form: form.member.civility,
+                            disabled: false,
+                            show_label: true,
+                            wrapper_class: 'mb-1'
+                        } %}
+                    </div>
+                    <div class="col-md-3">
+                        {% include 'composants/inputs/input_text.html.twig' with {
+                            form: form.member.firstname,
+                            disabled: false,
+                            show_label: true,
+                            wrapper_class: 'mb-1'
+                        } %}
+                    </div>
+                    <div class="col-md-3">
+                        {% include 'composants/inputs/input_text.html.twig' with {
+                            form: form.member.lastname,
+                            disabled: false,
+                            show_label: true,
+                            wrapper_class: 'mb-1'
+                        } %}
+                    </div>
+                    <div class="col-md-4 offset-md-1">
+                        {% include 'composants/inputs/input_checkbox.html.twig' with {
+                            form: form.member.isRespStructure,
+                            disabled: false,
+                            show_label: true,
+                            wrapper_class: 'mb-1'
+                        } %}
+                    </div>
+                </div>
+                <div class="row g-1">
+                    <div class="col-md-6">
+                        {% include 'composants/inputs/input_text.html.twig' with {
+                            form: form.member.email,
+                            disabled: false,
+                            show_label: true,
+                            wrapper_class: 'mb-1'
+                        } %}
+                    </div>
 
-        {% include 'composants/inputs/block_civility.html.twig' with {
-            wrapper_class : 'col-6 mb-3',
-            label: 'Le ou la responsable',
-            civility: form.contactResponsableCivility,
-            firstname: form.contactResponsableFirstname,
-            lastname: form.contactResponsableLastname,
-            show_label: true
-        } %}
-        <div class="col-md-2">
-            {% include 'composants/inputs/input_text.html.twig' with {
-                form: form.contactPhone,
-                disabled: false,
-                show_label: true,
-            } %}
-        </div>
-        <div class="col-md-2">
-            {% include 'composants/inputs/input_text.html.twig' with {
-                form: form.contactEmail,
-                disabled: false,
-                show_label: true,
-            } %}
-        </div>
-        <div class="clear"></div>
+
+                </div>
+                <div class="row g-1">
+                    <div class="col-md-4">
+                        {% include 'composants/inputs/input_text.html.twig' with {
+                            form: form.member.password.first,
+                            disabled: false,
+                            show_label: true,
+                            wrapper_class: 'mb-1'
+                        } %}
+                    </div>
+                    <div class="col-md-4">
+                        {% include 'composants/inputs/input_text.html.twig' with {
+                            form: form.member.password.second,
+                            disabled: false,
+                            show_label: true,
+                            wrapper_class: 'mb-1'
+                        } %}
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+
+
         {{ form_rest(form) }}
         <div class="col-12">
-            <button type="submit" class="btn btn-primary">Ajouter la structure</button>
+            <button type="submit" class="btn btn-primary">{{ button_label|default('Ajouter la structure') }}</button>
         </div>
 
     </div>

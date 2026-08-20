@@ -7,6 +7,7 @@ use App\Entity\Admin\Member;
 use App\Entity\Admin\Structure;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\EnumType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -43,16 +44,41 @@ class MemberType extends AbstractType
             ])
             ->add('firstname')
             ->add('lastname')
-            ->add('structure', EntityType::class, [
-                'label' => 'Structure',
-                'class' => Structure::class,
-                'choice_label' => 'name',
-                'placeholder' => 'Sélectionnez une structure',
-                'required' => true,
-            ])
         ;
 
-        if ($route == 'app_admin_member_new') {
+        if ($route !== 'app_admin_structure_new') {
+            $builder
+                ->add('structure', EntityType::class, [
+                    'label' => 'Structure',
+                    'class' => Structure::class,
+                    'choice_label' => 'name',
+                    'placeholder' => 'Sélectionnez une structure',
+                    'required' => true,
+                ])
+            ;
+        }
+
+        if ($route == 'app_admin_structure_new') {
+            $builder
+                ->add('role', ChoiceType::class, [
+                    'label' => 'Rôle',
+                    'mapped' => false,
+                    'choices' => [
+                        'Administrateur' => 'ROLE_ADMIN',
+                        'Prescripteur' => 'ROLE_PRESCRIPTEUR',
+                        'Médiateur' => 'ROLE_MEDIATEUR',
+                    ],
+                    'placeholder' => 'Sélectionnez un rôle',
+                    'required' => true,
+                ])
+                ->add('isRespStructure', CheckboxType::class, [
+                    'label' => 'Responsable de la structure',
+                    'required' => true,
+                ])
+            ;
+        }
+
+        if ($route == 'app_admin_member_new' || $route == 'app_admin_structure_new') {
             $builder
                 ->add('password', RepeatedType::class, [
                     'type' => PasswordType::class,

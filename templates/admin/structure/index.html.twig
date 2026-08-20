@@ -47,8 +47,26 @@
         #}
         <div class="row g-1">
             {% for structure in structures %}
+                {% set familyMember = structure.responsibleMember ?: structure.members|first %}
+                {% set familyRole = familyMember ? familyMember.roles|first : null %}
+                {% if familyRole == 'ROLE_MEDIATEUR' %}
+                    {% set familyColor = 'success' %}
+                    {% set familyLabel = 'Médiateur' %}
+                {% elseif familyRole == 'ROLE_PRESCRIPTEUR' %}
+                    {% set familyColor = 'primary' %}
+                    {% set familyLabel = 'Prescripteur' %}
+                {% elseif familyRole == 'ROLE_ADMIN' %}
+                    {% set familyColor = 'danger' %}
+                    {% set familyLabel = 'Administrateur' %}
+                {% elseif familyRole == 'ROLE_SUPER_ADMIN' %}
+                    {% set familyColor = 'dark' %}
+                    {% set familyLabel = 'Super administrateur' %}
+                {% else %}
+                    {% set familyColor = 'secondary' %}
+                    {% set familyLabel = 'Non défini' %}
+                {% endif %}
                 <div class="col-12">
-                    <div class="card shadow-sm border-1 border-dark">
+                    <div class="card shadow-sm border-1 border-dark" style="border-left: 6px solid var(--bs-{{ familyColor }}) !important;">
                         <div class="card-body">
                             <div class="row g-4">
 
@@ -56,15 +74,21 @@
                                     COLONNE BÉNÉFICIAIRE
                                 ======================== #}
                                 <div class="col-lg-8">
-                                    <div class="d-flex align-items-center">
-                                        <div class="bg-primary bg-opacity-10 text-primary rounded-circle d-flex align-items-center justify-content-center me-3" style="width:40px;height:40px;">
-                                            <i class="fa-duotone fa-solid fa-building-flag"></i>
+                                    <div class="d-flex align-items-center justify-content-between">
+                                        <div class="d-flex align-items-center">
+                                            <div class="bg-primary bg-opacity-10 text-primary rounded-circle d-flex align-items-center justify-content-center me-3" style="width:40px;height:40px;">
+                                                <i class="fa-duotone fa-solid fa-building-flag"></i>
+                                            </div>
+                                            <div>
+                                                <h5 class="mb-0">
+                                                    {{ structure.name }}
+                                                    <span class="badge text-bg-{{ familyColor }} py-1 align-middle">{{ familyLabel }}</span>
+                                                </h5>
+                                            </div>
                                         </div>
-                                        <div>
-                                            <h5 class="mb-0">
-                                                {{ structure.name }}
-                                            </h5>
-                                        </div>
+                                        <a href="{{ path('app_admin_structure_edit', {'id': structure.id}) }}" class="btn btn-sm btn-outline-dark">
+                                            <i class="fa-duotone fa-solid fa-pen"></i>&nbsp;Modifier
+                                        </a>
                                     </div>
 
                                     <hr class="my-3">

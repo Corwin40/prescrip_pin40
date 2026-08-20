@@ -30,14 +30,8 @@ class StructureRepository extends ServiceEntityRepository
     public function findPrescriptorsByMediator($structure): array
     {
         return $this->createQueryBuilder('s')
-            ->select('DISTINCT s')
-            ->join('s.members', 'm')
-            ->join('m.referent', 'r')
-            ->join('r.structure', 'st')
-            ->where('st = :idstructure')
-            ->setParameter('idstructure', $structure)
-            //->where('s.roles LIKE :role')
-            //->setParameter('role', '%ROLE_PRESCRIPTEUR%')
+            ->where('s.lieuMediationPartner = :structure')
+            ->setParameter('structure', $structure)
             ->getQuery()
             ->getResult();
     }
@@ -45,11 +39,10 @@ class StructureRepository extends ServiceEntityRepository
     public function findPrescriptorsByAdmin(): array
     {
         return $this->createQueryBuilder('s')
+            ->select('DISTINCT s')
             ->join('s.members', 'm')
-            ->join('m.referent', 'r')
-            //->andWhere('r.roles LIKE :admin OR r.roles LIKE :superAdmin')
-            //->setParameter('admin', '%ROLE_ADMIN%')
-            //->setParameter('superAdmin', '%ROLE_SUPER_ADMIN%')
+            ->where('m.roles LIKE :role')
+            ->setParameter('role', '%ROLE_PRESCRIPTEUR%')
             ->getQuery()
             ->getResult();
     }

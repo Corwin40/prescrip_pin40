@@ -86,10 +86,14 @@
                                 </div>
                             </td>
                             <td>
-                                <span class="fw-semibold">{{ member.structure.name }}</span>
+                                {% if member.structure %}
+                                    <span class="fw-semibold">{{ member.structure.name }}</span>
+                                {% else %}
+                                    <span class="text-muted">—</span>
+                                {% endif %}
                             </td>
-                            <td>{{ member.structure.address }} - {{ member.structure.zipcode }} {{ member.structure.city }}</td>
-                            <td>{{ member.structure.contactEmail }}<br>{{ member.structure.contactPhone }}</td>
+                            <td>{% if member.structure %}{{ member.structure.address }} - {{ member.structure.zipcode }} {{ member.structure.city }}{% endif %}</td>
+                            <td>{% if member.structure %}{{ member.structure.contactEmail }}<br>{{ member.structure.contactPhone }}{% endif %}</td>
                             <td class="text-center">
                                 <a href="{{ path('app_admin_member_edit', {'id': member.id}) }}" class="text-dark text-decoration-none"><i class="fa-duotone fa-solid fa-user-pen"></i></a>&nbsp;&nbsp;&nbsp;
                                 <a href="{{ path('app_admin_member_delete', {'id': member.id}) }}" class="text-dark text-decoration-none openModal" ><i class="fa-duotone fa-solid fa-user-circle-minus"></i></a>&nbsp;&nbsp;&nbsp;

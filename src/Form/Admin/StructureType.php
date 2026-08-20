@@ -2,22 +2,33 @@
 
 namespace App\Form\Admin;
 
-use App\Config\Civility;
 use App\Entity\Admin\Member;
 use App\Entity\Admin\Structure;
 use App\Entity\Gestapp\Competence;
 use App\Form\Gestapp\CompetenceType;
+use Doctrine\ORM\EntityRepository;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\CollectionType;
-use Symfony\Component\Form\Extension\Core\Type\EnumType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class StructureType extends AbstractType
 {
+    private RequestStack $requestStack;
+
+    public function __construct(RequestStack $requestStack)
+    {
+        $this->requestStack = $requestStack;
+    }
+
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
+        $request = $this->requestStack->getCurrentRequest();
+        $route = $request?->attributes->get('_route');
+        $structure = $options['structure'];
+
         $builder
             ->add('name', TextType::class,[
                 'label' => 'Nom',
@@ -49,34 +60,44 @@ class StructureType extends AbstractType
             ->add('contactPhone', TextType::class,[
                 'label' => 'Téléphone',
             ])
-            ->add('contactResponsableFirstname', TextType::class,[
-                'label' => 'Nom du responsable',
+            ->add('lieuMediationPartner', EntityType::class, [
+                'label' => 'Lieu de médiation partenaire',
+                'class' => Structure::class,
+                'choice_label' => 'name',
+                'required' => false,
+                'placeholder' => 'Aucun',
+                'query_builder' => function (EntityRepository $er) use ($structure) {
+                    $qb = $er->createQueryBuilder('l')
+                        ->innerJoin('l.members', 'm')
+                        ->where('m.roles LIKE :roles')
+                        ->setParameter('roles', '%ROLE_MEDIATEUR%')
+                        ->orderBy('l.name', 'ASC');
+
+                    if ($structure && $structure->getId()) {
+                        $qb->andWhere('l != :self')
+                            ->setParameter('self', $structure);
+                    }
+
+                    return $qb;
+                },
             ])
-            ->add('contactResponsableLastname', TextType::class,[
-                'label' => 'Prénom du responsable',
-            ])
-            ->add('contactResponsableCivility', EnumType::class, [
-                'class' => Civility::class,
-            ])
-            //->add('members', CollectionType::class, [
-            //    'label' => 'Membres de la structure',
-            //    'help' => 'Ajouter un membre avant de sauvegarder',
-            //    'entry_type' => AddMemberStructureType::class,
-            //    'entry_options' => ['label' => false,],
-            //    'allow_add' => true,
-            //    'allow_delete' => true,
-            //    'by_reference' => false,
-            //    'attr' => [
-            //        'data-controller' => 'form-collection'
-            //    ]
-            //])
         ;
+
+        if ($route === 'app_admin_structure_new') {
+            $builder
+                ->add('member', MemberType::class, [
+                    'label' => 'Le membre référent',
+                    'mapped' => false,
+                ])
+            ;
+        }
     }
 
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'data_class' => Structure::class,
+            'structure' => null,
         ]);
     }
 }

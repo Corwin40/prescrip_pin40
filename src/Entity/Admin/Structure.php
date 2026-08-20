@@ -2,7 +2,6 @@
 
 namespace App\Entity\Admin;
 
-use App\Config\Civility;
 use App\Entity\Gestapp\Beneficiary;
 use App\Entity\Gestapp\Equipment;
 use App\Entity\Gestapp\Prescription;
@@ -41,15 +40,6 @@ class Structure
 
     #[ORM\Column(length: 14, nullable: true)]
     private ?string $contactPhone = null;
-
-    #[ORM\Column(length: 100, nullable: true)]
-    private ?string $contactResponsableFirstname = null;
-
-    #[ORM\Column(length: 100, nullable: true)]
-    private ?string $contactResponsableLastname = null;
-
-    #[ORM\Column(enumType: Civility::class)]
-    private ?Civility $contactResponsableCivility = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $createdAt = null;
@@ -99,6 +89,15 @@ class Structure
     #[ORM\OneToMany(targetEntity: Equipment::class, mappedBy: 'structure')]
     private Collection $equipmentDelivered;
 
+    #[ORM\ManyToOne(inversedBy: 'prescriptorPartners')]
+    private ?Structure $lieuMediationPartner = null;
+
+    /**
+     * @var Collection<int, Structure>
+     */
+    #[ORM\OneToMany(targetEntity: Structure::class, mappedBy: 'lieuMediationPartner')]
+    private Collection $prescriptorPartners;
+
     public function __construct()
     {
         $this->prescriptions = new ArrayCollection();
@@ -107,6 +106,7 @@ class Structure
         $this->lieuxmediation = new ArrayCollection();
         $this->equipment = new ArrayCollection();
         $this->equipmentDelivered = new ArrayCollection();
+        $this->prescriptorPartners = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -193,39 +193,6 @@ class Structure
         return $this;
     }
 
-    public function getContactResponsableFirstname(): ?string
-    {
-        return $this->contactResponsableFirstname;
-    }
-
-    public function setContactResponsableFirstname(?string $contactResponsableFirstname): static
-    {
-        $this->contactResponsableFirstname = $contactResponsableFirstname;
-        return $this;
-    }
-
-    public function getContactResponsableLastname(): ?string
-    {
-        return $this->contactResponsableLastname;
-    }
-
-    public function setContactResponsableLastname(?string $contactResponsableLastname): static
-    {
-        $this->contactResponsableLastname = $contactResponsableLastname;
-        return $this;
-    }
-
-    public function getContactResponsableCivility(): ?Civility
-    {
-        return $this->contactResponsableCivility;
-    }
-
-    public function setContactResponsableCivility(?Civility $contactResponsableCivility): static
-    {
-        $this->contactResponsableCivility = $contactResponsableCivility;
-        return $this;
-    }
-
     public function getCreatedAt(): ?\DateTimeInterface
     {
         return $this->createdAt;
@@ -261,6 +228,37 @@ class Structure
     public function getMembers(): Collection
     {
         return $this->members;
+    }
+
+    public function getResponsibleMember(): ?Member
+    {
+        foreach ($this->members as $member) {
+            if ($member->isRespStructure()) {
+                return $member;
+            }
+        }
+
+        return null;
+    }
+
+    public function getLieuMediationPartner(): ?self
+    {
+        return $this->lieuMediationPartner;
+    }
+
+    public function setLieuMediationPartner(?self $lieuMediationPartner): static
+    {
+        $this->lieuMediationPartner = $lieuMediationPartner;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Structure>
+     */
+    public function getPrescriptorPartners(): Collection
+    {
+        return $this->prescriptorPartners;
     }
 
     public function addMember(Member $member): static

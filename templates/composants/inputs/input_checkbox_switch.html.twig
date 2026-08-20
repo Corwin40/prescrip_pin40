@@ -1,14 +1,18 @@
-
 {% set disabled = disabled|default(false) %}
+{% set wrapper_class = wrapper_class|default('mb-0') %}
+
 <div class="form-check form-switch">
     {{ form_widget(form, {
         attr: {
-            class: 'form-check-input',
+            class: 'form-check-input' ~ (form.vars.errors|length > 0 ? ' is-invalid' : ''),
             role: 'switch',
             style: 'border: 1px solid black;'
         } | merge(disabled ? { disabled: 'disabled' } : {})
     }) }}
-    {% if form_label is defined %}
+    {% if show_label is true %}
         {{ form_label(form) }}
+    {% else %}
     {% endif %}
+    <span class="text-secondary">{{ form_help(form) }}</span>
+    <span class="text-danger">{{ form_errors(form) }}</span>
 </div>

@@ -14,6 +14,7 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\PasswordHasher\PasswordHasherInterface;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
+use Symfony\Component\String\Slugger\SluggerInterface;
 use Symfony\UX\Map\Bridge\Leaflet\LeafletOptions;
 use Symfony\UX\Map\Bridge\Leaflet\Option\TileLayer;
 use Symfony\UX\Map\Map;
@@ -50,7 +51,7 @@ final class StructureController extends AbstractController
     }
 
     #[Route('/new', name: 'app_admin_structure_new', methods: 'GET|POST')]
-    public function new(Request $request, EntityManagerInterface $entityManager, UserPasswordHasherInterface $passwordHasher): Response
+    public function new(Request $request, EntityManagerInterface $entityManager, UserPasswordHasherInterface $passwordHasher, SluggerInterface $slugger): Response
     {
         $user = $this->getUser();
 
@@ -62,27 +63,27 @@ final class StructureController extends AbstractController
             'attr' => [
                 'id' => 'formStructure',
             ],
-            //'user' => $user,
-            //'structure' => $structure
+            'structure' => $structure,
         ]);
 
         $form->handleRequest($request);
 
         if($form->isSubmitted() && $form->isValid())
         {
+            $structure->setSlug($slugger->slug($structure->getName())->lower());
+
             $entityManager->persist($structure);
             $entityManager->flush();
 
-            $member = new Member();
+            /** @var Member $member */
+            $member = $form->get('member')->getData();
             $member->setStructure($structure);
-            $member->setRoles(['ROLE_PRESCRIPTEUR']);
-            $member->setEmail($structure->getContactEmail());
 
-            $hashedPassword = $passwordHasher->hashPassword($member, 'Pr3scr!pteurs');
-            $member->setPassword($hashedPassword);
-            $member->setCivility($structure->getContactResponsableCivility());
-            $member->setFirstname($structure->getContactResponsableFirstname());
-            $member->setLastname($structure->getContactResponsableLastname());
+            $role = $form->get('member')->get('role')->getData();
+            $member->setRoles([$role]);
+
+            $plainPassword = $form->get('member')->get('password')->getData();
+            $member->setPassword($passwordHasher->hashPassword($member, $plainPassword));
 
             $member->setIsRespStructure(true);
             $entityManager->persist($member);
@@ -95,6 +96,35 @@ final class StructureController extends AbstractController
         // dans la poursuite de la crétaion d'une structure, il faut créer obligatoirement le dossier de stockage des pdfs générés et déposés.
 
         return $this->render('admin/structure/new.html.twig', [
+            'form' => $form,
+            'structure' => $structure,
+        ]);
+    }
+
+    #[Route('/{id}/edit', name: 'app_admin_structure_edit', methods: ['GET', 'POST'])]
+    public function edit(Request $request, Structure $structure, EntityManagerInterface $entityManager, SluggerInterface $slugger): Response
+    {
+        $form = $this->createForm(StructureType::class, $structure, [
+            'action' => $this->generateUrl('app_admin_structure_edit', ['id' => $structure->getId()]),
+            'method' => 'POST',
+            'attr' => [
+                'id' => 'formStructure',
+            ],
+            'structure' => $structure,
+        ]);
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $structure->setSlug($slugger->slug($structure->getName())->lower());
+
+            $entityManager->flush();
+
+            $this->addFlash('success', 'La structure a bien été mise à jour.');
+            return $this->redirectToRoute('app_admin_structure_index');
+        }
+
+        return $this->render('admin/structure/edit.html.twig', [
             'form' => $form,
             'structure' => $structure,
         ]);

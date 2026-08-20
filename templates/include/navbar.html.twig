@@ -25,7 +25,7 @@
                     </li>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
-                            <i class="fa-duotone fa-solid fa-circle-user"></i>&nbsp;{{ app.user.firstname }} {{ app.user.lastname }} | {{ app.user.structure.name }}
+                            <i class="fa-duotone fa-solid fa-circle-user"></i>&nbsp;{{ app.user.firstname }} {{ app.user.lastname }}{% if app.user.structure %} | {{ app.user.structure.name }}{% endif %}
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end">
                             <li><a class="dropdown-item" href="{{ path('app_admin_member_edit', {'id': app.user.id}) }}"><i class="fa-sharp-duotone fa-solid fa-circle-info"></i> Mes informations</a></li>

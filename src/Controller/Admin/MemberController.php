@@ -3,8 +3,6 @@
 namespace App\Controller\Admin;
 
 use App\Entity\Admin\Member;
-use App\Entity\Gestapp\Beneficiary;
-use App\Entity\Gestapp\Prescription;
 use App\Form\Admin\MemberResetPasswordType;
 use App\Form\Admin\MemberType;
 use App\Repository\MemberRepository;
@@ -32,7 +30,7 @@ final class MemberController extends AbstractController
 
         if($user && in_array('ROLE_SUPER_ADMIN', $user->getRoles())){
             return $this->render('admin/member/index.html.twig', [
-                'members' => $memberRepository->findAll(),
+                'members' => $memberRepository->findAllExceptRole('ROLE_SUPER_ADMIN'),
             ]);
         }
 
@@ -180,12 +178,13 @@ final class MemberController extends AbstractController
                 ],200);
             }
 
+
             $view = $this->render('admin/member/_formResetPassword.html.twig', [
                 'form' => $form,
             ]);
 
             return $this->json([
-                'code' => 200,
+                'code' => 400,
                 'message' => 'Une erreur est survenue.',
                 'formView' => $view->getContent(),
             ],200);
@@ -202,7 +201,7 @@ final class MemberController extends AbstractController
     }
 
     #[Route('/admin/member/{id}', name: 'app_admin_member_delete', methods: ['POST'])]
-    public function delete(Request $request, Member $member, EntityManagerInterface $entityManager, Beneficiary $beneficiary, Prescription $prescription): Response
+    public function delete(Request $request, Member $member, EntityManagerInterface $entityManager): Response
     {
         if ($this->isCsrfTokenValid('delete' . $member->getId(), $request->getPayload()->getString('_token'))) {
             if($member->getRoles()[0] === 'ROLE_PRESCRIPTEUR')
@@ -210,13 +209,8 @@ final class MemberController extends AbstractController
                 $beneficiaries = $member->getBeneficiaries();
                 foreach($beneficiaries as $beneficiary)
                 {
-                    $beneficiary->setPrescriptor(null);
+                    $beneficiary->setReferent(null);
                     $entityManager->persist($beneficiary);
-                }
-                $prescriptions = $member->getPrescriptions();
-                foreach($prescriptions as $prescription){
-                    $prescription->setMembre(null);
-                    $entityManager->persist($prescription);
                 }
             }
 

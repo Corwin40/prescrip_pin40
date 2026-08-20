@@ -5,7 +5,6 @@ namespace App\Controller\Admin;
 use App\Config\StepPrescription;
 use App\Entity\Gestapp\Prescription;
 use App\Entity\Serv\Docuseal;
-use App\Repository\Gestapp\PrescriptionRepository;
 use App\Repository\Serv\DocusealRepository;
 use App\Service\QrcodeGenerator;
 use Doctrine\ORM\EntityManagerInterface;
@@ -26,34 +25,20 @@ final class DocusealController extends AbstractController
     ) {
     }
 
-    public function getPrescriptions(PrescriptionRepository $prescriptionRepository)
-    {
-        $user = $this->getUser();
-        if($user && in_array('ROLE_PRESCRIPTEUR', $user->getRoles())){
-            $prescriptions = $prescriptionRepository->filteredByWithoutStepForPrescriptor(StepPrescription::Signed, $user->getStructure());
-        }
-        if($user && in_array('ROLE_MEDIATEUR', $user->getRoles())){
-            $prescriptions = $prescriptionRepository->filteredByWithoutStepForMediator(StepPrescription::Signed, $user->getStructure());
-        }
-        if($user && in_array('ROLE_ADMIN', $user->getRoles())){
-            $prescriptions = $prescriptionRepository->findBy(['step' => StepPrescription::Signed]);
-        }
-        if($user && in_array('ROLE_SUPER_ADMIN', $user->getRoles())){
-            $prescriptions = $prescriptionRepository->filteredByWithoutStep(StepPrescription::Signed->name);
-        }
-    }
-
     public function getElement(Prescription $prescription)
     {
         // Création des éléments de préremplissage
         $element = [];
-        $beneficiaire = $prescription->getBeneficiaire()->getCivility()->value ." ".$prescription->getBeneficiaire()->getFirstname()." ".$prescription->getBeneficiaire()->getLastname() ?? '';
+        $beneficiaire = ($prescription->getBeneficiaire()->getCivility()?->value ?? "")." ".($prescription->getBeneficiaire()->getFirstname() ?? "")." ".($prescription->getBeneficiaire()->getLastname() ?? "");
         $age = $prescription->getBeneficiaire()->getAgeGroup() ?? '';
         $genre = $prescription->getBeneficiaire()->getGender() ?? '';
         $situation = $prescription->getBeneficiaire()->getProfessionnalStatus() ?? '';
         $structure = $prescription->getPrescriptor()->getName() ?? '';
         $lieuMediation = $prescription->getLieuMediation()->getName() ?? '';
-        $respStructure = $prescription->getPrescriptor()->getContactResponsableCivility()->value." ".$prescription->getPrescriptor()->getContactResponsableFirstname()." ".$prescription->getPrescriptor()->getContactResponsableLastname() ?? '';
+        $responsibleMember = $prescription->getPrescriptor()->getResponsibleMember();
+        $respStructure = $responsibleMember
+            ? ($responsibleMember->getCivility()?->value ?? "")." ".($responsibleMember->getFirstname() ?? "")." ".($responsibleMember->getLastname() ?? "")
+            : "";
         $telPrescripteur = $prescription->getPrescriptor()->getContactPhone() ?? '';
         $emailPrescripteur = $prescription->getPrescriptor()->getContactEmail() ?? '';
         $details = $prescription->getDetails() ?? '';
@@ -72,7 +57,7 @@ final class DocusealController extends AbstractController
         $parcours = $prescription->getCompetence()->getDetailParcour() ?? '';
         $isAutoEvalEnd = $prescription->getCompetence()->isAutoEvaEnd() ? 'true' : 'false';
         $idMachine = $prescription->getEquipement()->getEquipmentId() ?? '';
-        $ville = $prescription->getCp()." ".$prescription->getCommune() ??'';
+        $ville = ($prescription->getCp() ?? "")." ".($prescription->getCommune() ?? "");
         $le = (new \DateTime('now'))->format('d-m-Y');
 
         $element['Beneficiaire']            = $beneficiaire;
@@ -186,15 +171,18 @@ final class DocusealController extends AbstractController
 
         $data = $response->toArray();
 
-        if($data){
-            $docuseal = $this->getDocuseal($data, $prescription);
-            $prescription->setStep(StepPrescription::SubmissionForSigned);
-            $this->em->flush();
+        if(!$data){
+            return $this->json([
+                'code' => 422,
+                'message' => 'Impossible de créer la demande de signature auprès du service Docuseal.'
+            ], 200);
         }
 
-        $qrcodeImage = $this->qrcodeGenerator->generate($docuseal?->getEmbedSrcSeal());
+        $docuseal = $this->getDocuseal($data, $prescription);
+        $prescription->setStep(StepPrescription::SubmissionForSigned);
+        $this->em->flush();
 
-        //dd($qrcodeImage);
+        $qrcodeImage = $this->qrcodeGenerator->generate($docuseal->getEmbedSrcSeal());
 
         $view = $this->renderView('gestapp/prescription/include/_linkDocuseal.html.twig', [
             'embedSrc' => $docuseal->getEmbedSrcSeal(),
@@ -270,10 +258,10 @@ final class DocusealController extends AbstractController
         // PARTIE DOCUMENTS - CHARGEMENT DES FICHIERS DANS SERVEUR
         // -------------------------------------
         $documents = $submission['documents'] ?? [];
+        $slugStructure = $prescription->getPrescriptor()->getSlug();
         foreach ($documents as $index => $document) {
             $pdfUrl = $document['url'];                                                 // Récupération du chemin PDF
             $responsePdf = $client->request('GET', $pdfUrl);                            // Téléchargement via HttpClient
-            $slugStructure = $prescription->getPrescriptor()->getSlug();
 
             // DOCUMENT
             if ($responsePdf->getStatusCode() === 200) {                                // dans le cas d'une réussite

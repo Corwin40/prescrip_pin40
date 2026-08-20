@@ -29,40 +29,30 @@
                     </td>
                 </tr>
                 <tr>
-                    <th scope="row">Nom de la structure</th>
-                    <td>{{ member.nameStructure }}</td>
+                    <th scope="row">Civilité</th>
+                    <td>{{ member.civility ? member.civility.value : '' }}</td>
                 </tr>
                 <tr>
-                    <th scope="row">Adresse</th>
-                    <td>{{ member.address }}</td>
+                    <th scope="row">Prénom</th>
+                    <td>{{ member.firstname }}</td>
                 </tr>
                 <tr>
-                    <th scope="row">Code postal</th>
-                    <td>{{ member.zipcode }}</td>
+                    <th scope="row">Nom</th>
+                    <td>{{ member.lastname }}</td>
                 </tr>
                 <tr>
-                    <th scope="row">Ville</th>
-                    <td>{{ member.city }}</td>
+                    <th scope="row">Structure</th>
+                    <td>{{ member.structure ? member.structure.name : '-' }}</td>
                 </tr>
                 <tr>
-                    <th scope="row">Email de contact</th>
-                    <td>{{ member.contactEmail }}</td>
-                </tr>
-                <tr>
-                    <th scope="row">Téléphone de contact</th>
-                    <td>{{ member.contactPhone }}</td>
-                </tr>
-                <tr>
-                    <th scope="row">Prénom du responsable</th>
-                    <td>{{ member.contactResponsableFirstname }}</td>
-                </tr>
-                <tr>
-                    <th scope="row">Nom du responsable</th>
-                    <td>{{ member.contactResponsableLastname }}</td>
-                </tr>
-                <tr>
-                    <th scope="row">Civilité du responsable</th>
-                    <td>{{ member.contactResponsableCivility }}</td>
+                    <th scope="row">Responsable de la structure</th>
+                    <td>
+                        {% if member.isRespStructure %}
+                            <span class="badge bg-success px-3 py-2 rounded-pill">Oui</span>
+                        {% else %}
+                            <span class="badge bg-danger px-3 py-2 rounded-pill">Non</span>
+                        {% endif %}
+                    </td>
                 </tr>
                 <tr>
                     <th scope="row">Vérifié</th>
