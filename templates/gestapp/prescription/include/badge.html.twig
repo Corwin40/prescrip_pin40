@@ -57,7 +57,7 @@
         </a>
     </div>
 {% elseif prescription.step.name == 'Signed' %}
-    {% if is_granted('ROLE_MEDIATEUR') %}
+    {% if is_granted('ROLE_MEDIATEUR') and prescription.pathSigned %}
         <a href="{{ asset(prescription.pathSigned) }}" target="_blank" class="text-decoration-none">
             <i class="fa-sharp fa-light fa-file-pdf"></i>&nbsp;Pdf signé par le bénéficiaire
         </a>
