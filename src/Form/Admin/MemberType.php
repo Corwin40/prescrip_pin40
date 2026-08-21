@@ -58,7 +58,7 @@ class MemberType extends AbstractType
             ;
         }
 
-        if ($route == 'app_admin_structure_new') {
+        if ($route == 'app_admin_structure_new' || $route == 'app_admin_member_edit') {
             $builder
                 ->add('role', ChoiceType::class, [
                     'label' => 'Rôle',

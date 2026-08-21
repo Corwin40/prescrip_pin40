@@ -12,6 +12,11 @@ export function initIndex_Member() {
     modalEl.addEventListener('hidden.bs.modal', () => {
         // Remise à zero HTML de la modal
         modalEl.querySelector('.modal-dialog').classList.remove('modal-lg', 'modal-xl');
+        modalEl.querySelector('.modal-title').classList.remove('text-danger');
+        const confirmBtn = modalEl.querySelector('.modal-footer a');
+        confirmBtn.classList.remove('btn-outline-danger');
+        confirmBtn.classList.add('btn-outline-primary');
+        delete confirmBtn.dataset.csrf;
         modalEl.querySelector('.modal-body').innerHTML = `
               <div class="d-flex justify-content-center">
                 <div class="spinner-border text-primary" role="status">
@@ -45,6 +50,26 @@ export function initIndex_Member() {
                 })
             modal.show();
         }
+        else if(crud === "DEL_MEMBER")
+        {
+            modalEl.querySelector('.modal-title').innerText = contentTitle;
+            modalEl.querySelector('.modal-title').classList.add('text-danger');
+            modalEl.querySelector('.modal-body').innerHTML = `
+                <p class="mb-0">
+                    <span class="text-danger">
+                        <i class="fa-light fa-circle-exclamation"></i>&nbsp;Attention,
+                    </span>
+                    <br>
+                    En cliquant sur le bouton ci-dessous, ce membre sera supprimé définitivement.
+                </p>`;
+            const confirmBtn = modalEl.querySelector('.modal-footer a');
+            confirmBtn.textContent = 'Supprimer le membre';
+            confirmBtn.classList.remove('btn-outline-primary');
+            confirmBtn.classList.add('btn-outline-danger');
+            confirmBtn.href = url;
+            confirmBtn.dataset.csrf = a.dataset.csrf;
+            modal.show();
+        }
         else{
             reloadEvent()
             toasterMessage('une erreur est survenue');
@@ -72,6 +97,20 @@ export function initIndex_Member() {
                         console.log(error)
                     })
             }
+        }
+        else if(e.currentTarget.dataset.csrf){
+            let url = e.currentTarget.href;
+            let data = new URLSearchParams({ _token: e.currentTarget.dataset.csrf });
+            axios
+                .post(url, data)
+                .then(function({data}) {
+                    modal.hide();
+                    toasterMessage(data.message);
+                    window.location.reload();
+                })
+                .catch(error => {
+                    console.log(error)
+                })
         }
     }
 

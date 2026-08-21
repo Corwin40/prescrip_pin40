@@ -40,70 +40,68 @@
     </section>
 
     <section id="page_content">
-        {% if members is not empty %}
-            <div class="table-responsive">
-                <table class="table table-hover table-bordered align-middle">
-                    <thead class="table-light">
-                    <tr>
-                        <th>Membre</th>
-                        <th>Structure</th>
-                        <th>Adresse</th>
-                        <th>Contacts</th>
-                        <th class="col-1">Actions</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {% for member in members %}
-                        {% set role = 'aucun' %}
-                        {% if member.roles|first == 'ROLE_SUPER_ADMIN' or member.roles|first == 'ROLE_ADMIN' %}
-                            {% set role = 'Administrateur' %}
-                        {% elseif member.roles|first == 'ROLE_MEDIATEUR' %}
-                            {% set role = 'Médiateur' %}
-                        {% elseif member.roles|first == 'ROLE_PRESCRIPTEUR' %}
-                            {% set role = 'Prescripteur' %}
-                        {% elseif member.roles|first == 'ROLE_RECONDITIONNEUR' %}
-                            {% set role = 'Reconditionneur' %}
-                        {% endif %}
-                        <tr>
-                            <td>
-                                <div class="d-flex align-items-center justify-content-between">
-                                    <div>
-                                        <span class="fw-semibold">{{ member.civility.value }} {{ member.Firstname }} {{ member.Lastname }}</span>
-                                        <br>
-                                        {{ member.email }}
-                                    </div>
-                                    <div>
-                                        {% if role == "Administrateur" %}
-                                            <span class="badge text-bg-danger py-2">{{ role }}</span>
-                                        {% elseif role == "Médiateur" %}
-                                            <span class="badge text-bg-success py-2">{{ role }}</span>
-                                        {% elseif role == "Prescripteur" %}
-                                            <span class="badge text-bg-primary py-2">{{ role }}</span>
-                                        {% elseif role == "Reconditionneur" %}
-                                            <span class="badge text-bg-warning py-2">{{ role }}</span>
-                                        {% endif %}
-                                    </div>
-                                </div>
-                            </td>
-                            <td>
-                                {% if member.structure %}
-                                    <span class="fw-semibold">{{ member.structure.name }}</span>
-                                {% else %}
-                                    <span class="text-muted">—</span>
+        {% if membersByStructure is not empty %}
+            {% for structureName, members in membersByStructure %}
+                <div class="mb-4">
+                    <h5 class="mb-2">
+                        <i class="fa-duotone fa-solid fa-building"></i>&nbsp;{{ structureName }}
+                        <span class="badge text-bg-secondary rounded-pill">{{ members|length }}</span>
+                    </h5>
+                    <div class="table-responsive">
+                        <table class="table table-hover table-bordered align-middle mb-0">
+                            <thead class="table-light">
+                            <tr>
+                                <th>Membre</th>
+                                <th class="col-1">Actions</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for member in members %}
+                                {% set role = 'aucun' %}
+                                {% if member.roles|first == 'ROLE_SUPER_ADMIN' or member.roles|first == 'ROLE_ADMIN' %}
+                                    {% set role = 'Administrateur' %}
+                                {% elseif member.roles|first == 'ROLE_MEDIATEUR' %}
+                                    {% set role = 'Médiateur' %}
+                                {% elseif member.roles|first == 'ROLE_PRESCRIPTEUR' %}
+                                    {% set role = 'Prescripteur' %}
+                                {% elseif member.roles|first == 'ROLE_RECONDITIONNEUR' %}
+                                    {% set role = 'Reconditionneur' %}
                                 {% endif %}
-                            </td>
-                            <td>{% if member.structure %}{{ member.structure.address }} - {{ member.structure.zipcode }} {{ member.structure.city }}{% endif %}</td>
-                            <td>{% if member.structure %}{{ member.structure.contactEmail }}<br>{{ member.structure.contactPhone }}{% endif %}</td>
-                            <td class="text-center">
-                                <a href="{{ path('app_admin_member_edit', {'id': member.id}) }}" class="text-dark text-decoration-none"><i class="fa-duotone fa-solid fa-user-pen"></i></a>&nbsp;&nbsp;&nbsp;
-                                <a href="{{ path('app_admin_member_delete', {'id': member.id}) }}" class="text-dark text-decoration-none openModal" ><i class="fa-duotone fa-solid fa-user-circle-minus"></i></a>&nbsp;&nbsp;&nbsp;
-                                <a href="{{ path('app_admin_member_renew_password', {'id': member.id}) }}" class="text-dark text-decoration-none openModal" data-bs-data="RESETPASSWORD-Changement du mot de passe-"><i class="fa-light fa-key"></i></a>
-                            </td>
-                        </tr>
-                    {% endfor %}
-                    </tbody>
-                </table>
-            </div>
+                                <tr>
+                                    <td>
+                                        <div class="d-flex align-items-center justify-content-between">
+                                            <div>
+                                                <span class="fw-semibold">{{ member.civility.value }} {{ member.Firstname }} {{ member.Lastname }}</span>
+                                                <br>
+                                                {{ member.email }}
+                                            </div>
+                                            <div>
+                                                {% if role == "Administrateur" %}
+                                                    <span class="badge text-bg-danger py-2">{{ role }}</span>
+                                                {% elseif role == "Médiateur" %}
+                                                    <span class="badge text-bg-success py-2">{{ role }}</span>
+                                                {% elseif role == "Prescripteur" %}
+                                                    <span class="badge text-bg-primary py-2">{{ role }}</span>
+                                                {% elseif role == "Reconditionneur" %}
+                                                    <span class="badge text-bg-warning py-2">{{ role }}</span>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="text-center">
+                                        <a href="{{ path('app_admin_member_edit', {'id': member.id}) }}" class="text-dark text-decoration-none"><i class="fa-duotone fa-solid fa-user-pen"></i></a>&nbsp;&nbsp;&nbsp;
+                                        {% if is_granted('ROLE_ADMIN') %}
+                                            <a href="{{ path('app_admin_member_delete', {'id': member.id}) }}" class="text-dark text-decoration-none openModal" data-bs-data="DEL_MEMBER-Suppression du membre-" data-csrf="{{ csrf_token('delete' ~ member.id) }}"><i class="fa-duotone fa-solid fa-user-circle-minus"></i></a>&nbsp;&nbsp;&nbsp;
+                                        {% endif %}
+                                        <a href="{{ path('app_admin_member_renew_password', {'id': member.id}) }}" class="text-dark text-decoration-none openModal" data-bs-data="RESETPASSWORD-Changement du mot de passe-"><i class="fa-light fa-key"></i></a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            {% endfor %}
         {% else %}
             <p class="text-center">Aucun membre trouvé.</p>
         {% endif %}

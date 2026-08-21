@@ -22,21 +22,39 @@
         } %}
     </div>
     <div class="col-md-2">
-        {{ form_label(form.firstname, 'Prénom', {'label_attr': {'class': 'form-label fw-semibold'}}) }}
-        {{ form_widget(form.firstname, {'attr': {'class': 'form-control form-control-sm'}}) }}
+        {% include 'composants/inputs/input_text.html.twig' with {
+            form: form.firstname,
+            disabled: false,
+            show_label: true,
+            wrapper_class: 'mb-1'
+        } %}
     </div>
-    <!-- Email -->
     <div class="col-md-2">
-        {{ form_label(form.lastname, 'Nom', {'label_attr': {'class': 'form-label fw-semibold'}}) }}
-        {{ form_widget(form.lastname, {'attr': {'class': 'form-control form-control-sm'}}) }}
+        {% include 'composants/inputs/input_text.html.twig' with {
+            form: form.lastname,
+            disabled: false,
+            show_label: true,
+            wrapper_class: 'mb-1'
+        } %}
     </div>
-    <div class="col-3">
-        {{ form_label(form.email, 'Email', {'label_attr': {'class': 'form-label fw-semibold'}}) }}
-        {{ form_widget(form.email, {'attr': {'class': 'form-control form-control-sm'}}) }}
+    <div class="col-md-3">
+        {% include 'composants/inputs/input_text.html.twig' with {
+            form: form.email,
+            disabled: false,
+            show_label: true,
+            wrapper_class: 'mb-1'
+        } %}
     </div>
     <div class="col-md-2">
         {% include 'composants/inputs/input_select.html.twig' with {
             form: form.structure,
+            show_label: true,
+            disabled: false
+        } %}
+    </div>
+    <div class="col-md-2">
+        {% include 'composants/inputs/input_select.html.twig' with {
+            form: form.role,
             show_label: true,
             disabled: false
         } %}

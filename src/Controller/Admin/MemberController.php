@@ -30,16 +30,46 @@ final class MemberController extends AbstractController
 
         if($user && in_array('ROLE_SUPER_ADMIN', $user->getRoles())){
             return $this->render('admin/member/index.html.twig', [
-                'members' => $memberRepository->findAllExceptRole('ROLE_SUPER_ADMIN'),
+                'membersByStructure' => $this->groupByStructure($memberRepository->findAllExceptRole('ROLE_SUPER_ADMIN')),
             ]);
         }
 
         if($user && in_array('ROLE_MEDIATEUR', $user->getRoles())){
             return $this->render('admin/member/index.html.twig', [
-                'members' => $memberRepository->findBy(['referent' => $user]),
+                'membersByStructure' => $this->groupByStructure($memberRepository->findBy(['referent' => $user])),
             ]);
         }
         return $this->redirectToRoute('app_admin_dashboard_index');
+    }
+
+    /**
+     * Regroupe les membres par structure (nom de structure trié alphabétiquement),
+     * les membres sans structure sont placés dans un groupe "Sans structure" en fin de liste.
+     *
+     * @param iterable<Member> $members
+     * @return array<string, Member[]>
+     */
+    private function groupByStructure(iterable $members): array
+    {
+        $grouped = [];
+        $withoutStructure = [];
+
+        foreach ($members as $member) {
+            $structure = $member->getStructure();
+            if ($structure) {
+                $grouped[$structure->getName()][] = $member;
+            } else {
+                $withoutStructure[] = $member;
+            }
+        }
+
+        ksort($grouped, SORT_NATURAL | SORT_FLAG_CASE);
+
+        if ($withoutStructure) {
+            $grouped['Sans structure'] = $withoutStructure;
+        }
+
+        return $grouped;
     }
 
     #[Route('/admin/member/new/{role}', name: 'app_admin_member_new', methods: ['GET', 'POST'])]
@@ -201,6 +231,7 @@ final class MemberController extends AbstractController
     }
 
     #[Route('/admin/member/{id}', name: 'app_admin_member_delete', methods: ['POST'])]
+    #[IsGranted('ROLE_ADMIN')]
     public function delete(Request $request, Member $member, EntityManagerInterface $entityManager): Response
     {
         if ($this->isCsrfTokenValid('delete' . $member->getId(), $request->getPayload()->getString('_token'))) {
@@ -216,7 +247,23 @@ final class MemberController extends AbstractController
 
             $entityManager->remove($member);
             $entityManager->flush();
+
+            if ($request->isXmlHttpRequest()) {
+                return $this->json([
+                    'code' => 200,
+                    'message' => 'Le membre a bien été supprimé.',
+                ]);
+            }
+
             $this->addFlash('danger', 'Le membre a bien été supprimé.');
+            return $this->redirectToRoute('app_admin_member_index');
+        }
+
+        if ($request->isXmlHttpRequest()) {
+            return $this->json([
+                'code' => 400,
+                'message' => 'Une erreur est survenue.',
+            ], 400);
         }
 
         return $this->redirectToRoute('app_admin_member_index');
