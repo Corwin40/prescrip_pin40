@@ -8,6 +8,10 @@ use Symfony\Component\Routing\Attribute\Route;
 
 final class AppController extends AbstractController
 {
+    /**
+     * Point d'entrée racine de l'application : redirige systématiquement vers le
+     * tableau de bord, qui gère ensuite lui-même la logique d'accès (connecté ou non).
+     */
     #[Route('/', name: 'app_ppin40_entry')]
     public function index(): Response
     {

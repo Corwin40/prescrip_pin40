@@ -7,6 +7,7 @@ use App\Entity\Gestapp\Document;
 use App\Form\Gestapp\DocumentFormType;
 use App\Repository\Gestapp\PrescriptionRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\Request;
@@ -15,6 +16,15 @@ use Symfony\Component\Routing\Attribute\Route;
 
 final class DocumentController extends AbstractController
 {
+    public function __construct(private readonly LoggerInterface $logger)
+    {
+    }
+
+    /**
+     * Page d'accueil scaffold par défaut (générée par Maker Bundle, jamais personnalisée).
+     * Aucune vue ni lien de l'application ne référence cette route — voir Observations
+     * dans `docs/controllers/gestapp-document.md`.
+     */
     #[Route('/gestapp/document', name: 'app_gestapp_document')]
     public function index(): Response
     {
@@ -23,6 +33,14 @@ final class DocumentController extends AbstractController
         ]);
     }
 
+    /**
+     * Dépôt manuel d'un document de prescription signée (upload direct, alternative
+     * au flux de signature électronique Docuseal). Enregistre le fichier sur disque
+     * (`prescription_signed_directory`), crée l'entité `Document` liée, fait passer la
+     * prescription à l'étape `Signed`. Répond toujours en JSON (appelée en AJAX depuis
+     * la modale d'upload) : GET/POST invalide renvoie le formulaire en HTML encapsulé,
+     * succès renvoie aussi la liste de prescriptions HTML mise à jour (filtrée par rôle).
+     */
     #[Route('/gestapp/document/prescription_signed_manually/{idprescription}', name: 'app_gestapp_document_prescriptionsigned_manually')]
     public function prescription_signed_manually(
         Request $request,
@@ -57,23 +75,17 @@ final class DocumentController extends AbstractController
                     $pathdir = $this->getParameter('prescription_signed_directory').$slugStructure;
                     $pathUrl = $this->getParameter('prescription_signed_directory_url').$slugStructure;
                     try {
-                        if (is_dir($pathdir)){
-                            $documentFile->move(
-                                $pathdir,
-                                $filename
-                            );
-                        }else{
+                        if (!is_dir($pathdir)){
                             // Création du répertoire s'il n'existe pas.
                             mkdir($pathdir."/", 0775, true);
-                            // Déplacement de la photo
-                            $documentFile->move(
-                                $pathdir,
-                                $filename
-                            );
                         }
-
+                        $documentFile->move($pathdir, $filename);
                     } catch (FileException $e) {
-                        // ... handle exception if something happens during file upload
+                        $this->logger->error('Dépôt manuel de document signé : échec du déplacement du fichier.', [
+                            'prescription' => $prescription->getRef(),
+                            'path' => $pathdir.'/'.$filename,
+                            'exception' => $e->getMessage(),
+                        ]);
                     }
 
                     $document->setDocumentFilename($filename);
@@ -120,7 +132,7 @@ final class DocumentController extends AbstractController
                 'code' => 400,
                 'message' => 'Une erreur s\'est glissé dans le formulaire',
                 'formView' => $view
-            ], 400);
+            ], 200);
 
 
         }

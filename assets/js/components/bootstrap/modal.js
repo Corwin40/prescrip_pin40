@@ -43,6 +43,7 @@ export function resetModal(modalEl) {
         footerLink.classList.add('btn-outline-primary');
         footerLink.href = '#';
         footerLink.textContent = '';
+        delete footerLink.dataset.csrf;
     }
 }
 

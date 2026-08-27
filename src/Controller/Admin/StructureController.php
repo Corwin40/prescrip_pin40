@@ -11,7 +11,6 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
-use Symfony\Component\PasswordHasher\PasswordHasherInterface;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Component\String\Slugger\SluggerInterface;
@@ -20,15 +19,22 @@ use Symfony\UX\Map\Bridge\Leaflet\Option\TileLayer;
 use Symfony\UX\Map\Map;
 use Symfony\UX\Map\Point;
 
+/**
+ * Gestion des structures (prescripteurs/médiateurs) : liste avec carte, création
+ * (structure + membre responsable), édition. Réservé à `ROLE_ADMIN` (couvre aussi
+ * `ROLE_SUPER_ADMIN` via la hiérarchie de rôles) pour tout le contrôleur.
+ */
 #[Route('/admin/structure')]
 #[IsGranted('ROLE_ADMIN')]
 final class StructureController extends AbstractController
 {
+    /**
+     * Liste des structures avec une carte (Symfony UX Map / Leaflet, centrée sur
+     * la région de la structure principale) affichant leur implantation géographique.
+     */
     #[Route('/', name: 'app_admin_structure_index')]
     public function index(StructureRepository $structureRepository): Response
     {
-        $user = $this->getUser();
-
         $map = new Map();
         $map
             ->center(new Point(43.88478, -0.50400))
@@ -50,11 +56,14 @@ final class StructureController extends AbstractController
         ]);
     }
 
+    /**
+     * Création d'une structure ET de son membre responsable en une seule soumission
+     * (le formulaire `StructureType` embarque un sous-formulaire membre). Le membre créé
+     * reçoit le rôle choisi dans le formulaire et est marqué `isRespStructure = true`.
+     */
     #[Route('/new', name: 'app_admin_structure_new', methods: 'GET|POST')]
     public function new(Request $request, EntityManagerInterface $entityManager, UserPasswordHasherInterface $passwordHasher, SluggerInterface $slugger): Response
     {
-        $user = $this->getUser();
-
         $structure = new Structure();
 
         $form = $this->createForm(StructureType::class, $structure, [
@@ -101,6 +110,10 @@ final class StructureController extends AbstractController
         ]);
     }
 
+    /**
+     * Édition d'une structure existante (ne touche pas au membre responsable,
+     * contrairement à `new()`).
+     */
     #[Route('/{id}/edit', name: 'app_admin_structure_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Structure $structure, EntityManagerInterface $entityManager, SluggerInterface $slugger): Response
     {

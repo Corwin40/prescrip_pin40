@@ -64,7 +64,8 @@
                             href="{{ path('app_gestapp_prescription_del', {'id': prescription.id}) }}"
                             class="text-danger openModal"
                             type="button"
-                            data-bs-data="DEL_PRESCRIPTION-Suppression de la prescription">
+                            data-bs-data="DEL_PRESCRIPTION-Suppression de la prescription"
+                            data-csrf="{{ csrf_token('delete' ~ prescription.id) }}">
                             <i class="fa-duotone fa-solid fa-file-circle-minus"></i>
                         </a>
                     </div>

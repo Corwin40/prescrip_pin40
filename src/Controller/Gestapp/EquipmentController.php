@@ -11,9 +11,16 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
+/**
+ * CRUD des équipements (matériel prêté aux bénéficiaires). Liée au dashboard admin
+ * (liste et création accessibles depuis `admin/dashboard/index.html.twig`).
+ */
 #[Route('/gestapp/equipment')]
 final class EquipmentController extends AbstractController
 {
+    /**
+     * Liste de tous les équipements.
+     */
     #[Route(name: 'app_gestapp_equipment_index', methods: ['GET'])]
     public function index(EquipmentRepository $equipmentRepository): Response
     {
@@ -22,6 +29,9 @@ final class EquipmentController extends AbstractController
         ]);
     }
 
+    /**
+     * Création d'un équipement.
+     */
     #[Route('/new', name: 'app_gestapp_equipment_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
@@ -42,6 +52,9 @@ final class EquipmentController extends AbstractController
         ]);
     }
 
+    /**
+     * Fiche détail d'un équipement.
+     */
     #[Route('/{id}', name: 'app_gestapp_equipment_show', methods: ['GET'])]
     public function show(Equipment $equipment): Response
     {
@@ -50,6 +63,9 @@ final class EquipmentController extends AbstractController
         ]);
     }
 
+    /**
+     * Édition d'un équipement.
+     */
     #[Route('/{id}/edit', name: 'app_gestapp_equipment_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Equipment $equipment, EntityManagerInterface $entityManager): Response
     {
@@ -68,6 +84,9 @@ final class EquipmentController extends AbstractController
         ]);
     }
 
+    /**
+     * Suppression d'un équipement.
+     */
     #[Route('/{id}', name: 'app_gestapp_equipment_delete', methods: ['POST'])]
     public function delete(Request $request, Equipment $equipment, EntityManagerInterface $entityManager): Response
     {

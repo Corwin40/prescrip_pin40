@@ -21,8 +21,11 @@ use Elastica\Query\BoolQuery;
 use Elastica\Query\MultiMatch;
 use Elastica\Query\Term;
 use Elastica\Query\Terms;
-use Elastica\Query\Nested;
 
+/**
+ * Gestion des bénéficiaires : recherche (Elasticsearch), création (deux flux),
+ * consultation, édition, suppression.
+ */
 #[Route('/gestapp/beneficiary')]
 final class BeneficiaryController extends AbstractController
 {
@@ -33,6 +36,13 @@ final class BeneficiaryController extends AbstractController
         $this->finder = $finder;
     }
 
+    /**
+     * Recherche de bénéficiaires via Elasticsearch (FOSElasticaBundle). Combine un filtre
+     * automatique selon le rôle de l'utilisateur (prescripteur : sa structure ; médiateur :
+     * les structures qu'il médie ; super-admin : toutes) avec les filtres du formulaire
+     * `BeneficiarySearchType` (recherche texte sur prénom/nom, filtre structure).
+     * C'est la route "index" fonctionnelle de la liste des bénéficiaires.
+     */
     #[Route('/', name: 'app_gestapp_beneficiary_index', methods: ['GET','POST'])]
     public function search(Request $request, StructureRepository $structureRepository): Response
     {
@@ -117,6 +127,13 @@ final class BeneficiaryController extends AbstractController
 
 
 
+    /**
+     * Liste des bénéficiaires via requête Doctrine classique (sans Elasticsearch), filtrée
+     * par rôle. Nommage historique trompeur : la méthode s'appelle `index()` mais sa route
+     * est `/await` (`app_gestapp_beneficiary_await`) — la vraie route "index" de la liste
+     * est `search()` ci-dessus. **Aucune vue ni script du projet ne référence cette route** :
+     * probable reliquat d'une ancienne liste remplacée par la recherche Elasticsearch.
+     */
     #[Route('/await', name: 'app_gestapp_beneficiary_await', methods: ['GET'])]
     public function index(BeneficiaryRepository $beneficiaryRepository): Response
     {
@@ -136,6 +153,14 @@ final class BeneficiaryController extends AbstractController
         ]);
     }
 
+    /**
+     * Création classique d'un bénéficiaire (page dédiée, formulaire complet).
+     * Déduit le genre à partir de la civilité choisie, rattache le bénéficiaire à la
+     * structure choisie dans le formulaire (par défaut celle de l'utilisateur connecté),
+     * et lui assigne un référent (le responsable de la structure pour un rôle
+     * admin/prescripteur, sinon l'utilisateur connecté lui-même). Force le rafraîchissement
+     * de l'index Elasticsearch après création pour une visibilité immédiate dans la recherche.
+     */
     #[Route('/new', name: 'app_gestapp_beneficiary_new', methods: ['GET', 'POST'])]
     public function new(
         Request $request,
@@ -198,6 +223,12 @@ final class BeneficiaryController extends AbstractController
         ]);
     }
 
+    /**
+     * Création d'un bénéficiaire en AJAX, depuis la modale intégrée au formulaire de
+     * prescription (`_beneficiaryForm.html.twig`). Répond toujours en JSON (jamais de
+     * redirection) : succès avec les données à injecter dans le `<select>` bénéficiaire
+     * du formulaire de prescription, erreur (code 422) avec le formulaire ré-rendu.
+     */
     #[Route('/new2', name: 'app_gestapp_beneficiary_new2', methods: ['GET', 'POST'])]
     public function new2(Request $request, EntityManagerInterface $entityManager): Response
     {
@@ -230,8 +261,6 @@ final class BeneficiaryController extends AbstractController
                 $entityManager->persist($beneficiary);
                 $entityManager->flush();
 
-                //dd($beneficiary);
-
                 return $this->json([
                     'message' => 'le béneficiaire est ajouté au formulaire de prescription.',
                     'nameBeneficiaire' => $beneficiary->getFirstname() . ' ' . $beneficiary->getLastname(),
@@ -262,6 +291,9 @@ final class BeneficiaryController extends AbstractController
         ],200);
     }
 
+    /**
+     * Fiche détail d'un bénéficiaire.
+     */
     #[Route('/{id}', name: 'app_gestapp_beneficiary_show', methods: ['GET'])]
     public function show(Beneficiary $beneficiary): Response
     {
@@ -270,6 +302,9 @@ final class BeneficiaryController extends AbstractController
         ]);
     }
 
+    /**
+     * Édition d'un bénéficiaire existant.
+     */
     #[Route('/{id}/edit', name: 'app_gestapp_beneficiary_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Beneficiary $beneficiary, EntityManagerInterface $entityManager): Response
     {
@@ -290,8 +325,6 @@ final class BeneficiaryController extends AbstractController
             return $this->redirectToRoute('app_gestapp_beneficiary_index', [], Response::HTTP_SEE_OTHER);
         }
 
-        //dd($beneficiary,$form, $user);
-
         return $this->render('gestapp/beneficiary/edit.html.twig', [
             'beneficiary' => $beneficiary,
             'form' => $form,
@@ -299,6 +332,11 @@ final class BeneficiaryController extends AbstractController
         ]);
     }
 
+    /**
+     * Suppression d'un bénéficiaire. Supprime d'abord sa prescription liée si elle existe
+     * (pour ne pas laisser une prescription orpheline), puis le bénéficiaire lui-même.
+     * Aucune restriction de rôle explicite (`#[IsGranted]`) sur cette action.
+     */
     #[Route('/{id}/delete', name: 'app_gestapp_beneficiary_delete', methods: ['POST'])]
     public function delete(Request $request, Beneficiary $beneficiary, EntityManagerInterface $entityManager): Response
     {

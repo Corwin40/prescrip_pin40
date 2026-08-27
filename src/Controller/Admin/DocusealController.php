@@ -8,12 +8,17 @@ use App\Entity\Serv\Docuseal;
 use App\Repository\Serv\DocusealRepository;
 use App\Service\QrcodeGenerator;
 use Doctrine\ORM\EntityManagerInterface;
+use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
+/**
+ * Intégration avec le service externe de signature électronique Docuseal :
+ * création de la demande de signature, suivi de statut, récupération des documents signés.
+ */
 #[Route('/gestapp/docuseal/')]
 final class DocusealController extends AbstractController
 {
@@ -22,9 +27,14 @@ final class DocusealController extends AbstractController
         private string $docuseal_Key,
         public EntityManagerInterface $em,
         private readonly QrcodeGenerator $qrcodeGenerator,
+        private readonly LoggerInterface $logger,
     ) {
     }
 
+    /**
+     * Construit le tableau de valeurs de préremplissage du template Docuseal
+     * (bénéficiaire, prescripteur, compétences, équipement...) à partir d'une prescription.
+     */
     public function getElement(Prescription $prescription)
     {
         // Création des éléments de préremplissage
@@ -92,6 +102,10 @@ final class DocusealController extends AbstractController
         return $element;
     }
 
+    /**
+     * Crée et persiste l'entité `Docuseal` à partir de la réponse de création de
+     * soumission de l'API Docuseal (premier élément du tableau `$data`), liée à la prescription.
+     */
     public function getDocuseal($data, $prescription)
     {
         $docuseal = new Docuseal();
@@ -117,11 +131,16 @@ final class DocusealController extends AbstractController
         return $docuseal;
     }
 
+    /**
+     * Lance la demande de signature électronique : envoie les données de la prescription
+     * à l'API Docuseal (création d'une soumission), enregistre l'entité `Docuseal` liée,
+     * fait passer la prescription à l'étape `SubmissionForSigned`, et retourne en JSON
+     * la vue du lien/QR code de signature à afficher.
+     */
     #[Route('prescription/{id}', name: 'app_admin_docuseal_prescription')]
     public function prescription(Prescription $prescription, HttpClientInterface $client): Response
     {
         $element = $this->getElement($prescription);
-        //dd($element);
 
         $response = $client->request('POST', 'https://dseal.openpixl.fr/api/submissions', [
             'headers' => [
@@ -134,7 +153,7 @@ final class DocusealController extends AbstractController
                     [
                         'name' => $element['Beneficiaire'],
                         'role' => 'Première partie',
-                        'email' => 'xavier.burke@openpixl.fr',
+                        'email' => $element['Email_Prescripteur'],
                         'values' => [
                             'Beneficiaire' => $element['Beneficiaire'],
                             'Genre' => $element['Genre'],
@@ -197,6 +216,11 @@ final class DocusealController extends AbstractController
         ], 200);
     }
 
+    /**
+     * Interroge l'API Docuseal pour le statut de la soumission liée à la prescription.
+     * Si elle est `completed`, affiche un message de fin (plus de lien à présenter) ;
+     * sinon, régénère le QR code / lien de signature pour laisser l'utilisateur continuer.
+     */
     #[Route('prescription/showqrcode/{id}', name: 'app_admin_docuseal_prescription_showqrcode')]
     public function prescriptionShowQrcode(Prescription $prescription, DocusealRepository $docusealRepository): Response
     {
@@ -229,6 +253,12 @@ final class DocusealController extends AbstractController
         ], 200);
     }
 
+    /**
+     * Une fois la signature Docuseal complétée : télécharge le document signé et le
+     * certificat d'audit depuis Docuseal et les écrit sur le disque local
+     * (`prescription_signed_directory`), puis fait passer la prescription à l'étape `Signed`.
+     * Retourne une erreur JSON (code 422) si la soumission n'est pas encore `completed`.
+     */
     #[Route('prescription/getdocuments/{id}', name: 'app_admin_docuseal_prescription_getdocuments')]
     public function prescriptionGetDocs(Prescription $prescription, DocusealRepository $docusealRepository,  HttpClientInterface $client)
     {
@@ -269,17 +299,22 @@ final class DocusealController extends AbstractController
                 $path = $this->getParameter('prescription_signed_directory').$slugStructure.'/'.$filename;
                 $pathurl = $this->getParameter('prescription_signed_directory_url').$slugStructure.'/'.$filename;
 
-                //dd($path, dirname($path));
-
                 try{
                     if (!is_dir(dirname($path))) {
                         mkdir(dirname($path), 0775, true);
-                        file_put_contents($path, $responsePdf->getContent());
-                    }else{
-                        file_put_contents($path, $responsePdf->getContent());
+                    }
+                    if (file_put_contents($path, $responsePdf->getContent()) === false) {
+                        $this->logger->error('Docuseal : échec d\'écriture du document signé sur le disque.', [
+                            'prescription' => $prescription->getRef(),
+                            'path' => $path,
+                        ]);
                     }
                 }catch (FileException $e) {
-                    // ... handle exception if something happens during file upload
+                    $this->logger->error('Docuseal : exception lors de l\'écriture du document signé.', [
+                        'prescription' => $prescription->getRef(),
+                        'path' => $path,
+                        'exception' => $e->getMessage(),
+                    ]);
                 }
                 $docuseal->setPathDocSeal($pathurl);
                 $prescription->setPathSigned($pathurl);
@@ -296,12 +331,19 @@ final class DocusealController extends AbstractController
         try{
             if (!is_dir(dirname($certifpath))) {
                 mkdir(dirname($certifpath), 0775, true);
-                file_put_contents($certifpath, $responseCertif->getContent());
-            }else{
-                file_put_contents($certifpath, $responseCertif->getContent());
+            }
+            if (file_put_contents($certifpath, $responseCertif->getContent()) === false) {
+                $this->logger->error('Docuseal : échec d\'écriture du certificat d\'audit sur le disque.', [
+                    'prescription' => $prescription->getRef(),
+                    'path' => $certifpath,
+                ]);
             }
         }catch (FileException $e) {
-            // ... handle exception if something happens during file upload
+            $this->logger->error('Docuseal : exception lors de l\'écriture du certificat d\'audit.', [
+                'prescription' => $prescription->getRef(),
+                'path' => $certifpath,
+                'exception' => $e->getMessage(),
+            ]);
         }
         $docuseal->setPathCertifSeal($certifpathurl);
         $prescription->setPathSignedCertif($certifpathurl);
@@ -315,13 +357,6 @@ final class DocusealController extends AbstractController
         ], 200);
     }
 }
-
-
-
-
-
-
-
 
 
 

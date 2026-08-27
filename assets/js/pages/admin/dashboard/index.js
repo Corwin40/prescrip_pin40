@@ -98,6 +98,7 @@ export function initIndex_Dashboard() {
             modalEl.querySelector('.modal-footer a').classList.remove('btn-outline-primary')
             modalEl.querySelector('.modal-footer a').classList.add('btn-outline-danger')
             modalEl.querySelector('.modal-footer a').href = url
+            modalEl.querySelector('.modal-footer a').dataset.csrf = a.dataset.csrf
             modal.show();
         }
         else{
@@ -139,8 +140,9 @@ export function initIndex_Dashboard() {
         }else{
             e.preventDefault()
             let url = e.currentTarget.href
+            let payload = new URLSearchParams({ _token: e.currentTarget.dataset.csrf || '' })
             axios
-                .post(url)
+                .post(url, payload)
                 .then(({data}) => {
                     if(data.code === 422){
                         modal.hide()

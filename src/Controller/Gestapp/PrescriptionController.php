@@ -11,7 +11,6 @@ use App\Form\Gestapp\PrescriptionType;
 use App\Form\Search\PrescriptionSearchType;
 use App\Repository\Admin\StructureRepository;
 use App\Repository\Gestapp\PrescriptionRepository;
-use App\Repository\MemberRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Elastica\Query\Terms;
 use FOS\ElasticaBundle\Elastica\Index;
@@ -26,6 +25,11 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
+/**
+ * Contrôleur central du workflow de prescription : recherche, création, édition par
+ * étapes (`StepPrescription`), clôture, suppression. Le cycle de vie d'une prescription
+ * avance via `edit()` en fonction de l'étape courante et du rôle de l'utilisateur.
+ */
 #[Route('/gestapp/prescription')]
 final class PrescriptionController extends AbstractController
 {
@@ -36,6 +40,12 @@ final class PrescriptionController extends AbstractController
         $this->finder = $finder;
     }
 
+    /**
+     * Génère la référence initiale d'une prescription (`YYYYMMDD-xxxxx-N`) au moment de
+     * sa création, avant qu'un prescripteur ne soit associé (le "xxxxx" est un espace
+     * réservé remplacé par le slug de structure une fois celle-ci connue, voir `new()`).
+     * Le compteur `N` incrémente le dernier compteur connu pour le prescripteur donné.
+     */
     public function createRef($structure, PrescriptionRepository $prescriptionRepository)
     {
         // Construction de la variable Ref
@@ -53,24 +63,12 @@ final class PrescriptionController extends AbstractController
         return [$ref, $compteur];
     }
 
-    public function getPrescriptionsForPrescriptor(PrescriptionRepository $prescriptionRepository){
-        $user = $this->getUser();
-        $prescriptions = $prescriptionRepository->filteredByWithoutStepForPrescriptor(StepPrescription::Signed, $user->getStructure());
-        return $prescriptions;
-    }
-
-    public function getPrescriptionsForMediator(PrescriptionRepository $prescriptionRepository){
-        $user = $this->getUser();
-        $prescriptions = $prescriptionRepository->filteredByWithoutStepForMediator(StepPrescription::Signed, $user->getStructure());
-        return $prescriptions;
-    }
-
-    public function getPrescriptionsForAdmin(PrescriptionRepository $prescriptionRepository){
-        $user = $this->getUser();
-        $prescriptions = $prescriptionRepository->findBy(['step' => StepPrescription::Signed]);
-        return $prescriptions;
-    }
-
+    /**
+     * Recherche de prescriptions via Elasticsearch (FOSElasticaBundle), combinée à un
+     * filtre automatique selon le rôle (prescripteur/médiateur/super-admin) et aux
+     * filtres du formulaire `PrescriptionSearchType` (référence, prescripteur).
+     * C'est la route "index" fonctionnelle de la liste des prescriptions.
+     */
     #[Route('/', name: 'app_gestapp_prescription_index', methods: ['GET', 'POST'])]
     public function index(Request $request, StructureRepository $structureRepository): Response
     {
@@ -114,7 +112,6 @@ final class PrescriptionController extends AbstractController
         if ($member && in_array('ROLE_MEDIATEUR', $member->getRoles())) {
             $termsQuery = new Terms('prescriptor.id', $prescriptorIds);
             $boolQuery->addFilter($termsQuery);
-            //dd($boolQuery);
         }
         if ($member && in_array('ROLE_SUPER_ADMIN', $member->getRoles())) {
             $termsQuery = new Terms('prescriptor.id', $prescriptorIds);
@@ -150,6 +147,10 @@ final class PrescriptionController extends AbstractController
 
     }
 
+    /**
+     * Liste des prescriptions signées (étape `Signed`), toutes structures confondues.
+     * Accessible depuis la navbar (lien "Prescriptions" pour les rôles admin).
+     */
     #[Route('/admin', name: 'app_gestapp_prescription_foradmin', methods: ['GET', 'POST'])]
     public function listPrescriptionForAdmin(PrescriptionRepository $prescriptionRepository)
     {
@@ -160,6 +161,12 @@ final class PrescriptionController extends AbstractController
         ]);
     }
 
+    /**
+     * Liste des prescriptions via requête Doctrine classique (sans Elasticsearch),
+     * filtrée par rôle. **Aucune vue ni script du projet ne référence cette route** —
+     * probable reliquat, comme `BeneficiaryController::index()` (route `/await`) et pour
+     * la même raison (remplacée par la recherche Elasticsearch de `index()`).
+     */
     #[Route(name: 'app_gestapp_prescription_await', methods: ['GET'])]
     public function await(PrescriptionRepository $prescriptionRepository): Response
     {
@@ -182,6 +189,15 @@ final class PrescriptionController extends AbstractController
         ]);
     }
 
+    /**
+     * Création d'une prescription. Le statut/l'étape de départ dépend du rôle créateur
+     * (admin : `Open` directement ; médiateur/prescripteur : `OneParts`). À la soumission,
+     * la référence définitive est recalculée avec le vrai slug de structure et un compteur
+     * mensuel par structure (le compteur repart à 1 à chaque changement de mois), en
+     * fonction du rôle : admin/médiateur déterminent la structure via le bénéficiaire
+     * choisi, un prescripteur utilise directement sa propre structure. Rafraîchit l'index
+     * Elasticsearch après persistance pour une visibilité immédiate en recherche.
+     */
     #[Route('/new', name: 'app_gestapp_prescription_new', methods: ['GET', 'POST'])]
     public function new(
         Request $request,
@@ -306,6 +322,12 @@ final class PrescriptionController extends AbstractController
         ]);
     }
 
+    /**
+     * Fiche détail d'une prescription.
+     * **Aucune vue ni script du projet ne référence cette route** (recherche exhaustive
+     * dans `templates/` et `assets/js/`) — probable reliquat, la fiche prescription
+     * semble uniquement consultée via l'édition (`edit()`).
+     */
     #[Route('/{id}', name: 'app_gestapp_prescription_show', methods: ['GET'])]
     public function show(Prescription $prescription): Response
     {
@@ -314,6 +336,14 @@ final class PrescriptionController extends AbstractController
         ]);
     }
 
+    /**
+     * Fait avancer une prescription d'une étape (`StepPrescription`) à la suivante,
+     * selon l'étape courante ET le rôle de l'utilisateur qui soumet le formulaire —
+     * c'est le cœur de la machine à états du workflow de prescription (chaque rôle
+     * ne peut faire progresser que certaines étapes). Marque aussi l'équipement choisi
+     * comme indisponible (`isDispo = 0`) s'il y en a un. Rafraîchit l'index Elasticsearch
+     * après la mise à jour.
+     */
     #[Route('/{id}/edit', name: 'app_gestapp_prescription_edit', methods: ['GET', 'POST'])]
     public function edit(
         Request $request,
@@ -360,7 +390,6 @@ final class PrescriptionController extends AbstractController
                     $prescription->setStep(StepPrescription::TwoParts);
                 }
                 if($user && in_array('ROLE_PRESCRIPTEUR', $user->getRoles())){
-                    $competence = $prescription->getCompetence();
                     $prescription->setIsOpenByPrescriptor(1);
                     $prescription->setStep(StepPrescription::TwoParts);
                 }
@@ -415,6 +444,12 @@ final class PrescriptionController extends AbstractController
         ]);
     }
 
+    /**
+     * Clôture une prescription (étape `ValidCase`), en renseignant commune/code postal
+     * depuis le lieu de médiation. **Aucune vue ni script du projet ne référence cette
+     * route ni n'inclut son template `_formClosedCase.html.twig`** — probable
+     * fonctionnalité non finalisée ou abandonnée.
+     */
     #[Route('/{id}/closedcase', name: 'app_gestapp_prescription_closedcase', methods: ['POST'])]
     public function closedcase(Prescription $prescription, EntityManagerInterface $entityManager, Request $request)
     {
@@ -450,14 +485,13 @@ final class PrescriptionController extends AbstractController
             'prescription' => $prescription,
             'form' => $form,
         ]);
-
-        //return $this->json([
-        //    'code' => 200,
-        //    'message' => 'Le fichier PDF correspondant à la prescription est en cours de génération',
-        //    'prescription' => $prescription,
-        //], 200);
     }
 
+    /**
+     * Suppression classique d'une prescription (formulaire de suppression, redirection).
+     * Ne nettoie ni les fichiers PDF/signés sur disque, ni la soumission Docuseal associée
+     * — contrairement à `del()` ci-dessous. Rafraîchit l'index Elasticsearch après coup.
+     */
     #[Route('/{id}', name: 'app_gestapp_prescription_delete', methods: ['POST'])]
     public function delete(
         Request $request,
@@ -478,9 +512,23 @@ final class PrescriptionController extends AbstractController
         return $this->redirectToRoute('app_gestapp_prescription_index', [], Response::HTTP_SEE_OTHER);
     }
 
+    /**
+     * Suppression complète d'une prescription, appelée en AJAX depuis les listes
+     * (modale de confirmation) : supprime aussi les fichiers PDF associés sur disque
+     * (original, signé, certificat de signature) et archive/supprime la soumission
+     * Docuseal liée si elle existe. Retourne en JSON la liste de prescriptions HTML
+     * mise à jour, filtrée par rôle.
+     */
     #[Route('/{id}/del', name: 'app_gestapp_prescription_del', methods: ['POST'])]
     public function del(Request $request, Prescription $prescription, EntityManagerInterface $entityManager, PrescriptionRepository $prescriptionRepository): Response
     {
+        if (!$this->isCsrfTokenValid('delete'.$prescription->getId(), $request->getPayload()->getString('_token'))) {
+            return $this->json([
+                'code' => 422,
+                'message' => 'Jeton de sécurité invalide, veuillez réessayer.',
+            ], 200);
+        }
+
         $member = $this->getUser();
         // Supprimer les fichiers stockés sur le serveur
         $paths = array_filter([$prescription->getPath(), $prescription->getPathSigned(), $prescription->getPathSignedCertif()], fn($path) => $path !== null);

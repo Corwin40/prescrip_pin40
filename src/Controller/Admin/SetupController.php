@@ -15,6 +15,12 @@ use Symfony\Component\Routing\Attribute\Route;
 
 final class SetupController extends AbstractController
 {
+    /**
+     * Assistant de première installation : crée le tout premier compte (ROLE_SUPER_ADMIN)
+     * de l'application. Se neutralise automatiquement dès qu'un membre existe déjà en base
+     * (redirection vers `/login`), donc inaccessible en usage normal une fois l'app initialisée.
+     * Connecte directement l'utilisateur créé via `Security::login()` (pas de redirection vers /login).
+     */
     #[Route('/setup', name: 'app_setup', methods: ['GET', 'POST'])]
     public function create(
         Request $request,

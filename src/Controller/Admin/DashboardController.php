@@ -3,7 +3,6 @@
 namespace App\Controller\Admin;
 
 use App\Config\StepPrescription;
-use App\Entity\Gestapp\Prescription;
 use App\Repository\Gestapp\BeneficiaryRepository;
 use App\Repository\Gestapp\EquipmentRepository;
 use App\Repository\Gestapp\PrescriptionRepository;
@@ -15,12 +14,15 @@ use Symfony\Component\Routing\Attribute\Route;
 final class DashboardController extends AbstractController
 {
 
+    /**
+     * Tableau de bord : agrège bénéficiaires, prescriptions (en cours / signées) et
+     * équipements disponibles, avec un périmètre différent selon le rôle de l'utilisateur
+     * connecté — prescripteur/médiateur : limité à sa structure ; admin/super-admin : global.
+     */
     #[Route('/admin/dashboard', name: 'app_admin_dashboard_index', methods: ['GET'])]
     public function index(MemberRepository $memberRepository, EquipmentRepository $equipmentRepository, PrescriptionRepository $prescriptionRepository, BeneficiaryRepository $beneficiaryRepository): Response
     {
         $user = $this->getUser();
-        $structure = $user->getStructure();
-        $roles = $user->getRoles();
         $member = $memberRepository->find($user->getId());
 
         if($user && in_array('ROLE_PRESCRIPTEUR', $user->getRoles())){
@@ -49,8 +51,6 @@ final class DashboardController extends AbstractController
             $prescriptionsSigned = $prescriptionRepository->filteredByStep(StepPrescription::Signed->name);
             $equipments = $equipmentRepository->findByDispos();
         }
-
-        //dd($member,$equipments, $prescriptions, $beneficiaries);
 
         return $this->render('admin/dashboard/index.html.twig', [
             'equipments' => $equipments,

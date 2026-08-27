@@ -106,7 +106,9 @@ export function initIndex_Member() {
                 .then(function({data}) {
                     modal.hide();
                     toasterMessage(data.message);
-                    window.location.reload();
+                    if(data.code === 200){
+                        window.location.reload();
+                    }
                 })
                 .catch(error => {
                     console.log(error)
