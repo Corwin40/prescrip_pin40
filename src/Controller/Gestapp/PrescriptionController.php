@@ -530,15 +530,15 @@ final class PrescriptionController extends AbstractController
         }
 
         $member = $this->getUser();
-        // Supprimer les fichiers stockés sur le serveur
-        $paths = array_filter([$prescription->getPath(), $prescription->getPathSigned(), $prescription->getPathSignedCertif()], fn($path) => $path !== null);
-        if ($paths) {
-            foreach ($paths as $p) {
-                if (!empty($p) && is_file($this->getParameter('kernel.project_dir')."/public".$p)) {
-                    unlink($this->getParameter('kernel.project_dir')."/public".$p);
-                }
-            }
-        }
+
+        // Chemins des fichiers à purger UNIQUEMENT après une suppression réussie en base
+        // (unlink() n'est pas transactionnel : si le flush échoue, les fichiers seraient
+        // perdus alors que les lignes en base subsisteraient).
+        $projectDir = $this->getParameter('kernel.project_dir');
+        $paths = array_filter(
+            [$prescription->getPath(), $prescription->getPathSigned(), $prescription->getPathSignedCertif()],
+            fn($path) => !empty($path)
+        );
 
         // Supprimer la trace sur le serveur de signature
         if($prescription->getDocuseal()){
@@ -548,8 +548,24 @@ final class PrescriptionController extends AbstractController
             $entityManager->remove($docuseal);
         }
 
-        $entityManager->remove($prescription);
-        $entityManager->flush();
+        // La suppression cascade sur les Document liés (OneToMany orphanRemoval).
+        try {
+            $entityManager->remove($prescription);
+            $entityManager->flush();
+        } catch (\Throwable $e) {
+            return $this->json([
+                'code' => 500,
+                'message' => "La prescription n'a pas pu être supprimée : ".$e->getMessage(),
+            ], 200);
+        }
+
+        // Base à jour : on peut purger les fichiers du disque.
+        foreach ($paths as $p) {
+            $fullPath = $projectDir."/public".$p;
+            if (is_file($fullPath)) {
+                @unlink($fullPath);
+            }
+        }
 
         if($member && in_array('ROLE_PRESCRIPTEUR', $member->getRoles())){
             $prescriptions = $prescriptionRepository->findBy(['prescriptor' => $member->getStructure()]);

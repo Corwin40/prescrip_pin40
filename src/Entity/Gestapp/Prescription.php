@@ -82,7 +82,7 @@ class Prescription
     /**
      * @var Collection<int, Document>
      */
-    #[ORM\OneToMany(targetEntity: Document::class, mappedBy: 'prescription')]
+    #[ORM\OneToMany(targetEntity: Document::class, mappedBy: 'prescription', cascade: ['remove'], orphanRemoval: true)]
     private Collection $documents;
 
     #[ORM\OneToOne(mappedBy: 'prescription', cascade: ['persist', 'remove'])]
