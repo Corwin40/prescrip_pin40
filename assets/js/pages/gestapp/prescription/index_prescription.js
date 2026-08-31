@@ -1,5 +1,5 @@
 import {toasterMessage} from "../../../components/bootstrap/toaster";
-import {initModal, parseModalTrigger, setupIframeModal, bindModalEvents, removeOptions, resetModal} from "../../../components/bootstrap/modal";
+import {initModal, parseModalTrigger, setupIframeModal, bindModalEvents, resetModal} from "../../../components/bootstrap/modal";
 import {generateCsrfToken} from "../../../../controllers/csrf_protection_controller";
 import axios from 'axios';
 
@@ -91,17 +91,26 @@ export function initIndex_Prescription() {
             generateCsrfToken(form);
             let action = form.action;
             let data = new FormData(form);
+            // Indique au contrôleur quel gabarit de liste renvoyer (page liste des prescriptions).
+            data.append('_listContext', 'prescription_index');
             axios
                 .post(action, data)
                 .then(({data}) => {
-                    let select = document.getElementById('prescription_beneficiaire');
-                    removeOptions(select);
-                    const opt = new Option(data.beneficiaire, data.value);
-                    select.options.add(opt);
+                    if(data.code === 400){
+                        // Erreur de validation : garder la modale ouverte, ré-afficher le formulaire.
+                        modalEl.querySelector('.modal-body').innerHTML = data.formView;
+                        toasterMessage(data.message);
+                        bindModalEvents(openModal, submitModal);
+                        return;
+                    }
+                    if(data.liste){
+                        document.getElementById('liste').innerHTML = data.liste;
+                    }
+                    modal.hide();
+                    toasterMessage(data.message);
+                    bindModalEvents(openModal, submitModal);
                 })
                 .catch(error => { console.log(error) })
-            modal.hide();
-            bindModalEvents(openModal, submitModal);
         }
         else{
             let url = e.currentTarget.href;

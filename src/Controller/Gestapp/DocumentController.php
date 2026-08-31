@@ -98,20 +98,26 @@ final class DocumentController extends AbstractController
                 $em->persist($document);
                 $em->flush();
 
+                // Liste filtrée selon le rôle. Initialisée à [] : jamais de variable indéfinie
+                // si l'utilisateur ne correspond à aucun rôle attendu.
+                $prescriptions = [];
                 if($user && in_array('ROLE_PRESCRIPTEUR', $user->getRoles())){
                     $prescriptions = $prescriptionRepository->findBy(['prescriptor' => $user->getStructure()]);
-                }
-                if($user && in_array('ROLE_MEDIATEUR', $user->getRoles())){
+                } elseif($user && in_array('ROLE_MEDIATEUR', $user->getRoles())){
                     $prescriptions = $prescriptionRepository->findBy(['lieuMediation' => $user->getStructure()]);
-                }
-                if($user && in_array('ROLE_ADMIN', $user->getRoles())){
-                    $prescriptions = $prescriptionRepository->findAll();
-                }
-                if($user && in_array('ROLE_SUPER_ADMIN', $user->getRoles())){
+                } elseif($user && in_array('ROLE_ADMIN', $user->getRoles())){
+                    $prescriptions = $prescriptionRepository->findBy(['step' => StepPrescription::Signed]);
+                } elseif($user && in_array('ROLE_SUPER_ADMIN', $user->getRoles())){
                     $prescriptions = $prescriptionRepository->findAll();
                 }
 
-                $liste = $this->renderView('admin/dashboard/include/_liste.html.twig', [
+                // La modale est ouverte aussi bien depuis le tableau de bord admin que
+                // depuis la liste des prescriptions : chaque page indique son gabarit.
+                $listTemplate = $request->request->get('_listContext') === 'prescription_index'
+                    ? 'gestapp/prescription/include/_liste.html.twig'
+                    : 'admin/dashboard/include/_liste.html.twig';
+
+                $liste = $this->renderView($listTemplate, [
                     'prescriptions' => $prescriptions,
                 ]);
 
