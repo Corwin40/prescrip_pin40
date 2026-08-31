@@ -25,7 +25,9 @@ class Prescription
     #[ORM\ManyToOne(inversedBy: 'prescriptions')]
     private ?Structure $prescriptor = null;
 
-    #[ORM\OneToOne(cascade: ['persist', 'remove'])]
+    // Pas de cascade 'remove' : l'équipement est un matériel réutilisable, il doit
+    // être libéré (isDispo = true), jamais supprimé, quand la prescription l'est.
+    #[ORM\OneToOne(cascade: ['persist'])]
     private ?Equipment $equipement = null;
 
     #[ORM\Column(length: 100)]

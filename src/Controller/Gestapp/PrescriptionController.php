@@ -501,6 +501,11 @@ final class PrescriptionController extends AbstractController
     ): Response
     {
         if ($this->isCsrfTokenValid('delete'.$prescription->getId(), $request->getPayload()->getString('_token'))) {
+            // Libérer l'équipement réservé plutôt que de le supprimer avec la prescription.
+            if ($equipement = $prescription->getEquipement()) {
+                $equipement->setIsDispo(1);
+            }
+
             $entityManager->remove($prescription);
             $entityManager->flush();
 
@@ -539,6 +544,12 @@ final class PrescriptionController extends AbstractController
             [$prescription->getPath(), $prescription->getPathSigned(), $prescription->getPathSignedCertif()],
             fn($path) => !empty($path)
         );
+
+        // Libérer l'équipement réservé : c'est un matériel réutilisable, on le remet
+        // à disposition, on ne le supprime pas avec la prescription.
+        if($equipement = $prescription->getEquipement()){
+            $equipement->setIsDispo(1);
+        }
 
         // Supprimer la trace sur le serveur de signature
         if($prescription->getDocuseal()){
