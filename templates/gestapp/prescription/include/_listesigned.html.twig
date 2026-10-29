@@ -19,7 +19,7 @@
                 </tr>
             {% else %}
                 {% for prescription in prescriptions %}
-                <tr class="align-middle">
+                    <tr class="align-middle">
                     <td><input type="checkbox" class="form-check mb-0"></td>
                     <td class="position-relative">
                         <a href="{{ path('app_gestapp_prescription_edit', {'id': prescription.id}) }}" class="stretched-link"></a>
