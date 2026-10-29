@@ -9,6 +9,7 @@ use App\Repository\Gestapp\PrescriptionRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -53,6 +54,14 @@ final class DocumentController extends AbstractController
         $document = new Document();
 
         $prescription = $prescriptionRepository->find($idprescription);
+        if(!$prescription){
+            $message = 'La prescription demandée est introuvable. Elle a peut-être été supprimée : veuillez rafraîchir la page.';
+            return $this->json([
+                'code' => 404,
+                'message' => $message,
+                'formView' => '<div class="alert alert-danger mb-0">'.$message.'</div>',
+            ], 200);
+        }
 
         $form = $this->createForm(DocumentFormType::class, $document, [
             'action' => $this->generateUrl('app_gestapp_document_prescriptionsigned_manually', [
@@ -67,33 +76,42 @@ final class DocumentController extends AbstractController
 
         if($form->isSubmitted()){
 
-            if($form->isValid()) {
-                $documentFile = $form->get('documentFile')->getData();
-                if($documentFile){
-                    $slugStructure = $prescription->getPrescriptor()->getSlug();
-                    $filename = $prescription->getRef().'_signedByManually.pdf';
-                    $pathdir = $this->getParameter('prescription_signed_directory').$slugStructure;
-                    $pathUrl = $this->getParameter('prescription_signed_directory_url').$slugStructure;
-                    try {
-                        if (!is_dir($pathdir)){
-                            // Création du répertoire s'il n'existe pas.
-                            mkdir($pathdir."/", 0775, true);
-                        }
-                        $documentFile->move($pathdir, $filename);
-                    } catch (FileException $e) {
-                        $this->logger->error('Dépôt manuel de document signé : échec du déplacement du fichier.', [
-                            'prescription' => $prescription->getRef(),
-                            'path' => $pathdir.'/'.$filename,
-                            'exception' => $e->getMessage(),
-                        ]);
-                    }
+            $documentFile = $form->isValid() ? $form->get('documentFile')->getData() : null;
+            // Le champ n'est pas obligatoire côté formulaire : sans ce contrôle, un envoi vide
+            // créait un Document sans fichier et annonçait un dépôt réussi.
+            if($form->isValid() && !$documentFile){
+                $form->get('documentFile')->addError(new FormError('Aucun fichier n\'a été sélectionné. Veuillez déposer la fiche de prescription signée au format PDF.'));
+            }
 
-                    $document->setDocumentFilename($filename);
-                    $document->setPrescription($prescription);
-                    $document->setPath($pathUrl.'/'.$filename);
-                    $prescription->setStep(StepPrescription::Signed);
-                    $prescription->setPathSigned($pathUrl.'/'.$filename);
+            $stored = false;
+            if($form->isValid() && $documentFile) {
+                $slugStructure = $prescription->getPrescriptor()->getSlug();
+                $filename = $prescription->getRef().'_signedByManually.pdf';
+                $pathdir = $this->getParameter('prescription_signed_directory').$slugStructure;
+                $pathUrl = $this->getParameter('prescription_signed_directory_url').$slugStructure;
+                try {
+                    // Création du répertoire s'il n'existe pas.
+                    if (!is_dir($pathdir) && !@mkdir($pathdir."/", 0775, true) && !is_dir($pathdir)){
+                        throw new FileException(sprintf('Impossible de créer le répertoire "%s".', $pathdir));
+                    }
+                    $documentFile->move($pathdir, $filename);
+                    $stored = true;
+                } catch (FileException $e) {
+                    $this->logger->error('Dépôt manuel de document signé : échec du déplacement du fichier.', [
+                        'prescription' => $prescription->getRef(),
+                        'path' => $pathdir.'/'.$filename,
+                        'exception' => $e->getMessage(),
+                    ]);
+                    $form->get('documentFile')->addError(new FormError('Le fichier n\'a pas pu être enregistré sur le serveur. Veuillez réessayer ; si le problème persiste, contactez un administrateur.'));
                 }
+            }
+
+            if($stored) {
+                $document->setDocumentFilename($filename);
+                $document->setPrescription($prescription);
+                $document->setPath($pathUrl.'/'.$filename);
+                $prescription->setStep(StepPrescription::Signed);
+                $prescription->setPathSigned($pathUrl.'/'.$filename);
 
                 $em->persist($document);
                 $em->flush();
@@ -134,9 +152,16 @@ final class DocumentController extends AbstractController
                 'document' => $document
             ]);
 
+            // Message du toaster : les erreurs réelles (fichier manquant, trop lourd, mauvais
+            // format, jeton CSRF expiré, échec d'écriture…) plutôt qu'un texte générique.
+            $errors = [];
+            foreach ($form->getErrors(true) as $error) {
+                $errors[] = htmlspecialchars($error->getMessage(), ENT_QUOTES);
+            }
+
             return $this->json([
                 'code' => 400,
-                'message' => 'Une erreur s\'est glissé dans le formulaire',
+                'message' => $errors ? implode('<br>', array_unique($errors)) : 'Une erreur s\'est glissée dans le formulaire',
                 'formView' => $view
             ], 200);
 

@@ -30,7 +30,10 @@ class DocumentFormType extends AbstractType
                             'application/pdf',
                             'application/x-pdf',
                         ],
-                        'mimeTypesMessage' => 'Attention, veuillez charger un fichier au format jpg ou png',
+                        'mimeTypesMessage' => 'Le fichier doit être au format PDF (format reçu : {{ type }}).',
+                        'maxSizeMessage' => 'Le fichier est trop volumineux ({{ size }} {{ suffix }}). La taille maximale autorisée est de {{ limit }} {{ suffix }}.',
+                        'uploadIniSizeErrorMessage' => 'Le fichier dépasse la taille maximale acceptée par le serveur ({{ limit }} {{ suffix }}).',
+                        'uploadErrorMessage' => 'Le téléversement du fichier a échoué. Veuillez réessayer.',
                     ])
                 ],
 

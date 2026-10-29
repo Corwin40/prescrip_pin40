@@ -1,5 +1,6 @@
 import * as bootstrap from 'bootstrap';
 import {toasterMessage} from "../../../components/bootstrap/toaster";
+import {generateCsrfToken} from "../../../../controllers/csrf_protection_controller";
 import axios from 'axios';
 
 export function initIndex_Dashboard() {
@@ -112,6 +113,10 @@ export function initIndex_Dashboard() {
         let modalContent = e.currentTarget.parentNode.parentElement;
         let form = modalContent.querySelector('form');
         if(form){
+            // Le formulaire est injecté en AJAX, il ne passe jamais par un vrai
+            // événement "submit" du navigateur : sans cet appel explicite, le token
+            // CSRF reste sur sa valeur de substitution et le serveur le rejette.
+            generateCsrfToken(form);
             let action = form.action
             let data = new FormData(form)
             axios
@@ -129,7 +134,8 @@ export function initIndex_Dashboard() {
                         reloadEvent();
                     }
                     else{
-                        toasterMessage('une erreur est survenue');
+                        modal.hide()
+                        toasterMessage(data.message || 'une erreur est survenue');
                     }
 
                 })
